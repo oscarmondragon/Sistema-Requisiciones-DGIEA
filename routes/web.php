@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ProyectoController;
+use App\Http\Controllers\AdquisicionController;
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,3 +22,5 @@ Route::get('/', function () {
 });
 
 Route::get('/proyectos-siea', [ProyectoController::class, 'home'])->name('home');
+
+Route::get('/adquisiciones', [AdquisicionController::class, 'index'])->name('adquisiciones.index');

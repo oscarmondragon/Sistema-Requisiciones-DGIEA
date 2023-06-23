@@ -80,12 +80,12 @@ return [
 
         'sqlsrv' => [
             'driver' => 'sqlsrv',
-            'url' => env('DATABASE_URL'),
-            'host' => env('DB_HOST', 'localhost'),
-            'port' => env('DB_PORT', '1433'),
-            'database' => env('DB_DATABASE', 'forge'),
-            'username' => env('DB_USERNAME', 'forge'),
-            'password' => env('DB_PASSWORD', ''),
+            'url' => env('DATABASE_URL_SIEA'),
+            'host' => env('DB_HOST_SIEA', 'localhost'),
+            'port' => env('DB_PORT_SIEA', '1433'),
+            'database' => env('DB_DATABASE_SIEA', 'forge'),
+            'username' => env('DB_USERNAME_SIEA', 'forge'),
+            'password' => env('DB_PASSWORD_SIEA', ''),
             'charset' => 'utf8',
             'prefix' => '',
             'prefix_indexes' => true,
