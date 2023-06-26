@@ -17,4 +17,12 @@ class ProyectoController extends Controller
         return view('proyectos', ['proyectos' => $proyectos]);
 
     }
+
+    public function asignacion()
+    {
+
+
+        return view('admin.asignacion');
+
+    }
 }

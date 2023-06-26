@@ -17,24 +17,22 @@ return new class extends Migration {
             $table->unsignedBigInteger('id_proyecto');
             $table->unsignedBigInteger('id_rubro');
             $table->float('monto_total', 8, 2);
-            $table->unsignedBigInteger('id_bitacora');
-            $table->boolean('vobo_admin');
-            $table->boolean('vobo_rt');
-            $table->boolean('obligo_comprobar');
+            $table->unsignedBigInteger('id_bitacora')->nullable();
+            $table->boolean('vobo_admin')->nullable();
+            $table->boolean('vobo_rt')->nullable();
+            $table->boolean('obligo_comprobar')->nullable();
             $table->boolean('aviso_privacidad');
             $table->unsignedBigInteger('id_emisor');
             $table->unsignedBigInteger('id_revisor');
             $table->unsignedBigInteger('estatus_dgiea');
             $table->unsignedBigInteger('estatus_rt');
-            $table->string('observaciones', 255);
+            $table->string('observaciones', 255)->nullable();
             $table->timestamps();
 
             //llaves foraneas
             $table->foreign('tipo_requisicion')->references('id')->on('tipo_requisiciones');
             $table->foreign('id_rubro')->references('id')->on('cuentas_contables');
             $table->foreign('id_revisor')->references('id')->on('users');
-            $table->foreign('estatus_dgiea')->references('id')->on('estatus_requisiciones');
-            $table->foreign('estatus_rt')->references('id')->on('estatus_requisiciones');
 
 
 

@@ -11,9 +11,10 @@ class AdquisicionController extends Controller
 
     public function index()
     {
-        $adquisiciones = Adquisicion::get();
+        $adquisiciones = Adquisicion::where('tipo_requisicion', 1)->orderBy('id')->paginate(3);
 
         return view('adquisiciones.index', ['adquisiciones' => $adquisiciones]);
 
     }
+
 }

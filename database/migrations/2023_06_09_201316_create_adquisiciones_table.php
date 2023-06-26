@@ -20,10 +20,10 @@ return new class extends Migration {
             $table->unsignedBigInteger('id_rubro');
             $table->boolean('afecta_investigacion');
             $table->string('justificacion_academica', 255)->nullable();
-            $table->boolean('exclusividad');
-            $table->unsignedBigInteger('id_carta_exclusividad');
-            $table->boolean('vobo_admin');
-            $table->boolean('vobo_rt');
+            $table->boolean('exclusividad')->nullable();
+            $table->unsignedBigInteger('id_carta_exclusividad')->nullable();
+            $table->boolean('vobo_admin')->nullable();
+            $table->boolean('vobo_rt')->nullable();
             $table->unsignedBigInteger('id_emisor');
             $table->unsignedBigInteger('id_revisor');
             $table->unsignedBigInteger('estatus_general');

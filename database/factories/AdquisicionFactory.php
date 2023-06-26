@@ -18,6 +18,21 @@ class AdquisicionFactory extends Factory
     {
         return [
             //
+            'clave_adquisicion' => fake()->numberBetween(330000, 340000),
+            'id_rubro' => 1,
+            'afecta_investigacion' => 0,
+            'justificacion_academica' => '',
+            'exclusividad' => 0,
+            'vobo_admin' => 0,
+            'vobo_rt' => 0,
+            'id_emisor' => 1,
+            'id_revisor' => 1,
+            'estatus_general' => 1
+
+
+
+
+
         ];
     }
 }

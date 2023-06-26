@@ -4,10 +4,13 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\RolUsuario;
+use App\Models\Solicitud;
 use App\Models\TipoEstatus;
 use App\Models\TipoRequisicion;
 use App\Models\User;
 use App\Models\CuentaContable;
+use App\Models\Adquisicion;
+
 
 
 
@@ -68,12 +71,35 @@ class DatabaseSeeder extends Seeder
                 ['tipo_requisicion' => 2, 'clave_cuenta' => 51220103, 'nombre_cuenta' => 'ALIMENTACION PARA PERSONAS'],
 
 
+            )->create();
 
 
+        //Adquisiones
+
+        Adquisicion::factory()->count(5)->
+            sequence(
+                ['tipo_requisicion' => 1, 'id_proyecto' => 6627, 'id_rubro' => 1],
+                ['tipo_requisicion' => 1, 'id_proyecto' => 6627, 'id_rubro' => 2],
+                ['tipo_requisicion' => 1, 'id_proyecto' => 6881, 'id_rubro' => 2],
+                ['tipo_requisicion' => 2, 'id_proyecto' => 6627, 'id_rubro' => 4],
+                ['tipo_requisicion' => 2, 'id_proyecto' => 6881, 'id_rubro' => 5],
 
 
             )->create();
 
+
+        //solicitudes
+
+        Solicitud::factory()->count(5)->
+            sequence(
+                ['tipo_requisicion' => 2, 'id_proyecto' => 6627, 'id_rubro' => 5],
+                ['tipo_requisicion' => 2, 'id_proyecto' => 6627, 'id_rubro' => 4],
+                ['tipo_requisicion' => 2, 'id_proyecto' => 6881, 'id_rubro' => 4],
+                ['tipo_requisicion' => 2, 'id_proyecto' => 6627, 'id_rubro' => 4],
+                ['tipo_requisicion' => 2, 'id_proyecto' => 6881, 'id_rubro' => 5],
+
+
+            )->create();
 
         // \App\Models\User::factory()->create([
         //     'name' => 'Test User',
