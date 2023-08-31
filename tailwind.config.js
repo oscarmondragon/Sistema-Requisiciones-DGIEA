@@ -13,12 +13,6 @@ export default {
         extend: {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
-                body: ['Graphik', 'sans-serif'],
-            },
-            colors: {
-                cyan: '#9cdbff',
-                verde: '#66826C',
-                verde2: '#679370',
             },
         },
     },
