@@ -7,6 +7,8 @@ use App\Http\Controllers\ProyectoController;
 use App\Http\Controllers\AdquisicionController;
 use App\Http\Controllers\SolicitudController;
 use App\Http\Controllers\SeguimientoSiiaController;
+use App\Http\Controllers\CvuController;
+
 
 
 
@@ -19,6 +21,7 @@ Route::get('/', function () {
 
 //Rutas prueba a las bases de datos
 Route::get('/proyectos-siea', [ProyectoController::class, 'home'])->name('home');
+Route::get('/prueba', [AdquisicionController::class, 'prueba']);
 Route::get('/adquisiciones-siea', [AdquisicionController::class, 'index'])->name('adquisiciones.index');
 
 
@@ -53,3 +56,18 @@ Route::middleware('auth')->group(function () {
 Route::resource('adquisiciones', AdquisicionController::class);
 
 require __DIR__ . '/auth.php';
+
+
+//RUTAS DESDE CVU
+
+Route::post('/cvu', [CvuController::class, 'cvuVerificar'])->name('cvu.verificar');
+Route::get('/cvu', function () {
+    // return view('cvu.create');
+    return redirect()->route('cvu.create');
+
+});
+
+
+Route::get('/cvu-crear', [CvuController::class, 'create'])->name('cvu.create');
+Route::get('/cvu-vobo', [CvuController::class, 'darVobo'])->name('cvu.vobo');
+Route::get('/cvu-seguimiento', [CvuController::class, 'seguimiento'])->name('cvu.seguimiento');
