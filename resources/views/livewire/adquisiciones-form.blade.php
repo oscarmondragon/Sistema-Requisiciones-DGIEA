@@ -9,10 +9,10 @@
     <div>
 
       <div class="my-6">
-        <label for="rubro">
+        <label for="id_rubro">
           Rubro:
         </label>
-        <select id="rubro" name="rubro" wire:model="rubro" wire:change="resetearBienes" class="input_justificacion">
+        <select id="id_rubro" name="id_rubro" wire:model="id_rubro" wire:change="resetearBienes" class="input_justificacion">
           <option value="0">Selecciona un opción</option>
            @foreach ($cuentasContables as $cuentaContable)
            <option value="{{ $cuentaContable->id }}">{{ $cuentaContable->nombre_cuenta }}</option>
@@ -24,13 +24,12 @@
         <label>
           Descripción del bien o servicio:
         </label>
-        <button type="button" wire:click='$emit("openModal", "adquisicion-description-modal", @json(["rubro" => $rubro]))' class="bg-verde text-white font-extrabold text-center text-2xl py-2 px-4 rounded-full">
+        <button type="button" wire:click='$emit("openModal", "adquisicion-description-modal", @json(["id_rubro" => $id_rubro]))'  class="bg-verde text-white font-extrabold text-center text-2xl py-2 px-4 rounded-full">
           +
         </button>
-
       </div>
 
-      <div wire:poll x-data="{ elementos: @entangle('bienes').defer, rubro: '{{ $rubro }}' }">
+      <div wire:poll x-data="{ elementos: @entangle('bienes').defer, id_rubro: '{{ $id_rubro }}' }">
 
         <table class="table-auto my-5 w-full">
           <thead>
@@ -67,7 +66,7 @@
                     @endif
                 <th>
                   <button type="button" @click='$wire.emit("openModal", "adquisicion-description-modal",  
-                      { _id: elemento._id, descripcion: elemento.descripcion, importe: elemento.importe, justificacionSoftware: elemento.justificacionSoftware, numAlumnos: elemento.numAlumnos, numProfesores: elemento.numProfesores, numAdministrativos: elemento.numAdministrativos, rubro: rubro })' 
+                      { _id: elemento._id, descripcion: elemento.descripcion, importe: elemento.importe, justificacionSoftware: elemento.justificacionSoftware, numAlumnos: elemento.numAlumnos, numProfesores: elemento.numProfesores, numAdministrativos: elemento.numAdministrativos, id_rubro: id_rubro })' 
                       class="hover:bg-gray-100 py-2 px-4">
                     <img src="{{ ('img/btn_editar.png') }}" alt="Image/png">
                   </button>
@@ -78,6 +77,7 @@
                   </button>
                 </th>
               </tr>
+            </template>
                <tr>
                   @if ($id_rubro === '56590101')
                   <th></th>
@@ -120,11 +120,10 @@
                 <th>Total</th>
                 <th>${{$total}}</th>
               </tr>
-              
-            </template>
+             
         </tbody>
          </table>
-           @endif
+         
         </div>
 
       <div class="mb-4" x-data="{ afectaSelectedOption: ''}">
