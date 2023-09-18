@@ -12,6 +12,28 @@ class Adquisicion extends Model
     protected $connection = 'mysql';
     protected $table = "adquisiciones";
 
+    protected $fillable = [
+        'clave_adquisicion',
+        'tipo_requisicion',
+        'clave_proyecto',
+        'clave_espacio_academico',
+        'clave_rt',
+        'tipo_financiamiento',
+        'id_rubro',
+        'afecta_investigacion',
+        'justificacion_academica',
+        'exclusividad',
+        'id_carta_exclusividad',
+        'vobo_admin',
+        'vobo_rt',
+        'id_emisor',
+        'id_revisor',
+        'estatus_general',
+        'observaciones',
+        'subtotal',
+        'iva',
+        'total'
+    ];
 
-    // $invoices = DB::connection('mysql2')->table('invoices')->get();
+
 }

@@ -13,13 +13,33 @@
                 @error('descripcion') <span class="error">{{ $message }}</span> @enderror
               </div>
               <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="cantidad">
+                  Cantidad
+                </label>
+                <input wire:model= "cantidad" wire:change="calcularIvaImporte" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="cantidad" type="number" placeholder="Cantidad">
+                @error('cantidad') <span class="error">{{ $message }}</span> @enderror
+              </div>
+              <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="precioUnitario">
+                  Precio Unitario
+                </label>
+                <input wire:model= "precioUnitario" wire:change="calcularIvaImporte" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="precioUnitario" type="number" placeholder="Precio unitario">
+                @error('precioUnitario') <span class="error">{{ $message }}</span> @enderror
+              </div>
+              <div class="mB-4 text-right"> 
+                <span> {{$iva}}</span>   
+                  <input type="checkbox" id="checkIva" wire:model="checkIva" wire:change="calcularIvaImporte" name="checkIva">
+                 <label for="iva">IVA</label>
+  
+              </div>
+              <div class="mb-4">
                 <label   class="block text-gray-700 text-sm font-bold mb-2" for="importe">
                   Importe
                 </label>
-                <input  wire:model= "importe" required  class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="importe" type="number" placeholder="Importe">
+                <input  wire:model= "importe" required readonly class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="importe" type="number" placeholder="Importe">
                 @error('importe') <span class="error">{{ $message }}</span> @enderror
               </div> 
-              @if ($rubro === '3')
+              @if ($id_rubro === '56590101')
               <div class="mb-4">
                 <label   class="block text-gray-700 text-sm font-bold mb-2" for="importe">
                   Descripción y justificación al cual será dedicado el software:
@@ -57,6 +77,6 @@
 
     <x-slot name="buttons">
         <button wire:click="$emit('closeModal')" class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Cancelar</button>
-        <button wire:click="agregarElemento({{ $_id}}, {{$rubro}})" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Guardar</button>
+        <button wire:click="agregarElemento({{ $_id}}, {{$id_rubro}})" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Guardar</button>
     </x-slot>
 </x-modal>

@@ -1,5 +1,10 @@
 <div class="my-6">
   <h1 class="text-verde text-xl font-bold ">Formulario adquisicion de bienes y servicios</h1>
+  @if(session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
   <form wire:submit.prevent="save">
     <div>
 
@@ -8,9 +13,10 @@
           Rubro:
         </label>
         <select id="rubro" name="rubro" wire:model="rubro" wire:change="resetearBienes" class="input_justificacion">
-          <option value="1">PAPELERIA Y ARTICULOS DE ESCRITORIO</option>
-          <option value="2">MATERIAL PARA COMPUTADORAS Y BIENES INFORMATICOS</option>
-          <option value="3">LICENCIAMIENTO DE SOFWARE</option>
+          <option value="0">Selecciona un opción</option>
+           @foreach ($cuentasContables as $cuentaContable)
+           <option value="{{ $cuentaContable->id }}">{{ $cuentaContable->nombre_cuenta }}</option>
+           @endforeach
         </select>
       </div>
 
@@ -30,29 +36,35 @@
           <thead>
             <tr class="bg-blanco">
               <th>#</th>
-              <th>Descripcion</th>
-              <th>Importe</th>
-              @if ($rubro === '3')
-              <th>Justificacion</th>
-              <th>Alumnos</th>
-              <th>Profesores</th>
-              <th>Administrativos</th>
-              @endif
-              <th>Acciones</th>
+                    <th>Descripcion</th>
+                    <th>Cantidad</th>
+                    <th>Precio Unitario</th>
+                    <th>IVA</th>
+                    <th>Importe</th>
+                    @if ($id_rubro === '56590101')
+                    <th>Justificacion</th>
+                    <th>Alumnos</th>
+                    <th>Profesores</th>
+                    <th>Administrativos</th>
+                    @endif
+                    <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
             <template x-for="(elemento, index) in elementos" :key="index">
               <tr class="border border-b-textos_generales">
-                <th x-text="index + 1"></th>
-                <th x-text="elemento.descripcion"></th>
-                <th x-text="elemento.importe"></th>
-                @if ($rubro === '3')
-                <th x-text="elemento.justificacionSoftware"></th>
-                <th x-text="elemento.numAlumnos"></th>
-                <th x-text="elemento.numProfesores"></th>
-                <th x-text="elemento.numAdministrativos"></th>
-                @endif
+               <th x-text="index + 1" ></th>
+                    <th x-text="elemento.descripcion" ></th>  
+                    <th x-text="elemento.cantidad" ></th>
+                    <th x-text="elemento.precioUnitario" ></th>
+                    <th x-text="elemento.iva" ></th>
+                    <th x-text="elemento.importe" ></th>
+                    @if ($id_rubro === '56590101')
+                    <th x-text="elemento.justificacionSoftware" ></th>
+                    <th x-text="elemento.numAlumnos" ></th>
+                    <th x-text="elemento.numProfesores" ></th>
+                    <th x-text="elemento.numAdministrativos" ></th>
+                    @endif
                 <th>
                   <button type="button" @click='$wire.emit("openModal", "adquisicion-description-modal",  
                       { _id: elemento._id, descripcion: elemento.descripcion, importe: elemento.importe, justificacionSoftware: elemento.justificacionSoftware, numAlumnos: elemento.numAlumnos, numProfesores: elemento.numProfesores, numAdministrativos: elemento.numAdministrativos, rubro: rubro })' 
@@ -66,11 +78,54 @@
                   </button>
                 </th>
               </tr>
+               <tr>
+                  @if ($id_rubro === '56590101')
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  @endif
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th>Subtotal</th>
+                <th>${{$subtotal}}</th>
+              </tr>
+              <tr>
+                @if ($id_rubro === '56590101')
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                  @endif
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th>IVA</th>
+                <th>${{$iva}}</th>
+              </tr>
+              <tr>
+                @if ($id_rubro === '56590101')
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                  @endif
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th>Total</th>
+                <th>${{$total}}</th>
+              </tr>
+              
             </template>
-          </tbody>
-        </table>
-
-      </div>
+        </tbody>
+         </table>
+           @endif
+        </div>
 
       <div class="mb-4" x-data="{ afectaSelectedOption: ''}">
         <label for="afecta" class="text-dorado font-bold">
@@ -118,7 +173,6 @@
               {{ $archivo->getClientOriginalName() }}
               <button type="button" wire:click="eliminarArchivo('cartasExclusividad',{{ $index }})" class="btn_eliminar_lista">Eliminar</button>
             </li>
-
             @endforeach
           </ul>
         </div>
@@ -164,3 +218,7 @@
     </div>
   </form>
 </div>
+
+   
+         
+              
