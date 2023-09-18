@@ -1,3 +1,72 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* degradado pantalla de login */
+.fondo_degradado {
+    @apply bg-gradient-to-tl from-verde to-dorado;
+}
+
+/* inputs de login */
+.input_login {
+    @apply bg-trasnparente_botones placeholder:text-white text-white pl-11;
+}
+
+/* iconos de login */
+.ic_login {
+    @apply absolute mr-10 ml-2 mt-1 w-8 h-8;
+}
+
+/* formulario bienes_servicios */
+/* degradado para formulario */
+.fondo_deg_formulario {
+    @apply h-10 bg-gradient-to-r from-verde to-dorado;
+}
+
+/* botones adquisicion bienes_servicios */
+.btn_bienes_servicios {
+    @apply text-white font-bold py-2 px-4 mx-1 rounded-md;
+}
+
+/* input_justificacion */
+.input_justificacion {
+    @apply bg-blanco rounded-md;
+}
+
+.input_file {
+    @apply file:mr-4 file:py-2 file:px-4
+    file:rounded-md file:border-0
+    file:text-sm file:font-semibold
+    file:bg-dorado file:text-white text-dorado my-3;
+}
+
+.rbt_formulario {
+    @apply text-verde;
+}
+
+.btn_eliminar_lista{
+    @apply text-rojo italic;
+}
+
+
+/* componenetes generales */
+label {
+    @apply text-textos_generales;
+}
+
+h2{
+    @apply font-semibold text-xl text-verde leading-tight;
+}
+
+a{
+    @apply text-red-700;
+}
+
+p{
+    @apply text-textos_generales;
+}
+
+li{
+    @apply italic;
+}
+

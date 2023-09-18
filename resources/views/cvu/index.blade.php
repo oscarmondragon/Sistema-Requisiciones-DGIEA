@@ -1,6 +1,6 @@
 <x-cvu-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2>
             @if ($accion == 1)
             {{ __('Crear Requisiciones') }}  
 
