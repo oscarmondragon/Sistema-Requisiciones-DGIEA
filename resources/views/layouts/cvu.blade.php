@@ -17,6 +17,11 @@
         @livewireStyles
     </head>
     <body class="font-sans antialiased">
+
+    <div class="fondo_deg_formulario">
+            <img src="{{ asset('img/fondo_cabecera.png') }}" alt="Image/png">
+        </div>
+
         <div class="min-h-screen bg-gray-100">
             @include('layouts.navigation-cvu')
 
