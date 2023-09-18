@@ -10,16 +10,20 @@ class AdquisicionDescriptionModal extends ModalComponent
     //Atributos de un elemento de la colletion bienes
     public $_id = 0;
     public string $descripcion = '';
+    public $cantidad = 0;
+    public $precioUnitario = 0;
+    public $checkIva = 0;
+    public $iva = 0;
     public $importe = 0;
-    public $justificacionSoftware = '';
-    public $numAlumnos = 0;
-    public $numProfesores = 0;
-    public $numAdministrativos = 0;
+    public $justificacionSoftware;
+    public $numAlumnos;
+    public $numProfesores;
+    public $numAdministrativos;
 
 
 
 
-    public $rubro;
+    public $id_rubro;
 
     //REGLAS DE VALIDACION
     protected $rules = [
@@ -37,6 +41,20 @@ class AdquisicionDescriptionModal extends ModalComponent
         return view('livewire.adquisicion-description-modal');
     }
 
+    public function calcularIvaImporte()
+    {
+        $importe = $this->cantidad * $this->precioUnitario;
+        if ($this->checkIva) {
+            $this->iva = $importe * 0.16; //Calcula el IVA
+            $importe += $importe * 0.16; // Ajusta el importe con el 16% de IVA
+
+        } else {
+            $this->iva = 0;
+        }
+
+        $this->importe = $importe;
+    }
+
     //Método llamada  en el boton Guardar del modal
     public function agregarElemento()
     {
@@ -44,10 +62,19 @@ class AdquisicionDescriptionModal extends ModalComponent
         $this->closeModalWithEvents([
             //'childModalEvent', // Emit global event
             //AdquisicionesForm::getName() => 'childModalEvent', // Emit event to specific Livewire component
-            AdquisicionesForm::getName() => ['addBien', [$this->_id, $this->descripcion, $this->importe, $this->justificacionSoftware, $this->numAlumnos, $this->numProfesores, $this->numAdministrativos, $this->rubro]] // Ejecuta el metodo y le envia los valores del formulario            
+            AdquisicionesForm::getName() => [
+                'addBien',
+                [
+                    $this->_id, $this->descripcion, $this->cantidad, $this->precioUnitario, $this->iva, $this->checkIva, $this->importe, $this->justificacionSoftware,
+                    $this->numAlumnos, $this->numProfesores, $this->numAdministrativos, $this->id_rubro
+                ]
+            ] // Ejecuta el metodo y le envia los valores del formulario            
         ]);
         //reseteamos los valores
         $this->descripcion = "";
+        $this->cantidad = 0;
+        $this->precioUnitario = 0;
+        $this->iva = 0;
         $this->importe = 0;
 
     }

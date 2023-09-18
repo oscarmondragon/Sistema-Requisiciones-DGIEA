@@ -2,7 +2,7 @@
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             @if ($accion == 1)
-            {{ __('Crear Requisiciones') }}  
+            {{ __('Crear requerimientos') }}  
 
         @endif
         @if ($accion == 2)
