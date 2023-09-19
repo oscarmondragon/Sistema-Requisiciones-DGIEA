@@ -1,10 +1,10 @@
 <div class="my-6">
   <h1 class="text-verde text-xl font-bold ">Formulario adquisicion de bienes y servicios</h1>
   @if(session('error'))
-    <div class="alert alert-danger">
-        {{ session('error') }}
+    <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400">
+      <span class="font-medium">  {{ session('error') }} </span>
     </div>
-@endif
+    @endif
   <form wire:submit.prevent="save">
     <div>
 
@@ -12,26 +12,35 @@
         <label for="id_rubro">
           Rubro:
         </label>
-        <select id="id_rubro" name="id_rubro" wire:model="id_rubro" wire:change="resetearBienes" class="input_justificacion">
-          <option value="0">Selecciona un opción</option>
+        <select  required id="id_rubro" name="id_rubro" wire:model="id_rubro"  wire:change="resetearBienes" class="input_justificacion">
+          <option value="0">Selecciona una opción</option>
            @foreach ($cuentasContables as $cuentaContable)
            <option value="{{ $cuentaContable->id }}">{{ $cuentaContable->nombre_cuenta }}</option>
            @endforeach
         </select>
+        @error('id_rubro') <span class=" text-rojo error">{{ $message }}</span> @enderror
       </div>
-
       <div class="mb-4">
         <label>
           Descripción del bien o servicio:
         </label>
-        <button type="button" wire:click='$emit("openModal", "adquisicion-description-modal", @json(["id_rubro" => $id_rubro]))'  class="bg-verde text-white font-extrabold text-center text-2xl py-2 px-4 rounded-full">
-          +
+        @if ($id_rubro != 0)
+        <button type="button" 
+             x-on:click="$wire.emit('openModal', 'adquisicion-description-modal', { 'id_rubro': {{ $id_rubro }} })"
+            class="bg-verde text-white font-extrabold text-center text-2xl py-2 px-4 rounded-full"
+        >
+            +
         </button>
+        @else
+        <button type="button" class="bg-gray-300 text-white font-extrabold text-center text-2xl py-2 px-4 rounded-full" disabled>
+            +
+        </button>
+        @endif
       </div>
 
       <div wire:poll x-data="{ elementos: @entangle('bienes').defer, id_rubro: '{{ $id_rubro }}' }">
 
-        <table class="table-auto my-5 w-full">
+        <table class="table-auto my-5 w-full"  x-show="elementos.length > 0">
           <thead>
             <tr class="bg-blanco">
               <th>#</th>
@@ -51,77 +60,76 @@
           </thead>
           <tbody>
             <template x-for="(elemento, index) in elementos" :key="index">
-              <tr class="border border-b-textos_generales">
-               <th x-text="index + 1" ></th>
-                    <th x-text="elemento.descripcion" ></th>  
-                    <th x-text="elemento.cantidad" ></th>
-                    <th x-text="elemento.precioUnitario" ></th>
-                    <th x-text="elemento.iva" ></th>
-                    <th x-text="elemento.importe" ></th>
-                    @if ($id_rubro === '56590101')
-                    <th x-text="elemento.justificacionSoftware" ></th>
-                    <th x-text="elemento.numAlumnos" ></th>
-                    <th x-text="elemento.numProfesores" ></th>
-                    <th x-text="elemento.numAdministrativos" ></th>
-                    @endif
+              <tr class="border border-b-gray-200 border-transparent">
+                <th x-text="index + 1"></th>
+                <th x-text="elemento.descripcion"></th>
+                <th x-text="elemento.cantidad"></th>
+                <th x-text="elemento.precioUnitario"></th>
+                <th x-text="elemento.iva"></th>
+                <th x-text="elemento.importe"></th>
+                @if ($id_rubro === '56590101')
+                <th x-text="elemento.justificacionSoftware"></th>
+                <th x-text="elemento.numAlumnos"></th>
+                <th x-text="elemento.numProfesores"></th>
+                <th x-text="elemento.numAdministrativos"></th>
+                @endif
                 <th>
                   <button type="button" @click='$wire.emit("openModal", "adquisicion-description-modal",  
-                      { _id: elemento._id, descripcion: elemento.descripcion, importe: elemento.importe, justificacionSoftware: elemento.justificacionSoftware, numAlumnos: elemento.numAlumnos, numProfesores: elemento.numProfesores, numAdministrativos: elemento.numAdministrativos, id_rubro: id_rubro })' 
-                      class="hover:bg-gray-100 py-2 px-4">
+                      { _id: elemento._id, descripcion: elemento.descripcion, importe: elemento.importe, justificacionSoftware: elemento.justificacionSoftware, numAlumnos: elemento.numAlumnos, numProfesores: elemento.numProfesores, numAdministrativos: elemento.numAdministrativos, id_rubro: id_rubro })' class="hover:bg-gray-100 py-2 px-4">
                     <img src="{{ ('img/btn_editar.png') }}" alt="Image/png">
                   </button>
 
-                  <button type="button" @click="elementos.splice(index, 1)" 
-                  class="hover:bg-gray-100 py-2 px-4">
+                  <button type="button" @click="elementos.splice(index, 1)" class="hover:bg-gray-100 py-2 px-4">
                     <img src="{{ ('img/btn_eliminar.png') }}" alt="Image/png">
                   </button>
                 </th>
               </tr>
             </template>
-               <tr>
-                  @if ($id_rubro === '56590101')
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  @endif
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th>Subtotal</th>
-                <th>${{$subtotal}}</th>
-              </tr>
-              <tr>
-                @if ($id_rubro === '56590101')
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                  @endif
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th>IVA</th>
-                <th>${{$iva}}</th>
-              </tr>
-              <tr>
-                @if ($id_rubro === '56590101')
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                  @endif
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th>Total</th>
-                <th>${{$total}}</th>
-              </tr>
-             
-        </tbody>
+            <tr>
+              @if ($id_rubro === '56590101')
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              @endif
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th>Subtotal</th>
+              <th>${{$subtotal}}</th>
+            </tr>
+            <tr>
+              @if ($id_rubro === '56590101')
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              @endif
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th>IVA</th>
+              <th>${{$iva}}</th>
+            </tr>
+
+            <tr class="border border-b-gray-200 border-transparent">
+              @if ($id_rubro === '56590101')
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              @endif
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th>Total</th>
+              <th>${{$total}}</th>
+            </tr>
+
+          </tbody>
          </table>
          
         </div>
@@ -142,13 +150,16 @@
           </label>
         </div>
 
-        <div x-show="afectaSelectedOption === 'si'">
-          <label for="justificacion">Justificación académica:</label>
-          <input type="text" id="justificacion" class="form-input input_justificacion w-1/2">
+        <div x-show="afectaSelectedOption === 'si'" class="flex flex-col">
+          <label for="justificacion" class="mb-2">Justificación académica:</label>
+          
+          <textarea id="justificacion" name="justificacion" class="form-input input_justificacion w-full" rows="2" cols="30">
+            
+            </textarea>
         </div>
       </div>
 
-      <div class="mb-4" x-data="{ exclusividadSelectedOption: ''}">
+      <div class="mb-2" x-data="{ exclusividadSelectedOption: ''}">
         <label for="afecta">
           ¿Es bien o servicio con exclusividad?
         </label>
@@ -189,7 +200,7 @@
 
         @endforeach
       </ul>
-      <div class="my-2">
+      <div class="mt-2">
         <label for="cotizacionesPdf">Cotizaciones PDF:</label>
         <input type="file" id="cotizacionesPdf" wire:model='docsCotizacionesPdf' class="input_file">
       </div>
@@ -203,17 +214,18 @@
 
         @endforeach
       </ul>
-      <p class="text-verde"> <span class="font-bold">Nota:</span> Las cotizaciones deben describir exactamente el mismo material, suministro, servicio general,
+      <p class="text-verde mt-5"> <span class="font-bold">Nota:</span> Las cotizaciones deben describir exactamente el mismo material, suministro, servicio general,
         bien mueble o intangible.
       </p>
-      <div class="my-5">
-        <input type="checkbox" id="vobo" name="vobo" class="rounded-full ml-10 rbt_formulario">
+      <div class="mt-10">
+        <input type="checkbox" id="vobo" required name="vobo" class="rounded-full ml-10 rbt_formulario">
         <label for="vobo">VoBo al requerimiento solicitado. Se envía para VoBo del Admistrativo/Investigador</label>
-
       </div>
-      <button type="submit" class="bg-verde btn_bienes_servicios">Guardar</button>
-      <button type="submit" class="bg-btn_vobo btn_bienes_servicios">Enviar para VoBo</button>
-      <button type="submit" class="bg-btn_cancelar btn_bienes_servicios">Cancelar</button>
+      <div class="mt-10 -mb-5">
+        <button type="submit" class="bg-verde btn_bienes_servicios">Guardar</button>
+        <button type="submit" class="bg-btn_vobo btn_bienes_servicios">Enviar para VoBo</button>
+        <button type="submit" class="bg-btn_cancelar btn_bienes_servicios">Cancelar</button>
+    </div>
     </div>
   </form>
 </div>

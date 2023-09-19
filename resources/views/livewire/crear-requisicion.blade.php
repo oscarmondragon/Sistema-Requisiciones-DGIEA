@@ -4,7 +4,7 @@
       <div class="p-6 text-gray-900">
         <div class="inline-block relative w-64">
           <h3 class="text-dorado font-bold">Selecciona tipo de requisicion</h3>
-          <select id="tipo" wire:model="tipo" class="input_justificacion">
+          <select id="tipo" wire:model="tipo" >
              <option value="0">Selecciona un opción</option>
                   @foreach ($tiposRequisicion as $tipoRequisicion)
                       <option value="{{ $tipoRequisicion->id }}">{{ $tipoRequisicion->descripcion }}</option>
@@ -17,16 +17,17 @@
           </div>
         </div>
         
-         @if (session('status'))
-              <div class="alert alert-success">
-                  {{ session('status') }}
-              </div>
-              @endif
+         
+        @if(session('success'))
+          <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+            <span class="font-medium"> {{ session('success') }}</span>
+          </div>
+        @endif
 
         @if ($tipo == 1)
+
         <livewire:adquisiciones-form />
-
-
+        
         @endif
         @if ($tipo == 2)
 

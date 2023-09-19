@@ -52,7 +52,14 @@ class AdquisicionesForm extends Component
     public $docsCotizacionesPdf = [];
 
 
+    protected $rules = [
+        'id_rubro' => 'required|not_in:0',
 
+    ];
+    protected $messages = [
+        'id_rubro.required' => 'Debe seleccionar un rubro.',
+        'id_rubro.not_in' => 'Debe seleccionar un rubro.'
+    ];
     public $listeners = [
         'addBien' => 'setBien',
     ];
@@ -73,6 +80,7 @@ class AdquisicionesForm extends Component
 
     public function save()
     {
+        $this->validate();
         $clave_proyecto = Session::get('id_proyecto');
         $id_user = Session::get('id_user');
 
@@ -132,10 +140,8 @@ class AdquisicionesForm extends Component
                 ]);
             }
 
+            return redirect('/cvu-crear')->with('success', 'Su solicitud ha sido guardada correctamente. Recuerde completarla y mandarla a visto bueno.');
 
-            Session::flash('status', 'Su solicitud ha sido guardada correctamente.');
-
-            return $this->redirect('/cvu-crear');
         } else {
             // No se encontró ningún proyecto  con esca clave"
             return redirect()->back()->with('error', 'No se encontró un proyecto asociado a la clave ' . $clave_proyecto);
@@ -161,15 +167,12 @@ class AdquisicionesForm extends Component
     ) {
         $this->bienes = collect($this->bienes); //asegurar que bienes sea una coleccion
 
-        $this->subtotal += $cantidad * $precioUnitario;
-        $this->iva += $iva;
-        $this->total += $importe;
+
 
 
         if ($_id == 0) { //entramos aqui si el item es nuevo
             // Genera un nuevo ID para el elemento
             $newItemId = $this->bienes->max('_id') + 1;
-
 
             //Agregamos el bien en la coleccion
             $this->bienes->push([
@@ -185,6 +188,10 @@ class AdquisicionesForm extends Component
                 'numProfesores' => $numProfesores,
                 'numAdministrativos' => $numAdministrativos
             ]);
+            //Actualizamos valores de subtotal,iva y total
+            $this->subtotal += $cantidad * $precioUnitario;
+            $this->iva += $iva;
+            $this->total += $importe;
 
 
         } else {
@@ -192,6 +199,12 @@ class AdquisicionesForm extends Component
             $item = $this->bienes->firstWhere('_id', $_id);
 
             if ($item) {
+
+                //actualizamos valores de subtotal, iva y total (restamos el anterior valor)
+                $this->subtotal -= $item['cantidad'] * $item['precioUnitario'];
+                $this->iva -= $item['iva'];
+                $this->total -= $item['importe'];
+
                 //actualizamos el item si existe en la busqueda
                 $item['descripcion'] = $descripcion;
                 $item['cantidad'] = $cantidad;
@@ -203,6 +216,12 @@ class AdquisicionesForm extends Component
                 $item['numAlumnos'] = $numAlumnos;
                 $item['numProfesores'] = $numProfesores;
                 $item['numAdministrativos'] = $numAdministrativos;
+
+
+                //sumamos los nuevos valores al subtotal,iva y total
+                $this->subtotal += $cantidad * $precioUnitario;
+                $this->iva += $iva;
+                $this->total += $importe;
 
 
                 //Devolvemos la nueva collecion
@@ -232,10 +251,19 @@ class AdquisicionesForm extends Component
 
     public function deleteBien($bien)
     {
-        $this->bienes->forget($bien);
+        //EL BIEN SE ESTA ELIMINANDO CON ALPINEJS desde el front
+        //actualizamos valores de subtotal, iva y total (restamos el anterior valor)
+        $this->subtotal -= $bien['cantidad'] * $bien['precioUnitario'];
+        $this->iva -= $bien['iva'];
+        $this->total -= $bien['importe'];
+
+        //   $this->bienes->forget($bien);
     }
     public function resetearBienes()
     {
+        $this->subtotal = 0;
+        $this->iva = 0;
+        $this->total = 0;
         $this->bienes = collect();
     }
 

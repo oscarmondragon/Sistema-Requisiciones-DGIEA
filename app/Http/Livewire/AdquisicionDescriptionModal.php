@@ -28,13 +28,19 @@ class AdquisicionDescriptionModal extends ModalComponent
     //REGLAS DE VALIDACION
     protected $rules = [
         'descripcion' => 'required',
+        'cantidad' => 'required',
+        'precioUnitario' => 'required',
         'importe' => 'required',
+
     ];
 
     //MENSAJES DE LA VALIDACION
     protected $messages = [
         'descripcion.required' => 'La descripción no puede estar vacia.',
+        'cantidad.required' => 'La cantidad no puede estar vacia.',
+        'precioUnitario.required' => 'El precio unitario no puede estar vacio.',
         'importe.required' => 'El importe no puede estar vacio.',
+
     ];
     public function render()
     {
@@ -43,7 +49,18 @@ class AdquisicionDescriptionModal extends ModalComponent
 
     public function calcularIvaImporte()
     {
+
+        //Validamos que sean valores numericos para evitar errores
+        if (!is_numeric($this->cantidad)) {
+            $this->cantidad = null;
+        }
+        if (!is_numeric($this->precioUnitario)) {
+            $this->precioUnitario = null;
+        }
+
+        //Calcula IMPORTE SIN IVA
         $importe = $this->cantidad * $this->precioUnitario;
+        //CALCULA IVA E IMPORTE
         if ($this->checkIva) {
             $this->iva = $importe * 0.16; //Calcula el IVA
             $importe += $importe * 0.16; // Ajusta el importe con el 16% de IVA
@@ -65,8 +82,18 @@ class AdquisicionDescriptionModal extends ModalComponent
             AdquisicionesForm::getName() => [
                 'addBien',
                 [
-                    $this->_id, $this->descripcion, $this->cantidad, $this->precioUnitario, $this->iva, $this->checkIva, $this->importe, $this->justificacionSoftware,
-                    $this->numAlumnos, $this->numProfesores, $this->numAdministrativos, $this->id_rubro
+                    $this->_id,
+                    $this->descripcion,
+                    $this->cantidad,
+                    $this->precioUnitario,
+                    $this->iva,
+                    $this->checkIva,
+                    $this->importe,
+                    $this->justificacionSoftware,
+                    $this->numAlumnos,
+                    $this->numProfesores,
+                    $this->numAdministrativos,
+                    $this->id_rubro
                 ]
             ] // Ejecuta el metodo y le envia los valores del formulario            
         ]);
