@@ -10,15 +10,15 @@ class AdquisicionDescriptionModal extends ModalComponent
     //Atributos de un elemento de la colletion bienes
     public $_id = 0;
     public string $descripcion = '';
-    public $cantidad = 0;
-    public $precioUnitario = 0;
+    public $cantidad;
+    public $precioUnitario;
     public $checkIva = 0;
     public $iva = 0;
     public $importe = 0;
     public $justificacionSoftware;
-    public $numAlumnos;
-    public $numProfesores;
-    public $numAdministrativos;
+    public $numAlumnos = 0;
+    public $numProfesores = 0;
+    public $numAdministrativos = 0;
 
 
 
@@ -28,9 +28,13 @@ class AdquisicionDescriptionModal extends ModalComponent
     //REGLAS DE VALIDACION
     protected $rules = [
         'descripcion' => 'required',
-        'cantidad' => 'required',
-        'precioUnitario' => 'required',
+        'cantidad' => 'required|gte:1',
+        'precioUnitario' => 'required|gte:1',
         'importe' => 'required',
+        'justificacionSoftware' => 'required',
+        'numAlumnos' => 'required|gte:0',
+        'numProfesores' => 'required|gte:0',
+        'numAdministrativos' => 'required|gte:0'
 
     ];
 
@@ -38,8 +42,17 @@ class AdquisicionDescriptionModal extends ModalComponent
     protected $messages = [
         'descripcion.required' => 'La descripción no puede estar vacia.',
         'cantidad.required' => 'La cantidad no puede estar vacia.',
+        'cantidad.gte' => 'La cantidad no puede ser menor a 1.',
         'precioUnitario.required' => 'El precio unitario no puede estar vacio.',
+        'precioUnitario.gte' => 'El precio unitario no puede ser menor 1.',
         'importe.required' => 'El importe no puede estar vacio.',
+        'justificacionSoftware.required' => 'La justificación no puede estar vacia.',
+        'numAlumnos.required' => 'El número de alumnos no puede estar vacio.',
+        'numAlumnos.gte' => 'El número de alumnos no puede ser negativo.',
+        'numProfesores.required' => 'El numero de profesores no puede estar vacio.',
+        'numProfesores.gte' => 'El número de profesores no puede ser negativo.',
+        'numAdministrativos.required' => 'El número de los administrativos no puede estar vacio.',
+        'numAdministrativos.gte' => 'El número de administrativos no puede ser negativo.',
 
     ];
     public function render()
@@ -103,8 +116,5 @@ class AdquisicionDescriptionModal extends ModalComponent
         $this->precioUnitario = 0;
         $this->iva = 0;
         $this->importe = 0;
-
     }
-
-
 }

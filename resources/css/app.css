@@ -20,25 +20,31 @@
 /* formulario bienes_servicios */
 /* degradado para formulario */
 .fondo_deg_formulario {
-    @apply h-10 bg-gradient-to-r from-verde to-dorado;
+    @apply bg-gradient-to-r from-verde to-dorado;
 }
 
-/* botones adquisicion bienes_servicios:
- guardar, enviar para VoBo y cancelar */
-.btn_bienes_servicios {
-    @apply text-white font-bold py-2 px-4 mx-1 rounded-md;
+/* botones adquisicion bienes_servicios:*/
+.btn_guardar {
+    @apply hover:bg-[#4e6856] hover:rounded-lg focus:ring-2 focus:outline-none focus:ring-[#3c5042];
+}
+
+.btn_cancelar {
+    @apply hover:bg-[#be9748] focus:ring-2 focus:outline-none focus:ring-[#947538];
+}
+
+.btn_vobo {
+    @apply hover:bg-[#2c4449] focus:ring-2 focus:outline-none focus:ring-[#203135];
 }
 
 /* input_justificacion */
-.input_justificacion {
+/* .input_justificacion {
     @apply bg-blanco text-textos_generales rounded-md w-1/2;
-    border: 1px solid #62836C;
+    border: 1px solid #62836c;
     appearance: none;
-}
+} */
 
-.input_file {
-    @apply file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold
-    file:bg-dorado file:text-white text-dorado my-3 hover:bg-gray-100;
+.inputs_formulario_adquisicion_descripcion {
+    @apply bg-blanco text-textos_generales rounded-md border-2 border-verde w-full;
 }
 
 .btn_eliminar_lista {
@@ -74,15 +80,29 @@ li {
     @apply italic;
 }
 
+button {
+    @apply text-white font-bold py-2 px-4 mx-1 rounded-md;
+}
+
 select {
-    @apply bg-blanco text-textos_generales rounded-md;
-    border: 1px solid #62836C;
-    appearance: none;
+    @apply bg-blanco text-textos_generales rounded-md border-2 border-verde;
+    /* border: 1px solid #62836c;
+    appearance: none; */
+}
+
+input[type="file"] {
+    @apply file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-dorado file:text-sm file:font-semibold
+    file:bg-dorado file:text-white text-dorado my-3 hover:file:bg-[#7c744c] hover:bg-gray-100;
+}
+
+textarea {
+    @apply bg-blanco text-textos_generales border-2 rounded-md border-verde
+    focus:border-verde focus:outline-none focus:ring-2 focus:ring-verde;
 }
 
 input[type="radio"],
 input[type="checkbox"] {
-    @apply text-verde outline-none rounded-full;
+    @apply text-verde outline-none rounded-full focus:ring-2 ring-red-700;
 }
 
 /* componentes generales FOCUS */
@@ -92,7 +112,8 @@ input[type="checkbox"]:focus,
 input[type="text"]:focus,
 input[type="number"]:focus,
 input[type="file"]:focus {
-    border-color: #62836C;
+    /* border-color: #62836c;
     box-shadow: 0 0 0 0px;
-    outline: none;
+    outline: none; */
+    @apply focus:border-verde focus:outline-none focus:ring-2 ring-verde;
 }
