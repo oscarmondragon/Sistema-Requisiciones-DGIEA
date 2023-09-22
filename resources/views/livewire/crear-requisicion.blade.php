@@ -3,7 +3,7 @@
     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
       <div class="p-6 text-gray-900">
         <div class="inline-block relative w-64">
-          <h3 class="text-dorado font-bold">Selecciona tipo de requisicion</h3>
+          <h3 class="text-dorado font-bold">Selecciona tipo de requisición</h3>
           <select id="tipo" wire:model="tipo" >
              <option value="0">Selecciona un opción</option>
                   @foreach ($tiposRequisicion as $tipoRequisicion)
