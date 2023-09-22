@@ -18,7 +18,7 @@
                 </div>
             </div>
 
-            <div class="justify-end px-4 pb-5 sm:px-4 sm:flex">
+            <div class="text-right px-4 pb-5 sm:px-4">
                 {{ $buttons }}
             </div>
     @if($formAction)

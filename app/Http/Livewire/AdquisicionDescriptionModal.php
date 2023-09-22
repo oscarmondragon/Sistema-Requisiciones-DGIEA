@@ -40,18 +40,18 @@ class AdquisicionDescriptionModal extends ModalComponent
 
     //MENSAJES DE LA VALIDACION
     protected $messages = [
-        'descripcion.required' => 'La descripción no puede estar vacia.',
-        'cantidad.required' => 'La cantidad no puede estar vacia.',
+        'descripcion.required' => 'La descripción no puede estar vacía.',
+        'cantidad.required' => 'La cantidad no puede estar vacía.',
         'cantidad.gte' => 'La cantidad no puede ser menor a 1.',
-        'precioUnitario.required' => 'El precio unitario no puede estar vacio.',
-        'precioUnitario.gte' => 'El precio unitario no puede ser menor 1.',
-        'importe.required' => 'El importe no puede estar vacio.',
-        'justificacionSoftware.required' => 'La justificación no puede estar vacia.',
-        'numAlumnos.required' => 'El número de alumnos no puede estar vacio.',
+        'precioUnitario.required' => 'El precio unitario no puede estar vacío.',
+        'precioUnitario.gte' => 'El precio unitario no puede ser menor a 1.',
+        'importe.required' => 'El importe no puede estar vacío.',
+        'justificacionSoftware.required' => 'La justificación no puede estar vacía.',
+        'numAlumnos.required' => 'El número de alumnos no puede estar vacío.',
         'numAlumnos.gte' => 'El número de alumnos no puede ser negativo.',
-        'numProfesores.required' => 'El numero de profesores no puede estar vacio.',
+        'numProfesores.required' => 'El numero de profesores no puede estar vacío.',
         'numProfesores.gte' => 'El número de profesores no puede ser negativo.',
-        'numAdministrativos.required' => 'El número de los administrativos no puede estar vacio.',
+        'numAdministrativos.required' => 'El número de los administrativos no puede estar vacío.',
         'numAdministrativos.gte' => 'El número de administrativos no puede ser negativo.',
 
     ];
