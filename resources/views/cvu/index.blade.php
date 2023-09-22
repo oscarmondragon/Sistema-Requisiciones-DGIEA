@@ -15,7 +15,12 @@
         @endif
         </h2>
         <p>Id user: {{Session::get('id_user')}}</p>
-        <p>Id proyecto: {{Session::get('id_proyecto')}}</p>
+        <p>Nombre user: {{Session::get('name_user')}}</p>
+        <p>Nombre administrativo: {{Session::get('id_administrativo')}}-{{Session::get('name_administrativo')}}</p>
+        <p>Nombre RT: {{Session::get('id_rt')}}-{{Session::get('name_rt')}}</p>
+
+
+
     </x-slot>
     
             @if ($accion == 1)
