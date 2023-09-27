@@ -24,6 +24,8 @@ class AdquisicionDescriptionModal extends ModalComponent
 
 
     public $id_rubro;
+    public $id_rubro_especial;
+
 
     //REGLAS DE VALIDACION
     protected $rules = [
@@ -31,10 +33,10 @@ class AdquisicionDescriptionModal extends ModalComponent
         'cantidad' => 'required|gte:1',
         'precioUnitario' => 'required|gte:1',
         'importe' => 'required',
-        'justificacionSoftware' => 'required',
-        'numAlumnos' => 'required|gte:0',
-        'numProfesores' => 'required|gte:0',
-        'numAdministrativos' => 'required|gte:0'
+        'justificacionSoftware' => 'required_if:id_rubro_especial,1',
+        'numAlumnos' => 'required_if:id_rubro_especial,1|gte:0',
+        'numProfesores' => 'required_if:id_rubro_especial,1|gte:0',
+        'numAdministrativos' => 'required_if:id_rubro_especial,1|gte:0'
 
     ];
 
@@ -46,12 +48,13 @@ class AdquisicionDescriptionModal extends ModalComponent
         'precioUnitario.required' => 'El precio unitario no puede estar vacío.',
         'precioUnitario.gte' => 'El precio unitario no puede ser menor a 1.',
         'importe.required' => 'El importe no puede estar vacío.',
-        'justificacionSoftware.required' => 'La justificación no puede estar vacía.',
-        'numAlumnos.required' => 'El número de alumnos no puede estar vacío.',
+        'justificacionSoftware.required_if' => 'La justificación no puede estar vacía.',
+        'numAlumnos.required_id' => 'El número de alumnos no puede estar vacío.',
         'numAlumnos.gte' => 'El número de alumnos no puede ser negativo.',
         'numProfesores.required' => 'El número de profesores no puede estar vacío.',
+        'numProfesores.required_if' => 'El número de profesores no puede estar vacío.',
         'numProfesores.gte' => 'El número de profesores no puede ser negativo.',
-        'numAdministrativos.required' => 'El número de los administrativos no puede estar vacío.',
+        'numAdministrativos.required_if' => 'El número de los administrativos no puede estar vacío.',
         'numAdministrativos.gte' => 'El número de administrativos no puede ser negativo.',
 
     ];
