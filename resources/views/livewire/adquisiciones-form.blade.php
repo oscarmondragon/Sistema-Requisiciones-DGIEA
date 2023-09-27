@@ -6,16 +6,15 @@
   </div>
   @endif
   <form wire:submit.prevent="saveVobo">
-    <div>
-
+    <div ">
       <div class="my-6">
         <label for="id_rubro">
           Rubro:
         </label>
-        <select required id="id_rubro" name="id_rubro" wire:model="id_rubro" wire:change="resetearBienes">
+        <select required id="id_rubro" name="id_rubro" wire:model="id_rubro"  @change="$wire.resetearBienes($event.target.selectedOptions[0].getAttribute('data-id-especial'))">
           <option value="0">Selecciona una opción</option>
           @foreach ($cuentasContables as $cuentaContable)
-          <option value="{{ $cuentaContable->id }}">{{ $cuentaContable->nombre_cuenta }}</option>
+          <option value="{{ $cuentaContable->id }}" data-id-especial="{{ $cuentaContable->id_especial }}" >{{ $cuentaContable->nombre_cuenta }}</option>
           @endforeach
         </select>
         @error('id_rubro') <span class=" text-rojo error">{{ $message }}</span> @enderror
@@ -26,7 +25,7 @@
           Descripción del bien o servicio:
         </label>
         @if ($id_rubro != 0)
-        <button type="button" x-on:click="$wire.emit('openModal', 'adquisicion-description-modal', { 'id_rubro': {{ $id_rubro }} })" class="bg-verde w-8 h-8 py-0 px-0 rounded-full hover:bg-[#3c5042] focus:ring-2 focus:outline-none focus:ring-[#3c5042]">
+        <button type="button" x-on:click="$wire.emit('openModal', 'adquisicion-description-modal', { 'id_rubro': {{ $id_rubro }}, 'id_rubro_especial': {{$id_rubro_especial ?: 'null'}} })" class="bg-verde w-8 h-8 py-0 px-0 rounded-full hover:bg-[#3c5042] focus:ring-2 focus:outline-none focus:ring-[#3c5042]">
           <span class="text-white font-extrabold text-2xl">+</span>
         </button>
         @else
@@ -49,7 +48,7 @@
               <th>Precio Unitario</th>
               <th>IVA</th>
               <th>Importe</th>
-              @if ($id_rubro === '56590101')
+              @if ($id_rubro_especial == '1')
               <th>Justificacion</th>
               <th>Alumnos</th>
               <th>Profesores</th>
@@ -60,14 +59,14 @@
           </thead>
           <tbody>
             <template x-for="(elemento, index) in elementos" :key="index">
-              <tr class="border border-b-gray-200 border-transparent">
+              <tr x-for="(elemento, index) in elementos" :key="index" class="border border-b-gray-200 border-transparent">
                 <th x-text="index + 1"></th>
                 <th x-text="elemento.descripcion"></th>
                 <th x-text="elemento.cantidad"></th>
                 <th x-text="elemento.precioUnitario"></th>
                 <th x-text="elemento.iva"></th>
                 <th x-text="elemento.importe"></th>
-                @if ($id_rubro === '56590101')
+                @if ($id_rubro_especial == '1')
                 <th x-text="elemento.justificacionSoftware"></th>
                 <th x-text="elemento.numAlumnos"></th>
                 <th x-text="elemento.numProfesores"></th>
@@ -75,18 +74,20 @@
                 @endif
                 <th>
                   <button type="button" @click='$wire.emit("openModal", "adquisicion-description-modal",  
-                      { _id: elemento._id, descripcion: elemento.descripcion, importe: elemento.importe, justificacionSoftware: elemento.justificacionSoftware, numAlumnos: elemento.numAlumnos, numProfesores: elemento.numProfesores, numAdministrativos: elemento.numAdministrativos, id_rubro: id_rubro })' class="hover:bg-gray-100 py-2 px-4">
+                      { _id: elemento._id, descripcion: elemento.descripcion, cantidad: elemento.cantidad, precioUnitario: elemento.precioUnitario, importe: elemento.importe, justificacionSoftware: elemento.justificacionSoftware, 
+                        numAlumnos: elemento.numAlumnos, numProfesores: elemento.numProfesores, numAdministrativos: elemento.numAdministrativos, id_rubro: id_rubro,
+                         id_rubro_especial: {{$id_rubro_especial ?: 'null'}} })' class="hover:bg-gray-100 py-2 px-4">
                     <img src="{{ ('img/btn_editar.png') }}" alt="Image/png">
                   </button>
 
-                  <button type="button" @click="elementos.splice(index, 1)" class="hover:bg-gray-100 py-2 px-4">
+                  <button type="button" @click.stop="elementos.splice(index, 1); $wire.deleteBien(elemento)" class="hover:bg-gray-100 py-2 px-4">
                     <img src="{{ ('img/btn_eliminar.png') }}" alt="Image/png">
                   </button>
                 </th>
               </tr>
             </template>
             <tr>
-              @if ($id_rubro === '56590101')
+              @if ($id_rubro_especial == '1')
               <th></th>
               <th></th>
               <th></th>
@@ -100,7 +101,7 @@
               <th>${{$subtotal}}</th>
             </tr>
             <tr>
-              @if ($id_rubro === '56590101')
+              @if ($id_rubro_especial == '1')
               <th></th>
               <th></th>
               <th></th>
@@ -115,7 +116,7 @@
             </tr>
 
             <tr class="border border-b-gray-200 border-transparent">
-              @if ($id_rubro === '56590101')
+              @if ($id_rubro_especial == '1')
               <th></th>
               <th></th>
               <th></th>

@@ -34,6 +34,7 @@ class AdquisicionesForm extends Component
     public $clave_rt = '';
     public $clave_tipo_financiamiento = '';
     public $id_rubro = 0;
+    public $id_rubro_especial; //variable para determinar si es una cuenta especial (software por ejemplo)
     public $afecta_investigacion = '0';
     public $justificacion_academica;
     public $exclusividad = '0';
@@ -360,8 +361,9 @@ class AdquisicionesForm extends Component
 
         //   $this->bienes->forget($bien);
     }
-    public function resetearBienes()
+    public function resetearBienes($idRubroEspecial)
     {
+        $this->id_rubro_especial = $idRubroEspecial;
         $this->subtotal = 0;
         $this->iva = 0;
         $this->total = 0;

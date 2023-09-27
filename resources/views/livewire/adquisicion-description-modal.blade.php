@@ -40,7 +40,7 @@
         <input wire:model="importe" required readonly class="inputs_formulario_adquisicion_descripcion cursor-not-allowed" id="importe" type="text" placeholder="Importe">
         @error('importe') <span class="text-rojo">{{ $message }}</span> @enderror
       </div>
-      @if ($id_rubro == '56590101')
+      @if ($id_rubro_especial == '1')
       <div class="mb-4">
         <label class="block mb-2" for="importe">
           Descripción y justificación al cual será dedicado el software:
