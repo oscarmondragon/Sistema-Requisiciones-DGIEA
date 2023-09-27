@@ -291,8 +291,11 @@ class AdquisicionesForm extends Component
             ]);
             //Actualizamos valores de subtotal,iva y total
             $this->subtotal += $cantidad * $precioUnitario;
+            $this->subtotal = round($this->subtotal, $precision = 2, $mode = PHP_ROUND_HALF_UP);
             $this->iva += $iva;
+            $this->iva = round($this->iva, $precision = 2, $mode = PHP_ROUND_HALF_UP);
             $this->total += $importe;
+            $this->total = round($this->total, $precision = 2, $mode = PHP_ROUND_HALF_UP);
 
 
         } else {
@@ -303,8 +306,11 @@ class AdquisicionesForm extends Component
 
                 //actualizamos valores de subtotal, iva y total (restamos el anterior valor)
                 $this->subtotal -= $item['cantidad'] * $item['precioUnitario'];
+                $this->subtotal = round($this->subtotal, $precision = 2, $mode = PHP_ROUND_HALF_UP);
                 $this->iva -= $item['iva'];
+                $this->iva = round($this->iva, $precision = 2, $mode = PHP_ROUND_HALF_UP);
                 $this->total -= $item['importe'];
+                $this->total = round($this->total, $precision = 2, $mode = PHP_ROUND_HALF_UP);
 
                 //actualizamos el item si existe en la busqueda
                 $item['descripcion'] = $descripcion;
@@ -321,8 +327,11 @@ class AdquisicionesForm extends Component
 
                 //sumamos los nuevos valores al subtotal,iva y total
                 $this->subtotal += $cantidad * $precioUnitario;
+                $this->subtotal = round($this->subtotal, $precision = 2, $mode = PHP_ROUND_HALF_UP);
                 $this->iva += $iva;
+                $this->iva = round($this->iva, $precision = 2, $mode = PHP_ROUND_HALF_UP);
                 $this->total += $importe;
+                $this->total = round($this->total, $precision = 2, $mode = PHP_ROUND_HALF_UP);
 
 
                 //Devolvemos la nueva collecion
@@ -355,8 +364,11 @@ class AdquisicionesForm extends Component
         //EL BIEN SE ESTA ELIMINANDO CON ALPINEJS desde el front
         //actualizamos valores de subtotal, iva y total (restamos el anterior valor)
         $this->subtotal -= $bien['cantidad'] * $bien['precioUnitario'];
+        //$this->subtotal = round($this->subtotal, $precision = 2, $mode = PHP_ROUND_HALF_UP);
         $this->iva -= $bien['iva'];
+        //$this->iva = round($this->iva, $precision = 2, $mode = PHP_ROUND_HALF_UP);
         $this->total -= $bien['importe'];
+        //$this->total = round($this->total, $precision = 2, $mode = PHP_ROUND_HALF_UP);
 
         //   $this->bienes->forget($bien);
     }
