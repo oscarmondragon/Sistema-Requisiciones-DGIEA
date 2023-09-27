@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Proyecto;
 
-
-
 class CvuController extends Controller
 {
     public function cvuVerificar(Request $request)
@@ -15,6 +13,7 @@ class CvuController extends Controller
         $name_user = '';
         $clave_proyecto = $request->input('id_proyecto');
         $accion = $request->input('id_accion');
+
 
         //Busca el proyecto por la clave
         $proyecto = Proyecto::where('CveEntPry', $clave_proyecto)->first();
@@ -27,6 +26,7 @@ class CvuController extends Controller
             } else if ($id_user == $proyecto->CveEntEmp_Administrativo) {
                 $name_user = $proyecto->Nombre_Administrativo . ' ' . $proyecto->APaterno_Administrativo . ' ' . $proyecto->AMaterno_Administrativo;
             }
+
             //Creamos la sesion con los datos del proyecto
             session([
                 'id_user' => $id_user,
@@ -43,7 +43,6 @@ class CvuController extends Controller
             ]);
 
             return view('cvu.index', ['accion' => $accion]);
-
         } else {
             return "El proyecto no existe";
         }
@@ -64,6 +63,4 @@ class CvuController extends Controller
     {
         return view('cvu.index', ['accion' => 3]);
     }
-
-
 }

@@ -20,7 +20,7 @@
 /* formulario bienes_servicios */
 /* degradado para formulario */
 .fondo_deg_formulario {
-    @apply bg-gradient-to-r from-verde to-dorado;
+    @apply bg-gradient-to-r from-verde to-dorado h-9;
 }
 
 /* botones adquisicion bienes_servicios:*/
@@ -92,6 +92,11 @@ input[type="file"] {
     @apply my-3 file:py-2 file:px-4 file:rounded-md file:border-none file:text-sm file:font-semibold file:bg-dorado 
     file:text-white text-dorado hover:file:bg-[#7c744c] hover:bg-gray-100 focus:outline-none focus:ring-0;
 }
+
+th, td {
+    width: 100px;
+    word-wrap: break-word;
+} 
 
 textarea {
     @apply bg-blanco text-textos_generales rounded-md border-verde

@@ -51,7 +51,8 @@ class AdquisicionDescriptionModal extends ModalComponent
         'justificacionSoftware.required_if' => 'La justificación no puede estar vacía.',
         'numAlumnos.required_id' => 'El número de alumnos no puede estar vacío.',
         'numAlumnos.gte' => 'El número de alumnos no puede ser negativo.',
-        'numProfesores.required_if' => 'El numero de profesores no puede estar vacío.',
+        'numProfesores.required' => 'El número de profesores no puede estar vacío.',
+        'numProfesores.required_if' => 'El número de profesores no puede estar vacío.',
         'numProfesores.gte' => 'El número de profesores no puede ser negativo.',
         'numAdministrativos.required_if' => 'El número de los administrativos no puede estar vacío.',
         'numAdministrativos.gte' => 'El número de administrativos no puede ser negativo.',
@@ -75,11 +76,15 @@ class AdquisicionDescriptionModal extends ModalComponent
 
         //Calcula IMPORTE SIN IVA
         $importe = $this->cantidad * $this->precioUnitario;
+        //number_format($importe, 2, ',', '.');
+        $importe = round($importe, $precision = 2, $mode = PHP_ROUND_HALF_UP);
+
         //CALCULA IVA E IMPORTE
         if ($this->checkIva) {
             $this->iva = $importe * 0.16; //Calcula el IVA
+            $this->iva = round($this->iva, $precision = 2, $mode = PHP_ROUND_HALF_UP);
             $importe += $importe * 0.16; // Ajusta el importe con el 16% de IVA
-
+            $importe = round($importe, $precision = 2, $mode = PHP_ROUND_HALF_UP);
         } else {
             $this->iva = 0;
         }
