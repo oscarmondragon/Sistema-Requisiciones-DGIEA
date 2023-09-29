@@ -60,7 +60,7 @@ class AdquisicionesForm extends Component
         'docsCartaExclusividad' => 'required_if:exclusividad,1',
         'docsCotizacionesFirmadas' => 'required|array|min:1',
         'docsCotizacionesPdf' => 'required|array|min:1',
-        'vobo' => 'required'
+        'vobo' => 'accepted'
     ];
     protected $messages = [
         'id_rubro.required' => 'Debe seleccionar un rubro.',
@@ -76,7 +76,7 @@ class AdquisicionesForm extends Component
         'docsCotizacionesPdf.required' => 'Debe adjuntar por lo menos una cotización PDF.',
         'docsCotizacionesPdf.array' => 'Debe adjuntar por lo menos una cotización PDF.',
         'docsCotizacionesPdf.min' => 'Debe adjuntar por lo menos una cotización PDF.',
-        'vobo.required' => 'Debe dar el visto bueno.',
+        'vobo.accepted' => 'Debe dar el visto bueno.',
 
     ];
     public $listeners = [

@@ -9,7 +9,7 @@
         <label class="block mb-2" for="descripcion">
           Descripción
         </label>
-        <input wire:model="descripcion" required class="inputs_formulario_adquisicion_descripcion" id="descripcion" type="text" placeholder="Descripción">
+        <input autofocus wire:model="descripcion" required class="inputs_formulario_adquisicion_descripcion" id="descripcion" type="text" placeholder="Descripción">
         @error('descripcion')
         <span class="text-rojo">{{ $message }}</span>@enderror
       </div>
@@ -77,7 +77,7 @@
   </x-slot>
 
   <x-slot name="buttons" class="mt-10">
-    <button wire:click="agregarElemento({{ $_id}}, {{$id_rubro}})" class="bg-verde btn_guardar">Guardar</button>
-    <button wire:click="$emit('closeModal')" class="bg-btn_cancelar btn_cancelar">Cancelar</button>
+    <button wire:click="agregarElemento({{ $_id}}, {{$id_rubro}})" class="btn-success">Guardar</button>
+    <button wire:click="$emit('closeModal')" class="btn-warning">Cancelar</button>
   </x-slot>
 </x-modal>

@@ -1,20 +1,29 @@
 <div class="my-6">
+  @if ($errors->any())
+  <div class="p-4 my-4 rounded-lg bg-red-50 dark:text-rojo text-rojo">
+    <ul>
+      @foreach ($errors->all() as $error)
+      <li>{{ $error }}</li>
+      @endforeach
+    </ul>
+  </div>
+  @endif
   <h1 class="text-verde text-xl font-bold ">Formulario adquisición de bienes y servicios</h1>
-  @if(session('error'))
+  <!-- @if(session('error'))
   <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400">
     <span class="font-medium"> {{ session('error') }} </span>
   </div>
-  @endif
+  @endif -->
   <form wire:submit.prevent="saveVobo">
-    <div ">
-      <div class="my-6">
+    <div>
+      <div class=" my-6">
         <label for="id_rubro">
           Rubro:
         </label>
-        <select required id="id_rubro" name="id_rubro" wire:model="id_rubro"  @change="$wire.resetearBienes($event.target.selectedOptions[0].getAttribute('data-id-especial'))">
+        <select class="w-3/4" required id="id_rubro" name="id_rubro" wire:model="id_rubro" @change="$wire.resetearBienes($event.target.selectedOptions[0].getAttribute('data-id-especial'))">
           <option value="0">Selecciona una opción</option>
           @foreach ($cuentasContables as $cuentaContable)
-          <option value="{{ $cuentaContable->id }}" data-id-especial="{{ $cuentaContable->id_especial }}" >{{ $cuentaContable->nombre_cuenta }}</option>
+          <option value="{{ $cuentaContable->id }}" data-id-especial="{{ $cuentaContable->id_especial }}">{{ $cuentaContable->nombre_cuenta }}</option>
           @endforeach
         </select>
         @error('id_rubro') <span class=" text-rojo error">{{ $message }}</span> @enderror
@@ -37,12 +46,11 @@
 
       </div>
 
-      <div wire:poll x-data="{ elementos: @entangle('bienes').defer, id_rubro: '{{ $id_rubro }}' }">
-
-        <table class="table-auto my-5 w-full" x-show="elementos.length > 0">
+      <div class="overflow-x-auto" wire:poll x-data="{ elementos: @entangle('bienes').defer, id_rubro: '{{ $id_rubro }}' }">
+        <table class="table-auto text-sm w-3/4 h-3/4 sm:w-full" x-show="elementos.length > 0">
           <thead>
             <tr class="bg-blanco">
-              <th>#</th>
+              <th class="w-[5%]">#</th>
               <th>Descripcion</th>
               <th>Cantidad</th>
               <th>Precio Unitario</th>
@@ -50,16 +58,14 @@
               <th>Importe</th>
               @if ($id_rubro_especial == '1')
               <th>Justificacion</th>
-              <th>Alumnos</th>
-              <th>Profesores</th>
-              <th>Administrativos</th>
+              <th>Beneficiados</th>
               @endif
-              <th>Acciones</th>
+              <th class="w-1/6">Acciones</th>
             </tr>
           </thead>
           <tbody>
             <template x-for="(elemento, index) in elementos" :key="index">
-              <tr x-for="(elemento, index) in elementos" :key="index" class="border border-b-gray-200 border-transparent">
+              <tr class="border border-b-gray-200 border-transparent">
                 <th x-text="index + 1"></th>
                 <th x-text="elemento.descripcion"></th>
                 <th x-text="elemento.cantidad"></th>
@@ -67,14 +73,14 @@
                 <th x-text="elemento.iva"></th>
                 <th x-text="elemento.importe"></th>
                 @if ($id_rubro_especial == '1')
-                <th x-text="elemento.justificacionSoftware"></th>
-                <th x-text="elemento.numAlumnos"></th>
-                <th x-text="elemento.numProfesores"></th>
-                <th x-text="elemento.numAdministrativos"></th>
+                <th x-text="elemento.justificacionSoftware.substring(0,40) + '...'"></th>
+                <th x-text="'Alumnos: ' + elemento.numAlumnos + 
+                          '\nProfesores: ' + elemento.numProfesores + 
+                          '\nAdministrativos: ' + elemento.numAdministrativos"></th>
                 @endif
                 <th>
                   <button type="button" @click='$wire.emit("openModal", "adquisicion-description-modal",  
-                      { _id: elemento._id, descripcion: elemento.descripcion, cantidad: elemento.cantidad, precioUnitario: elemento.precioUnitario, importe: elemento.importe, justificacionSoftware: elemento.justificacionSoftware, 
+                      { _id: elemento._id, descripcion: elemento.descripcion, cantidad: elemento.cantidad, precioUnitario: elemento.precioUnitario, iva: elemento.iva, checkIva: elemento.checkIva, importe: elemento.importe, justificacionSoftware: elemento.justificacionSoftware, 
                         numAlumnos: elemento.numAlumnos, numProfesores: elemento.numProfesores, numAdministrativos: elemento.numAdministrativos, id_rubro: id_rubro,
                          id_rubro_especial: {{$id_rubro_especial ?: 'null'}} })' class="hover:bg-gray-100 py-2 px-4">
                     <img src="{{ ('img/btn_editar.png') }}" alt="Image/png">
@@ -90,8 +96,6 @@
               @if ($id_rubro_especial == '1')
               <th></th>
               <th></th>
-              <th></th>
-              <th></th>
               @endif
               <th></th>
               <th></th>
@@ -102,8 +106,6 @@
             </tr>
             <tr>
               @if ($id_rubro_especial == '1')
-              <th></th>
-              <th></th>
               <th></th>
               <th></th>
               @endif
@@ -119,8 +121,6 @@
               @if ($id_rubro_especial == '1')
               <th></th>
               <th></th>
-              <th></th>
-              <th></th>
               @endif
               <th></th>
               <th></th>
@@ -134,7 +134,7 @@
         </table>
 
       </div>
-      <div class="mb-4" x-data x-init="afectaSelectedOption = '{{ $afecta_investigacion }}'">
+      <div class="my-5" x-data x-init="afectaSelectedOption = '{{ $afecta_investigacion }}'">
         <label for="afecta" class="text-dorado font-bold">
           ¿El cambio de alguna de las características del bien descritas en la cotización,
           afectan el desarrollo de la investigación?
@@ -231,10 +231,10 @@
         @error('vobo') <span class=" text-rojo error">{{ $message }}</span> @enderror
 
       </div>
-      <div class="text-right mt-10 -mb-5">
-        <button type="button" wire:click="save()" class="bg-verde btn_guardar">Guardar</button>
-        <button type="submit" class="bg-btn_vobo btn_vobo">Enviar para VoBo</button>
-        <button type="button" class="bg-btn_cancelar btn_cancelar" x-on:click="window.location.href = '{{ route('cvu.create') }}'">Cancelar</button>
+      <div class="sm:text-right text-left my-10 -mb-5">
+        <button type="button" wire:click="save()" class="btn-success">Guardar</button>
+        <button type="submit" class="btn-primary">Enviar para VoBo</button>
+        <button type="button" class="btn-warning" x-on:click="window.location.href = '{{ route('cvu.create') }}'">Cancelar</button>
       </div>
     </div>
   </form>
