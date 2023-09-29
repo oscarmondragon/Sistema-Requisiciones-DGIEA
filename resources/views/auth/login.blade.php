@@ -17,7 +17,7 @@
                     <img src="{{ asset('img/ic_email.png') }}" alt="Icono" class="ic_login">
                 </span>
                 <x-text-input id="email" class="input_login" type="email" name="email" :value="old('email')" placeholder="Correo electrónico" required autofocus autocomplete="username" />
-                <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                <!-- <x-input-error :messages="$errors->get('email')" class="mt-2" /> -->
             </div>
 
             <!-- Password -->
@@ -28,8 +28,8 @@
                     <img src="{{ asset('img/ic_lock.png') }}" alt="Icono" class="ic_login">
                 </span>
                 <x-text-input id="password" class="input_login" type="password" name="password" placeholder="Contraseña" required autocomplete="current-password" />
-
-                <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                @error('email') <span class="text-rojo block text-center mt-4">{{ $message }}</span> @enderror
+                <!-- <x-input-error :messages="$errors->get('password')" class="mt-2" /> -->
             </div>
 
             <!-- Remember Me -->

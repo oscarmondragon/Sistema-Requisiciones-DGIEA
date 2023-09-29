@@ -2,121 +2,117 @@
 @tailwind components;
 @tailwind utilities;
 
-/* degradado pantalla de login */
-.fondo_degradado {
-    @apply bg-gradient-to-tl from-verde to-dorado;
-}
+@layer base {
+    /* encabezados */
+    h1 {
+        @apply text-verde text-xl font-bold;
+    }
 
-/* inputs de login */
-.input_login {
-    @apply bg-trasnparente_botones placeholder:text-white text-white pl-11;
-}
+    h2 {
+        @apply font-semibold text-xl text-verde leading-tight;
+    }
 
-/* iconos de login */
-.ic_login {
-    @apply absolute mr-10 ml-2 mt-1 w-8 h-8;
-}
+    h3 {
+        @apply text-dorado font-bold;
+    }
 
-/* formulario bienes_servicios */
-/* degradado para formulario */
-.fondo_deg_formulario {
-    @apply bg-gradient-to-r from-verde to-dorado h-9;
-}
+    label {
+        @apply text-textos_generales;
+    }
 
-/* botones adquisicion bienes_servicios:*/
-.btn_guardar {
-    @apply hover:bg-[#4e6856] hover:rounded-lg focus:ring-2 focus:outline-none focus:ring-[#3c5042];
+    a {
+        @apply text-red-700;
+    }
 
-    /* hover:delay-1000 
-    hover:animate-pulse*/
-}
+    p {
+        @apply text-textos_generales;
+    }
 
-.btn_cancelar {
-    @apply hover:bg-[#be9748] focus:ring-2 focus:outline-none focus:ring-[#947538];
-}
+    li {
+        @apply italic list-disc list-outside ml-10;
+    }
 
-.btn_vobo {
-    @apply hover:bg-[#2c4449] focus:ring-2 focus:outline-none focus:ring-[#203135];
-}
+    select {
+        @apply bg-blanco text-textos_generales rounded-md border-verde;
+    }
 
-.inputs_formulario_adquisicion_descripcion {
-    @apply bg-blanco text-textos_generales rounded-md border-verde w-full;
-}
-
-.btn_eliminar_lista {
-    @apply text-rojo italic;
-}
-
-/* componenetes generales */
-label {
-    @apply text-textos_generales;
-}
-
-h1 {
-    @apply text-verde text-xl font-bold;
-}
-
-h2 {
-    @apply font-semibold text-xl text-verde leading-tight;
-}
-
-h3 {
-    @apply text-dorado font-bold;
-}
-
-a {
-    @apply text-red-700;
-}
-
-p {
-    @apply text-textos_generales;
-}
-
-li {
-    @apply italic list-disc list-inside ml-10;
-}
-
-button {
-    @apply transition ease-out delay-150 text-white font-bold py-2 px-4 mx-1 rounded-md  hover:-translate-y-1 hover:scale-110 duration-300;
-    /* animate-pulse */
-}
-
-
-select {
-    @apply bg-blanco text-textos_generales rounded-md border-verde;
-    /* border: 1px solid #62836c;
-    appearance: none; */
-}
-
-input[type="file"] {
-    @apply my-3 file:py-2 file:px-4 file:rounded-md file:border-none file:text-sm file:font-semibold file:bg-dorado 
+    input[type="file"] {
+        @apply my-3 file:py-2 file:px-4 file:rounded-md file:border-none file:text-sm file:font-semibold file:bg-dorado 
     file:text-white text-dorado hover:file:bg-[#7c744c] hover:bg-gray-100 focus:outline-none focus:ring-0;
+    }
+
+    th, td {
+        width: 100px;
+        word-wrap: break-word;
+    }
+
+    textarea {
+        @apply bg-blanco text-textos_generales rounded-md border-verde
+        focus:border-verde focus:outline-none focus:ring-1 focus:ring-verde;
+        /* resize-none */
+    }
+
+    input[type="radio"],
+    input[type="checkbox"] {
+        @apply text-verde outline-none rounded-full;
+    }
+
+    /* componentes generales FOCUS */
+    select:focus,
+    input[type="radio"]:focus,
+    input[type="checkbox"]:focus,
+    input[type="text"]:focus,
+    input[type="number"]:focus {
+        @apply focus:border-verde focus:outline-none focus:ring-1 ring-verde;
+    }
 }
 
-th, td {
-    width: 100px;
-    word-wrap: break-word;
-} 
+@layer components {
+    /* botones */
+    button {
+        @apply transition ease-out delay-150 text-white font-bold py-2 px-4 mx-1 rounded-md  hover:-translate-y-1 hover:scale-110 duration-300;
+        /* animate-pulse */
+    }
 
-textarea {
-    @apply bg-blanco text-textos_generales rounded-md border-verde
-    focus:border-verde focus:outline-none focus:ring-1 focus:ring-verde;
-    /* resize-none */
+    .btn-success {
+        @apply bg-verde hover:bg-[#4e6856] hover:rounded-lg focus:ring-2 focus:outline-none focus:ring-[#3c5042] mt-1;
+    }
+
+    .btn-warning {
+        @apply bg-btn_cancelar hover:bg-[#be9748] focus:ring-2 focus:outline-none focus:ring-[#947538] mt-1;
+    }
+
+    .btn-primary {
+        @apply bg-btn_vobo hover:bg-[#2c4449] focus:ring-2 focus:outline-none focus:ring-[#203135] mt-1;
+    }
+
+    .btn_eliminar_lista {
+        @apply text-rojo italic;
+    }
 }
 
-input[type="radio"],
-input[type="checkbox"] {
-    @apply text-verde outline-none rounded-full;
-}
+@layer utilities {
+    /* degradado pantalla de login */
+    .fondo_degradado {
+        @apply bg-gradient-to-tl from-verde to-dorado;
+    }
 
-/* componentes generales FOCUS */
-select:focus,
-input[type="radio"]:focus,
-input[type="checkbox"]:focus,
-input[type="text"]:focus,
-input[type="number"]:focus {
-    /* border-color: #62836c;
-    box-shadow: 0 0 0 0px;
-    outline: none; */
-    @apply focus:border-verde focus:outline-none focus:ring-1 ring-verde;
+    /* degradado para formulario */
+    .fondo_deg_formulario {
+        @apply bg-gradient-to-r from-verde to-dorado h-9;
+    }
+
+    .inputs_formulario_adquisicion_descripcion {
+        @apply bg-blanco text-textos_generales rounded-md border-verde w-full;
+    }
+
+    /* inputs de login */
+    .input_login {
+        @apply bg-trasnparente_botones placeholder:text-white text-white pl-11;
+    }
+    
+    /* iconos de login */
+    .ic_login {
+        @apply absolute mr-10 ml-2 mt-1 w-8 h-8;
+    }
 }

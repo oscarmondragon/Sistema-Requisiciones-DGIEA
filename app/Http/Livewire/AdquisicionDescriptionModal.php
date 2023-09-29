@@ -49,7 +49,7 @@ class AdquisicionDescriptionModal extends ModalComponent
         'precioUnitario.gte' => 'El precio unitario no puede ser menor a 1.',
         'importe.required' => 'El importe no puede estar vacío.',
         'justificacionSoftware.required_if' => 'La justificación no puede estar vacía.',
-        'numAlumnos.required_id' => 'El número de alumnos no puede estar vacío.',
+        'numAlumnos.required_if' => 'El número de alumnos no puede estar vacío.',
         'numAlumnos.gte' => 'El número de alumnos no puede ser negativo.',
         'numProfesores.required' => 'El número de profesores no puede estar vacío.',
         'numProfesores.required_if' => 'El número de profesores no puede estar vacío.',
