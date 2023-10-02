@@ -8,7 +8,7 @@
     </ul>
   </div>
   @endif
-  <h1 class="text-verde text-xl font-bold ">Formulario adquisición de bienes y servicios</h1>
+  <h1>Formulario adquisición de bienes y servicios</h1>
   <!-- @if(session('error'))
   <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400">
     <span class="font-medium"> {{ session('error') }} </span>
@@ -47,46 +47,46 @@
       </div>
 
       <div class="overflow-x-auto" wire:poll x-data="{ elementos: @entangle('bienes').defer, id_rubro: '{{ $id_rubro }}' }">
-        <table class="table-auto text-sm w-3/4 h-3/4 sm:w-full" x-show="elementos.length > 0">
+        <table class="table-auto text-left text-sm w-3/4 sm:w-full mx-auto" x-show="elementos.length > 0">
           <thead>
             <tr class="bg-blanco">
-              <th class="w-[5%]">#</th>
-              <th>Descripcion</th>
-              <th>Cantidad</th>
-              <th>Precio Unitario</th>
-              <th>IVA</th>
-              <th>Importe</th>
+              <th class="w-[26px]">#</th>
+              <th class="w-[200px]">Descripcion</th>
+              <th class="w-[80px]">Cantidad</th>
+              <th class="w-[80px]">Precio Unitario</th>
+              <th class="w-[80px]">IVA</th>
+              <th class="w-[80px]">Importe</th>
               @if ($id_rubro_especial == '1')
-              <th>Justificacion</th>
-              <th>Beneficiados</th>
+              <th class="w-[300px]">Justificacion</th>
+              <th class="w-[180px]">Beneficiados</th>
               @endif
-              <th class="w-1/6">Acciones</th>
+              <th class="w-[148px]">Acciones</th>
             </tr>
           </thead>
           <tbody>
             <template x-for="(elemento, index) in elementos" :key="index">
               <tr class="border border-b-gray-200 border-transparent">
-                <th x-text="index + 1"></th>
-                <th x-text="elemento.descripcion"></th>
-                <th x-text="elemento.cantidad"></th>
-                <th x-text="elemento.precioUnitario"></th>
-                <th x-text="elemento.iva"></th>
-                <th x-text="elemento.importe"></th>
+                <th class="w-[26px]" x-text="index + 1"></th>
+                <th class="w-[200px]" x-text="elemento.descripcion"></th>
+                <th class="w-[80px]" x-text="elemento.cantidad"></th>
+                <th class="w-[80px]" x-text="elemento.precioUnitario"></th>
+                <th class="w-[80px]" x-text="elemento.iva"></th>
+                <th class="w-[80px]" x-text="elemento.importe"></th>
                 @if ($id_rubro_especial == '1')
-                <th x-text="elemento.justificacionSoftware.substring(0,40) + '...'"></th>
-                <th x-text="'Alumnos: ' + elemento.numAlumnos + 
-                          '\nProfesores: ' + elemento.numProfesores + 
-                          '\nAdministrativos: ' + elemento.numAdministrativos"></th>
+                <th class="w-[300px]" x-text="elemento.justificacionSoftware.substring(0,75) + '...'"></th>
+                <th class="w-[180px]" x-html="'Alumnos: ' + elemento.numAlumnos + 
+                          '<br>Profesores: ' + elemento.numProfesores + 
+                          '<br>Administrativos: ' + elemento.numAdministrativos"></th>
                 @endif
-                <th>
+                <th class="w-[148px]">
                   <button type="button" @click='$wire.emit("openModal", "adquisicion-description-modal",  
                       { _id: elemento._id, descripcion: elemento.descripcion, cantidad: elemento.cantidad, precioUnitario: elemento.precioUnitario, iva: elemento.iva, checkIva: elemento.checkIva, importe: elemento.importe, justificacionSoftware: elemento.justificacionSoftware, 
                         numAlumnos: elemento.numAlumnos, numProfesores: elemento.numProfesores, numAdministrativos: elemento.numAdministrativos, id_rubro: id_rubro,
-                         id_rubro_especial: {{$id_rubro_especial ?: 'null'}} })' class="hover:bg-gray-100 py-2 px-4">
+                         id_rubro_especial: {{$id_rubro_especial ?: 'null'}} })' class="py-0 px-0 hover:bg-gray-100">
                     <img src="{{ ('img/btn_editar.png') }}" alt="Image/png">
                   </button>
 
-                  <button type="button" @click.stop="elementos.splice(index, 1); $wire.deleteBien(elemento)" class="hover:bg-gray-100 py-2 px-4">
+                  <button type="button" @click.stop="elementos.splice(index, 1); $wire.deleteBien(elemento)" class="py-0 px-0 hover:bg-gray-100">
                     <img src="{{ ('img/btn_eliminar.png') }}" alt="Image/png">
                   </button>
                 </th>
@@ -152,12 +152,10 @@
 
         <div x-show="afectaSelectedOption === '1'" class="flex flex-col">
           <label for="justificacion" class="mb-2">Justificación académica:</label>
-
-          <textarea id="justificacion" name="justificacion" wire:model='justificacion_academica' placeholder="Justificación" class="w-3/4" rows="2" cols="30">
-
+            <textarea id="justificacion" name="justificacion" wire:model='justificacion_academica' placeholder="Justificación" class="w-3/4" rows="2" cols="30">
             </textarea>
+            </div>
           @error('justificacion_academica') <span class=" text-rojo error">{{ $message }}</span> @enderror
-
         </div>
       </div>
 
