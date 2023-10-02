@@ -53,7 +53,7 @@ Route::middleware('auth')->group(function () {
 
 //RUTAS ADQUISICIONES
 
-Route::resource('adquisiciones', AdquisicionController::class);
+//Route::resource('adquisiciones', AdquisicionController::class);
 
 require __DIR__ . '/auth.php';
 

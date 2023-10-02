@@ -5,19 +5,16 @@
             <div>
              
                 <div class="mb-4">
-                  <label for="rubroS">
+                  <label for="id_rubro">
                       Rubro:
                     </label>
-                  <select id="rubroS"  name="rubroS" wire:model= "rubroS" >
-                    <option  value="51260101">COMBUSTIBLE</option>
-                    <option value="51220103" >ALIMENTACIÓN PARA PERSONAS</option>
-                    <option value="51370103">TRANSPORTACIÓN AÉREA</option>
-                    <option value="51370104">GASTOS DE TRASLADO POR VIA TERRESTRE</option>
-                    <option value="51370211">GASTOS DE ALIMENTACIÓN</option>
-                    <option value="51370211">HOSPEDAJES EN TERRITORIO NACIONAL E INTERNACIONAL</option>
+                  <select id="id_rubro"  name="id_rubro" wire:model= "id_rubro" @change="$wire.resetearRecursos($event.target.selectedOptions[0].getAttribute('data-id-especial'))" >
+                    <option value="0">Selecciona una opción</option>
+                    @foreach ($cuentasContables as $cuentaContable)
+                    <option value="{{ $cuentaContable->id }}" data-id-especial="{{ $cuentaContable->id_especial }}">{{ $cuentaContable->nombre_cuenta }}</option>
+                    @endforeach
                   </select>
                </div>
-
                <div>
                     <label for="monto_total">Monto a solicitar</label>
                     <input type="float" id="monto_total" name="monto_total" class="form-input" >
@@ -25,28 +22,34 @@
                 </div>
                 <div>
                     <label for="nombre_expedido">Expedido a nombre de:</label>
-                    <input type="text" id="nombre_expedido" class="form-input">
+                    <input type="text" readonly id="nombre_expedido" value="{{Session::get('name_rt')}}" class="form-input">
                 </div>
 
                 <div class="mb-4">
-                    <label>
-                        Desglose de recursos a solicitar
-                    </label>   
-                    <button type="button" wire:click='$emit("openModal", "solicitud-recurso-modal",  @json(["rubroS" => $rubroS]))'  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                        +
-                    </button>
-                    
-                </div-->
-       
-            <div wire:poll x-data="{ elementos: @entangle('bienes').defer, rubroS: '{{ $rubroS }}' }">             
-              <table class="table-auto">
+                  <label>
+                    Descripción del bien o servicio:
+                  </label>
+                  @if ($id_rubro != 0)
+                  <button type="button" x-on:click="$wire.emit('openModal', 'solicitud-recurso-modal', { 'id_rubro': {{ $id_rubro }}, 'id_rubro_especial': {{$id_rubro_especial ?: 'null'}} })" class="bg-verde w-8 h-8 py-0 px-0 rounded-full hover:bg-[#3c5042] focus:ring-2 focus:outline-none focus:ring-[#3c5042]">
+                    <span class="text-white font-extrabold text-2xl">+</span>
+                  </button>
+                  @else
+                  <p class="bg-gray-300 w-8 h-8 -pt-2 px-2 ml-1 rounded-full hover:bg-gray-200 hover:font-extrabold hover:text-gray-400 cursor-not-allowed inline-block select-none" disabled>
+                    <span class="text-white font-extrabold text-2xl">+</span>
+                  </p>
+                  @endif
+                  @error('recursos') <span class=" text-rojo error">{{ $message }}</span> @enderror
+          
+                </div>
+            <div wire:poll x-data="{ elementos: @entangle('recursos').defer, id_rubro: '{{ $id_rubro }}', id_rubro_especial: '{{ $id_rubro_especial }}'}" }">             
+              <table class="table-auto" x-show="elementos.length > 0">
                 <thead>
                   <tr>
                     <th>#</th>
                     <th>Importe</th>
                     <th>Concepto</th>
                     <th>Justificación</th>
-                    @if ($rubroS === '51220103')
+                    @if ($id_rubro_especial === '2')
                     <th>fecha inicial</th>
                     <th>fecha final</th>
                     @endif
@@ -60,14 +63,16 @@
                     <th x-text="elemento.importe" ></th>  
                     <th x-text="elemento.concepto" ></th>
                     <th x-text="elemento.justificacionS" ></th>
-                    @if ($rubroS === '51220103')
+                    @if ($id_rubro_especial === '2')
                       <th x-text="elemento.finicial" ></th>
                       <th x-text="elemento.ffinal" ></th>
                     @endif
-                    <th><button type="button" @click='$wire.emit("openModal", "solicitud-recurso-modal",  
-                      { _id: elemento._id, descripcion: elemento.descripcion, monto: elemento.monto, rubroS: rubroS })' class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
-                      Editar
-                    </button></th>
+                    <th>
+                      <button type="button" @click='$wire.emit("openModal", "solicitud-recurso-modal",  
+                      { _id: elemento._id, concepto: elemento.concepto, importe: elemento.importe, justificacionS: elemento.justificacionS, finicial: elemento.finicial, ffinal: elemento.ffinal, id_rubro: id_rubro, id_rubro_especial: id_rubro_especial })' class="hover:bg-gray-100 py-2 px-4">
+                    <img src="{{ ('img/btn_editar.png') }}" alt="Image/png">
+                  </button>
+                  </th>
                     <th> <button type="button" @click="elementos.splice(index, 1)" class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">Eliminar</button></th>
                   </tr>
                 </template>
@@ -76,7 +81,7 @@
            </div>
 
     
-           @if ($rubroS === '51220103')        
+           @if ($id_rubro_especial === '3')        
 
             <div class="mt-2">
               <label for="bitacoraPdf">Bitacora (solo aplica para combustibles)</label>
@@ -92,22 +97,18 @@
                
               @endforeach
           </ul>
-          <p>Nota: Las cotizaciones deben describir exactamente el mismo material, suministro, servicio general, 
-            bien mueble o intangible.
-            </p>
-
-
+          @if ($id_rubro_especial !== '3')    
             <div class="mt-2">
               <input type="checkbox" id="comprobacion"  name="comprobacion"  >
-              <label for="vobo">Me obligo a comprobar esta cantidad en un plazo no mayor a 20 días naturales, a partir de la 
-recepción del cheque y/o transferencia, en caso contrario autorizo a la U.A.E.M. 
-para que se descuente vía nómina
-</label>
-
+              <label for="comprobacion">Me obligo a comprobar esta cantidad en un plazo no mayor a 20 días naturales, a partir de la 
+              recepción del cheque y/o transferencia, en caso contrario autorizo a la U.A.E.M. 
+              para que se descuente vía nómina
+              </label>
             </div>
+            @endif
             <div class="mt-2">
               <input type="checkbox" id="aviso_privacidad"  name="aviso_privacidad"  >
-              <label for="vobo">Acepto aviso de privacidad simplificada de la UAEMEX</label>
+              <label for="aviso_privacidad">Acepto aviso de privacidad simplificada de la UAEMEX</label>
 
             </div>
 

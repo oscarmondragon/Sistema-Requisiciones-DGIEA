@@ -89,7 +89,8 @@ class AdquisicionesForm extends Component
         $this->docsCartaExclusividad = [];
         $this->docsCotizacionesFirmadas = [];
         $this->docsCotizacionesPdf = [];
-        $this->cuentasContables = CuentaContable::where('estatus', 1)->where('tipo_requisicion', 1)->get();
+        $this->cuentasContables = CuentaContable::where('estatus', 1)->whereIn('tipo_requisicion', [1, 3])->get();
+
 
     }
     public function render()

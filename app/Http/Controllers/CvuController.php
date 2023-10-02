@@ -31,8 +31,8 @@ class CvuController extends Controller
             session([
                 'id_user' => $id_user,
                 'name_user' => $name_user,
-                'id_proyecto' => $proyecto->NomEntPry,
-                'name_proyecto' => $clave_proyecto,
+                'id_proyecto' => $clave_proyecto,
+                'name_proyecto' => $proyecto->NomEntPry,
                 'clave_espacioAcademico' => $proyecto->CveCenCos,
                 'name_espacioAcademico' => $proyecto->NomCenCos,
                 'id_rt' => $proyecto->CveEntEmp_Responsable,

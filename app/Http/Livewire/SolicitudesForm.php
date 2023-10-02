@@ -6,17 +6,27 @@ use Livewire\Component;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Livewire\WithFileUploads;
+use App\Models\Proyecto;
+use App\Models\CuentaContable;
+
 
 class SolicitudesForm extends Component
 {
     use WithFileUploads;
 
-    public $recurso;
-    public $rubroS;
+    //catalogos
+    public $cuentasContables;
+
+    //Atributos de una solicitud de recursos
+    public $id_rubro;
+    public $id_rubro_especial; //variable para determinar si es una cuenta especial (software por ejemplo)
     public $monto_total;
     public $nombre_expedido;
+    public $recursos;
     public $docsbitacoraPdf = [];
-    public $bienes;
+    public $checkMeobligo;
+    public $checkAceptoPrivacidad;
+    public $vobo;
 
 
     public function render()
@@ -24,27 +34,17 @@ class SolicitudesForm extends Component
         return view('livewire.solicitudes-form');
     }
 
-    public $listeners =['addBien' => 'setBien',];
+    public $listeners = ['addRecurso' => 'setRecurso',];
 
     public function mount()
     {
-        $this->bienes = collect();
+        $this->recursos = collect();
         $this->docsbitacoraPdf = [];
+        $this->cuentasContables = CuentaContable::where('estatus', 1)->whereIn('tipo_requisicion', [2, 3])->get();
+
     }
 
-     /*funcion que valida el monto total ingresado*/
-    public function validaMonto()
-    {
-        if($rubroS = "51260101" and $monto_total > 35000){
-            $messages = [
-                'monto.required' => 'La monto no puede estar vacia.',
-                'importe.required' => 'El importe no puede estar vacio.',
-            ];
-        }
-    }
-
-  
-    protected $rules =[
+    protected $rules = [
         'monto_total' => 'required'
     ];
     protected $messages = [
@@ -52,38 +52,30 @@ class SolicitudesForm extends Component
         'importe.required' => 'El importe no puede estar vacio.',
     ];
 
-   /* public function updated($propertyName){
-        $this->validateOnly(field $propertyName);
-    }*/
+    /* public function updated($propertyName){
+         $this->validateOnly(field $propertyName);
+     }*/
 
-    public function save(){
-        $this ->validate();
-
-        if($rubroS = "51260101" and $monto_total > 35000){
-            
-        }
-
+    public function save()
+    {
+        $this->validate();
     }
 
-    public function setBien($_id, $importe, $concepto, $justificacionS, $ffinal, $finicial, $rubroS)
+    public function setRecurso($_id, $importe, $concepto, $justificacionS, $ffinal, $finicial, $id_rubro)
     {
-        $this->bienes = collect($this->bienes); //asegurar que bienes sea una coleccion
+        $this->recursos = collect($this->recursos); //asegurar que recursos sea una coleccion
 
         if ($_id == 0) { //entramos aqui si el item es nuevo
             // Genera un nuevo ID para el elemento
-            $newItemId = $this->bienes->max('_id') + 1;
+            $newItemId = $this->recursos->max('_id') + 1;
 
-            if ($rubroS === '51220103' || $rubroS === '51370103') {
-                //Agregamos el bien en la coleccion
-                $this->bienes->push(['_id' => $newItemId, 'importe' => $importe, 'concepto' => $concepto, 'justificacionS' => $justificacionS, 'finicial' => $finicial, 'ffinal' => $ffinal]);
-            } else {
-                //Agregamos el bien en la coleccion
-                $this->bienes->push(['_id' => $newItemId, 'importe' => $importe, 'concepto' => $concepto, 'justificacionS' => $justificacionS]);
-            }
+
+            //Agregamos el recurso en la coleccion
+            $this->recursos->push(['_id' => $newItemId, 'importe' => $importe, 'concepto' => $concepto, 'justificacionS' => $justificacionS, 'finicial' => $finicial, 'ffinal' => $ffinal]);
 
         } else {
             //Si entra aqui es por que entro a la funcion editar, entonces buscamos el item en la collecion por su id
-            $item = $this->bienes->firstWhere('_id', $_id);
+            $item = $this->recursos->firstWhere('_id', $_id);
 
             if ($item) {
                 //actualizamos el item si existe en la busqueda
@@ -94,19 +86,19 @@ class SolicitudesForm extends Component
                 $item['ffinal'] = $ffinal;
 
                 //Devolvemos la nueva collecion
-                $this->bienes = $this->bienes->map(function ($bien) use ($_id, $concepto, $importe, $justificacionS, $finicial, $ffinal) {
-                    if ($bien['_id'] == $_id) {
-                        $bien['concepto'] = $concepto;
-                        $bien['importe'] = $importe;
-                        $bien['justificacionS'] = $justificacionS;
-                        $bien['finicial'] = $finicial;
-                        $bien['ffinal'] = $ffinal;
+                $this->recursos = $this->recursos->map(function ($recurso) use ($_id, $concepto, $importe, $justificacionS, $finicial, $ffinal) {
+                    if ($recurso['_id'] == $_id) {
+                        $recurso['concepto'] = $concepto;
+                        $recurso['importe'] = $importe;
+                        $recurso['justificacionS'] = $justificacionS;
+                        $recurso['finicial'] = $finicial;
+                        $recurso['ffinal'] = $ffinal;
 
                     }
-                    return $bien;
+                    return $recurso;
                 });
                 //actualizamos indices
-                $this->bienes = $this->bienes->values();
+                $this->recursos = $this->recursos->values();
 
             }
 
@@ -114,14 +106,15 @@ class SolicitudesForm extends Component
 
     }
 
-    public function deleteBien($bien)
+    public function deleteRecurso($recurso)
     {
-        $this->bienes->forget($bien);
+        $this->recursos->forget($recurso);
     }
-    
-    public function resetearBienes()
+
+    public function resetearRecursos($idRubroEspecial)
     {
-        $this->bienes = collect();
+        $this->id_rubro_especial = $idRubroEspecial;
+        $this->recursos = collect();
     }
 
     public function eliminarArchivo($tipoArchivo, $index)
@@ -130,7 +123,7 @@ class SolicitudesForm extends Component
             unset($this->docsbitacoraPdf[$index]);
             $this->docsbitacoraPdf = array_values($this->docsbitacoraPdf);
 
-        } 
+        }
 
     }
 
