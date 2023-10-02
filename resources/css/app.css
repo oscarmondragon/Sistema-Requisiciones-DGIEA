@@ -41,10 +41,10 @@
     file:text-white text-dorado hover:file:bg-[#7c744c] hover:bg-gray-100 focus:outline-none focus:ring-0;
     }
 
-    th, td {
+    /* th, td {
         width: 100px;
         word-wrap: break-word;
-    }
+    } */
 
     textarea {
         @apply bg-blanco text-textos_generales rounded-md border-verde
@@ -62,7 +62,9 @@
     input[type="radio"]:focus,
     input[type="checkbox"]:focus,
     input[type="text"]:focus,
-    input[type="number"]:focus {
+    input[type="number"]:focus,
+    input[type="float"]:focus,
+    input[type="date"]:focus {
         @apply focus:border-verde focus:outline-none focus:ring-1 ring-verde;
     }
 }
@@ -89,6 +91,10 @@
     .btn_eliminar_lista {
         @apply text-rojo italic;
     }
+
+    .btn-tablas{
+        @apply py-0 px-0 hover:bg-gray-100;
+    }
 }
 
 @layer utilities {
@@ -108,11 +114,15 @@
 
     /* inputs de login */
     .input_login {
-        @apply bg-trasnparente_botones placeholder:text-white text-white pl-11;
+        @apply bg-trasnparente_botones placeholder:text-white text-white;
     }
     
     /* iconos de login */
     .ic_login {
         @apply absolute mr-10 ml-2 mt-1 w-8 h-8;
+    }
+
+    .inputs-formulario-solicitudes{
+        @apply bg-blanco text-textos_generales rounded-md border-verde h-10 px-2;
     }
 }
