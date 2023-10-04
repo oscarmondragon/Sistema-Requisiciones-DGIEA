@@ -67,8 +67,6 @@ class SolicitudesForm extends Component
         $this->docsbitacoraPdf = [];
         $this->cuentasContables = CuentaContable::where('estatus', 1)->whereIn('tipo_requisicion', [2, 3])->get();
         $this->nombre_expedido = Session::get('name_rt');
-
-
     }
 
     protected $rules = [
@@ -179,6 +177,7 @@ class SolicitudesForm extends Component
         $this->validateOnly($monto_total);
     }
 
+
     public function setRecurso($_id, $importe, $concepto, $justificacionS, $finicial, $ffinal, $id_rubro, $monto_sumado)
     {
         $this->recursos = collect($this->recursos); //asegurar que recursos sea una coleccion
@@ -190,7 +189,6 @@ class SolicitudesForm extends Component
 
             //Agregamos el recurso en la coleccion
             $this->recursos->push(['_id' => $newItemId, 'importe' => $importe, 'concepto' => $concepto, 'justificacionS' => $justificacionS, 'finicial' => $finicial, 'ffinal' => $ffinal]);
-
         } else {
             //Si entra aqui es por que entro a la funcion editar, entonces buscamos el item en la collecion por su id
             $item = $this->recursos->firstWhere('_id', $_id);
@@ -211,20 +209,15 @@ class SolicitudesForm extends Component
                         $recurso['justificacionS'] = $justificacionS;
                         $recurso['finicial'] = $finicial;
                         $recurso['ffinal'] = $ffinal;
-
                     }
                     return $recurso;
                 });
                 //actualizamos indices
                 $this->recursos = $this->recursos->values();
-
             }
-
         }
-
         //asignamos el monto_sumado
         $this->monto_sumado = $monto_sumado;
-
     }
 
     public function deleteRecurso($recurso)
@@ -256,5 +249,6 @@ class SolicitudesForm extends Component
     {
         $this->docsbitacoraPdf = [];
     }
+
 
 }

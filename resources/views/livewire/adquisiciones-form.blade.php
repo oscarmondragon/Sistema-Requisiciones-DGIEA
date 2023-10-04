@@ -26,7 +26,7 @@
           <option value="{{ $cuentaContable->id }}" data-id-especial="{{ $cuentaContable->id_especial }}">{{ $cuentaContable->nombre_cuenta }}</option>
           @endforeach
         </select>
-        @error('id_rubro') <span class=" text-rojo error">{{ $message }}</span> @enderror
+        @error('id_rubro') <span class=" text-rojo">{{ $message }}</span> @enderror
       </div>
 
       <div class="mb-4">
@@ -42,7 +42,7 @@
           <span class="text-white font-extrabold text-2xl">+</span>
         </p>
         @endif
-        @error('bienes') <span class=" text-rojo error">{{ $message }}</span> @enderror
+        @error('bienes') <span class=" text-rojo">{{ $message }}</span> @enderror
 
       </div>
 
@@ -82,11 +82,10 @@
                   <button type="button" @click='$wire.emit("openModal", "adquisicion-description-modal",  
                       { _id: elemento._id, descripcion: elemento.descripcion, cantidad: elemento.cantidad, precioUnitario: elemento.precioUnitario, iva: elemento.iva, checkIva: elemento.checkIva, importe: elemento.importe, justificacionSoftware: elemento.justificacionSoftware, 
                         numAlumnos: elemento.numAlumnos, numProfesores: elemento.numProfesores, numAdministrativos: elemento.numAdministrativos, id_rubro: id_rubro,
-                         id_rubro_especial: {{$id_rubro_especial ?: 'null'}} })' class="py-0 px-0 hover:bg-gray-100">
+                         id_rubro_especial: {{$id_rubro_especial ?: 'null'}} })' class="btn-tablas">
                     <img src="{{ ('img/btn_editar.png') }}" alt="Image/png">
                   </button>
-
-                  <button type="button" @click.stop="elementos.splice(index, 1); $wire.deleteBien(elemento)" class="py-0 px-0 hover:bg-gray-100">
+                  <button type="button" @click.stop="elementos.splice(index, 1); $wire.deleteBien(elemento)" class="btn-tablas">
                     <img src="{{ ('img/btn_eliminar.png') }}" alt="Image/png">
                   </button>
                 </th>
@@ -141,99 +140,109 @@
         </label>
         <div class="mt-2">
           <label class="inline-flex items-center">
-            <input type="radio" x-model="afectaSelectedOption" wire:model='afecta_investigacion' class="form-radio rbt_formulario" name="siAfecta" value="1">
+            <input type="radio" x-model="afectaSelectedOption" wire:model='afecta_investigacion' name="siAfecta" value="1">
             <span class="ml-2">Si</span>
           </label>
           <label class="inline-flex items-center ml-6">
-            <input type="radio" x-model="afectaSelectedOption" wire:model='afecta_investigacion' class="form-radio" name="noAfecta" value="0" checked>
+            <input type="radio" x-model="afectaSelectedOption" wire:model='afecta_investigacion' wire:click="resetJustificacionAcademica" name="noAfecta" value="0" checked>
             <span class="ml-2">No</span>
           </label>
         </div>
 
         <div x-show="afectaSelectedOption === '1'" class="flex flex-col">
-          <label for="justificacion" class="mb-2">Justificación académica:</label>
-            <textarea id="justificacion" name="justificacion" wire:model='justificacion_academica' placeholder="Justificación" class="w-3/4" rows="2" cols="30">
+          <label for="justificacion" class="my-2">Justificación académica:</label>
+          <textarea id="justificacion" name="justificacion" wire:model='justificacion_academica' placeholder="Justificación" class="w-3/4" rows="2" cols="30">
             </textarea>
-            </div>
-          @error('justificacion_academica') <span class=" text-rojo error">{{ $message }}</span> @enderror
         </div>
-      </div>
-
-      <div class="mb-2" x-data x-init="exclusividadSelectedOption = '{{ $exclusividad }}'">
-        <label for="afecta">
-          ¿Es bien o servicio con exclusividad?
-        </label>
-        <div class="mt-2">
-          <label class="inline-flex items-center">
-            <input type="radio" x-model="exclusividadSelectedOption" wire:model='exclusividad' class="form-radio rbt_formulario" name="siExclusivo" value="1">
-            <span class="ml-2">Si</span>
-          </label>
-          <label class="inline-flex items-center ml-6">
-            <input type="radio" x-model="exclusividadSelectedOption" wire:model='exclusividad' class="form-radio" name="noExclusivo" value="0" checked>
-            <span class="ml-2">No</span>
-          </label>
-        </div>
-
-        <div x-show="exclusividadSelectedOption === '1'">
-          <label for="cartaExlcusividad">Carta de exclusividad:</label>
-          <input type="file" id="cartaExlcusividad" wire:model='docsCartaExclusividad'>
-          @error('docsCartaExclusividad') <span class=" text-rojo error">{{ $message }}</span> @enderror
-          <ul>
-            @foreach($docsCartaExclusividad as $index => $docCarta)
-            <li>
-              {{ $docCarta->getClientOriginalName()}}
-              <button type="button" class="btn_eliminar_lista" wire:click="eliminarArchivo('cartasExclusividad', {{ $index }})">
-                Eliminar
-              </button>
-            </li>
-            @endforeach
-          </ul>
-        </div>
-      </div>
-      <div class="mt-2">
-        <label for="cotizacionFirmada">Cotización firmada:</label>
-        <input type="file" id="cotizacionFirmada" wire:model='docsCotizacionesFirmadas'>
-      </div>
-      @error('docsCotizacionesFirmadas') <span class=" text-rojo error">{{ $message }}</span> @enderror
-      <ul>
-        @foreach($docsCotizacionesFirmadas as $index => $docFirmadas)
-        <li>
-          {{ $docFirmadas->getClientOriginalName()}}
-          <button type="button" class="btn_eliminar_lista" wire:click="eliminarArchivo('cotizacionesFirmadas', {{ $index }})">
-            Eliminar
-          </button>
-        </li>
-        @endforeach
-      </ul>
-      <div class="mt-2">
-        <label for="cotizacionesPdf">Cotizaciones PDF:</label>
-        <input type="file" id="cotizacionesPdf" wire:model='docsCotizacionesPdf'>
-      </div>
-      @error('docsCotizacionesPdf') <span class=" text-rojo error">{{ $message }}</span> @enderror
-      <ul class="my-2">
-        @foreach($docsCotizacionesPdf as $index => $docPdf)
-        <li>
-          {{ $docPdf->getClientOriginalName()}}
-          <button type="button" class="btn_eliminar_lista" wire:click="eliminarArchivo('cotizacionesPdf', {{ $index }})">
-            Eliminar
-          </button>
-        </li>
-        @endforeach
-      </ul>
-      <p class="text-verde mt-5"> <span class="font-bold">Nota:</span> Las cotizaciones deben describir exactamente el mismo material, suministro, servicio general,
-        bien mueble o intangible.
-      </p>
-      <div class="mt-10">
-        <input type="checkbox" id="vobo" wire:model='vobo' name="vobo" class="rounded-full ml-10 rbt_formulario">
-        <label for="vobo">VoBo al requerimiento solicitado. Se envía para VoBo del Admistrativo/Investigador</label>
-        @error('vobo') <span class=" text-rojo error">{{ $message }}</span> @enderror
-
-      </div>
-      <div class="sm:text-right text-left my-10 -mb-5">
-        <button type="button" wire:click="save()" class="btn-success">Guardar</button>
-        <button type="submit" class="btn-primary">Enviar para VoBo</button>
-        <button type="button" class="btn-warning" x-on:click="window.location.href = '{{ route('cvu.create') }}'">Cancelar</button>
+        @error('justificacion_academica') <span class=" text-rojo">{{ $message }}</span> @enderror
       </div>
     </div>
-  </form>
+
+    <div class="mb-2" x-data x-init="exclusividadSelectedOption = '{{ $exclusividad }}'">
+      <label for="afecta">
+        ¿Es bien o servicio con exclusividad?
+      </label>
+      <div class="mt-2">
+        <label class="inline-flex items-center">
+          <input type="radio" x-model="exclusividadSelectedOption" wire:model='exclusividad' name="siExclusivo" value="1">
+          <span class="ml-2">Si</span>
+        </label>
+        <label class="inline-flex items-center ml-6">
+          <input type="radio" x-model="exclusividadSelectedOption" wire:model='exclusividad' wire:click="resetdocsCartaExclusividad" name="noExclusivo" value="0" checked>
+          <span class="ml-2">No</span>
+        </label>
+      </div>
+
+      <div x-show="exclusividadSelectedOption === '1'">
+        <label for="cartaExlcusividad">Carta de exclusividad:</label>
+        <input type="file" id="cartaExlcusividad" wire:model='docsCartaExclusividad'>
+        @empty($docsCartaExclusividad)<span class="text-dorado">Sin archivos seleccionados.</span>
+        @endempty
+        <br>
+        <div wire:loading wire:target="docsCartaExclusividad">Cargando archivo...</div>
+        @error('docsCartaExclusividad') <span class=" text-rojo">{{ $message }}</span> @enderror
+        <ul>
+          @foreach($docsCartaExclusividad as $index => $docCarta)
+          <li>
+            {{ $docCarta->getClientOriginalName()}}
+            <button type="button" class="btn-eliminar-lista" wire:click="eliminarArchivo('cartasExclusividad', {{ $index }})">
+              Eliminar
+            </button>
+          </li>
+          @endforeach
+        </ul>
+      </div>
+    </div>
+    <div class="mt-2">
+      <label for="cotizacionFirmada">Cotización firmada:</label>
+      <input type="file" id="cotizacionFirmada" wire:model='docsCotizacionesFirmadas'>
+      @empty($docsCotizacionesFirmadas)<span class="text-dorado">Sin archivos seleccionados.</span>@endempty
+      <br>
+      <div wire:loading wire:target="docsCotizacionesFirmadas">Cargando archivo...</div>
+    </div>
+    @error('docsCotizacionesFirmadas') <span class=" text-rojo">{{ $message }}</span> @enderror
+    <ul>
+      @foreach($docsCotizacionesFirmadas as $index => $docFirmadas)
+      <li>
+        {{ $docFirmadas->getClientOriginalName()}}
+        <button type="button" class="btn-eliminar-lista" wire:click="eliminarArchivo('cotizacionesFirmadas', {{ $index }})">
+          Eliminar
+        </button>
+      </li>
+      @endforeach
+    </ul>
+    <div class="mt-2">
+      <label for="cotizacionesPdf">Cotizaciones PDF:</label>
+      <input type="file" id="cotizacionesPdf" wire:model='docsCotizacionesPdf'>
+      @empty($docsCotizacionesPdf)<span class="text-dorado">Sin archivos seleccionados.</span>@endempty
+      <br>
+      <div wire:loading wire:target="docsCotizacionesPdf">Cargando archivo...</div>
+    </div>
+    @error('docsCotizacionesPdf') <span class=" text-rojo">{{ $message }}</span> @enderror
+    <ul class="my-2">
+      @foreach($docsCotizacionesPdf as $index => $docPdf)
+      <li>
+        {{ $docPdf->getClientOriginalName()}}
+        <button type="button" class="btn-eliminar-lista" wire:click="eliminarArchivo('cotizacionesPdf', {{ $index }})">
+          Eliminar
+        </button>
+      </li>
+      @endforeach
+    </ul>
+    <p class="text-verde mt-5"> <span class="font-bold">Nota:</span> Las cotizaciones deben describir exactamente el mismo material, suministro, servicio general,
+      bien mueble o intangible.
+    </p>
+    <div class="mt-10">
+      <input type="checkbox" id="vobo" wire:model='vobo' name="vobo" class="rounded-full ml-10">
+      <label for="vobo">VoBo al requerimiento solicitado. Se envía para VoBo del Admistrativo/Investigador</label>
+      @error('vobo') <span class=" text-rojo error">{{ $message }}</span> @enderror
+
+    </div>
+    <div class="sm:text-right text-left my-10 -mb-5">
+      <button type="button" wire:click="save()" class="btn-success">Guardar</button>
+      <button type="submit" class="btn-primary">Enviar para VoBo</button>
+      <button type="button" class="btn-warning" x-on:click="window.location.href = '{{ route('cvu.create') }}'">Cancelar</button>
+    </div>
+</div>
+</form>
 </div>
