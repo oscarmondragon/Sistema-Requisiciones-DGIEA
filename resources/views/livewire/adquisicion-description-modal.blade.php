@@ -9,7 +9,7 @@
         <label class="block mb-2" for="descripcion">
           Descripción
         </label>
-        <input autofocus wire:model="descripcion" required class="inputs_formulario_adquisicion_descripcion" id="descripcion" type="text" placeholder="Descripción">
+        <input autofocus wire:model="descripcion" required class="inputs-formulario" id="descripcion" type="text" placeholder="Descripción">
         @error('descripcion')
         <span class="text-rojo">{{ $message }}</span>@enderror
       </div>
@@ -17,14 +17,14 @@
         <label class="block mb-2" for="cantidad">
           Cantidad
         </label>
-        <input wire:model="cantidad" wire:change="calcularIvaImporte" required class="inputs_formulario_adquisicion_descripcion" id="cantidad" type="number" min="1"  placeholder="Cantidad">
+        <input wire:model="cantidad" wire:change="calcularIvaImporte" required class="inputs-formulario" id="cantidad" type="number" min="1"  placeholder="Cantidad">
         @error('cantidad') <span class="text-rojo">{{ $message }}</span> @enderror
       </div>
       <div class="mb-4">
         <label class="block mb-2" for="precioUnitario">
           Precio Unitario
         </label>
-        <input wire:model="precioUnitario" wire:change="calcularIvaImporte" required class="inputs_formulario_adquisicion_descripcion" id="precioUnitario" type="number" min="1" placeholder="$ Precio unitario">
+        <input wire:model="precioUnitario" wire:change="calcularIvaImporte" required class="inputs-formulario" id="precioUnitario" type="number" min="1" placeholder="$ Precio unitario">
         @error('precioUnitario') <span class="text-rojo">{{ $message }}</span> @enderror
       </div>
       <div class="mb-4 text-right">
@@ -37,7 +37,7 @@
         <label class="block mb-2" for="importe">
           Importe
         </label>
-        <input wire:model="importe" required readonly class="inputs_formulario_adquisicion_descripcion cursor-not-allowed" id="importe" type="text" placeholder="Importe">
+        <input wire:model="importe" required readonly class="inputs-formulario cursor-not-allowed" id="importe" type="text" placeholder="Importe">
         @error('importe') <span class="text-rojo">{{ $message }}</span> @enderror
       </div>
       @if ($id_rubro_especial == '1')
@@ -45,7 +45,7 @@
         <label class="block mb-2" for="importe">
           Descripción y justificación al cual será dedicado el software:
         </label>
-        <textarea wire:model="justificacionSoftware" required class="inputs_formulario_adquisicion_descripcion" rows="2" cols="30" id="justificacionSoftware" placeholder="Descripción y justificación"></textarea>
+        <textarea wire:model="justificacionSoftware" required class="inputs-formulario" rows="2" cols="30" id="justificacionSoftware" placeholder="Descripción y justificación"></textarea>
         @error('justificacionSoftware') <span class="text-rojo">{{ $message }}</span> @enderror
       </div>
 
@@ -56,19 +56,19 @@
         <label class="block mb-2" for="importe">
           Alumnos:
         </label>
-        <input wire:model="numAlumnos" required class="inputs_formulario_adquisicion_descripcion" id="numAlumnos" type="number" min="0" placeholder="Número de alumnos">
+        <input wire:model="numAlumnos" required class="inputs-formulario" id="numAlumnos" type="number" min="0" placeholder="Número de alumnos">
         @error('numAlumnos') <span class="text-rojo">{{ $message }}</span> @enderror
 
         <label class="block mb-2 mt-4" for="importe">
           Profesores / Investigadores:
         </label>
-        <input wire:model="numProfesores" required class="inputs_formulario_adquisicion_descripcion" id="numProfesores" type="number" min="0" placeholder="Número de profesores / investigadores">
+        <input wire:model="numProfesores" required class="inputs-formulario" id="numProfesores" type="number" min="0" placeholder="Número de profesores / investigadores">
         @error('numProfesores') <span class="text-rojo">{{ $message }}</span> @enderror
 
         <label class="block mb-2 mt-4" for="importe">
           Administrativos:
         </label>
-        <input wire:model="numAdministrativos" required class="inputs_formulario_adquisicion_descripcion" id="numAdministrativos" type="number" min="0" placeholder="Número de administradores">
+        <input wire:model="numAdministrativos" required class="inputs-formulario" id="numAdministrativos" type="number" min="0" placeholder="Número de administradores">
         @error('numAdministrativos') <span class="text-rojo">{{ $message }}</span> @enderror
       </div>
       @endif

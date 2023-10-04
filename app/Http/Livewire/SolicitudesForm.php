@@ -41,7 +41,6 @@ class SolicitudesForm extends Component
         $this->recursos = collect();
         $this->docsbitacoraPdf = [];
         $this->cuentasContables = CuentaContable::where('estatus', 1)->whereIn('tipo_requisicion', [2, 3])->get();
-
     }
 
     protected $rules = [
@@ -61,7 +60,7 @@ class SolicitudesForm extends Component
         $this->validate();
     }
 
-    public function setRecurso($_id, $importe, $concepto, $justificacionS, $ffinal, $finicial, $id_rubro)
+    public function setRecurso($_id, $importe, $concepto, $justificacionS, $finicial, $ffinal, $id_rubro)
     {
         $this->recursos = collect($this->recursos); //asegurar que recursos sea una coleccion
 
@@ -72,7 +71,6 @@ class SolicitudesForm extends Component
 
             //Agregamos el recurso en la coleccion
             $this->recursos->push(['_id' => $newItemId, 'importe' => $importe, 'concepto' => $concepto, 'justificacionS' => $justificacionS, 'finicial' => $finicial, 'ffinal' => $ffinal]);
-
         } else {
             //Si entra aqui es por que entro a la funcion editar, entonces buscamos el item en la collecion por su id
             $item = $this->recursos->firstWhere('_id', $_id);
@@ -93,17 +91,13 @@ class SolicitudesForm extends Component
                         $recurso['justificacionS'] = $justificacionS;
                         $recurso['finicial'] = $finicial;
                         $recurso['ffinal'] = $ffinal;
-
                     }
                     return $recurso;
                 });
                 //actualizamos indices
                 $this->recursos = $this->recursos->values();
-
             }
-
         }
-
     }
 
     public function deleteRecurso($recurso)
@@ -120,11 +114,14 @@ class SolicitudesForm extends Component
     public function eliminarArchivo($tipoArchivo, $index)
     {
         if ($tipoArchivo === 'docsbitacoraPdf') {
-            unset($this->docsbitacoraPdf[$index]);
-            $this->docsbitacoraPdf = array_values($this->docsbitacoraPdf);
-
+            if (array_key_exists($index, $this->docsbitacoraPdf)) {
+                // Eliminar el archivo del array usando el índice
+                unset($this->docsbitacoraPdf[$index]);
+                // Reindexar el array para asegurar una secuencia numérica continua
+                $this->docsbitacoraPdf = array_values($this->docsbitacoraPdf);
+            }
         }
-
     }
+
 
 }
