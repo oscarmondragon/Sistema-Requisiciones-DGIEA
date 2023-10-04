@@ -12,15 +12,26 @@ class Solicitud extends Model
     protected $connection = 'mysql';
     protected $table = "solicitudes";
 
-    public function store(Request $request)
-    {
-        $solicitud = new Solicitud;
-        $solicitud->monto_total = $request->monto_total;
-        $solicitud->id_bitacora = $request->id_bitacora;
-        $solicitud->save();
 
-        return redirect()->route('solicitud.index');
-    }
+    protected $fillable = [
+        'clave_solicitud',
+        'tipo_requisicion',
+        'clave_proyecto',
+        'clave_espacio_academico',
+        'clave_rt',
+        'tipo_financiamiento',
+        'id_rubro',
+        'monto_total',
+        'nombre_expedido',
+        'id_bitacora',
+        'vobo_admin',
+        'vobo_rt',
+        'obligo_comprobar',
+        'aviso_privacidad',
+        'id_emisor',
+        'estatus_dgiea',
+        'estatus_rt'
+    ];
 
 
 }
