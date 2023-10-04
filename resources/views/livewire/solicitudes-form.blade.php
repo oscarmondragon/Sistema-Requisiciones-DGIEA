@@ -31,7 +31,8 @@
           Descripción del bien o servicio:
         </label>
         @if ($id_rubro != 0)
-        <button type="button" x-on:click="$wire.emit('openModal', 'solicitud-recurso-modal', { 'id_rubro': {{ $id_rubro }}, 'id_rubro_especial': {{$id_rubro_especial ?: 'null'}} }), 'monto_total': {{ $monto_total }}, 'monto_sumado': {{ $monto_sumado }}" class="bg-verde w-8 h-8 py-0 px-0 rounded-full hover:bg-[#3c5042] focus:ring-2 focus:outline-none focus:ring-[#3c5042]">
+        <button type="button" x-on:click="$wire.emit('openModal', 'solicitud-recurso-modal', {'id_rubro': {{ $id_rubro }}, 
+        'id_rubro_especial': {{$id_rubro_especial ?: 'null'}}, 'monto_total': {{ $monto_total }}, 'monto_sumado': {{ $monto_sumado }} })" class="bg-verde w-8 h-8 py-0 px-0 rounded-full hover:bg-[#3c5042] focus:ring-2 focus:outline-none focus:ring-[#3c5042]">
           <span class="text-white font-extrabold text-2xl">+</span>
         </button>
         @else
@@ -42,7 +43,7 @@
         @error('recursos') <span class=" text-rojo">{{ $message }}</span> @enderror
 
       </div>
-      <div class="overflow-x-auto mt-4" wire:poll x-data="{ elementos: @entangle('recursos').defer, id_rubro: '{{ $id_rubro }}', id_rubro_especial: '{{ $id_rubro_especial }}'}, monto_total: '{{ $monto_total }}', monto_sumado: '{{ $monto_sumado }}'" }">
+      <div class="overflow-x-auto mt-4" wire:poll x-data="{ elementos: @entangle('recursos').defer, id_rubro: '{{ $id_rubro }}', id_rubro_especial: '{{ $id_rubro_especial }}', monto_total: '{{ $monto_total }}',monto_sumado: '{{ $monto_sumado }}'}">
         <table class="table-auto text-left text-sm w-4/5 sm:w-full mx-auto px-40" x-show="elementos.length > 0">
           <thead>
             <tr class="bg-blanco">
