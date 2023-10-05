@@ -56,19 +56,19 @@
         <label class="block mb-2" for="importe">
           Alumnos:
         </label>
-        <input wire:model="numAlumnos" required class="inputs-formulario" id="numAlumnos" type="number" min="0" placeholder="Número de alumnos">
+        <input wire:model="numAlumnos"  x-data="{ numAlumnos: @entangle('numAlumnos') }" x-on:focus="numAlumnos = ''" x-on:input.debounce.500ms="numAlumnos = $event.target.value"  required class="inputs-formulario" id="numAlumnos" type="number" min="0" placeholder="Número de alumnos">
         @error('numAlumnos') <span class="text-rojo">{{ $message }}</span> @enderror
 
         <label class="block mb-2 mt-4" for="importe">
           Profesores / Investigadores:
         </label>
-        <input wire:model="numProfesores" required class="inputs-formulario" id="numProfesores" type="number" min="0" placeholder="Número de profesores / investigadores">
+        <input wire:model="numProfesores"  x-data="{ numProfesores: @entangle('numProfesores') }" x-on:focus="numProfesores = ''" x-on:input.debounce.500ms="numProfesores = $event.target.value"  required class="inputs-formulario" id="numProfesores" type="number" min="0" placeholder="Número de profesores / investigadores">
         @error('numProfesores') <span class="text-rojo">{{ $message }}</span> @enderror
 
         <label class="block mb-2 mt-4" for="importe">
           Administrativos:
         </label>
-        <input wire:model="numAdministrativos" required class="inputs-formulario" id="numAdministrativos" type="number" min="0" placeholder="Número de administradores">
+        <input wire:model="numAdministrativos" x-data="{ numAdministrativos: @entangle('numAdministrativos') }" x-on:focus="numAdministrativos = ''" x-on:input.debounce.500ms="numAdministrativos = $event.target.value"  required class="inputs-formulario" id="numAdministrativos" type="number" min="0" placeholder="Número de administradores">
         @error('numAdministrativos') <span class="text-rojo">{{ $message }}</span> @enderror
       </div>
       @endif

@@ -19,7 +19,9 @@ class SolicitudRecursoModal extends ModalComponent
     public $id_rubro;
     public $id_rubro_especial = 0; //variable para saber si es una cuenta especial y agregar o quitar campos
     public $monto_total; //variable que guarda el monto total de la solicitud
-    public $monto_sumado; //variable que guarda la suma de lso recursos que se van agregando
+    public $monto_sumado = 0; //variable que guarda la suma de lso recursos que se van agregando
+    public $importe_editar = 0; //variable auxiliar para restar el valor de importe al monto_sumado despues de editarlo
+
 
     public function render()
     {
@@ -31,7 +33,7 @@ class SolicitudRecursoModal extends ModalComponent
         'monto_sumado' => 'lte:monto_total',
         'justificacionS' => 'required',
         'finicial' => 'required_if:id_rubro_especial,2',
-        'ffinal' => 'required_if:id_rubro_especial,2'
+        'ffinal' => 'nullable|date|required_if:id_rubro_especial,2|after_or_equal:finicial'
     ];
 
     //MENSAJES DE LA VALIDACION
@@ -41,16 +43,15 @@ class SolicitudRecursoModal extends ModalComponent
         'monto_sumado.lte' => 'La suma de los importes de lso recursos listados  no puede superar al monto total de la solicitud.',
         'justificacionS.required' => 'La justificación no puede estar vacía.',
         'finicial.required_if' => 'La fecha inicial no puede estar vacia.',
-        'finicial.date' => 'La fecha inicial tiene que ser una fecha valida.',
         'ffinal.required_if' => 'La fecha final no puede estar vacia.',
-        'ffinal.date' => 'La fecha final tiene que ser una fecha valida.',
+        'ffinal.after_or_equal' => 'La fecha final debe ser mayor o igual a la fecha inicial.'
     ];
 
     //Método llamada  en el boton Guardar del modal
     public function agregarElemento()
     {
         $this->validate();
-        $this->sumarMonto(); // sumamos el importe al monto_sumado
+        $this->actualizarMonto(); // actualizamos el monto_sumado, restando el importe_editar y sumando el importe nuevo
         $this->closeModalWithEvents([
             //'childModalEvent', // Emit global event
             //AdquisicionesForm::getName() => 'childModalEvent', // Emit event to specific Livewire component
@@ -67,15 +68,20 @@ class SolicitudRecursoModal extends ModalComponent
         $this->validateOnly($importe);
     }
 
-    public function sumarMonto()
+    public function actualizarMonto()
     {
         //Validamos que sean valores numericos para evitar errores
         if (!is_numeric($this->importe)) {
             $this->importe = null;
         }
+        if (!is_numeric($this->importe_editar)) {
+            $this->importe_editar = null;
+        }
         if (!is_numeric($this->monto_sumado)) {
             $this->monto_sumado = null;
         }
+        //Restamos el valor anterior de importe al monto_total cuando se entra a editar
+        $this->monto_sumado -= $this->importe_editar;
 
         //Sumamos el importe al monto_sumado
         $this->monto_sumado += $this->importe;
@@ -89,8 +95,10 @@ class SolicitudRecursoModal extends ModalComponent
         $rules['importe'][] = function ($attribute, $value, $fail) {
             $montoSumado = $this->monto_sumado;
             $montoTotal = $this->monto_total;
+            $importeEditar = $this->importe_editar;
 
-            if ($montoSumado + $value > $montoTotal) {
+
+            if ($montoSumado - $importeEditar + $value > $montoTotal) {
                 $fail('La suma de los importes de cada recurso no puede superar al monto total solicitado.');
             }
         };
