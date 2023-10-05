@@ -3,8 +3,8 @@
     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
       <div class="p-6 text-gray-900">
         <div class="inline-block relative w-64">
-          <h3>Selecciona tipo de requisición</h3>
-          <select id="tipo" wire:model="tipo" >
+          <h3>Selecciona tipo de requerimiento</h3>
+          <select id="tipo" wire:model="tipo" class="mt-2">
              <option value="0">Selecciona un opción</option>
                   @foreach ($tiposRequisicion as $tipoRequisicion)
                       <option value="{{ $tipoRequisicion->id }}">{{ $tipoRequisicion->descripcion }}</option>

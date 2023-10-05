@@ -24,7 +24,7 @@
         <label class="block mb-2" for="precioUnitario">
           Precio Unitario
         </label>
-        <input wire:model="precioUnitario" wire:change="calcularIvaImporte" required class="inputs-formulario" id="precioUnitario" type="number" min="1" placeholder="$ Precio unitario">
+        <input wire:model="precioUnitario" wire:change="calcularIvaImporte" required class="inputs-formulario" id="precioUnitario" type="number" min="1" placeholder="$ 0000.00">
         @error('precioUnitario') <span class="text-rojo">{{ $message }}</span> @enderror
       </div>
       <div class="mb-4 text-right">
@@ -37,7 +37,7 @@
         <label class="block mb-2" for="importe">
           Importe
         </label>
-        <input wire:model="importe" required readonly class="inputs-formulario cursor-not-allowed" id="importe" type="text" placeholder="Importe">
+        <input wire:model="importe" required readonly class="inputs-formulario cursor-not-allowed" id="importe" type="text" placeholder="$ 0000.00">
         @error('importe') <span class="text-rojo">{{ $message }}</span> @enderror
       </div>
       @if ($id_rubro_especial == '1')

@@ -3,11 +3,11 @@
   <form wire:submit.prevent="saveVobo">
     <div>
 
-      <div class="mt-4">
+      <div class="mt-6">
         <label for="id_rubro">
           Rubro:
         </label>
-        <select id="id_rubro" name="id_rubro" wire:model="id_rubro" @change="$wire.resetearRecursos($event.target.selectedOptions[0].getAttribute('data-id-especial'))">
+        <select class="w-auto" id="id_rubro" name="id_rubro" wire:model="id_rubro" @change="$wire.resetearRecursos($event.target.selectedOptions[0].getAttribute('data-id-especial'))">
           <option value="0">Selecciona una opción</option>
           @foreach ($cuentasContables as $cuentaContable)
           <option value="{{ $cuentaContable->id }}" data-id-especial="{{ $cuentaContable->id_especial }}">{{ $cuentaContable->nombre_cuenta }}</option>
@@ -15,18 +15,18 @@
         </select>
         @error('id_rubro') <span class="text-rojo">{{ $message }}</span> @enderror
       </div>
-      <div class="mt-4">
+      <div class="mt-8">
         <label for="monto_total">Monto a solicitar: </label>
-        <input type="number"  id="monto_total" name="monto_total" wire:model="monto_total" class="inputs-formulario-solicitudes w-80" min="0" placeholder="$ 3694.97">
+        <input type="number" id="monto_total" name="monto_total" wire:model="monto_total" class="inputs-formulario-solicitudes w-40" min="0" placeholder="$ 0000.00">
         @error('monto_total') <span class="text-rojo">{{ $message }}</span> @enderror
       </div>
-      <div class="mt-4">
+      <div class="mt-8">
         <label for="nombre_expedido">Expedido a nombre de: </label>
-        <input type="text" readonly id="nombre_expedido" wire:model="nombre_expedido" class="inputs-formulario-solicitudes w-80 cursor-not-allowed" placeholder="Nombre">
+        <input type="text" readonly id="nombre_expedido" wire:model="nombre_expedido" class="inputs-formulario-solicitudes w-96 cursor-not-allowed" placeholder="Nombre">
         @error('nombre_expedido') <span class="text-rojo">{{ $message }}</span> @enderror
       </div>
 
-      <div class="mt-4">
+      <div class="mt-6">
         <label>
           Descripción del bien o servicio:
         </label>

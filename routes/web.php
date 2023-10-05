@@ -67,6 +67,9 @@ Route::get('/cvu', function () {
 
 });
 
+Route::post('logout-cvu', [CvuController::class, 'destroy'])
+->name('logout.cvu');
+
 
 Route::get('/cvu-crear', [CvuController::class, 'create'])->name('cvu.create');
 Route::get('/cvu-vobo', [CvuController::class, 'darVobo'])->name('cvu.vobo');

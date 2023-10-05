@@ -4,6 +4,7 @@
   </x-slot>
   <x-slot name="content">
     <div class="w-full">
+    {{$monto_sumado}}
     <div>
         <label class="block mb-2" for="concepto">
           Concepto
@@ -16,7 +17,7 @@
         <label class="block mb-2" for="importe">
           Importe
         </label>
-        <input wire:model="importe" required class="inputs-formulario" id="importe" type="number" placeholder="Importe" min="0">
+        <input wire:model="importe" required class="inputs-formulario" id="importe" type="number" placeholder="$ 0000.00">
         @error('importe') <span class="text-rojo">{{ $message }}</span> @enderror
       </div>
       <div class="my-4">
