@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Proyecto;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
 
 class CvuController extends Controller
 {
@@ -62,5 +64,16 @@ class CvuController extends Controller
     public function seguimiento()
     {
         return view('cvu.index', ['accion' => 3]);
+    }
+
+    public function destroy(Request $request): RedirectResponse
+    {
+        Auth::guard('web')->logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        return redirect('http://www.siea.uaemex.mx/cvu/');
     }
 }

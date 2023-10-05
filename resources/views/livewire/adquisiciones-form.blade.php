@@ -9,18 +9,13 @@
   </div>
   @endif
   <h1>Formulario adquisición de bienes y servicios</h1>
-  <!-- @if(session('error'))
-  <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400">
-    <span class="font-medium"> {{ session('error') }} </span>
-  </div>
-  @endif -->
   <form wire:submit.prevent="saveVobo">
     <div>
-      <div class=" my-6">
+      <div class="my-6">
         <label for="id_rubro">
           Rubro:
         </label>
-        <select class="w-3/4" required id="id_rubro" name="id_rubro" wire:model="id_rubro" @change="$wire.resetearBienes($event.target.selectedOptions[0].getAttribute('data-id-especial'))">
+        <select class="w-auto" required id="id_rubro" name="id_rubro" wire:model="id_rubro" @change="$wire.resetearBienes($event.target.selectedOptions[0].getAttribute('data-id-especial'))">
           <option value="0">Selecciona una opción</option>
           @foreach ($cuentasContables as $cuentaContable)
           <option value="{{ $cuentaContable->id }}" data-id-especial="{{ $cuentaContable->id_especial }}">{{ $cuentaContable->nombre_cuenta }}</option>

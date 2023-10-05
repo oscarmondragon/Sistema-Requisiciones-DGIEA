@@ -53,10 +53,10 @@
                         </x-slot>
                         <x-slot name="content">
                             <!-- Authentication -->
-                            <form method="POST" action="{{ route('logout') }}">
+                            <form method="POST" action="{{ route('logout.cvu') }}">
                                 @csrf
-                                <x-dropdown-link :href="route('logout')" onclick="event.preventDefault();
-                                                                        this.closest('form').submit();">
+                                <x-dropdown-link :href="route('logout.cvu')" onclick="event.preventDefault();
+                                                this.closest('form').submit();">
                                     {{ __('Salir') }}
                                 </x-dropdown-link>
                             </form>
@@ -122,7 +122,7 @@
             <x-responsive-nav-link :href="route('cvu.seguimiento')" :active="request()->routeIs('seguimiento.index')">
                 {{ __('Seguimiento') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+            <x-responsive-nav-link :href="'http://www.siea.uaemex.mx/cvu/'">
                 {{ __('Salir') }}
             </x-responsive-nav-link>
         </div>
