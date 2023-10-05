@@ -388,6 +388,13 @@ class AdquisicionesForm extends Component
         $this->subtotal = 0;
         $this->iva = 0;
         $this->total = 0;
+        $this->docsCartaExclusividad = [];
+        $this->docsCotizacionesFirmadas = [];
+        $this->docsCotizacionesPdf = [];
+        $this->justificacion_academica = '';
+        $this->vobo = 0;
+        $this->afecta_investigacion = 0;
+        $this->exclusividad = 0;
         $this->bienes = collect();
     }
 

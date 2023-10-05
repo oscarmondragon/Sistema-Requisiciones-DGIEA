@@ -32,7 +32,7 @@ class SolicitudesForm extends Component
     public $clave_tipo_financiamiento = '';
     public $id_rubro = 0;
     public $id_rubro_especial; //variable para determinar si es una cuenta especial (software por ejemplo)
-    public $monto_total = 0;
+    public $monto_total;
     public $nombre_expedido;
     public $id_bitacora;
     public $vobo;
@@ -71,7 +71,6 @@ class SolicitudesForm extends Component
 
     protected $rules = [
         'id_rubro' => 'required|not_in:0',
-        'monto_total' => 'required|lte:35000|min:1',
         'nombre_expedido' => 'required',
         'recursos' => 'required|array|min:1',
         'docsbitacoraPdf' => 'required_if:id_rubro_especial,3',
@@ -82,7 +81,7 @@ class SolicitudesForm extends Component
     protected $messages = [
         'id_rubro.required' => 'Debe seleccionar un rubro.',
         'id_rubro.not_in' => 'Debe seleccionar un rubro.',
-        'monto_total.required' => 'La monto no puede estar vacia.',
+        'monto_total.required' => 'El monto no puede estar vacio.',
         'monto_total.lte' => 'El monto no puede ser mayor a $35000.',
         'monto_total.min' => 'El monto no puede ser menor o igual a 0.',
         'nombre_expedido.required' => 'El nombre de quien expide no puede estar vacio',
@@ -105,7 +104,8 @@ class SolicitudesForm extends Component
 
         $this->validate([
             'id_rubro' => 'required|not_in:0',
-            'recursos' => 'required|array|min:1'
+            'recursos' => 'required|array|min:1',
+            'monto_total' => 'required|min:1|lte:35000'
         ]);
 
 
@@ -134,8 +134,77 @@ class SolicitudesForm extends Component
                 'obligo_comprobar' => $this->comprobacion,
                 'aviso_privacidad' => $this->aviso_privacidad,
                 'id_emisor' => $id_user,
-                'estatus_dgiea' => $this->estatus_dgiea,
-                'estatus_rt' => $this->estatus_rt
+                'estatus_dgiea' => 1,
+                'estatus_rt' => 1
+            ]);
+
+            // Genera la clave_solicitud con fecha y id
+            $id_solicitud = $solicitud->id;
+            $fecha_actual = date('Ymd');
+            $clave_solicitud = $fecha_actual . 'SOLIC' . $id_solicitud;
+
+            // Actualiza la clave de solicitud en el registro de la solicitud
+            $solicitud->update(['clave_solicitud' => $clave_solicitud]);
+
+            //Guarda los recursos en solicitud_detalles
+            //primero agregamos el id_solicitud a cada recurso
+
+            $this->recursos = $this->recursos->map(function ($recurso) use ($id_solicitud) {
+                $recurso['id_solicitud'] = $id_solicitud;
+                return $recurso;
+            });
+
+            foreach ($this->recursos as $recurso) {
+                $elemento = SolicitudDetalle::create([
+                    'id_solicitud' => $recurso['id_solicitud'],
+                    'concepto' => $recurso['concepto'],
+                    'justificacion' => $recurso['justificacionS'],
+                    'importe' => $recurso['importe'],
+                    'periodo_inicio' => $recurso['finicial'],
+                    'periodo_fin' => $recurso['ffinal']
+                ]);
+            }
+
+            return redirect('/cvu-crear')->with('success', 'Su solicitud ha sido guardada correctamente. Recuerde completarla y mandarla a visto bueno.');
+
+        } else {
+            // No se encontró ningún proyecto  con esca clave"
+            return redirect()->back()->with('error', 'No se encontró un proyecto asociado a la clave ' . $clave_proyecto);
+        }
+    }
+
+    public function saveVobo()
+    {
+
+        $this->validate();
+
+        $clave_proyecto = Session::get('id_proyecto');
+        $id_user = Session::get('id_user');
+
+        //Busca el proyecto por la clave
+        $proyecto = Proyecto::where('CveEntPry', $clave_proyecto)->first();
+
+        if ($proyecto) {
+
+            //Inserta la Adquisición en base de datos
+            $solicitud = Solicitud::create([
+                'clave_solicitud' => '',
+                'tipo_requisicion' => $this->tipo_requisicion,
+                'clave_proyecto' => $clave_proyecto,
+                'clave_espacio_academico' => $proyecto->CveCenCos,
+                'clave_rt' => $proyecto->CveEntEmp_Responsable,
+                'tipo_financiamiento' => $proyecto->Tipo_Proyecto,
+                'id_rubro' => (int) $this->id_rubro,
+                'monto_total' => $this->monto_total,
+                'nombre_expedido' => $this->nombre_expedido,
+                'id_bitacora' => $this->id_bitacora,
+                'vobo_admin' => $this->vobo_admin,
+                'vobo_rt' => $this->vobo_rt,
+                'obligo_comprobar' => $this->comprobacion,
+                'aviso_privacidad' => $this->aviso_privacidad,
+                'id_emisor' => $id_user,
+                'estatus_dgiea' => 2,
+                'estatus_rt' => 2
             ]);
 
             // Genera la clave_solicitud con fecha y id
@@ -220,6 +289,8 @@ class SolicitudesForm extends Component
         $this->monto_sumado = $monto_sumado;
     }
 
+
+
     public function deleteRecurso($recurso)
     {
         $this->monto_sumado = $this->monto_sumado - $recurso['importe'];
@@ -231,6 +302,14 @@ class SolicitudesForm extends Component
         $this->recursos = collect();
         $this->monto_sumado = 0;
         $this->resetdocsBitacora();
+        $this->monto_total = null;
+        $this->comprobacion = 0;
+        $this->aviso_privacidad = 0;
+        $this->vobo = 0;
+
+
+
+
     }
 
     public function eliminarArchivo($tipoArchivo, $index)
@@ -250,5 +329,21 @@ class SolicitudesForm extends Component
         $this->docsbitacoraPdf = [];
     }
 
+    public function rules()
+    {
+        $rules = $this->rules;
+        $rules['monto_total'][] = 'required';
+        $rules['monto_total'][] = 'lte:35000';
+        $rules['monto_total'][] = 'min:1';
+        $rules['monto_total'][] = function ($attribute, $value, $fail) {
+            $montoSumado = $this->monto_sumado;
+            $montoTotal = $this->monto_total;
 
+            if ($montoSumado > $value) {
+                $fail('El monto solicitado no puede ser menor a la suma de los recursos listados.');
+            }
+        };
+
+        return $rules;
+    }
 }
