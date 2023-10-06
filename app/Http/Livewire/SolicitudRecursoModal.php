@@ -38,12 +38,12 @@ class SolicitudRecursoModal extends ModalComponent
 
     //MENSAJES DE LA VALIDACION
     protected $messages = [
-        'concepto.required' => 'El concepto no puede estar vacio.',
-        'importe.required' => 'El importe no puede estar vacio.',
+        'concepto.required' => 'El concepto no puede estar vacío.',
+        'importe.required' => 'El importe no puede estar vacío.',
         'monto_sumado.lte' => 'La suma de los importes de lso recursos listados  no puede superar al monto total de la solicitud.',
         'justificacionS.required' => 'La justificación no puede estar vacía.',
-        'finicial.required_if' => 'La fecha inicial no puede estar vacia.',
-        'ffinal.required_if' => 'La fecha final no puede estar vacia.',
+        'finicial.required_if' => 'La fecha inicial no puede estar vacía.',
+        'ffinal.required_if' => 'La fecha final no puede estar vacía.',
         'ffinal.after_or_equal' => 'La fecha final debe ser mayor o igual a la fecha inicial.'
     ];
 

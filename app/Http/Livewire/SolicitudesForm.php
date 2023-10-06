@@ -81,10 +81,10 @@ class SolicitudesForm extends Component
     protected $messages = [
         'id_rubro.required' => 'Debe seleccionar un rubro.',
         'id_rubro.not_in' => 'Debe seleccionar un rubro.',
-        'monto_total.required' => 'El monto no puede estar vacio.',
+        'monto_total.required' => 'El monto no puede estar vacío.',
         'monto_total.lte' => 'El monto no puede ser mayor a $35000.',
         'monto_total.gte' => 'El monto no puede ser menor a la suma de los importes de los recursos solicitados o igual a 0.',
-        'nombre_expedido.required' => 'El nombre de quien expide no puede estar vacio',
+        'nombre_expedido.required' => 'El nombre de quien expide no puede estar vacío',
         'recursos.required' => 'Debe agregar por lo menos un recurso.',
         'recursos.array' => 'Debe agregar por lo menos un recurso.',
         'recursos.min' => 'Debe agregar por lo menos un recurso.',

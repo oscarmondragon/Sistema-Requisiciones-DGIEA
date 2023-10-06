@@ -1,5 +1,5 @@
 <div>
-  <h1 class="mt-4">Formulario solicitudes</h1>
+  <h1 class="mt-6">Formulario solicitudes</h1>
   <form wire:submit.prevent="saveVobo">
     <div>
 
@@ -37,7 +37,7 @@
         </button>
         @else
         <p class="bg-gray-300 w-8 h-8 -pt-2 px-2 ml-1 rounded-full hover:bg-gray-200 hover:font-extrabold hover:text-gray-400 cursor-not-allowed inline-block select-none" disabled>
-          <span class="text-white font-extrabold text-2xl">+</span>
+        <span title="Primero selecciona un rubro y un monto." class="text-white font-extrabold text-2xl">+</span>
         </p>
         @endif
         @error('recursos') <span class=" text-rojo">{{ $message }}</span> @enderror
@@ -64,7 +64,7 @@
                 <th x-text="index + 1"></th>
                 <th x-text="elemento.importe"></th>
                 <th x-text="elemento.concepto"></th>
-                <th x-text="elemento.justificacionS.substring(0,103) + '...'"></th>
+                <th x-text="elemento.justificacionS.length > 135 ? elemento.justificacionS.substring(0,135) + '...' : elemento.justificacionS"></th>
                 @if ($id_rubro_especial === '2')
                 <th x-text="elemento.finicial"></th>
                 <th x-text="elemento.ffinal"></th>
@@ -112,21 +112,21 @@
         <input type="checkbox" id="comprobacion" name="comprobacion" wire:model='comprobacion' class="mr-1">
         <label for="comprobacion">Me obligo a comprobar esta cantidad en un plazo no mayor a 20 días naturales, a partir de la
           recepción del cheque y/o transferencia, en caso contrario autorizo a la U.A.E.M.
-          para que se descuente vía nómina
+          para que se descuente vía nómina.
         </label>
         @error('comprobacion') <span class=" text-rojo">{{ $message }}</span> @enderror
       </div>
       @endif
       <div class="mt-4">
         <input type="checkbox" id="aviso_privacidad" name="aviso_privacidad" wire:model='aviso_privacidad' class="mr-1">
-        <label for="aviso_privacidad">Acepto aviso de privacidad simplificada de la UAEMEX</label>
+        <label for="aviso_privacidad">Acepto aviso de privacidad simplificada de la UAEMEX.</label>
         @error('aviso_privacidad') <span class=" text-rojo">{{ $message }}</span> @enderror
       </div>
 
 
       <div class="mt-4">
         <input type="checkbox" id="vobo" name="vobo" wire:model='vobo' class="mr-1">
-        <label for="vobo">VoBo al requerimiento solicitado. Se envía para VoBo del Admistrativo/Investigador</label>
+        <label for="vobo">VoBo al requerimiento solicitado. Se envía para VoBo del Admistrativo/Investigador.</label>
         @error('vobo') <span class=" text-rojo">{{ $message }}</span> @enderror
       </div>
 

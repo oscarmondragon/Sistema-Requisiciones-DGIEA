@@ -29,13 +29,12 @@
 
       @if ($id_rubro_especial == '2')
       <label>Periodo</label>
-      <div class="mt-2 mb-6 sm:grid sm:grid-cols-2 flex-col">
+      <div class="mt-2 sm:grid sm:grid-cols-2 flex-col">
         <div class="sm:mr-2 mr-0 flex-col">
           <label class="block mb-1" for="finicial">
             Fecha inicial:
           </label>
           <input wire:model="finicial" required class="inputs-formulario" id="finicial" type="date" placeholder="">
-          @error('finicial') <span class="text-rojo">{{ $message }}</span> @enderror
         </div>
 
         <div class="flex-col">
@@ -43,9 +42,10 @@
             Fecha final:
           </label>
           <input wire:model="ffinal" required class="inputs-formulario" id="ffinal" type="date" placeholder="">
-          @error('ffinal') <span class="text-rojo">{{ $message }}</span> @enderror
         </div>
       </div>
+      @error('finicial') <span class="text-rojo block">{{ $message }}</span> @enderror
+      @error('ffinal') <span class="text-rojo block">{{ $message }}</span> @enderror
       @endif
     </div>
   </x-slot>

@@ -77,7 +77,7 @@
   </x-slot>
 
   <x-slot name="buttons" class="mt-10">
-    <button wire:click="agregarElemento({{ $_id}}, {{$id_rubro}})" class="btn-success">Guardar</button>
-    <button wire:click="$emit('closeModal')" class="btn-warning">Cancelar</button>
+    <button wire:click="agregarElemento({{ $_id}}, {{$id_rubro}})" class="btn-success sm:w-auto w-full">Guardar</button>
+    <button wire:click="$emit('closeModal')" class="btn-warning sm:w-auto w-full">Cancelar</button>
   </x-slot>
 </x-modal>
