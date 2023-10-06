@@ -74,7 +74,7 @@ class SolicitudesForm extends Component
         'nombre_expedido' => 'required',
         'recursos' => 'required|array|min:1',
         'docsbitacoraPdf' => 'required_if:id_rubro_especial,3',
-        'comprobacion' => 'required_unless:id_rubro_especial,3|accepted',
+        'comprobacion' => 'required_unless:id_rubro_especial,3',
         'aviso_privacidad' => 'accepted',
         'vobo' => 'accepted'
     ];
@@ -83,14 +83,14 @@ class SolicitudesForm extends Component
         'id_rubro.not_in' => 'Debe seleccionar un rubro.',
         'monto_total.required' => 'El monto no puede estar vacio.',
         'monto_total.lte' => 'El monto no puede ser mayor a $35000.',
-        'monto_total.min' => 'El monto no puede ser menor o igual a 0.',
+        'monto_total.gte' => 'El monto no puede ser menor a la suma de los importes de los recursos solicitados o igual a 0.',
         'nombre_expedido.required' => 'El nombre de quien expide no puede estar vacio',
         'recursos.required' => 'Debe agregar por lo menos un recurso.',
         'recursos.array' => 'Debe agregar por lo menos un recurso.',
         'recursos.min' => 'Debe agregar por lo menos un recurso.',
         'docsbitacoraPdf.required_if' => 'Debe adjuntar la bitacora.',
         'comprobacion.required_unless' => 'Debe de aceptar la condición.',
-        'comprobacion.accepted' => 'Debe de aceptar la condición.',
+        'comprobacion.accepted' => 'Debe de aceptar la condición seleccionela.',
         'aviso_privacidad.accepted' => 'Debe de aceptar el aviso de privacidad.',
         'vobo.accepted' => 'Debe dar el visto bueno.'
     ];
@@ -105,8 +105,9 @@ class SolicitudesForm extends Component
         $this->validate([
             'id_rubro' => 'required|not_in:0',
             'recursos' => 'required|array|min:1',
-            'monto_total' => 'required|min:1|lte:35000'
+            'monto_total' => 'required|lte:35000|gte:monto_sumado'
         ]);
+
 
 
         $clave_proyecto = Session::get('id_proyecto');
@@ -340,7 +341,7 @@ class SolicitudesForm extends Component
             $montoTotal = $this->monto_total;
 
             if ($montoSumado > $value) {
-                $fail('El monto solicitado no puede ser menor a la suma de los recursos listados.');
+                $fail('El monto no puede ser menor a la suma de los importes de los recursos solicitados o igual a 0.');
             }
         };
 

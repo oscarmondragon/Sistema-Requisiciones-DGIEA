@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Proyecto;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Redirect;
+
 
 class CvuController extends Controller
 {
@@ -44,7 +46,17 @@ class CvuController extends Controller
                 'tipo_financiamiento' => $proyecto->Tipo_Proyecto
             ]);
 
-            return view('cvu.index', ['accion' => $accion]);
+            if ($accion == 1) {
+                return Redirect::route('cvu.create');
+            }
+            if ($accion == 2) {
+                return Redirect::route('cvu.vobo');
+            }
+            if ($accion == 3) {
+                return Redirect::route('cvu.seguimiento');
+            }
+            return "La acción solicitada no es valida";
+            // return view('cvu.index', ['accion' => $accion]);
         } else {
             return "El proyecto no existe";
         }
@@ -68,11 +80,26 @@ class CvuController extends Controller
 
     public function destroy(Request $request): RedirectResponse
     {
-        Auth::guard('web')->logout();
+        // Auth::guard('web')->logout();
 
-        $request->session()->invalidate();
+        // $request->session()->invalidate();
 
-        $request->session()->regenerateToken();
+        //$request->session()->regenerateToken();
+        session()->forget([
+            'id_user',
+            'name_user',
+            'id_proyecto',
+            'name_proyecto',
+            'clave_espacioAcademico',
+            'name_espacioAcademico',
+            'id_rt',
+            'name_rt',
+            'id_administrativo',
+            'name_administrativo',
+            'tipo_financiamiento'
+        ]);
+
+        request()->flush();
 
         return redirect('http://www.siea.uaemex.mx/cvu/');
     }

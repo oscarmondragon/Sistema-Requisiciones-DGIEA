@@ -4,7 +4,6 @@
   </x-slot>
   <x-slot name="content">
     <div class="w-full">
-    {{$monto_sumado}}
     <div>
         <label class="block mb-2" for="concepto">
           Concepto
