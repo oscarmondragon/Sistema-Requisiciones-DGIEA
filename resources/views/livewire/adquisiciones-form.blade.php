@@ -34,7 +34,7 @@
         </button>
         @else
         <p class="bg-gray-300 w-8 h-8 -pt-2 px-2 ml-1 rounded-full hover:bg-gray-200 hover:font-extrabold hover:text-gray-400 cursor-not-allowed inline-block select-none" disabled>
-          <span class="text-white font-extrabold text-2xl">+</span>
+          <span title="Primero selecciona un rubro." class="text-white font-extrabold text-2xl">+</span>
         </p>
         @endif
         @error('bienes') <span class=" text-rojo">{{ $message }}</span> @enderror
@@ -46,13 +46,13 @@
           <thead>
             <tr class="bg-blanco">
               <th class="w-[26px]">#</th>
-              <th class="w-[200px]">Descripcion</th>
+              <th class="w-[200px]">Descripción</th>
               <th class="w-[80px]">Cantidad</th>
               <th class="w-[80px]">Precio Unitario</th>
               <th class="w-[80px]">IVA</th>
               <th class="w-[80px]">Importe</th>
               @if ($id_rubro_especial == '1')
-              <th class="w-[300px]">Justificacion</th>
+              <th class="w-[300px]">Justificación</th>
               <th class="w-[180px]">Beneficiados</th>
               @endif
               <th class="w-[148px]">Acciones</th>
@@ -68,7 +68,7 @@
                 <th class="w-[80px]" x-text="elemento.iva"></th>
                 <th class="w-[80px]" x-text="elemento.importe"></th>
                 @if ($id_rubro_especial == '1')
-                <th class="w-[300px]" x-text="elemento.justificacionSoftware.substring(0,75) + '...'"></th>
+                <th class="w-[300px]" x-text="elemento.justificacionSoftware.length > 85 ? elemento.justificacionSoftware.substring(0,85) + '...' : elemento.justificacionSoftware"></th>
                 <th class="w-[180px]" x-html="'Alumnos: ' + elemento.numAlumnos + 
                           '<br>Profesores: ' + elemento.numProfesores + 
                           '<br>Administrativos: ' + elemento.numAdministrativos"></th>
@@ -171,7 +171,8 @@
       <div x-show="exclusividadSelectedOption === '1'">
         <label for="cartaExlcusividad">Carta de exclusividad:</label>
         <input type="file" id="cartaExlcusividad" wire:model='docsCartaExclusividad'>
-        @empty($docsCartaExclusividad)<span class="text-dorado">Sin archivos seleccionados.</span>
+        @empty($docsCartaExclusividad)
+          <label for="cartaExlcusividad" class="text-dorado">Sin archivos seleccionados.</label>
         @endempty
         <br>
         <div wire:loading wire:target="docsCartaExclusividad">Cargando archivo...</div>
@@ -191,7 +192,9 @@
     <div class="mt-2">
       <label for="cotizacionFirmada">Cotización firmada:</label>
       <input type="file" id="cotizacionFirmada" wire:model='docsCotizacionesFirmadas'>
-      @empty($docsCotizacionesFirmadas)<span class="text-dorado">Sin archivos seleccionados.</span>@endempty
+      @empty($docsCotizacionesFirmadas)
+      <label for="cotizacionFirmada" class="text-dorado">Sin archivos seleccionados.</label>
+      @endempty
       <br>
       <div wire:loading wire:target="docsCotizacionesFirmadas">Cargando archivo...</div>
     </div>
@@ -209,7 +212,9 @@
     <div class="mt-2">
       <label for="cotizacionesPdf">Cotizaciones PDF:</label>
       <input type="file" id="cotizacionesPdf" wire:model='docsCotizacionesPdf'>
-      @empty($docsCotizacionesPdf)<span class="text-dorado">Sin archivos seleccionados.</span>@endempty
+      @empty($docsCotizacionesPdf)
+        <label for="cotizacionesPdf" class="text-dorado">Sin archivos seleccionados.</label>
+      @endempty
       <br>
       <div wire:loading wire:target="docsCotizacionesPdf">Cargando archivo...</div>
     </div>
@@ -233,10 +238,10 @@
       @error('vobo') <span class=" text-rojo error">{{ $message }}</span> @enderror
 
     </div>
-    <div class="sm:text-right text-left my-10 -mb-5">
-      <button type="button" wire:click="save()" class="btn-success">Guardar</button>
-      <button type="submit" class="btn-primary">Enviar para VoBo</button>
-      <button type="button" class="btn-warning" x-on:click="window.location.href = '{{ route('cvu.create') }}'">Cancelar</button>
+    <div class="sm:text-right text-center my-10 -mb-5">
+      <button type="button" wire:click="save()" class="btn-success sm:w-auto w-3/4">Guardar</button>
+      <button type="submit" class="btn-primary sm:w-auto w-3/4">Enviar para VoBo</button>
+      <button type="button" class="btn-warning sm:w-auto w-3/4" x-on:click="window.location.href = '{{ route('cvu.create') }}'">Cancelar</button>
     </div>
 </div>
 </form>
