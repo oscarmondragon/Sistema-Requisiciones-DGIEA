@@ -14,7 +14,7 @@
     <span class="font-medium"> {{ session('error') }} </span>
   </div>
   @endif -->
-  <form wire:submit.prevent="saveVobo">
+  <form wire:submit.prevent="saveVobo" enctype="mulñtipart/form-data">
     <div>
       <div class=" my-6">
         <label for="id_rubro">
@@ -178,7 +178,7 @@
 
         <div x-show="exclusividadSelectedOption === '1'">
           <label for="cartaExlcusividad">Carta de exclusividad:</label>
-          <input type="file" id="cartaExlcusividad" wire:model='docsCartaExclusividad'>
+          <input type="file" id="cartaExlcusividad" wire:model='docsCartaExclusividad' accept=".doc,.docx,.pdf" >
           @error('docsCartaExclusividad') <span class=" text-rojo error">{{ $message }}</span> @enderror
           <ul>
             @foreach($docsCartaExclusividad as $index => $docCarta)
@@ -194,7 +194,7 @@
       </div>
       <div class="mt-2">
         <label for="cotizacionFirmada">Cotización firmada:</label>
-        <input type="file" id="cotizacionFirmada" wire:model='docsCotizacionesFirmadas'>
+        <input type="file" id="cotizacionFirmada" wire:model='docsCotizacionesFirmadas' accept=".doc,.docx,.pdf">
       </div>
       @error('docsCotizacionesFirmadas') <span class=" text-rojo error">{{ $message }}</span> @enderror
       <ul>
@@ -209,7 +209,7 @@
       </ul>
       <div class="mt-2">
         <label for="cotizacionesPdf">Cotizaciones PDF:</label>
-        <input type="file" id="cotizacionesPdf" wire:model='docsCotizacionesPdf'>
+        <input type="file" id="cotizacionesPdf" wire:model='docsCotizacionesPdf' accept="..pdf">
       </div>
       @error('docsCotizacionesPdf') <span class=" text-rojo error">{{ $message }}</span> @enderror
       <ul class="my-2">
@@ -232,6 +232,13 @@
 
       </div>
       <div class="sm:text-right text-left my-10 -mb-5">
+      @if (session('error'))
+      <span class=" text-rojo error">
+    <!--div class="alert alert-danger"-->
+        {{ session('error') }}
+    <!--/div-->
+    </span>
+@endif
         <button type="button" wire:click="save()" class="btn-success">Guardar</button>
         <button type="submit" class="btn-primary">Enviar para VoBo</button>
         <button type="button" class="btn-warning" x-on:click="window.location.href = '{{ route('cvu.create') }}'">Cancelar</button>
