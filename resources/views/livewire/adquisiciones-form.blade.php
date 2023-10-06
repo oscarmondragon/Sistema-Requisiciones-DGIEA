@@ -152,7 +152,6 @@
         @error('justificacion_academica') <span class=" text-rojo">{{ $message }}</span> @enderror
       </div>
     </div>
-
     <div class="mb-2" x-data x-init="exclusividadSelectedOption = '{{ $exclusividad }}'">
       <label for="afecta">
         ¿Es bien o servicio con exclusividad?
@@ -170,7 +169,7 @@
 
       <div x-show="exclusividadSelectedOption === '1'">
         <label for="cartaExlcusividad">Carta de exclusividad:</label>
-        <input type="file" id="cartaExlcusividad" wire:model='docsCartaExclusividad'>
+        <input type="file" id="cartaExlcusividad" wire:model='docsCartaExclusividad'  accept=".doc,.docx,.pdf">
         @empty($docsCartaExclusividad)
           <label for="cartaExlcusividad" class="text-dorado">Sin archivos seleccionados.</label>
         @endempty
@@ -191,7 +190,7 @@
     </div>
     <div class="mt-2">
       <label for="cotizacionFirmada">Cotización firmada:</label>
-      <input type="file" id="cotizacionFirmada" wire:model='docsCotizacionesFirmadas'>
+      <input type="file" id="cotizacionFirmada" wire:model='docsCotizacionesFirmadas'  accept=".doc,.docx,.pdf">
       @empty($docsCotizacionesFirmadas)
       <label for="cotizacionFirmada" class="text-dorado">Sin archivos seleccionados.</label>
       @endempty
@@ -211,7 +210,7 @@
     </ul>
     <div class="mt-2">
       <label for="cotizacionesPdf">Cotizaciones PDF:</label>
-      <input type="file" id="cotizacionesPdf" wire:model='docsCotizacionesPdf'>
+      <input type="file" id="cotizacionesPdf" wire:model='docsCotizacionesPdf'  accept=".pdf">
       @empty($docsCotizacionesPdf)
         <label for="cotizacionesPdf" class="text-dorado">Sin archivos seleccionados.</label>
       @endempty
