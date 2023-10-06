@@ -97,7 +97,8 @@ class AdquisicionesForm extends Component
         $this->docsCartaExclusividad = [];
         $this->docsCotizacionesFirmadas = [];
         $this->docsCotizacionesPdf = [];
-        $this->cuentasContables = CuentaContable::where('estatus', 1)->where('tipo_requisicion', 1)->get();
+        $this->cuentasContables = CuentaContable::where('estatus', 1)->whereIn('tipo_requisicion', [1, 3])->get();
+
 
     }
     public function render()
@@ -238,12 +239,7 @@ class AdquisicionesForm extends Component
         } else {
             // No se encontró ningún proyecto  con esca clave"
             return redirect()->back()->with('error', 'No se encontró un proyecto asociado a la clave ' . $clave_proyecto);
-
-
         }
-
-
-
     }
     
     
@@ -288,40 +284,46 @@ class AdquisicionesForm extends Component
                 'subtotal' => $this->subtotal,
                 'iva' => $this->iva,
                 'total' => $this->total
-
-            ]);
-
-            // Genera la clave_adquisición con fecha y id
-            $id_adquisicion = $adquisicion->id;
-            $fecha_actual = date('Ymd');
-            $clave_adquisicion = $fecha_actual . 'ADQ' . $id_adquisicion;
-
-            // Actualiza la clave de adquisición en el registro de la adquisición
-            $adquisicion->update(['clave_adquisicion' => $clave_adquisicion]);
-
-            //Guarda los bienes o servicios en adquisicion_detalles
-            //primero agregamos el id_adquisicion a cada bien
-
-            $this->bienes = $this->bienes->map(function ($bien) use ($id_adquisicion) {
-                $bien['id_adquisicion'] = $id_adquisicion;
-                return $bien;
-            });
-
-            foreach ($this->bienes as $bien) {
-                $elemento = AdquisicionDetalle::create([
-                    'id_adquisicion' => $bien['id_adquisicion'],
-                    'descripcion' => $bien['descripcion'],
-                    'cantidad' => $bien['cantidad'],
-                    'precio_unitario' => $bien['precioUnitario'],
-                    'iva' => $bien['iva'],
-                    'importe' => $bien['importe'],
-                    'justificacion_software' => $bien['justificacionSoftware'],
-                    'alumnos' => $bien['numAlumnos'],
-                    'profesores_invest' => $bien['numProfesores'],
-                    'administrativos' => $bien['numAdministrativos'],
-                    'id_emisor' => $id_user
                 ]);
-            }
+
+                // Genera la clave_adquisición con fecha y id
+                $id_adquisicion = $adquisicion->id;
+                $fecha_actual = date('Ymd');
+                $clave_adquisicion = $fecha_actual . 'ADQ' . $id_adquisicion;
+
+                // Actualiza la clave de adquisición en el registro de la adquisición
+                $adquisicion->update(['clave_adquisicion' => $clave_adquisicion]);
+
+                //Guarda los bienes o servicios en adquisicion_detalles
+                //primero agregamos el id_adquisicion a cada bien
+
+                $this->bienes = $this->bienes->map(function ($bien) use ($id_adquisicion) {
+                    $bien['id_adquisicion'] = $id_adquisicion;
+                    return $bien;
+                });
+
+                foreach ($this->bienes as $bien) {
+                    $elemento = AdquisicionDetalle::create([
+                        'id_adquisicion' => $bien['id_adquisicion'],
+                        'descripcion' => $bien['descripcion'],
+                        'cantidad' => $bien['cantidad'],
+                        'precio_unitario' => $bien['precioUnitario'],
+                        'iva' => $bien['iva'],
+                        'importe' => $bien['importe'],
+                        'justificacion_software' => $bien['justificacionSoftware'],
+                        'alumnos' => $bien['numAlumnos'],
+                        'profesores_invest' => $bien['numProfesores'],
+                        'administrativos' => $bien['numAdministrativos'],
+                        'id_emisor' => $id_user
+                    ]);
+                }
+
+
+                $documento = Documento::create([
+                    'id_requisicion' => $id_adquisicion,
+                    'nombre_oc' => 'hola',
+                    'tipo_docume' => 1
+                ]);
 
             //definimos la ruta de los archivos a insertar 
             $ruta_archivo = $clave_proyecto.'/Requisiciones/'.$id_adquisicion;
@@ -373,6 +375,7 @@ class AdquisicionesForm extends Component
             return redirect()->back()->with('error', 'error en el deposito' . $e->getMessage());
 
         }
+     
         } else {
             // No se encontró ningún proyecto  con esca clave"
             return redirect()->back()->with('error', 'No se encontró un proyecto asociado a la clave ' . $clave_proyecto);
@@ -509,6 +512,13 @@ class AdquisicionesForm extends Component
         $this->subtotal = 0;
         $this->iva = 0;
         $this->total = 0;
+        $this->docsCartaExclusividad = [];
+        $this->docsCotizacionesFirmadas = [];
+        $this->docsCotizacionesPdf = [];
+        $this->justificacion_academica = '';
+        $this->vobo = 0;
+        $this->afecta_investigacion = 0;
+        $this->exclusividad = 0;
         $this->bienes = collect();
     }
 
@@ -543,6 +553,16 @@ class AdquisicionesForm extends Component
                 $this->docsCotizacionesPdf = array_values($this->docsCotizacionesPdf);
             }
         }
+    }
+
+    public function resetJustificacionAcademica()
+    {
+        $this->justificacion_academica = '';
+    }
+
+    public function resetdocsCartaExclusividad()
+    {
+        $this->docsCartaExclusividad = [];
     }
 
 }
