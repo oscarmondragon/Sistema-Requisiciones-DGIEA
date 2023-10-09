@@ -35,6 +35,9 @@
     @if ($accion == 3)
     <livewire:seguimiento />
     @endif
+    @if ($accion == 4)
+    <livewire:seguimiento-siia />
+    @endif
 
     </div>
     </div>

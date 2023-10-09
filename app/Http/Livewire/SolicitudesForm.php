@@ -166,7 +166,7 @@ class SolicitudesForm extends Component
                 ]);
             }
 
-            return redirect('/cvu-crear')->with('success', 'Su solicitud ha sido guardada correctamente. Recuerde completarla y mandarla a visto bueno.');
+            return redirect('/cvu-crear')->with('success', 'Su solicitud con clave ' . $clave_solicitud . ' ha sido creada correctamente. Recuerde completarla y mandarla a visto bueno.');
 
         } else {
             // No se encontró ningún proyecto  con esca clave"
@@ -235,7 +235,7 @@ class SolicitudesForm extends Component
                 ]);
             }
 
-            return redirect('/cvu-crear')->with('success', 'Su solicitud ha sido guardada correctamente. Recuerde completarla y mandarla a visto bueno.');
+            return redirect('/cvu-crear')->with('success', 'Su solicitud con clave ' . $clave_solicitud . ' ha sido enviada para visto bueno.');
 
         } else {
             // No se encontró ningún proyecto  con esca clave"

@@ -64,7 +64,9 @@ Route::post('/cvu', [CvuController::class, 'cvuVerificar'])->name('cvu.verificar
 Route::post('logout-cvu', [CvuController::class, 'destroy'])->name('logout.cvu');
 Route::get('/cvu-crear', [CvuController::class, 'create'])->middleware('CvuAuth')->name('cvu.create');
 Route::get('/cvu-vobo', [CvuController::class, 'darVobo'])->middleware('CvuAuth')->name('cvu.vobo');
-Route::get('/cvu-seguimiento', [CvuController::class, 'seguimiento'])->middleware('CvuAuth')->name('cvu.seguimiento');
+Route::get('/cvu-seguimiento-dgiea', [CvuController::class, 'seguimientoDgiea'])->middleware('CvuAuth')->name('cvu.seguimiento-dgiea');
+Route::get('/cvu-seguimiento-siia', [CvuController::class, 'seguimientoSiia'])->middleware('CvuAuth')->name('cvu.seguimiento-siia');
+
 Route::get('/cvu', function () {
     // return view('cvu.create');
     return redirect()->route('cvu.create');
