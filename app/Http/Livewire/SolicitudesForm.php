@@ -92,7 +92,7 @@ class SolicitudesForm extends Component
         'recursos.min' => 'Debe agregar por lo menos un recurso.',
         'docsbitacoraPdf.required_if' => 'Debe adjuntar la bitacora.',
         'docsbitacoraPdf.*' => 'Se debe adjuntar archivos con extensión pdf unicamente',
-        'docsbitacoraPdf.*.max'=>'El archivo no debe pesar mas de 2MB',
+        'docsbitacoraPdf.*.max' => 'El archivo no debe pesar mas de 2MB',
         'comprobacion.required_unless' => 'Debe de aceptar la condición.',
         'comprobacion.accepted' => 'Debe de aceptar la condición seleccionela.',
         'aviso_privacidad.accepted' => 'Debe de aceptar el aviso de privacidad.',
@@ -123,81 +123,81 @@ class SolicitudesForm extends Component
 
         if ($proyecto) {
             DB::beginTransaction();
-            try{
+            try {
 
-            //Inserta la Adquisición en base de datos
-            $solicitud = Solicitud::create([
-                'clave_solicitud' => '',
-                'tipo_requisicion' => $this->tipo_requisicion,
-                'clave_proyecto' => $clave_proyecto,
-                'clave_espacio_academico' => $proyecto->CveCenCos,
-                'clave_rt' => $proyecto->CveEntEmp_Responsable,
-                'tipo_financiamiento' => $proyecto->Tipo_Proyecto,
-                'id_rubro' => (int) $this->id_rubro,
-                'monto_total' => $this->monto_total,
-                'nombre_expedido' => $this->nombre_expedido,
-                'id_bitacora' => $this->id_bitacora,
-                'vobo_admin' => $this->vobo_admin,
-                'vobo_rt' => $this->vobo_rt,
-                'obligo_comprobar' => $this->comprobacion,
-                'aviso_privacidad' => $this->aviso_privacidad,
-                'id_emisor' => $id_user,
-                'estatus_dgiea' => 1,
-                'estatus_rt' => 1
-            ]);
-
-            // Genera la clave_solicitud con fecha y id
-            $id_solicitud = $solicitud->id;
-            $fecha_actual = date('Ymd');
-            $clave_solicitud = $fecha_actual . 'SOLIC' . $id_solicitud;
-
-            // Actualiza la clave de solicitud en el registro de la solicitud
-            $solicitud->update(['clave_solicitud' => $clave_solicitud]);
-
-            //Guarda los recursos en solicitud_detalles
-            //primero agregamos el id_solicitud a cada recurso
-
-            $this->recursos = $this->recursos->map(function ($recurso) use ($id_solicitud) {
-                $recurso['id_solicitud'] = $id_solicitud;
-                return $recurso;
-            });
-
-            foreach ($this->recursos as $recurso) {
-                $elemento = SolicitudDetalle::create([
-                    'id_solicitud' => $recurso['id_solicitud'],
-                    'concepto' => $recurso['concepto'],
-                    'justificacion' => $recurso['justificacionS'],
-                    'importe' => $recurso['importe'],
-                    'periodo_inicio' => $recurso['finicial'],
-                    'periodo_fin' => $recurso['ffinal']
+                //Inserta la Adquisición en base de datos
+                $solicitud = Solicitud::create([
+                    'clave_solicitud' => '',
+                    'tipo_requisicion' => $this->tipo_requisicion,
+                    'clave_proyecto' => $clave_proyecto,
+                    'clave_espacio_academico' => $proyecto->CveCenCos,
+                    'clave_rt' => $proyecto->CveEntEmp_Responsable,
+                    'tipo_financiamiento' => $proyecto->Tipo_Proyecto,
+                    'id_rubro' => (int) $this->id_rubro,
+                    'monto_total' => $this->monto_total,
+                    'nombre_expedido' => $this->nombre_expedido,
+                    'id_bitacora' => $this->id_bitacora,
+                    'vobo_admin' => $this->vobo_admin,
+                    'vobo_rt' => $this->vobo_rt,
+                    'obligo_comprobar' => $this->comprobacion,
+                    'aviso_privacidad' => $this->aviso_privacidad,
+                    'id_emisor' => $id_user,
+                    'estatus_dgiea' => 1,
+                    'estatus_rt' => 1
                 ]);
-            }
-            $ruta_archivo = $clave_proyecto.'/Solicitudes/'.$id_solicitud;
-            $i=1;
-            if(empty($this->docsbitacoraPdf)==false){
-                foreach ($this->docsbitacoraPdf as $dbp) {
-                    //extensiond e archivo a depositar
-                    $extension = $dbp->getClientOriginalExtension();
-                    $nombre_doc = $dbp->getClientOriginalName();
-                    //almacenamos archivo en servidor y obtenemos la ruta para agregar a la BD
-                    $pathBD=$dbp->storeAs($ruta_archivo.'/Bitacoras','doc_bitacora'.$i.'.'.$extension);
-                    $i++;
-                    $documento = Documento::create([
-                        'id_requisicion' => $id_solicitud,
-                        'nombre_doc' => $pathBD,
-                        'tipo_documento' => '1',
-                        'tipo_requisicion' => '2',
-                        'nombre_documento' => $nombre_doc
-                    ]);                
-                    }
-                    $i=1;
+
+                // Genera la clave_solicitud con fecha y id
+                $id_solicitud = $solicitud->id;
+                $fecha_actual = date('Ymd');
+                $clave_solicitud = $fecha_actual . 'SOLIC' . $id_solicitud;
+
+                // Actualiza la clave de solicitud en el registro de la solicitud
+                $solicitud->update(['clave_solicitud' => $clave_solicitud]);
+
+                //Guarda los recursos en solicitud_detalles
+                //primero agregamos el id_solicitud a cada recurso
+
+                $this->recursos = $this->recursos->map(function ($recurso) use ($id_solicitud) {
+                    $recurso['id_solicitud'] = $id_solicitud;
+                    return $recurso;
+                });
+
+                foreach ($this->recursos as $recurso) {
+                    $elemento = SolicitudDetalle::create([
+                        'id_solicitud' => $recurso['id_solicitud'],
+                        'concepto' => $recurso['concepto'],
+                        'justificacion' => $recurso['justificacionS'],
+                        'importe' => $recurso['importe'],
+                        'periodo_inicio' => $recurso['finicial'],
+                        'periodo_fin' => $recurso['ffinal']
+                    ]);
                 }
-             
+                $ruta_archivo = $clave_proyecto . '/Solicitudes/' . $id_solicitud;
+                $i = 1;
+                if (empty($this->docsbitacoraPdf) == false) {
+                    foreach ($this->docsbitacoraPdf as $dbp) {
+                        //extensiond e archivo a depositar
+                        $extension = $dbp->getClientOriginalExtension();
+                        $nombre_doc = $dbp->getClientOriginalName();
+                        //almacenamos archivo en servidor y obtenemos la ruta para agregar a la BD
+                        $pathBD = $dbp->storeAs($ruta_archivo . '/Bitacoras', 'doc_bitacora' . $i . '.' . $extension);
+                        $i++;
+                        $documento = Documento::create([
+                            'id_requisicion' => $id_solicitud,
+                            'nombre_doc' => $pathBD,
+                            'tipo_documento' => '1',
+                            'tipo_requisicion' => '2',
+                            'nombre_documento' => $nombre_doc
+                        ]);
+                    }
+                    $i = 1;
+                }
+
                 DB::commit();
-                return redirect('/cvu-crear')->with('success', 'Su solicitud ha sido guardada correctamente con el numero.'.$clave_solicitud.' Recuerde completarla y mandarla a visto bueno.');
-            }catch (\Exception $e) {
+                return redirect('/cvu-crear')->with('success', 'Su solicitud ha sido guardada correctamente con el numero.' . $clave_solicitud . ' Recuerde completarla y mandarla a visto bueno.');
+            } catch (\Exception $e) {
                 DB::rollback();
-                dd("Error en el catch".$e); 
+                dd("Error en el catch" . $e);
                 return redirect()->back()->with('error', 'Error en el proceso de guardado ' . $e->getMessage());
             }
 
@@ -216,12 +216,12 @@ class SolicitudesForm extends Component
         $id_user = Session::get('id_user');
         $who_vobo = Session::get('VoBo_Who');
 
-        if($who_vobo){//Si el deposito es por parte del Responsable técnico
-            $this->vobo_admin=0;
-            $this->vobo_rt=1;
-        }else{//Si el depósito es por parte del administrativo
-            $this->vobo_admin=1;
-            $this->vobo_rt=0;
+        if ($who_vobo) { //Si el deposito es por parte del Responsable técnico
+            $this->vobo_admin = 0;
+            $this->vobo_rt = 1;
+        } else { //Si el depósito es por parte del administrativo
+            $this->vobo_admin = 1;
+            $this->vobo_rt = 0;
         }
 
         //Busca el proyecto por la clave
@@ -229,81 +229,81 @@ class SolicitudesForm extends Component
 
         if ($proyecto) {
             DB::beginTransaction();
-            try{
+            try {
 
-            //Inserta la Adquisición en base de datos
-            $solicitud = Solicitud::create([
-                'clave_solicitud' => '',
-                'tipo_requisicion' => $this->tipo_requisicion,
-                'clave_proyecto' => $clave_proyecto,
-                'clave_espacio_academico' => $proyecto->CveCenCos,
-                'clave_rt' => $proyecto->CveEntEmp_Responsable,
-                'tipo_financiamiento' => $proyecto->Tipo_Proyecto,
-                'id_rubro' => (int) $this->id_rubro,
-                'monto_total' => $this->monto_total,
-                'nombre_expedido' => $this->nombre_expedido,
-                'id_bitacora' => $this->id_bitacora,
-                'vobo_admin' => $this->vobo_admin,
-                'vobo_rt' => $this->vobo_rt,
-                'obligo_comprobar' => $this->comprobacion,
-                'aviso_privacidad' => $this->aviso_privacidad,
-                'id_emisor' => $id_user,
-                'estatus_dgiea' => 2,
-                'estatus_rt' => 2
-            ]);
-
-            // Genera la clave_solicitud con fecha y id
-            $id_solicitud = $solicitud->id;
-            $fecha_actual = date('Ymd');
-            $clave_solicitud = $fecha_actual . 'SOLIC' . $id_solicitud;
-
-            // Actualiza la clave de solicitud en el registro de la solicitud
-            $solicitud->update(['clave_solicitud' => $clave_solicitud]);
-
-            //Guarda los recursos en solicitud_detalles
-            //primero agregamos el id_solicitud a cada recurso
-
-            $this->recursos = $this->recursos->map(function ($recurso) use ($id_solicitud) {
-                $recurso['id_solicitud'] = $id_solicitud;
-                return $recurso;
-            });
-
-            foreach ($this->recursos as $recurso) {
-                $elemento = SolicitudDetalle::create([
-                    'id_solicitud' => $recurso['id_solicitud'],
-                    'concepto' => $recurso['concepto'],
-                    'justificacion' => $recurso['justificacionS'],
-                    'importe' => $recurso['importe'],
-                    'periodo_inicio' => $recurso['finicial'],
-                    'periodo_fin' => $recurso['ffinal']
+                //Inserta la Adquisición en base de datos
+                $solicitud = Solicitud::create([
+                    'clave_solicitud' => '',
+                    'tipo_requisicion' => $this->tipo_requisicion,
+                    'clave_proyecto' => $clave_proyecto,
+                    'clave_espacio_academico' => $proyecto->CveCenCos,
+                    'clave_rt' => $proyecto->CveEntEmp_Responsable,
+                    'tipo_financiamiento' => $proyecto->Tipo_Proyecto,
+                    'id_rubro' => (int) $this->id_rubro,
+                    'monto_total' => $this->monto_total,
+                    'nombre_expedido' => $this->nombre_expedido,
+                    'id_bitacora' => $this->id_bitacora,
+                    'vobo_admin' => $this->vobo_admin,
+                    'vobo_rt' => $this->vobo_rt,
+                    'obligo_comprobar' => $this->comprobacion,
+                    'aviso_privacidad' => $this->aviso_privacidad,
+                    'id_emisor' => $id_user,
+                    'estatus_dgiea' => 2,
+                    'estatus_rt' => 2
                 ]);
-            }
 
-            $ruta_archivo = $clave_proyecto.'/Solicitudes/'.$id_solicitud;
-            $i=1;
-            foreach ($this->docsbitacoraPdf as $dbp) {
-                //extensiond e archivo a depositar
-                $extension = $dbp->getClientOriginalExtension();
-                $nombre_doc = $dbp->getClientOriginalName();
-                //almacenamos archivo en servidor y obtenemos la ruta para agregar a la BD
-                $pathBD=$dbp->storeAs($ruta_archivo.'/Bitacoras','doc_bitacora'.$i.'.'.$extension);
-                $i++;
-                $documento = Documento::create([
-                    'id_requisicion' => $id_solicitud,
-                    'nombre_doc' => $pathBD,
-                    'tipo_documento' => '1',
-                    'tipo_requisicion' => '2',
-                    'nombre_documento' => $nombre_doc
-                ]);                
+                // Genera la clave_solicitud con fecha y id
+                $id_solicitud = $solicitud->id;
+                $fecha_actual = date('Ymd');
+                $clave_solicitud = $fecha_actual . 'SOLIC' . $id_solicitud;
+
+                // Actualiza la clave de solicitud en el registro de la solicitud
+                $solicitud->update(['clave_solicitud' => $clave_solicitud]);
+
+                //Guarda los recursos en solicitud_detalles
+                //primero agregamos el id_solicitud a cada recurso
+
+                $this->recursos = $this->recursos->map(function ($recurso) use ($id_solicitud) {
+                    $recurso['id_solicitud'] = $id_solicitud;
+                    return $recurso;
+                });
+
+                foreach ($this->recursos as $recurso) {
+                    $elemento = SolicitudDetalle::create([
+                        'id_solicitud' => $recurso['id_solicitud'],
+                        'concepto' => $recurso['concepto'],
+                        'justificacion' => $recurso['justificacionS'],
+                        'importe' => $recurso['importe'],
+                        'periodo_inicio' => $recurso['finicial'],
+                        'periodo_fin' => $recurso['ffinal']
+                    ]);
+                }
+
+                $ruta_archivo = $clave_proyecto . '/Solicitudes/' . $id_solicitud;
+                $i = 1;
+                foreach ($this->docsbitacoraPdf as $dbp) {
+                    //extensiond e archivo a depositar
+                    $extension = $dbp->getClientOriginalExtension();
+                    $nombre_doc = $dbp->getClientOriginalName();
+                    //almacenamos archivo en servidor y obtenemos la ruta para agregar a la BD
+                    $pathBD = $dbp->storeAs($ruta_archivo . '/Bitacoras', 'doc_bitacora' . $i . '.' . $extension);
+                    $i++;
+                    $documento = Documento::create([
+                        'id_requisicion' => $id_solicitud,
+                        'nombre_doc' => $pathBD,
+                        'tipo_documento' => '1',
+                        'tipo_requisicion' => '2',
+                        'nombre_documento' => $nombre_doc
+                    ]);
+                }
+                $i = 1;
+                DB::commit();
+                return redirect('/cvu-crear')->with('success', 'Su solicitud con clave ' . $clave_solicitud . ' ha sido  registrada y se ha enviado para visto bueno.');
+            } catch (\Exception $e) {
+                DB::rollback();
+                dd("Error en el catch" . $e);
+                return redirect()->back()->with('error', 'Error en el proceso de guardado ' . $e->getMessage());
             }
-            $i=1;  
-            DB::commit();
-             return redirect('/cvu-crear')->with('success', 'Su solicitud con clave ' . $clave_solicitud . ' ha sido enviada para visto bueno.');
-        }catch (\Exception $e) {
-            DB::rollback();
-            dd("Error en el catch".$e); 
-            return redirect()->back()->with('error', 'Error en el proceso de guardado ' . $e->getMessage());
-        }
         } else {
             // No se encontró ningún proyecto  con esca clave"
             return redirect()->back()->with('error', 'No se encontró un proyecto asociado a la clave ' . $clave_proyecto);
