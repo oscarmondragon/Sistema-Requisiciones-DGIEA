@@ -298,13 +298,12 @@ class SolicitudesForm extends Component
             }
             $i=1;  
             DB::commit();
-            return redirect('/cvu-crear')->with('success', 'Su solicitud ha sido guardada correctamente con la clave.'.$clave_solicitud);
+             return redirect('/cvu-crear')->with('success', 'Su solicitud con clave ' . $clave_solicitud . ' ha sido enviada para visto bueno.');
         }catch (\Exception $e) {
             DB::rollback();
             dd("Error en el catch".$e); 
             return redirect()->back()->with('error', 'Error en el proceso de guardado ' . $e->getMessage());
         }
-
         } else {
             // No se encontró ningún proyecto  con esca clave"
             return redirect()->back()->with('error', 'No se encontró un proyecto asociado a la clave ' . $clave_proyecto);

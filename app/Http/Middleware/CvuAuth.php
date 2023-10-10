@@ -17,7 +17,7 @@ class CvuAuth
     {
         //Revisa si las variables de sesion existen
         if (!session()->has('id_user') || !session()->has('id_proyecto') || !session()->has('id_rt')) {
-            return redirect('/login'); // Redirige al usuario al inicio de sesión si alguna variable de sesión no existe
+            return redirect('/error-cvu'); // Redirige al usuario al inicio de sesión si alguna variable de sesión no existe
         }
 
         return $next($request);

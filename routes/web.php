@@ -61,12 +61,14 @@ require __DIR__ . '/auth.php';
 //RUTAS DESDE CVU
 
 Route::post('/cvu', [CvuController::class, 'cvuVerificar'])->name('cvu.verificar');
-Route::post('logout-cvu', [CvuController::class, 'destroy'])->name('logout.cvu');
+Route::post('logout-cvu', [CvuController::class, 'destroy'])->middleware('CvuAuth')->name('logout.cvu');
 Route::get('/cvu-crear', [CvuController::class, 'create'])->middleware('CvuAuth')->name('cvu.create');
 Route::get('/cvu-vobo', [CvuController::class, 'darVobo'])->middleware('CvuAuth')->name('cvu.vobo');
+Route::get('/error-cvu', [CvuController::class, 'error'])
+    ->name('errores');
 Route::get('/cvu-seguimiento', [CvuController::class, 'seguimiento'])->middleware('CvuAuth')->name('cvu.seguimiento');
+
 Route::get('/cvu', function () {
     // return view('cvu.create');
     return redirect()->route('cvu.create');
-
 })->middleware('CvuAuth')->name('cvu.verificado');

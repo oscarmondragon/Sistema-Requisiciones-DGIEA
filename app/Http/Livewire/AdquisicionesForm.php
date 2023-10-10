@@ -52,7 +52,9 @@ class AdquisicionesForm extends Component
     public $docsCartaExclusividad = [];
     public $docsCotizacionesFirmadas = [];
     public $docsCotizacionesPdf = [];
-    public $ruta_archivo='';
+    public $docsAnexoOtrosDocumentos = [];
+    public $ruta_archivo = '';
+
 
 
     protected $rules = [
@@ -60,6 +62,7 @@ class AdquisicionesForm extends Component
         'bienes' => 'required|array|min:1',
         'justificacion_academica' => 'required_if:afecta_investigacion,1',
         'docsCartaExclusividad' => 'required_if:exclusividad,1',
+
         'docsCartaExclusividad.*' => 'mimes:pdf|max:2560',
         'docsCotizacionesFirmadas' => 'required|array|min:1',
         'docsCotizacionesFirmadas.*' => 'required|mimes:pdf|max:2560',
@@ -87,8 +90,7 @@ class AdquisicionesForm extends Component
         'docsCotizacionesPdf.min' => 'Debe adjuntar por lo menos una cotización PDF.',
         'docsCotizacionesPdf.*'=>'Debes adjuntar Cotizaciones con extension .pdf unicamente',
         'docsCotizacionesPdf.*.max'=>'El archivo no debe pesar mas de 2MB',
-        'vobo.accepted' => 'Debe dar el visto bueno.',
-
+        'vobo.accepted' => 'Debe dar el visto bueno.'
     ];
     public $listeners = [
         'addBien' => 'setBien',
@@ -109,8 +111,7 @@ class AdquisicionesForm extends Component
         return view('livewire.adquisiciones-form');
     }
 
-
-    public function save()
+public function save()
     {
         $this->validate([
             'id_rubro' => 'required|not_in:0',
@@ -186,7 +187,7 @@ class AdquisicionesForm extends Component
             //definimos la ruta temporal de los archivos
             $ruta_archivo = $clave_proyecto.'/Requisiciones/'.$id_adquisicion;
             $i=1;
-            /*Revisar si los arrgelos contienen datos*/
+            /Revisar si los arrgelos contienen datos/
 
             if(empty($this->docsCartaExclusividad)== false)  {    
                      
@@ -405,10 +406,8 @@ class AdquisicionesForm extends Component
 
 
         }
+    
 
-
-
-    }
     public function setBien(
         $_id,
         $descripcion,
@@ -538,6 +537,7 @@ class AdquisicionesForm extends Component
         $this->docsCartaExclusividad = [];
         $this->docsCotizacionesFirmadas = [];
         $this->docsCotizacionesPdf = [];
+        $this->docsAnexoOtrosDocumentos = [];
         $this->justificacion_academica = '';
         $this->vobo = 0;
         $this->afecta_investigacion = 0;
@@ -546,7 +546,7 @@ class AdquisicionesForm extends Component
     }
 
 
-//word/excel/pdf|2MB
+    //word/excel/pdf|2MB
     public function eliminarArchivo($tipoArchivo, $index)
     {
         if ($tipoArchivo === 'cartasExclusividad') {
@@ -558,6 +558,7 @@ class AdquisicionesForm extends Component
                 $this->docsCartaExclusividad = array_values($this->docsCartaExclusividad);
             }
         }
+
         if ($tipoArchivo === 'cotizacionesFirmadas') {
             // Verificar si el índice existe en el array
             if (array_key_exists($index, $this->docsCotizacionesFirmadas)) {
@@ -567,6 +568,7 @@ class AdquisicionesForm extends Component
                 $this->docsCotizacionesFirmadas = array_values($this->docsCotizacionesFirmadas);
             }
         }
+
         if ($tipoArchivo === 'cotizacionesPdf') {
             // Verificar si el índice existe en el array
             if (array_key_exists($index, $this->docsCotizacionesPdf)) {
@@ -574,6 +576,16 @@ class AdquisicionesForm extends Component
                 unset($this->docsCotizacionesPdf[$index]);
                 // Reindexar el array para asegurar una secuencia numérica continua
                 $this->docsCotizacionesPdf = array_values($this->docsCotizacionesPdf);
+            }
+        }
+
+        if ($tipoArchivo === 'anexoDocumentos') {
+            // Verificar si el índice existe en el array
+            if (array_key_exists($index, $this->docsAnexoOtrosDocumentos)) {
+                // Eliminar el archivo del array usando el índice
+                unset($this->docsAnexoOtrosDocumentos[$index]);
+                // Reindexar el array para asegurar una secuencia numérica continua
+                $this->docsAnexoOtrosDocumentos = array_values($this->docsAnexoOtrosDocumentos);
             }
         }
     }
@@ -586,6 +598,8 @@ class AdquisicionesForm extends Component
     public function resetdocsCartaExclusividad()
     {
         $this->docsCartaExclusividad = [];
+        $this->docsAnexoOtrosDocumentos = [];
+
     }
 
 }

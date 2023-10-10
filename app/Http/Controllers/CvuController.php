@@ -27,10 +27,10 @@ class CvuController extends Controller
             //Determinamos si el usuario es el rt o el administrativo del proyecto para asignar nombre al usuario de la sesion
             if ($id_user == $proyecto->CveEntEmp_Responsable) {
                 $name_user = $proyecto->Nombre_Responsable . ' ' . $proyecto->APaterno_Responsable . ' ' . $proyecto->AMaterno_Responsable;
-                $VoBo_Who =1;//Logueo de un responsable técnico
+                $VoBo_Who = 1; //Logueo de un responsable técnico
             } else if ($id_user == $proyecto->CveEntEmp_Administrativo) {
                 $name_user = $proyecto->Nombre_Administrativo . ' ' . $proyecto->APaterno_Administrativo . ' ' . $proyecto->AMaterno_Administrativo;
-                $VoBo_Who =0;//Logueo de un administrativo
+                $VoBo_Who = 0; //Logueo de un administrativo
             }
 
             //Creamos la sesion con los datos del proyecto
@@ -46,7 +46,7 @@ class CvuController extends Controller
                 'id_administrativo' => $proyecto->CveEntEmp_Administrativo,
                 'name_administrativo' => $proyecto->Nombre_Administrativo . ' ' . $proyecto->APaterno_Administrativo . ' ' . $proyecto->AMaterno_Administrativo,
                 'tipo_financiamiento' => $proyecto->Tipo_Proyecto,
-                'VoBo_Who'=>$VoBo_Who
+                'VoBo_Who' => $VoBo_Who
             ]);
 
             if ($accion == 1) {
@@ -58,6 +58,7 @@ class CvuController extends Controller
             if ($accion == 3) {
                 return Redirect::route('cvu.seguimiento');
             }
+
             return "La acción solicitada no es valida";
             // return view('cvu.index', ['accion' => $accion]);
         } else {
@@ -105,5 +106,9 @@ class CvuController extends Controller
         request()->flush();
 
         return redirect('http://www.siea.uaemex.mx/cvu/');
+    }
+
+    public function error(){
+        return view('errores.error-cvu');
     }
 }
