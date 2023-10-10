@@ -24,10 +24,11 @@
                 </div>
 
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('cvu.vobo')" :active="request()->routeIs('cvu.vobo')">
-                        {{ __('Seguimiento DGIEA') }}
+                    <x-nav-link :href="route('cvu.seguimiento')" :active="request()->routeIs('cvu.seguimiento')">
+                        {{ __('Seguimiento') }}
                     </x-nav-link>
                 </div>
+                
             </div>
 
             <!-- Settings Dropdown -->
@@ -98,13 +99,16 @@
     </div> --}}
 
     <!-- Hamburger -->
+
     <div class="-mr-2 flex flex-nowrap items-center sm:hidden">
+
         <div class="sm:hidden inline-block my-auto">
             <p>{{Session::get('name_user')}}
                 <p class="text-verde font-bold text-sm text-end">En sesión</p>
             </p>
         </div>
         <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out" title="Opciones">
+
             <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                 <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                 <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -117,17 +121,14 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('cvu.create')" :active="request()->routeIs('cvu.create')">
+        <x-responsive-nav-link :href="route('cvu.create')" :active="request()->routeIs('cvu.create')">
                 {{ __('Requisiciones') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('cvu.vobo')" :active="request()->routeIs('cvu.vobo')">
                 {{ __('Vistos Buenos') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('cvu.vobo')" :active="request()->routeIs('cvu.vobo')">
-                {{ __('Seguimiento DGIEA') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('cvu.vobo')" :active="request()->routeIs('cvu.vobo')">
-                {{ __('Seguimiento DGIEA-SIIA') }}
+            <x-responsive-nav-link :href="route('cvu.seguimiento')" :active="request()->routeIs('cvu.seguimiento')">
+                {{ __('Seguimiento') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="'http://www.siea.uaemex.mx/cvu/'">
                 {{ __('Salir') }}

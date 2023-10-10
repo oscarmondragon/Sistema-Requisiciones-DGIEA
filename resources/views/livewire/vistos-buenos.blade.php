@@ -12,11 +12,11 @@
                       <thead>
                         <tr class="bg-blanco">
                           <th scope="col">#</th>
-                          <th scope="col">Id</th>
                           <th scope="col">Clave requerimiento</th>
-                          <th scope="col">Tipo requerimiento</th>
                           <th scope="col">Clave proyecto</th>
-                          <th scope="col">id rubro</th>
+                          <th scope="col">Rubro</th>
+                          <th scope="col">Tipo requerimiento</th>
+                          <th scope="col">Estatus</th>
                           <th scope="col">Ultima modificacion</th>        
                           <th scope="col">Acciones</th>        
                         </tr>
@@ -25,11 +25,11 @@
                         @foreach ($adquisiciones as $adquisicion)
                         <tr class="border-b-gray-200 border-transparent">
                     <td>{{$loop->iteration}}</td>
-                    <td> {{$adquisicion->id}} </td>
                     <td> {{$adquisicion->clave_adquisicion}} </td>
-                    <td> Adquisicion </td>
                     <td>{{$adquisicion->clave_proyecto}}</td>
-                    <td>{{$adquisicion->id_rubro}}</td>
+                    <td>SEMILLA </td>
+                    <td> Adquisicion </td>
+                    <td class="text-rojo"> Creada </td>
                     <td>{{$adquisicion->updated_at}}</td>
                     <th class="w-[148px]">
                       <button type="button" class="btn-tablas">
@@ -55,12 +55,12 @@
                           <thead>
                             <tr class="bg-blanco">
                               <th scope="col">#</th>
-                              <th scope="col">Id</th>
                               <th scope="col">Clave requerimiento</th>
-                              <th scope="col">Tipo requerimiento</th>
                               <th scope="col">Clave proyecto</th>
-                              <th scope="col">id rubro</th>
-                              <th scope="col">Ultima modificacion</th>     
+                              <th scope="col">Rubro</th>
+                              <th scope="col">Tipo requerimiento</th>
+                              <th scope="col">Estatus</th>
+                              <th scope="col">Ultima modificacion</th>        
                               <th scope="col">Acciones</th>        
                             </tr>
                           </thead>
@@ -68,11 +68,11 @@
                             @foreach ($adquisiciones as $adquisicion)
                             <tr class="border-b-gray-200 border-transparent">
                         <td>{{$loop->iteration}}</td>
-                        <td> {{$adquisicion->id}} </td>
                         <td> {{$adquisicion->clave_adquisicion}} </td>
-                        <td> Adquisicion </td>
                         <td>{{$adquisicion->clave_proyecto}}</td>
-                        <td>{{$adquisicion->id_rubro}}</td>
+                        <td>SEMILLA </td>
+                        <td> Adquisicion </td>
+                        <td class="text-rojo"> Falta VoBo </td>
                         <td>{{$adquisicion->updated_at}}</td>
                         <th class="w-[148px]">
                           <button type="button" class="btn-primary ">
