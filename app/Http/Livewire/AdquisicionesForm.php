@@ -52,6 +52,7 @@ class AdquisicionesForm extends Component
     public $docsCartaExclusividad = [];
     public $docsCotizacionesFirmadas = [];
     public $docsCotizacionesPdf = [];
+    public $docsAnexoOtrosDocumentos = [];
     public $ruta_archivo = '';
 
 
@@ -515,6 +516,7 @@ class AdquisicionesForm extends Component
         $this->docsCartaExclusividad = [];
         $this->docsCotizacionesFirmadas = [];
         $this->docsCotizacionesPdf = [];
+        $this->docsAnexoOtrosDocumentos = [];
         $this->justificacion_academica = '';
         $this->vobo = 0;
         $this->afecta_investigacion = 0;
@@ -553,6 +555,16 @@ class AdquisicionesForm extends Component
                 $this->docsCotizacionesPdf = array_values($this->docsCotizacionesPdf);
             }
         }
+
+        if ($tipoArchivo === 'anexoDocumentos') {
+            // Verificar si el índice existe en el array
+            if (array_key_exists($index, $this->docsAnexoOtrosDocumentos)) {
+                // Eliminar el archivo del array usando el índice
+                unset($this->docsAnexoOtrosDocumentos[$index]);
+                // Reindexar el array para asegurar una secuencia numérica continua
+                $this->docsAnexoOtrosDocumentos = array_values($this->docsAnexoOtrosDocumentos);
+            }
+        }
     }
 
     public function resetJustificacionAcademica()
@@ -563,6 +575,8 @@ class AdquisicionesForm extends Component
     public function resetdocsCartaExclusividad()
     {
         $this->docsCartaExclusividad = [];
+        $this->docsAnexoOtrosDocumentos = [];
+
     }
 
 }
