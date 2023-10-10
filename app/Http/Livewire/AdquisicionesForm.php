@@ -60,11 +60,11 @@ class AdquisicionesForm extends Component
         'bienes' => 'required|array|min:1',
         'justificacion_academica' => 'required_if:afecta_investigacion,1',
         'docsCartaExclusividad' => 'required_if:exclusividad,1',
-        'docsCartaExclusividad.*' => 'mimes:doc,docx,pdf',
+        'docsCartaExclusividad.*' => 'mimes:pdf|max:2560',
         'docsCotizacionesFirmadas' => 'required|array|min:1',
-        'docsCotizacionesFirmadas.*' => 'required|mimes:doc,docx,pdf',
+        'docsCotizacionesFirmadas.*' => 'required|mimes:pdf|max:2560',
         'docsCotizacionesPdf' => 'required|array|min:1',
-        'docsCotizacionesPdf.*' => 'mimes:pdf',
+        'docsCotizacionesPdf.*' => 'mimes:pdf|max:2560',
         'vobo' => 'accepted'
     ];
     protected $messages = [
@@ -75,15 +75,18 @@ class AdquisicionesForm extends Component
         'bienes.min' => 'Debe agregar por lo menos un bien o servicio.',
         'justificacion_academica.required_if' => 'La justificación académica no puede estar vacia.',
         'docsCartaExclusividad.required_if' => 'Debe adjuntar la carta de exclusividad.',
-        'docsCartaExclusividad.*'=>'Debes adjuntar Cartas de exclusividad con extension .pdf .doc .docx unicamente',
+        'docsCartaExclusividad.*'=>'Debes adjuntar Cartas de exclusividad con extension .pdf unicamente',
+        'docsCartaExclusividad.*.max'=>'El archivo no debe pesar mas de 2MB',
         'docsCotizacionesFirmadas.required' => 'Debe adjuntar por lo menos una cotización firmada.',
         'docsCotizacionesFirmadas.array' => 'Debe adjuntar por lo menos una cotización firmada.',
         'docsCotizacionesFirmadas.min' => 'Debe adjuntar por lo menos una cotización firmada.',
-        'docsCotizacionesFirmadas.*'=>'Debes adjuntar Cotizaciones Firmadas con extension .pdf .doc .docx unicamente',
+        'docsCotizacionesFirmadas.*'=>'Debes adjuntar Cotizaciones Firmadas con extension .pdf  unicamente',
+        'docsCotizacionesFirmadas.*.max'=>'El archivo no debe pesar mas de 2MB',
         'docsCotizacionesPdf.required' => 'Debe adjuntar por lo menos una cotización PDF.',
         'docsCotizacionesPdf.array' => 'Debe adjuntar por lo menos una cotización PDF.',
         'docsCotizacionesPdf.min' => 'Debe adjuntar por lo menos una cotización PDF.',
         'docsCotizacionesPdf.*'=>'Debes adjuntar Cotizaciones con extension .pdf unicamente',
+        'docsCotizacionesPdf.*.max'=>'El archivo no debe pesar mas de 2MB',
         'vobo.accepted' => 'Debe dar el visto bueno.',
 
     ];
@@ -111,7 +114,10 @@ class AdquisicionesForm extends Component
     {
         $this->validate([
             'id_rubro' => 'required|not_in:0',
-            'bienes' => 'required|array|min:1'
+            'bienes' => 'required|array|min:1',
+            'docsCartaExclusividad.*' => 'mimes:pdf|max:2560',
+            'docsCotizacionesFirmadas.*' => 'required|mimes:pdf|max:2560',
+            'docsCotizacionesPdf.*' => 'mimes:pdf|max:2560',
         ]);
 
 
@@ -181,17 +187,23 @@ class AdquisicionesForm extends Component
             $ruta_archivo = $clave_proyecto.'/Requisiciones/'.$id_adquisicion;
             $i=1;
             /*Revisar si los arrgelos contienen datos*/
-            if(empty($this->docsCartaExclusividad)== false)  {          
+
+            if(empty($this->docsCartaExclusividad)== false)  {    
+                     
                 foreach ($this->docsCartaExclusividad as $dce) {
                     //extensiond e archivo a depositar
                     $extension = $dce->getClientOriginalExtension();
+                    $nombre_doc = $dce->getClientOriginalName();
                     //almacenamos archivo en servidor y obtenemos la ruta para agregar a la BD
                     $pathBD=$dce->storeAs($ruta_archivo.'/CExclusividad','doc_exclusividad'.$i.'.'.$extension);
                     $i++;
                     $documento = Documento::create([
                         'id_requisicion' => $id_adquisicion,
                         'nombre_doc' => $pathBD,
-                        'tipo_documento' => '1'
+                        'tipo_documento' => '1',
+                        'tipo_requisicion' => '1',
+                        'nombre_documento' => $nombre_doc
+
                     ]);                
                 }
                 $i=1;            
@@ -199,15 +211,18 @@ class AdquisicionesForm extends Component
             }
 
             if(empty($this->docsCotizacionesFirmadas)== 0){
-                
+               // dd(empty($this->docsCotizacionesFirmadas)); 
                 foreach ($this->docsCotizacionesFirmadas as $dcf) {
                     $extension = $dcf->getClientOriginalExtension();
+                    $nombre_doc = $dcf->getClientOriginalName();
                     $pathBD=$dcf->storeAs($ruta_archivo.'/CFirmadas','doc_cfirmadas'.$i.'.'.$extension);
                     $i++;
                     $documento = Documento::create([
                         'id_requisicion' => $id_adquisicion,
                         'nombre_doc' => $pathBD,
-                        'tipo_documento' => '2'
+                        'tipo_documento' => '2',
+                        'tipo_requisicion' => '1',
+                        'nombre_documento' => $nombre_doc
                     ]);
                 }
                 $i=1;
@@ -219,25 +234,30 @@ class AdquisicionesForm extends Component
             if(empty($this->docsCotizacionesPdf)== 0){
                 foreach ($this->docsCotizacionesPdf as $dcp) {
                     $extension = $dcp->getClientOriginalExtension();
+                    $nombre_doc = $dcp->getClientOriginalName();
                     $pathBD=$dce->storeAs($ruta_archivo.'/CPdf','doc_cpdf'.$i.'.'.$extension);
                     $i++;
                     $documento = Documento::create([
                         'id_requisicion' => $id_adquisicion,
                         'nombre_doc' => $pathBD,
-                        'tipo_documento' => '3'
+                        'tipo_documento' => '3',
+                        'tipo_requisicion' => '1',
+                        'nombre_documento' => $nombre_doc
                     ]);
                 }
                 $this->docsCotizacionesPdf = [];
             }
             DB::commit();
-           return redirect('/cvu-crear')->with('success', 'Su solicitud ha sido guardada correctamente. Recuerde completarla y mandarla a visto bueno.');
+           return redirect('/cvu-crear')->with('success', 'Su solicitud ha sido guardada correctamente con el número de clave '.$clave_adquisicion.'. Recuerde completarla y mandarla a visto bueno.');
         }catch (\Exception $e) {
             DB::rollback();
+            dd("Error en catch:".$e); 
             return redirect()->back()->with('error', 'Error en el proceso de guardado ' . $e->getMessage());
         }
 
         } else {
             // No se encontró ningún proyecto  con esca clave"
+            dd("error calve de proyecto"); 
             return redirect()->back()->with('error', 'No se encontró un proyecto asociado a la clave ' . $clave_proyecto);
         }
     }
@@ -263,6 +283,7 @@ class AdquisicionesForm extends Component
         $proyecto = Proyecto::where('CveEntPry', $clave_proyecto)->first();
 
         if ($proyecto) {
+            DB::beginTransaction();
             try{
             //Inserta la Adquisición en base de datos
             $adquisicion = Adquisicion::create([
@@ -317,67 +338,69 @@ class AdquisicionesForm extends Component
                         'id_emisor' => $id_user
                     ]);
                 }
-
-
-                $documento = Documento::create([
-                    'id_requisicion' => $id_adquisicion,
-                    'nombre_oc' => 'hola',
-                    'tipo_docume' => 1
-                ]);
-
             //definimos la ruta de los archivos a insertar 
             $ruta_archivo = $clave_proyecto.'/Requisiciones/'.$id_adquisicion;
             $i=1;
             foreach ($this->docsCartaExclusividad as $dce) {
                 //extensiond e archivo a depositar
                 $extension = $dce->getClientOriginalExtension();
+                $nombre_doc = $dce->getClientOriginalName();
                 //almacenamos archivo en servidor y obtenemos la ruta para agregar a la BD
                 $pathBD=$dce->storeAs($ruta_archivo.'/CExclusividad','doc_exclusividad'.$i.'.'.$extension);
                 $i++;
                 $documento = Documento::create([
                     'id_requisicion' => $id_adquisicion,
                     'nombre_doc' => $pathBD,
-                    'tipo_documento' => '1'
+                    'tipo_documento' => '1',
+                    'tipo_requisicion' => '1',
+                    'nombre_documento' => $nombre_doc
                 ]);                
             }
             $i=1;            
-            $docsCartaExclusividad = [];
+            //$docsCartaExclusividad = [];
                 foreach ($this->docsCotizacionesFirmadas as $dcf) {
                     $extension = $dcf->getClientOriginalExtension();
-                    $pathBD=$dce->storeAs($ruta_archivo.'/CFirmadas','doc_cfirmadas'.$i.'.'.$extension);
+                    $nombre_doc = $dcf->getClientOriginalName();
+                    $pathBD=$dcf->storeAs($ruta_archivo.'/CFirmadas','doc_cfirmadas'.$i.'.'.$extension);
                     $i++;
                     $documento = Documento::create([
                         'id_requisicion' => $id_adquisicion,
                         'nombre_doc' => $pathBD,
-                        'tipo_documento' => '2'
+                        'tipo_documento' => '2',
+                        'tipo_requisicion' => '1',
+                        'nombre_documento' => $nombre_doc
                     ]);
                 }
                 $i=1;
-                $docsCotizacionesFirmadas = [];
+                //$docsCotizacionesFirmadas = [];
           
                 foreach ($this->docsCotizacionesPdf as $dcp) {
                     $extension = $dcp->getClientOriginalExtension();
-                    $pathBD=$dce->storeAs($ruta_archivo.'/CPdf','doc_cpdf'.$i.'.'.$extension);
+                    $nombre_doc = $dcp->getClientOriginalName();
+                    $pathBD=$dcp->storeAs($ruta_archivo.'/CPdf','doc_cpdf'.$i.'.'.$extension);
                     $i++;
                     $documento = Documento::create([
                         'id_requisicion' => $id_adquisicion,
                         'nombre_doc' => $pathBD,
-                        'tipo_documento' => '3'
+                        'tipo_documento' => '3',
+                        'tipo_requisicion' => '1',
+                        'nombre_documento' => $nombre_doc
                     ]);
                 }
 
-                 $docsCotizacionesPdf = [];
-            
+                 //$docsCotizacionesPdf = [];
+                 DB::commit();
 
-            return redirect('/cvu-crear')->with('success', 'Su solicitud ha sido guardada correctamente. Recuerde completarla y mandarla a visto bueno.');
+            return redirect('/cvu-crear')->with('success', 'Su solicitud ha sido guardada correctamente con el numero de clave.'.$clave_adquisicion);
         }catch (\Exception $e) {
-
+            //dd("Error en el catch".$e); 
             return redirect()->back()->with('error', 'error en el deposito' . $e->getMessage());
 
         }
      
         } else {
             // No se encontró ningún proyecto  con esca clave"
+           // dd($e); 
             return redirect()->back()->with('error', 'No se encontró un proyecto asociado a la clave ' . $clave_proyecto);
 
 

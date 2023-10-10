@@ -11,8 +11,9 @@ use App\Models\CuentaContable;
 use Illuminate\Support\Facades\Session;
 use App\Models\Solicitud;
 use App\Models\SolicitudDetalle;
+use App\Models\Documento;
 
-
+use Illuminate\Support\Facades\DB;
 
 
 class SolicitudesForm extends Component
@@ -74,6 +75,7 @@ class SolicitudesForm extends Component
         'nombre_expedido' => 'required',
         'recursos' => 'required|array|min:1',
         'docsbitacoraPdf' => 'required_if:id_rubro_especial,3',
+        'docsbitacoraPdf.*' => 'mimes:pdf|max:2560',
         'comprobacion' => 'required_unless:id_rubro_especial,3',
         'aviso_privacidad' => 'accepted',
         'vobo' => 'accepted'
@@ -89,6 +91,8 @@ class SolicitudesForm extends Component
         'recursos.array' => 'Debe agregar por lo menos un recurso.',
         'recursos.min' => 'Debe agregar por lo menos un recurso.',
         'docsbitacoraPdf.required_if' => 'Debe adjuntar la bitacora.',
+        'docsbitacoraPdf.*' => 'Se debe adjuntar archivos con extensión pdf unicamente',
+        'docsbitacoraPdf.*.max'=>'El archivo no debe pesar mas de 2MB',
         'comprobacion.required_unless' => 'Debe de aceptar la condición.',
         'comprobacion.accepted' => 'Debe de aceptar la condición seleccionela.',
         'aviso_privacidad.accepted' => 'Debe de aceptar el aviso de privacidad.',
@@ -105,7 +109,8 @@ class SolicitudesForm extends Component
         $this->validate([
             'id_rubro' => 'required|not_in:0',
             'recursos' => 'required|array|min:1',
-            'monto_total' => 'required|lte:35000|gte:monto_sumado'
+            'monto_total' => 'required|lte:35000|gte:monto_sumado',
+            'docsbitacoraPdf.*' => 'mimes:pdf|max:2560'
         ]);
 
 
@@ -117,6 +122,8 @@ class SolicitudesForm extends Component
         $proyecto = Proyecto::where('CveEntPry', $clave_proyecto)->first();
 
         if ($proyecto) {
+            DB::beginTransaction();
+            try{
 
             //Inserta la Adquisición en base de datos
             $solicitud = Solicitud::create([
@@ -165,8 +172,34 @@ class SolicitudesForm extends Component
                     'periodo_fin' => $recurso['ffinal']
                 ]);
             }
-
-            return redirect('/cvu-crear')->with('success', 'Su solicitud ha sido guardada correctamente. Recuerde completarla y mandarla a visto bueno.');
+            $ruta_archivo = $clave_proyecto.'/Solicitudes/'.$id_solicitud;
+            $i=1;
+            if(empty($this->docsbitacoraPdf)==false){
+                foreach ($this->docsbitacoraPdf as $dbp) {
+                    //extensiond e archivo a depositar
+                    $extension = $dbp->getClientOriginalExtension();
+                    $nombre_doc = $dbp->getClientOriginalName();
+                    //almacenamos archivo en servidor y obtenemos la ruta para agregar a la BD
+                    $pathBD=$dbp->storeAs($ruta_archivo.'/Bitacoras','doc_bitacora'.$i.'.'.$extension);
+                    $i++;
+                    $documento = Documento::create([
+                        'id_requisicion' => $id_solicitud,
+                        'nombre_doc' => $pathBD,
+                        'tipo_documento' => '1',
+                        'tipo_requisicion' => '2',
+                        'nombre_documento' => $nombre_doc
+                    ]);                
+                    }
+                    $i=1;
+                }
+             
+                DB::commit();
+                return redirect('/cvu-crear')->with('success', 'Su solicitud ha sido guardada correctamente con el numero.'.$clave_solicitud.' Recuerde completarla y mandarla a visto bueno.');
+            }catch (\Exception $e) {
+                DB::rollback();
+                dd("Error en el catch".$e); 
+                return redirect()->back()->with('error', 'Error en el proceso de guardado ' . $e->getMessage());
+            }
 
         } else {
             // No se encontró ningún proyecto  con esca clave"
@@ -181,11 +214,22 @@ class SolicitudesForm extends Component
 
         $clave_proyecto = Session::get('id_proyecto');
         $id_user = Session::get('id_user');
+        $who_vobo = Session::get('VoBo_Who');
+
+        if($who_vobo){//Si el deposito es por parte del Responsable técnico
+            $this->vobo_admin=0;
+            $this->vobo_rt=1;
+        }else{//Si el depósito es por parte del administrativo
+            $this->vobo_admin=1;
+            $this->vobo_rt=0;
+        }
 
         //Busca el proyecto por la clave
         $proyecto = Proyecto::where('CveEntPry', $clave_proyecto)->first();
 
         if ($proyecto) {
+            DB::beginTransaction();
+            try{
 
             //Inserta la Adquisición en base de datos
             $solicitud = Solicitud::create([
@@ -235,7 +279,31 @@ class SolicitudesForm extends Component
                 ]);
             }
 
-            return redirect('/cvu-crear')->with('success', 'Su solicitud ha sido guardada correctamente. Recuerde completarla y mandarla a visto bueno.');
+            $ruta_archivo = $clave_proyecto.'/Solicitudes/'.$id_solicitud;
+            $i=1;
+            foreach ($this->docsbitacoraPdf as $dbp) {
+                //extensiond e archivo a depositar
+                $extension = $dbp->getClientOriginalExtension();
+                $nombre_doc = $dbp->getClientOriginalName();
+                //almacenamos archivo en servidor y obtenemos la ruta para agregar a la BD
+                $pathBD=$dbp->storeAs($ruta_archivo.'/Bitacoras','doc_bitacora'.$i.'.'.$extension);
+                $i++;
+                $documento = Documento::create([
+                    'id_requisicion' => $id_solicitud,
+                    'nombre_doc' => $pathBD,
+                    'tipo_documento' => '1',
+                    'tipo_requisicion' => '2',
+                    'nombre_documento' => $nombre_doc
+                ]);                
+            }
+            $i=1;  
+            DB::commit();
+            return redirect('/cvu-crear')->with('success', 'Su solicitud ha sido guardada correctamente con la clave.'.$clave_solicitud);
+        }catch (\Exception $e) {
+            DB::rollback();
+            dd("Error en el catch".$e); 
+            return redirect()->back()->with('error', 'Error en el proceso de guardado ' . $e->getMessage());
+        }
 
         } else {
             // No se encontró ningún proyecto  con esca clave"
