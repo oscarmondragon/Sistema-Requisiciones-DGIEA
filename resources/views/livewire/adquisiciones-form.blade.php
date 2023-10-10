@@ -1,13 +1,4 @@
 <div class="my-6">
-  @if ($errors->any())
-  <div class="p-4 my-4 rounded-lg bg-red-50 dark:text-rojo text-rojo">
-    <ul>
-      @foreach ($errors->all() as $error)
-      <li>{{ $error }}</li>
-      @endforeach
-    </ul>
-  </div>
-  @endif
   <h1>Formulario adquisición de bienes y servicios</h1>
   <form wire:submit.prevent="saveVobo">
     <div>
@@ -177,6 +168,7 @@
         <br>
         <div wire:loading wire:target="docsCartaExclusividad">Cargando archivo...</div>
         @error('docsCartaExclusividad') <span class=" text-rojo">{{ $message }}</span> @enderror
+        @error('docsCartaExclusividad.*') <span class=" text-rojo">{{ $message }}</span> @enderror
         <ul>
           @foreach($docsCartaExclusividad as $index => $docCarta)
           <li>
@@ -188,7 +180,6 @@
           @endforeach
         </ul>
       </div>
-
       <div class="mt-2">
         <label for="cotizacionFirmada">Cotización PDF firmada:</label>
         <input type="file" id="cotizacionFirmada" wire:model='docsCotizacionesFirmadas' accept=".pdf">
@@ -199,6 +190,7 @@
         <div wire:loading wire:target="docsCotizacionesFirmadas">Cargando archivo...</div>
       </div>
       @error('docsCotizacionesFirmadas') <span class=" text-rojo">{{ $message }}</span> @enderror
+      @error('docsCotizacionesFirmadas.*') <span class=" text-rojo">{{ $message }}</span> @enderror
       <ul>
         @foreach($docsCotizacionesFirmadas as $index => $docFirmadas)
         <li>
@@ -219,6 +211,7 @@
         <div wire:loading wire:target="docsCotizacionesPdf">Cargando archivo...</div>
       </div>
       @error('docsCotizacionesPdf') <span class=" text-rojo">{{ $message }}</span> @enderror
+      @error('docsCotizacionesPdf.*') <span class=" text-rojo">{{ $message }}</span> @enderror
       <ul class="my-2">
         @foreach($docsCotizacionesPdf as $index => $docPdf)
         <li>
@@ -242,6 +235,7 @@
         <br>
         <div wire:loading wire:target="docsAnexoOtrosDocumentos">Cargando archivo...</div>
         @error('docsAnexoOtrosDocumentos') <span class=" text-rojo">{{ $message }}</span> @enderror
+        @error('docsAnexoOtrosDocumentos.*') <span class=" text-rojo">{{ $message }}</span> @enderror
         <ul>
           @foreach($docsAnexoOtrosDocumentos as $index => $anexoDoc)
           <li>
@@ -254,7 +248,6 @@
         </ul>
       </div>
     </div>
-
     <p class="text-verde mt-5"> <span class="font-bold">Nota:</span> Las cotizaciones deben describir exactamente el mismo material, suministro, servicio general,
       bien mueble o intangible.
     </p>

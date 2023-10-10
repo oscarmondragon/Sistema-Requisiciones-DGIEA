@@ -97,6 +97,7 @@
         <br>
         <div wire:loading wire:target="docsbitacoraPdf">Cargando archivo...</div>
         @error('docsbitacoraPdf') <span class=" text-rojo">{{ $message }}</span> @enderror
+        @error('docsbitacoraPdf.*') <span class=" text-rojo">{{ $message }}</span> @enderror
       </div>
       @endif
       <ul>

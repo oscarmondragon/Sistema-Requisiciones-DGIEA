@@ -16,6 +16,8 @@ class Documento extends Model
     protected $fillable = [
         'id_requisicion',
         'nombre_doc',
-        'tipo_documento'
+        'tipo_documento',
+        'tipo_requisicion',
+        'nombre_documento'
     ];
 }
