@@ -52,6 +52,7 @@ class AdquisicionesForm extends Component
     public $docsCartaExclusividad = [];
     public $docsCotizacionesFirmadas = [];
     public $docsCotizacionesPdf = [];
+    public $docsAnexoOtrosDocumentos = [];
     public $ruta_archivo='';
 
 
@@ -60,11 +61,13 @@ class AdquisicionesForm extends Component
         'bienes' => 'required|array|min:1',
         'justificacion_academica' => 'required_if:afecta_investigacion,1',
         'docsCartaExclusividad' => 'required_if:exclusividad,1',
-        'docsCartaExclusividad.*' => 'mimes:doc,docx,pdf',
+        'docsCartaExclusividad.*' => 'mimes:pdf',
         'docsCotizacionesFirmadas' => 'required|array|min:1',
-        'docsCotizacionesFirmadas.*' => 'required|mimes:doc,docx,pdf',
+        'docsCotizacionesFirmadas.*' => 'required|mimes:pdf',
         'docsCotizacionesPdf' => 'required|array|min:1',
         'docsCotizacionesPdf.*' => 'mimes:pdf',
+        'docsAnexoOtrosDocumentos' => 'required_if:exclusividad, 1',
+        'docsAnexoOtrosDocumentos.*' => 'mimes:pdf',
         'vobo' => 'accepted'
     ];
     protected $messages = [
@@ -75,15 +78,17 @@ class AdquisicionesForm extends Component
         'bienes.min' => 'Debe agregar por lo menos un bien o servicio.',
         'justificacion_academica.required_if' => 'La justificación académica no puede estar vacia.',
         'docsCartaExclusividad.required_if' => 'Debe adjuntar la carta de exclusividad.',
-        'docsCartaExclusividad.*'=>'Debes adjuntar Cartas de exclusividad con extension .pdf .doc .docx unicamente',
+        'docsCartaExclusividad.*'=>'Debes adjuntar Cartas de exclusividad con extensión .pdf unicamente',
         'docsCotizacionesFirmadas.required' => 'Debe adjuntar por lo menos una cotización firmada.',
         'docsCotizacionesFirmadas.array' => 'Debe adjuntar por lo menos una cotización firmada.',
         'docsCotizacionesFirmadas.min' => 'Debe adjuntar por lo menos una cotización firmada.',
-        'docsCotizacionesFirmadas.*'=>'Debes adjuntar Cotizaciones Firmadas con extension .pdf .doc .docx unicamente',
+        'docsCotizacionesFirmadas.*'=>'Debes adjuntar Cotizaciones Firmadas con extensión .pdf unicamente',
         'docsCotizacionesPdf.required' => 'Debe adjuntar por lo menos una cotización PDF.',
         'docsCotizacionesPdf.array' => 'Debe adjuntar por lo menos una cotización PDF.',
         'docsCotizacionesPdf.min' => 'Debe adjuntar por lo menos una cotización PDF.',
-        'docsCotizacionesPdf.*'=>'Debes adjuntar Cotizaciones con extension .pdf unicamente',
+        'docsCotizacionesPdf.*'=>'Debes adjuntar Cotizaciones con extensión .pdf unicamente',
+        'docsAnexoOtrosDocumentos.required_if' => 'Debe adjuntar por lo menos un anexo PDF.',
+        'docsAnexoOtrosDocumentos.*' => 'Debes adjuntar anexos con extensión .pdf unicamente.',
         'vobo.accepted' => 'Debe dar el visto bueno.',
 
     ];
@@ -219,7 +224,7 @@ class AdquisicionesForm extends Component
             if(empty($this->docsCotizacionesPdf)== 0){
                 foreach ($this->docsCotizacionesPdf as $dcp) {
                     $extension = $dcp->getClientOriginalExtension();
-                    $pathBD=$dce->storeAs($ruta_archivo.'/CPdf','doc_cpdf'.$i.'.'.$extension);
+                    $pathBD=$dcp->storeAs($ruta_archivo.'/CPdf','doc_cpdf'.$i.'.'.$extension);
                     $i++;
                     $documento = Documento::create([
                         'id_requisicion' => $id_adquisicion,
@@ -317,14 +322,6 @@ class AdquisicionesForm extends Component
                         'id_emisor' => $id_user
                     ]);
                 }
-
-
-                $documento = Documento::create([
-                    'id_requisicion' => $id_adquisicion,
-                    'nombre_oc' => 'hola',
-                    'tipo_docume' => 1
-                ]);
-
             //definimos la ruta de los archivos a insertar 
             $ruta_archivo = $clave_proyecto.'/Requisiciones/'.$id_adquisicion;
             $i=1;
@@ -344,7 +341,7 @@ class AdquisicionesForm extends Component
             $docsCartaExclusividad = [];
                 foreach ($this->docsCotizacionesFirmadas as $dcf) {
                     $extension = $dcf->getClientOriginalExtension();
-                    $pathBD=$dce->storeAs($ruta_archivo.'/CFirmadas','doc_cfirmadas'.$i.'.'.$extension);
+                    $pathBD=$dcf->storeAs($ruta_archivo.'/CFirmadas','doc_cfirmadas'.$i.'.'.$extension);
                     $i++;
                     $documento = Documento::create([
                         'id_requisicion' => $id_adquisicion,
@@ -357,7 +354,7 @@ class AdquisicionesForm extends Component
           
                 foreach ($this->docsCotizacionesPdf as $dcp) {
                     $extension = $dcp->getClientOriginalExtension();
-                    $pathBD=$dce->storeAs($ruta_archivo.'/CPdf','doc_cpdf'.$i.'.'.$extension);
+                    $pathBD=$dcp->storeAs($ruta_archivo.'/CPdf','doc_cpdf'.$i.'.'.$extension);
                     $i++;
                     $documento = Documento::create([
                         'id_requisicion' => $id_adquisicion,
@@ -515,6 +512,7 @@ class AdquisicionesForm extends Component
         $this->docsCartaExclusividad = [];
         $this->docsCotizacionesFirmadas = [];
         $this->docsCotizacionesPdf = [];
+        $this->docsAnexoOtrosDocumentos = [];
         $this->justificacion_academica = '';
         $this->vobo = 0;
         $this->afecta_investigacion = 0;
@@ -535,6 +533,7 @@ class AdquisicionesForm extends Component
                 $this->docsCartaExclusividad = array_values($this->docsCartaExclusividad);
             }
         }
+
         if ($tipoArchivo === 'cotizacionesFirmadas') {
             // Verificar si el índice existe en el array
             if (array_key_exists($index, $this->docsCotizacionesFirmadas)) {
@@ -544,6 +543,7 @@ class AdquisicionesForm extends Component
                 $this->docsCotizacionesFirmadas = array_values($this->docsCotizacionesFirmadas);
             }
         }
+
         if ($tipoArchivo === 'cotizacionesPdf') {
             // Verificar si el índice existe en el array
             if (array_key_exists($index, $this->docsCotizacionesPdf)) {
@@ -551,6 +551,16 @@ class AdquisicionesForm extends Component
                 unset($this->docsCotizacionesPdf[$index]);
                 // Reindexar el array para asegurar una secuencia numérica continua
                 $this->docsCotizacionesPdf = array_values($this->docsCotizacionesPdf);
+            }
+        }
+
+        if ($tipoArchivo === 'anexoDocumentos') {
+            // Verificar si el índice existe en el array
+            if (array_key_exists($index, $this->docsAnexoOtrosDocumentos)) {
+                // Eliminar el archivo del array usando el índice
+                unset($this->docsAnexoOtrosDocumentos[$index]);
+                // Reindexar el array para asegurar una secuencia numérica continua
+                $this->docsAnexoOtrosDocumentos = array_values($this->docsAnexoOtrosDocumentos);
             }
         }
     }
@@ -563,6 +573,7 @@ class AdquisicionesForm extends Component
     public function resetdocsCartaExclusividad()
     {
         $this->docsCartaExclusividad = [];
+        $this->docsAnexoOtrosDocumentos = [];
     }
 
 }
