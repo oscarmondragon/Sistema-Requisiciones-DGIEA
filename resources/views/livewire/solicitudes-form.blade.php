@@ -88,7 +88,7 @@
       @if ($id_rubro_especial === '3')
       <div class="mt-4">
         <label for="bitacoraPdf">Bitacora </label>
-        <input type="file" id="bitacoraPdf" wire:model='docsbitacoraPdf'>
+        <input type="file" id="bitacoraPdf" wire:model='docsbitacoraPdf' accept=".pdf">
         @empty($docsbitacoraPdf)
           <label for="bitacoraPdf" class="text-dorado">
             Sin archivos seleccionados.

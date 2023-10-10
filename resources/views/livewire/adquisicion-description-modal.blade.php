@@ -1,6 +1,6 @@
 <x-modal>
   <x-slot name="title">
-    Descripcion del bien o servicio
+    Descripción del bien o servicio
   </x-slot>
   <x-slot name="content">
     <div>
@@ -9,7 +9,8 @@
         <label class="block mb-2" for="descripcion">
           Descripción
         </label>
-        <input autofocus wire:model="descripcion" required class="inputs-formulario" id="descripcion" type="text" placeholder="Descripción">
+        <!-- <input autofocus wire:model="descripcion" required class="inputs-formulario" id="descripcion" type="text" placeholder="Descripción"> -->
+        <textarea wire:model="descripcion" class="inputs-formulario" id="descripcion" rows="2" cols="30" placeholder="Descripción" autofocus required></textarea>
         @error('descripcion')
         <span class="text-rojo">{{ $message }}</span>@enderror
       </div>
@@ -28,9 +29,9 @@
         @error('precioUnitario') <span class="text-rojo">{{ $message }}</span> @enderror
       </div>
       <div class="mb-4 text-right">
-        <span> {{$iva}}</span>
-        <input type="checkbox" id="checkIva" wire:model="checkIva" wire:change="calcularIvaImporte" name="checkIva">
-        <label for="iva">IVA</label>
+        <span> {{ $porcentajeIva }}%</span>
+        <input type="checkbox" checked id="checkIva" wire:model="checkIva" wire:change="calcularIvaImporte" name="checkIva">
+        <label for="checkIva">IVA</label>
 
       </div>
       <div class="mb-4">

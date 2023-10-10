@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use LivewireUI\Modal\ModalComponent;
+use function env;
 
 class AdquisicionDescriptionModal extends ModalComponent
 {
@@ -12,8 +13,9 @@ class AdquisicionDescriptionModal extends ModalComponent
     public string $descripcion = '';
     public $cantidad;
     public $precioUnitario;
-    public $checkIva = 0;
-    public $iva = 0;
+    public $checkIva = 1;
+    public $iva;
+    public $porcentajeIva;
     public $importe = 0;
     public $justificacionSoftware;
     public $numAlumnos = 0;
@@ -63,6 +65,13 @@ class AdquisicionDescriptionModal extends ModalComponent
         return view('livewire.adquisicion-description-modal');
     }
 
+    public function mount()
+    {
+        $this->porcentajeIva = env('IVA', 16);
+
+
+    }
+
     public function calcularIvaImporte()
     {
 
@@ -81,9 +90,9 @@ class AdquisicionDescriptionModal extends ModalComponent
 
         //CALCULA IVA E IMPORTE
         if ($this->checkIva) {
-            $this->iva = $importe * 0.16; //Calcula el IVA
+            $this->iva = ($importe * $this->porcentajeIva) / 100; //Calcula el IVA
             $this->iva = round($this->iva, $precision = 2, $mode = PHP_ROUND_HALF_UP);
-            $importe += $importe * 0.16; // Ajusta el importe con el 16% de IVA
+            $importe += ($importe * $this->porcentajeIva) / 100; // Ajusta el importe con el 16% de IVA
             $importe = round($importe, $precision = 2, $mode = PHP_ROUND_HALF_UP);
         } else {
             $this->iva = 0;

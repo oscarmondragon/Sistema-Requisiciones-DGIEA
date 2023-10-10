@@ -107,4 +107,8 @@ class CvuController extends Controller
 
         return redirect('http://www.siea.uaemex.mx/cvu/');
     }
+
+    public function error(){
+        return view('errores.error-cvu');
+    }
 }
