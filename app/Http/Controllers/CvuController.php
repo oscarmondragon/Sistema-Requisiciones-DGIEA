@@ -56,11 +56,9 @@ class CvuController extends Controller
                 return Redirect::route('cvu.vobo');
             }
             if ($accion == 3) {
-                return Redirect::route('cvu.seguimiento-dgiea');
+                return Redirect::route('cvu.seguimiento');
             }
-            if ($accion == 4) {
-                return Redirect::route('cvu.seguimiento-siia');
-            }
+
             return "La acción solicitada no es valida";
             // return view('cvu.index', ['accion' => $accion]);
         } else {
@@ -79,15 +77,10 @@ class CvuController extends Controller
         return view('cvu.index', ['accion' => 2]);
     }
 
-    public function seguimientoDgiea()
+    public function seguimiento()
     {
         return view('cvu.index', ['accion' => 3]);
     }
-    public function seguimientoSiia()
-    {
-        return view('cvu.index', ['accion' => 4]);
-    }
-
 
     public function destroy(Request $request): RedirectResponse
     {

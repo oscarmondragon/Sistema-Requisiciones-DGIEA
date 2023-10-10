@@ -10,7 +10,7 @@
 
             @endif
             @if ($accion == 3)
-            {{ __('Seguimiento SIIA') }}
+            {{ __('Seguimiento') }}
 
             @endif
         </h2>
@@ -35,10 +35,6 @@
     @if ($accion == 3)
     <livewire:seguimiento />
     @endif
-    @if ($accion == 4)
-    <livewire:seguimiento-siia />
-    @endif
-
     </div>
     </div>
     </div>
