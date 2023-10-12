@@ -11,9 +11,10 @@ use App\Models\AdquisicionDetalle;
 use App\Models\Documento;
 use App\Models\CuentaContable;
 use App\Models\Proyecto;
-
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use Carbon\Carbon;
+
 
 
 
@@ -55,20 +56,25 @@ class AdquisicionesForm extends Component
     public $docsAnexoOtrosDocumentos = [];
     public $ruta_archivo = '';
 
+    //variables para validar documentos antes de agregarlos al arreglo
+    public $cartaExclusividadTemp;
+    public $cotizacionFirmadaTemp;
+    public $cotizacionPdfTemp;
+    public $anexoOtroTemp;
+
+
+
+
 
 
     protected $rules = [
         'id_rubro' => 'required|not_in:0',
         'bienes' => 'required|array|min:1',
         'justificacion_academica' => 'required_if:afecta_investigacion,1',
-        'docsCartaExclusividad' => 'required_if:exclusividad,1',
-
-        'docsCartaExclusividad.*' => 'mimes:pdf|max:2560',
+        'docsCartaExclusividad' => 'required_if:exclusividad,1|array|min:1',
         'docsCotizacionesFirmadas' => 'required|array|min:1',
-        'docsCotizacionesFirmadas.*' => 'required|mimes:pdf|max:2560',
+        'docsCotizacionesFirmadas.*' => 'required|array|min:1',
         'docsCotizacionesPdf' => 'required|array|min:1',
-        'docsCotizacionesPdf.*' => 'mimes:pdf|max:2560',
-        'docsAnexoOtrosDocumentos.*' => 'mimes:pdf|max:2560',
         'vobo' => 'accepted'
     ];
     protected $messages = [
@@ -79,21 +85,26 @@ class AdquisicionesForm extends Component
         'bienes.min' => 'Debe agregar por lo menos un bien o servicio.',
         'justificacion_academica.required_if' => 'La justificación académica no puede estar vacia.',
         'docsCartaExclusividad.required_if' => 'Debe adjuntar la carta de exclusividad.',
-        'docsCartaExclusividad.*' => 'Debes adjuntar Cartas de exclusividad con extension .pdf unicamente',
-        'docsCartaExclusividad.*.max' => 'El archivo no debe pesar mas de 2MB',
+        'docsCartaExclusividad.array' => 'Debe adjuntar por lo menos una cotización firmada.',
+        'docsCartaExclusividad.min' => 'Debe adjuntar por lo menos una carta de exclusividad.',
         'docsCotizacionesFirmadas.required' => 'Debe adjuntar por lo menos una cotización firmada.',
         'docsCotizacionesFirmadas.array' => 'Debe adjuntar por lo menos una cotización firmada.',
         'docsCotizacionesFirmadas.min' => 'Debe adjuntar por lo menos una cotización firmada.',
-        'docsCotizacionesFirmadas.*' => 'Debes adjuntar Cotizaciones Firmadas con extension .pdf  unicamente',
-        'docsCotizacionesFirmadas.*.max' => 'El archivo no debe pesar mas de 2MB',
         'docsCotizacionesPdf.required' => 'Debe adjuntar por lo menos una cotización PDF.',
         'docsCotizacionesPdf.array' => 'Debe adjuntar por lo menos una cotización PDF.',
         'docsCotizacionesPdf.min' => 'Debe adjuntar por lo menos una cotización PDF.',
-        'docsCotizacionesPdf.*' => 'Debes adjuntar Cotizaciones con extension .pdf unicamente',
-        'docsCotizacionesPdf.*.max' => 'El archivo no debe pesar mas de 2MB',
-        'docsAnexoOtrosDocumentos.*' => 'Debes adjuntar archivos con extension .pdf unicamente',
-        'docsAnexoOtrosDocumentos.*.max' => 'El archivo no debe pesar mas de 2MB',
-        'vobo.accepted' => 'Debe dar el visto bueno.'
+        'vobo.accepted' => 'Debe dar el visto bueno.',
+        'cartaExclusividadTemp.max' => 'El documento no debe pesar mas de 2MB.',
+        'cartaExclusividadTemp.mimes' => 'Debe adjuntar documentos con extension .pdf unicamente',
+        'cotizacionFirmadaTemp.max' => 'El documento no debe pesar mas de 2MB.',
+        'cotizacionFirmadaTemp.mimes' => 'Debe adjuntar documentos con extension .pdf unicamente',
+        'cotizacionPdfTemp.max' => 'El documento no debe pesar mas de 2MB.',
+        'cotizacionPdfTemp.mimes' => 'Debe adjuntar documentos con extension .pdf unicamente',
+        'anexoOtroTemp.max' => 'El documento no debe pesar mas de 2MB.',
+        'anexoOtroTemp.mimes' => 'Debe adjuntar documentos con extension .pdf unicamente',
+
+
+
     ];
     public $listeners = [
         'addBien' => 'setBien',
@@ -105,6 +116,8 @@ class AdquisicionesForm extends Component
         $this->docsCartaExclusividad = [];
         $this->docsCotizacionesFirmadas = [];
         $this->docsCotizacionesPdf = [];
+
+
         $this->cuentasContables = CuentaContable::where('estatus', 1)->whereIn('tipo_requisicion', [1, 3])->get();
 
 
@@ -211,7 +224,7 @@ class AdquisicionesForm extends Component
                         ]);
                     }
                     $i = 1;
-                    $this->docsCartaExclusividad = [];
+                    //$this->docsCartaExclusividad = [];
                 }
 
                 if (empty($this->docsCotizacionesFirmadas) == 0) {
@@ -230,7 +243,7 @@ class AdquisicionesForm extends Component
                         ]);
                     }
                     $i = 1;
-                    $this->docsCotizacionesFirmadas = [];
+                    // $this->docsCotizacionesFirmadas = [];
                     //dd($this->docsCotizacionesFirmadas);
 
                 }
@@ -249,8 +262,26 @@ class AdquisicionesForm extends Component
                             'nombre_documento' => $nombre_doc
                         ]);
                     }
-                    $this->docsCotizacionesPdf = [];
+                    //  $this->docsCotizacionesPdf = [];
                 }
+
+                if (empty($this->docsAnexoOtrosDocumentos) == 0) {
+                    foreach ($this->docsAnexoOtrosDocumentos as $dao) {
+                        $extension = $dao->getClientOriginalExtension();
+                        $nombre_doc = $dao->getClientOriginalName();
+                        $pathBD = $dao->storeAs($ruta_archivo . '/AnexosOtros', 'doc_otros' . $i . '.' . $extension);
+                        $i++;
+                        $documento = Documento::create([
+                            'id_requisicion' => $id_adquisicion,
+                            'nombre_doc' => $pathBD,
+                            'tipo_documento' => '5',
+                            'tipo_requisicion' => '1',
+                            'nombre_documento' => $nombre_doc
+                        ]);
+                    }
+                    //  $this->docsAnexoOtrosDocumentos = [];
+                }
+
                 DB::commit();
                 return redirect('/cvu-crear')->with('success', 'Su solicitud ha sido guardada correctamente con el número de clave ' . $clave_adquisicion . '. Recuerde completarla y mandarla a visto bueno.');
             } catch (\Exception $e) {
@@ -269,18 +300,18 @@ class AdquisicionesForm extends Component
 
     public function saveVobo()
     {
-
-        $this->validate();
+        //  $this->validate();
         $clave_proyecto = Session::get('id_proyecto');
         $id_user = Session::get('id_user');
         $who_vobo = Session::get('VoBo_Who');
+        $fecha_vobo = Carbon::now()->toDateString();
 
         if ($who_vobo) { //Si el deposito es por parte del Responsable técnico
-            $vobo_admin = 0;
-            $vobo_rt = 1;
+            $vobo_admin = null;
+            $vobo_rt = $fecha_vobo;
         } else { //Si el depósito es por parte del administrativo
-            $vobo_admin = 1;
-            $vobo_rt = 0;
+            $vobo_admin = $fecha_vobo;
+            $vobo_rt = null;
         }
 
         //Busca el proyecto por la clave
@@ -391,8 +422,25 @@ class AdquisicionesForm extends Component
                         'nombre_documento' => $nombre_doc
                     ]);
                 }
-
                 //$docsCotizacionesPdf = [];
+
+                if (empty($this->docsAnexoOtrosDocumentos) == 0) {
+                    foreach ($this->docsAnexoOtrosDocumentos as $dao) {
+                        $extension = $dao->getClientOriginalExtension();
+                        $nombre_doc = $dao->getClientOriginalName();
+                        $pathBD = $dao->storeAs($ruta_archivo . '/AnexosOtros', 'doc_otros' . $i . '.' . $extension);
+                        $i++;
+                        $documento = Documento::create([
+                            'id_requisicion' => $id_adquisicion,
+                            'nombre_doc' => $pathBD,
+                            'tipo_documento' => '5',
+                            'tipo_requisicion' => '1',
+                            'nombre_documento' => $nombre_doc
+                        ]);
+                    }
+                    //  $this->docsAnexoOtrosDocumentos = [];
+                }
+
                 DB::commit();
 
                 return redirect('/cvu-crear')->with('success', 'Su solicitud con clave ' . $clave_adquisicion . ' ha sido  registrada y se ha enviado para visto bueno.');
@@ -604,5 +652,69 @@ class AdquisicionesForm extends Component
         $this->docsAnexoOtrosDocumentos = [];
 
     }
+    public function updatedcartaExclusividadTemp()
+    {
+        $validatedData = $this->validate([
+            'cartaExclusividadTemp' => 'mimes:pdf|max:2048',
+        ]);
+
+        // Validar si la validación fue exitosa antes de agregar los archivos al arreglo
+        if (isset($validatedData['cartaExclusividadTemp'])) {
+            // Agregar el archivo al arreglo
+            $this->docsCartaExclusividad[] = $validatedData['cartaExclusividadTemp'];
+        }
+
+        $this->cartaExclusividadTemp = null;
+    }
+
+    public function updatedcotizacionFirmadaTemp()
+    {
+        $validatedData = $this->validate([
+            'cotizacionFirmadaTemp' => 'mimes:pdf|max:2048',
+        ]);
+
+        // Validar si la validación fue exitosa antes de agregar los archivos al arreglo
+        if (isset($validatedData['cotizacionFirmadaTemp'])) {
+            // Agregar el archivo al arreglo
+            $this->docsCotizacionesFirmadas[] = $validatedData['cotizacionFirmadaTemp'];
+        }
+
+        $this->cotizacionFirmadaTemp = null;
+    }
+
+    public function updatedcotizacionPdfTemp()
+    {
+        $validatedData = $this->validate([
+            'cotizacionPdfTemp' => 'mimes:pdf|max:2048',
+        ]);
+
+        // Validar si la validación fue exitosa antes de agregar los archivos al arreglo
+        if (isset($validatedData['cotizacionPdfTemp'])) {
+            // Agregar el archivo al arreglo
+            $this->docsCotizacionesPdf[] = $validatedData['cotizacionPdfTemp'];
+        }
+
+        $this->cotizacionPdfTemp = null;
+    }
+
+    public function updatedanexoOtroTemp()
+    {
+        $validatedData = $this->validate([
+            'anexoOtroTemp' => 'mimes:pdf|max:2048',
+        ]);
+
+        // Validar si la validación fue exitosa antes de agregar los archivos al arreglo
+        if (isset($validatedData['anexoOtroTemp'])) {
+            // Agregar el archivo al arreglo
+            $this->docsAnexoOtrosDocumentos[] = $validatedData['anexoOtroTemp'];
+        }
+
+        $this->anexoOtroTemp = null;
+    }
+    public function updated($id_rubro)
+    {
+        $this->validateOnly($id_rubro);
+    }
+
 
 }
