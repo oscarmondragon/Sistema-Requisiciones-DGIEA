@@ -71,10 +71,11 @@
                 @endif
                 <th>
                   <button type="button" @click='$wire.emit("openModal", "solicitud-recurso-modal",  
-                      { _id: elemento._id, concepto: elemento.concepto, importe: elemento.importe, importe_editar: elemento.importe, justificacionS: elemento.justificacionS, finicial: elemento.finicial, ffinal: elemento.ffinal, id_rubro: id_rubro, id_rubro_especial: id_rubro_especial, monto_total: monto_total, monto_sumado: monto_sumado  })' class="btn-tablas">
+                      { _id: elemento._id, concepto: elemento.concepto, importe: elemento.importe, importe_editar: elemento.importe, justificacionS: elemento.justificacionS, finicial: elemento.finicial, ffinal: elemento.ffinal, id_rubro: id_rubro, id_rubro_especial: id_rubro_especial, monto_total: monto_total, monto_sumado: monto_sumado  })' class="btn-tablas"
+                      title="Editar">
                     <img src="{{ ('img/btn_editar.png') }}" alt="Image/png">
                   </button>
-                  <button type="button" @click.stop="elementos.splice(index, 1); $wire.deleteRecurso(elemento)" class="btn-tablas">
+                  <button type="button" @click.stop="elementos.splice(index, 1); $wire.deleteRecurso(elemento)" class="btn-tablas" title="Eliminar">
                     <img src="{{ ('img/btn_eliminar.png') }}" alt="Image/png">
                   </button>
                 </th>
