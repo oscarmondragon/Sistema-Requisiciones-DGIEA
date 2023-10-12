@@ -224,8 +224,9 @@
       </ul>
 
       <div>
-        <label x-show="exclusividadSelectedOption === '1'" for="anexoDocumentos" class="text-btn_vobo mt-5 block">
-          <span class="font-bold">Nota: </span>Adjunte aquí el soporte de exclusividad.
+        <label x-show="exclusividadSelectedOption === '1'" for="anexoDocumentos" 
+        class="text-rojo mt-5 block">
+          <span class="text-verde font-bold">Nota: </span>Adjunte aquí el soporte de exclusividad.
         </label>
         <label for="anexoDocumentos">Anexo técnico u otros documentos:</label>
         <input type="file" id="anexoOtroTemp" wire:model='anexoOtroTemp' accept=".pdf">
