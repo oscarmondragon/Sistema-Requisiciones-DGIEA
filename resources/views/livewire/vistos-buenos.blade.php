@@ -8,6 +8,7 @@
 
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
               <div class="p-6 overflow-x-auto">
+                <input type="text" wire:model="search" placeholder="Buscar por clave, tipo...">
                 <table class="table-auto text-left text-sm w-3/4 sm:w-full mx-auto">
                   <thead>
                     <tr class="bg-blanco">
@@ -30,16 +31,16 @@
                       <td> {{ $adquisicion->estatus->descripcion }} </td>
                       <td> {{ $adquisicion->updated_at}}</td>
                       <td>
-                        <button type="button" class="btn-tablas" title="Editar">
-                          <img src="{{ ('img/btn_editar.png') }}" alt="Image/png">
-                        </button>
-                        <button type="button" @click.stop="elementos.splice(index, 1); $wire.deleteBien(elemento)" class="btn-tablas" title="Eliminar">
+                        <a href="{{route('adquisiciones.editar', $adquisicion->id)}}" class="btn-tablas" title="Editar">
+                          <img src="{{ asset('img/btn_editar.png') }}" alt="Editar">
+                      </a>
+                        <button type="button" wire:click="deleteAdquisicion({{ $adquisicion->id }})" class="btn-tablas" title="Eliminar">
                           <img src="{{ ('img/btn_eliminar.png') }}" alt="Image/png">
                         </button>
                       </td>
                     </tr>
                     @endforeach
-                    @foreach ($solicitudes as $solicitud)
+                  {{--   @foreach ($solicitudes as $solicitud)
                     <tr class="border-b-gray-200 border-transparent">
                       <td> {{ $loop->iteration }} </td>
                       <td> {{ $solicitud->clave_solicitud }} </td>
@@ -56,7 +57,7 @@
                         </button>
                       </td>
                     </tr>
-                    @endforeach
+                    @endforeach --}}
                   </tbody>
                 </table>
                 {{$adquisiciones->links()}}
@@ -67,6 +68,7 @@
             <h3>Requerimientos pendientes de visto bueno </h3>
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
               <div class="p-6 ">
+                <input type="text" wire:model="searchVobo" placeholder="Buscar por clave, tipo...">
                 <table class="table-auto text-left text-sm w-3/4 sm:w-full mx-auto">
                   <thead>
                     <tr class="bg-blanco">
@@ -82,7 +84,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    @foreach ($adquisiciones as $adquisicion)
+                    @foreach ($adquisicionesVistosBuenos as $adquisicion)
                     <tr class="border-b-gray-200 border-transparent">
                       <td> {{ $loop->iteration}}</td>
                       <td> {{ $adquisicion->clave_adquisicion}} </td>
@@ -99,7 +101,7 @@
                       </th>
                     </tr>
                     @endforeach
-                    @foreach ($solicitudes as $solicitud)
+                    {{-- @foreach ($solicitudes as $solicitud)
                     <tr class="border-b-gray-200 border-transparent">
                       <td> {{ $loop->iteration}}</td>
                       <td> {{ $solicitud->clave_solicitud}} </td>
@@ -115,7 +117,7 @@
                         </button>
                       </th>
                     </tr>
-                    @endforeach
+                    @endforeach--}}
                   </tbody>
                 </table>
                 {{$adquisiciones->links()}}
