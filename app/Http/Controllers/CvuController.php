@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Redirect;
 
 class CvuController extends Controller
 {
+
+    public $paginaCVU;
+
     public function cvuVerificar(Request $request)
     {
         $id_user = $request->input('id_investigador');
@@ -105,7 +108,8 @@ class CvuController extends Controller
 
         request()->flush();
 
-        return redirect('http://www.siea.uaemex.mx/cvu/');
+        $this->paginaCVU = env('PAGINA_CVU', 'http://www.siea.uaemex.mx/cvu/');
+        return redirect($this->paginaCVU);
     }
 
     public function error(){
