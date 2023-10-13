@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Livewire\AdquisicionEditar;
 use App\Models\Adquisicion;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProyectoController;
@@ -52,7 +53,8 @@ Route::middleware('auth')->group(function () {
 
 
 //RUTAS ADQUISICIONES
-
+//Route::get('/adquisiciones/{id}/editar', [AdquisicionController::class, 'edit'])->name('adquisiciones.editar');
+Route::get('/adquisiciones/{id}/editar', AdquisicionEditar::class)->middleware('CvuAuth')->name('adquisiciones.editar');
 //Route::resource('adquisiciones', AdquisicionController::class);
 
 require __DIR__ . '/auth.php';
