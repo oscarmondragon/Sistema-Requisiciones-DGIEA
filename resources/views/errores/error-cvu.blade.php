@@ -24,8 +24,8 @@
             <p class="mb-4 text-3xl tracking-tight font-bold text-verde md:text-4xl">No ha sido posible acceder a esta página.</p>
             <p class="mb-4 text-lg font-light text-verde">La página a la que intentas acceder no esta disponible o no cuentas con los permisos suficientes para acceder.
             </p>
-            <!-- <a href="http://sistema-requisiciones-dgiea.test/prueba" class="bg-dorado text-white inline-flex bg-primary-600 hover:bg-primary-800 focus:ring-4 focus:outline-none 
-                    focus:ring-dorado font-medium rounded-lg text-sm px-5 py-2.5 text-center my-4">Volver a inicio</a> -->
+            <a href="{{ env('PAGINA_CVU', 'http://www.siea.uaemex.mx/cvu/') }}" class="bg-dorado text-white inline-flex bg-primary-600 hover:bg-primary-800 focus:ring-4 focus:outline-none 
+                    focus:ring-dorado font-medium rounded-lg text-sm px-5 py-2.5 text-center my-4">Volver a CVU </a>
         </div>
     </div>
 </body>
