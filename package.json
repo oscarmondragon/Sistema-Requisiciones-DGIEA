@@ -20,6 +20,6 @@
     },
     "dependencies": {
         "@alpinejs/focus": "^3.12.2",
-        "sweetalert2": "^11.7.28"
+        "sweetalert2": "^11.7.32"
     }
 }
