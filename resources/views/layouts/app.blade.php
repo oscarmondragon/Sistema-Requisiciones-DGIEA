@@ -14,6 +14,8 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @livewireStyles
+
 </head>
 
 <body class="font-sans antialiased">
@@ -40,7 +42,8 @@
             {{ $slot }}
         </main>
     </div>
-    <script src="../path/to/flowbite/dist/flowbite.min.js"></script>
+    @livewire('livewire-ui-modal')
+    @livewireScripts
 </body>
 
 </html>

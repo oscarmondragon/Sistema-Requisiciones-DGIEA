@@ -12,6 +12,12 @@ class Documento extends Model
     protected $connection = 'mysql';
     protected $table = "documentos";
 
+    //return $this->hasOne('App\Profile');
+
+    public function tipoDocumento(){
+        return $this->belongsTo(TipoDocumentos::class, 'tipo_documento');
+    }
+
 
     protected $fillable = [
         'id_requisicion',

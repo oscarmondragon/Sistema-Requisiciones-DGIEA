@@ -23,7 +23,6 @@
     <div class="fondo_deg_formulario">
         <img src="{{ asset('img/fondo_cabecera.png') }}" alt="Image/png" class="static h-9">
     </div>
-
     <div class="min-h-screen bg-gray-100">
         @include('layouts.navigation-cvu')
 
@@ -44,7 +43,7 @@
 
     @livewire('livewire-ui-modal')
     @livewireScripts
-    <script src="../path/to/flowbite/dist/flowbite.min.js"></script>
+    @stack('scripts')
 </body>
 
 </html>

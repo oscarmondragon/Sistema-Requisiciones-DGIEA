@@ -161,14 +161,14 @@
 
       <div x-show="exclusividadSelectedOption === '1'">
         <label for="cartaExlcusividad">Carta de exclusividad:</label>
-        <input type="file" id="cartaExlcusividad" wire:model='docsCartaExclusividad' accept=".pdf">
+        <input type="file" id="cartaExclusividadTemp" wire:model='cartaExclusividadTemp'  accept=".pdf">
         @empty($docsCartaExclusividad)
         <label for="cartaExlcusividad" class="text-dorado">Sin archivos seleccionados.</label>
         @endempty
         <br>
         <div wire:loading wire:target="docsCartaExclusividad">Cargando archivo...</div>
+        @error('cartaExclusividadTemp') <span class=" text-rojo">{{ $message }}</span> @enderror
         @error('docsCartaExclusividad') <span class=" text-rojo">{{ $message }}</span> @enderror
-        @error('docsCartaExclusividad.*') <span class=" text-rojo">{{ $message }}</span> @enderror
         <ul>
           @foreach($docsCartaExclusividad as $index => $docCarta)
           <li>
@@ -182,15 +182,15 @@
       </div>
       <div class="mt-2">
         <label for="cotizacionFirmada">Cotización PDF firmada:</label>
-        <input type="file" id="cotizacionFirmada" wire:model='docsCotizacionesFirmadas' accept=".pdf">
+        <input type="file" id="cotizacionFirmadaTemp" wire:model='cotizacionFirmadaTemp' accept=".pdf">
         @empty($docsCotizacionesFirmadas)
         <label for="cotizacionFirmada" class="text-dorado">Sin archivos seleccionados.</label>
         @endempty
         <br>
         <div wire:loading wire:target="docsCotizacionesFirmadas">Cargando archivo...</div>
       </div>
+      @error('cotizacionFirmadaTemp') <span class=" text-rojo">{{ $message }}</span> @enderror
       @error('docsCotizacionesFirmadas') <span class=" text-rojo">{{ $message }}</span> @enderror
-      @error('docsCotizacionesFirmadas.*') <span class=" text-rojo">{{ $message }}</span> @enderror
       <ul>
         @foreach($docsCotizacionesFirmadas as $index => $docFirmadas)
         <li>
@@ -203,15 +203,15 @@
       </ul>
       <div class="mt-2">
         <label for="cotizacionesPdf">Cotizaciones PDF (Pueden ir o no firmadas):</label>
-        <input type="file" id="cotizacionesPdf" wire:model='docsCotizacionesPdf' accept=".pdf">
+        <input type="file" id="cotizacionPdfTemp" wire:model='cotizacionPdfTemp' accept=".pdf">
         @empty($docsCotizacionesPdf)
         <label for="cotizacionesPdf" class="text-dorado">Sin archivos seleccionados.</label>
         @endempty
         <br>
         <div wire:loading wire:target="docsCotizacionesPdf">Cargando archivo...</div>
       </div>
+      @error('cotizacionPdfTemp') <span class=" text-rojo">{{ $message }}</span> @enderror
       @error('docsCotizacionesPdf') <span class=" text-rojo">{{ $message }}</span> @enderror
-      @error('docsCotizacionesPdf.*') <span class=" text-rojo">{{ $message }}</span> @enderror
       <ul class="my-2">
         @foreach($docsCotizacionesPdf as $index => $docPdf)
         <li>
@@ -224,18 +224,19 @@
       </ul>
 
       <div>
-        <label x-show="exclusividadSelectedOption === '1'" for="anexoDocumentos" class="text-btn_vobo mt-5 block">
-          <span class="font-bold">Nota: </span>Adjunte aquí el soporte de exclusividad.
+        <label x-show="exclusividadSelectedOption === '1'" for="anexoDocumentos" 
+        class="text-rojo mt-5 block">
+          <span class="text-verde font-bold">Nota: </span>Adjunte aquí el soporte de exclusividad.
         </label>
         <label for="anexoDocumentos">Anexo técnico u otros documentos:</label>
-        <input type="file" id="anexoDocumentos" wire:model='docsAnexoOtrosDocumentos' accept=".pdf">
+        <input type="file" id="anexoOtroTemp" wire:model='anexoOtroTemp' accept=".pdf">
         @empty($docsAnexoOtrosDocumentos)
         <label for="anexoDocumentos" class="text-dorado">Sin archivos seleccionados.</label>
         @endempty
         <br>
         <div wire:loading wire:target="docsAnexoOtrosDocumentos">Cargando archivo...</div>
+        @error('anexoOtroTemp') <span class=" text-rojo">{{ $message }}</span> @enderror
         @error('docsAnexoOtrosDocumentos') <span class=" text-rojo">{{ $message }}</span> @enderror
-        @error('docsAnexoOtrosDocumentos.*') <span class=" text-rojo">{{ $message }}</span> @enderror
         <ul>
           @foreach($docsAnexoOtrosDocumentos as $index => $anexoDoc)
           <li>
