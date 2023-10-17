@@ -74,3 +74,8 @@ Route::get('/cvu', function () {
     // return view('cvu.create');
     return redirect()->route('cvu.create');
 })->middleware('CvuAuth')->name('cvu.verificado');
+
+
+
+Route::get('/descargar/{name}', [FilesController::class,'downloadFile'])
+->name('download');

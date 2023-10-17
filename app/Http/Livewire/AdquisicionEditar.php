@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
 
+use Illuminate\Support\Collection;
+use Monolog\Handler\IFTTTHandler;
 
 class AdquisicionEditar extends Component
 {
@@ -52,6 +54,10 @@ class AdquisicionEditar extends Component
     public $docsAnexoOtrosDocumentos = [];
     public $ruta_archivo = '';
 
+    public $documentos = [];
+    public $descripcionAdq;
+    public $bienesDB;
+
     //variables para validar documentos antes de agregarlos al arreglo
     public $cartaExclusividadTemp;
     public $cotizacionFirmadaTemp;
@@ -60,22 +66,32 @@ class AdquisicionEditar extends Component
     public function mount($id)
     {
         $this->adquisicion = Adquisicion::find($id);
+        $this->id_rubro = $this->adquisicion->id_rubro;
+        $this->id_rubro_especial = $this->adquisicion->cuentas->cuentaEspecial->id;
         $this->justificacion_academica = $this->adquisicion->justificacion_academica;
         $this->afecta_investigacion = $this->adquisicion->afecta_investigacion;
+        $this->exclusividad = $this->adquisicion->exclusividad;
+        $this->docsCartaExclusividad = $this->adquisicion->docsCartaExclusividad;
+        $this->subtotal = $this->adquisicion->subtotal;
+        $this->iva = $this->adquisicion->iva;
+        $this->total = $this->adquisicion->total;
 
-
-        $this->bienes = collect();
+        $this->bienesDB = AdquisicionDetalle::where('id', $id)->get();
+        $this->bienes = collect($this->bienesDB);
+        //dd($this->bienes);
         $this->docsCartaExclusividad = [];
         $this->docsCotizacionesFirmadas = [];
         $this->docsCotizacionesPdf = [];
 
-
         $this->cuentasContables = CuentaContable::where('estatus', 1)->whereIn('tipo_requisicion', [1, 3])->get();
 
+        $this->documentos = Documento::where('id_requisicion', $id)->get();
+        $this->descripcionAdq = Adquisicion::where('id', $id)->get();
     }
     public function render()
     {
-        return view('livewire.adquisicion-editar')->layout('layouts.cvu');
-
+        return view('livewire.adquisicion-editar', [
+            'documentos' => $this->documentos,
+            'bienes' => $this->bienes, 'descripcionAdq' => $this->descripcionAdq])->layout('layouts.cvu');
     }
 }

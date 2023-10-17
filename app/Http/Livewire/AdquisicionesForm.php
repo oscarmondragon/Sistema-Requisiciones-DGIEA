@@ -134,11 +134,8 @@ class AdquisicionesForm extends Component
         $this->validate([
             'id_rubro' => 'required|not_in:0',
             'bienes' => 'required|array|min:1',
-            //'docsCartaExclusividad.*' => 'mimes:pdf|max:2560',
             'docsCartaExclusividad.*' => 'mimes:' . $this->tipoDocumento . '|max:' . $this->tamanyoDocumentos . '',
-            //'docsCotizacionesFirmadas.*' => 'required|mimes:pdf|max:2560',
             'docsCotizacionesFirmadas.*' => 'required|'.'mimes:' . $this->tipoDocumento . '|max:' . $this->tamanyoDocumentos . '',
-            //'docsCotizacionesPdf.*' => 'mimes:pdf|max:2560',
             'docsCotizacionesPdf.*' => 'mimes:' . $this->tipoDocumento . '|max:' . $this->tamanyoDocumentos . '',
         ]);
 
