@@ -1,6 +1,6 @@
 <x-cvu-layout>
     <x-slot name="header">
-        <h2 class="mb-4">
+        <h2 class="mb-2">
             @if ($accion == 1)
             {{ __('Crear requerimientos') }}
 
@@ -15,13 +15,15 @@
             @endif
         </h2>
 
-        <div>
+        <div class="sm:grid sm:grid-cols-3 sm:justify-around flex flex-wrap">
             <p class="mt-2">Espacio Académico: <span class="text-dorado">{{Session::get('name_espacioAcademico')}}</span></p>
+            <p class="mt-2">Responsable Técnico: <span class="text-dorado">{{Session::get('id_rt')}} - {{Session::get('name_rt')}}</span> </p>
+            <p class="mt-2">Tipo de Financiamiento: <span class="text-dorado">{{Session::get('tipo_financiamiento')}}</span> </p>
+        </div>
+        <div>
             <p class="mt-2">Clave y Nombre del Proyecto:
                 <span class="text-dorado">{{Session::get('id_proyecto')}} - {{Session::get('name_proyecto')}}</span>
             </p>
-            <p class="mt-2">Responsable Técnico: <span class="text-dorado">{{Session::get('id_rt')}}  - {{Session::get('name_rt')}}</span> </p>
-            <p class="my-2 ">Tipo de Financiamiento: <span class="text-dorado">{{Session::get('tipo_financiamiento')}}</span> </p>
         </div>
 
     </x-slot>
