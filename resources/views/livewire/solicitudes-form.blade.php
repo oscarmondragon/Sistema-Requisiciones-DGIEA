@@ -1,8 +1,11 @@
+<?php
+use Carbon\Carbon;
+?>
+
 <div>
   <h1 class="mt-6">Formulario solicitudes</h1>
   <form wire:submit.prevent="saveVobo">
     <div>
-
       <div class="mt-6">
         <label for="id_rubro">
           Rubro:
@@ -25,91 +28,80 @@
         <input type="text" readonly id="nombre_expedido" wire:model="nombre_expedido" class="inputs-formulario-solicitudes w-96 cursor-not-allowed" placeholder="Nombre">
         @error('nombre_expedido') <span class="text-rojo">{{ $message }}</span> @enderror
       </div>
-
-      <div class="mt-6">
-        <label>
-          Descripción del bien o servicio:
-        </label>
-        @if ($id_rubro != 0 && $monto_total != null)
-        <button type="button" x-on:click="$wire.emit('openModal', 'solicitud-recurso-modal', {'id_rubro': {{ $id_rubro }}, 
-        'id_rubro_especial': {{$id_rubro_especial ? $id_rubro_especial : 'null'}}, 'monto_total': {{ $monto_total ? $monto_total : 'null' }}, 'monto_sumado': {{ $monto_sumado }} })" class="bg-verde w-8 h-8 py-0 px-0 rounded-full hover:bg-[#3c5042] focus:ring-2 focus:outline-none focus:ring-[#3c5042]">
-          <span class="text-white font-extrabold text-2xl">+</span>
-        </button>
-        @else
-        <p class="bg-gray-300 w-8 h-8 -pt-2 px-2 ml-1 rounded-full hover:bg-gray-200 hover:font-extrabold hover:text-gray-400 cursor-not-allowed inline-block select-none" disabled>
-        <span title="Primero selecciona un rubro y un monto." class="text-white font-extrabold text-2xl">+</span>
-        </p>
-        @endif
-        @error('recursos') <span class=" text-rojo">{{ $message }}</span> @enderror
-
+      <div class="mt-8">
+        <label for="concepto"> Concepto</label>
+        <input wire:model="concepto"  class="inputs-formulario-solicitudes w-80" id="concepto" type="text" placeholder="Concepto" autofocus>
+        @error('concepto') <span class="text-rojo">{{ $message }}</span> @enderror
       </div>
-      <div class="overflow-x-auto mt-4" wire:poll x-data="{ elementos: @entangle('recursos').defer, id_rubro: @entangle('id_rubro').defer, id_rubro_especial: @entangle('id_rubro_especial').defer, monto_total: @entangle('monto_total').defer,monto_sumado: @entangle('monto_sumado').defer}">
-        <table class="table-auto text-left text-sm w-4/5 sm:w-full mx-auto px-40" x-show="elementos.length > 0">
-          <thead>
-            <tr class="bg-blanco">
-              <th class="w-[5%]">#</th>
-              <th class="w-[10%]">Importe</th>
-              <th class="w-[25%]">Concepto</th>
-              <th class="w-[30%]">Justificación</th>
-              @if ($id_rubro_especial === '2')
-              <th class="w-[10%]">Fecha inicial</th>
-              <th class="w-[10%]">Fecha final</th>
-              @endif
-              <th class="w-[10%]">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <template x-for="(elemento, index) in elementos" :key="index">
-              <tr class="border border-b-gray-200 border-transparent">
-                <th x-text="index + 1"></th>
-                <th x-text="elemento.importe"></th>
-                <th x-text="elemento.concepto"></th>
-                <th x-text="elemento.justificacionS.length > 135 ? elemento.justificacionS.substring(0,135) + '...' : elemento.justificacionS"></th>
-                @if ($id_rubro_especial === '2')
-                <th x-text="elemento.finicial"></th>
-                <th x-text="elemento.ffinal"></th>
-                @endif
-                <th>
-                  <button type="button" @click='$wire.emit("openModal", "solicitud-recurso-modal",  
-                      { _id: elemento._id, concepto: elemento.concepto, importe: elemento.importe, importe_editar: elemento.importe, justificacionS: elemento.justificacionS, finicial: elemento.finicial, ffinal: elemento.ffinal, id_rubro: id_rubro, id_rubro_especial: id_rubro_especial, monto_total: monto_total, monto_sumado: monto_sumado  })' class="btn-tablas"
-                      title="Editar">
-                    <img src="{{ ('img/btn_editar.png') }}" alt="Image/png">
-                  </button>
-                  <button type="button" @click.stop="elementos.splice(index, 1); $wire.deleteRecurso(elemento)" class="btn-tablas" title="Eliminar">
-                    <img src="{{ ('img/btn_eliminar.png') }}" alt="Image/png">
-                  </button>
-                </th>
-              </tr>
-            </template>
-          </tbody>
-        </table>
+      <div class="mt-8">
+        <label for="justificacionS">Justificación</label>
+        <textarea wire:model="justificacionS"  class="inputs-formulario-solicitudes w-80" rows="3" cols="30" id="justificacionS" placeholder="Justificación"></textarea>
+        @error('justificacionS') <span class="text-rojo mb-4">{{ $message }}</span> @enderror
       </div>
 
+      @if ($id_rubro_especial == '2')
+      <div class="mt-8">
+        <label>Periodo</label>
+        <div class="mt-2 sm:grid sm:grid-cols-2 flex-col">
+          <div class="sm:mr-2 mr-0 flex-col">
+            <label class="block mb-1" for="finicial">
+              Fecha inicial:
+            </label>
+            <input wire:model="finicial"  class="inputs-formulario" id="finicial" type="date" placeholder=""  min="{{ Carbon::now()->addDay(15)->format('Y-m-d') }}">
+          </div>
+          <div class="flex-col">
+            <label class="block mb-1 sm:mt-0 mt-4" for="ffinal">
+              Fecha final:
+            </label>
+            <input wire:model="ffinal"  class="inputs-formulario" id="ffinal" type="date" placeholder=""  min="{{ Carbon::now()->addDay(15)->format('Y-m-d') }}">
+          </div>
+        </div>
+      @error('finicial') <span class="text-rojo block">{{ $message }}</span> @enderror
+      @error('ffinal') <span class="text-rojo block">{{ $message }}</span> @enderror
+      </div>
+      @endif
 
       @if ($id_rubro_especial === '3')
-      <div class="mt-4">
-        <label for="bitacoraPdf">Bitacora </label>
-        <input type="file" id="bitacoraPdf" wire:model='docsbitacoraPdf' accept=".pdf">
-        @empty($docsbitacoraPdf)
-          <label for="bitacoraPdf" class="text-dorado">
-            Sin archivos seleccionados.
+      <div class="my-5" x-data x-init="tipoComprobacionOption = '{{ $tipo_comprobacion }}'">
+        <label for="tipo_comprobacion" class="text-dorado font-bold">
+          ¿El cambio de alguna de las características del bien descritas en la cotización,
+          afectan el desarrollo de la investigación?
+        </label>
+        <div class="mt-2"><br>
+          <label class=" items-center">
+            <input type="radio"  wire:model='tipo_comprobacion' wire:click="muestraMensaje(1)" name="vale" value="vale">
+            <span class="ml-2">Vales</span>
           </label>
+          <label class=" items-center ml-6">
+            <input type="radio"  wire:model='tipo_comprobacion' wire:click="muestraMensaje(0)" name="ficha" value="ficha">
+            <span class="ml-2">Ficha de gasto</span>
+          </label>
+        </div>
+      </div>
+      @endif
+      @if ($id_rubro_especial === '3')
+      <div class="mt-2">
+        <label for="bitacoraPdf">Bitacora firmada PDF</label>
+        <input type="file" id="bitacoraPdfTemp" wire:model='bitacoraPdfTemp'  accept=".pdf">
+        @empty($docsCartaExclusividad)
+        <label for="bitacoraPdf" class="text-dorado">Sin archivos seleccionados.</label>
         @endempty
         <br>
         <div wire:loading wire:target="docsbitacoraPdf">Cargando archivo...</div>
-        @error('docsbitacoraPdf') <span class=" text-rojo">{{ $message }}</span> @enderror
-        @error('docsbitacoraPdf.*') <span class=" text-rojo">{{ $message }}</span> @enderror
       </div>
-      @endif
-      <ul>
-        @foreach ($docsbitacoraPdf as $index => $archivo)
-        <li wire:key="{{ $index }}">
-          {{ $archivo->getClientOriginalName() }}
-          <button type="button" wire:click="eliminarArchivo('docsbitacoraPdf',{{ $index }})" class="btn-eliminar-lista">Eliminar</button>
-        </li>
-        @endforeach
-      </ul>
-      @if ($id_rubro_especial !== '3')
+        @error('bitacoraPdfTemp') <span class=" text-rojo">{{ $message }}</span> @enderror
+        @error('docsbitacoraPdf') <span class=" text-rojo">{{ $message }}</span> @enderror
+        <ul>
+          @foreach($docsbitacoraPdf as $index => $archivo)
+          <li>
+            {{ $archivo->getClientOriginalName()}}
+            <button type="button" wire:click="eliminarArchivo('docsbitacoraPdf',{{ $index }})" class="btn-eliminar-lista">Eliminar</button>
+          </li>
+          @endforeach
+        </ul>
+        @endif
+
+      @if ($id_rubro_especial !== '3' or $tipo_comprobacion==='ficha')
       <div class="mt-4">
         <input type="checkbox" id="comprobacion" name="comprobacion" wire:model='comprobacion' class="mr-1">
         <label for="comprobacion">Me obligo a comprobar esta cantidad en un plazo no mayor a 20 días naturales, a partir de la

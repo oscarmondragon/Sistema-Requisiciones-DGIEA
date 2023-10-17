@@ -41,7 +41,8 @@ class Solicitud extends Model
         'aviso_privacidad',
         'id_emisor',
         'estatus_dgiea',
-        'estatus_rt'
+        'estatus_rt',
+        'tipo_comprobacion'
     ];
 
 
