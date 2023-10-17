@@ -1,4 +1,4 @@
-<div class="py-12">
+<div x-data class="py-12">
   <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
       <div class="p-6 text-textos_generales">
@@ -34,7 +34,7 @@
                         <a href="{{route('adquisiciones.editar', $adquisicion->id)}}" class="btn-tablas" title="Editar">
                           <img src="{{ asset('img/btn_editar.png') }}" alt="Editar">
                       </a>
-                        <button type="button" wire:click="deleteAdquisicion({{ $adquisicion->id }})" class="btn-tablas" title="Eliminar">
+                        <button type="button" @click="deleteConfirmation('{{$adquisicion->id}}')" class="btn-tablas" title="Eliminar">
                           <img src="{{ ('img/btn_eliminar.png') }}" alt="Image/png">
                         </button>
                       </td>
@@ -95,9 +95,11 @@
                       <td> {{ $adquisicion->estatus->descripcion }} </td>
                       <td> {{ $adquisicion->updated_at}}</td>
                       <th class="w-[148px]">
+                        @if(Session::get('id_user') != $adquisicion->id_emisor)
                         <button type="button" class="btn-primary">
                           Visto bueno
                         </button>
+                        @endif
                       </th>
                     </tr>
                     @endforeach
@@ -120,7 +122,7 @@
                     @endforeach--}}
                   </tbody>
                 </table>
-                {{$adquisiciones->links()}}
+                {{$adquisicionesVistosBuenos->links()}}
               </div>
             </div>
           </div>
@@ -128,4 +130,36 @@
       </div>
     </div>
   </div>
+  @push('scripts')
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    function deleteConfirmation(adquisicionId) {
+        // Now you can access the event object (e) directly
+     
+        Swal.fire({
+    title: '¿Estas seguro de eliminarlo?',
+    text: 'Un requerimiento eliminado no se puede recuperar.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: '¡Si, eliminar requerimiento!',
+    cancelButtonText: 'Cancelar',
+
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // Manda llamar el metodo liveware
+      window.livewire.emit('deleteAdquisicion',adquisicionId);
+      Swal.fire(
+        'Se eliminó el requerimiento',
+        'Eliminado correctamente',
+        'success'
+      )
+    }
+  });    }
+</script>
+
+@endpush
 </div>
+
+

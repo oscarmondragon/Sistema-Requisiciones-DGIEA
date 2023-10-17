@@ -15,6 +15,7 @@ class VistosBuenos extends Component
     public $search = '';
     public $searchVobo = '';
 
+    protected $listeners = ['deleteAdquisicion'];
     public function updatingSearch()
     {
         $this->resetPage();
@@ -33,14 +34,17 @@ class VistosBuenos extends Component
                 })->orWhereHas('cuentas', function ($query) {
                 $query->where('nombre_cuenta', 'like', '%' . $this->search . '%');
             });
-        })->where('estatus_general', 1)->orderBy('id')->paginate(3);
+        })->where('estatus_general', 1)
+            ->where('id_emisor', '=', session('id_user'))->orderBy('id')->paginate(10);
 
         $adquisicionesVistosBuenos = Adquisicion::where(function ($query) {
             $query->where('clave_adquisicion', 'like', '%' . $this->searchVobo . '%')
                 ->orWhereHas('requerimiento', function ($query) {
                     $query->where('descripcion', 'like', '%' . $this->searchVobo . '%');
-                });
-        })->where('estatus_general', 2)->orderBy('id')->paginate(3);
+                })->orWhereHas('cuentas', function ($query) {
+                $query->where('nombre_cuenta', 'like', '%' . $this->searchVobo . '%');
+            });
+        })->where('estatus_general', 2)->orderBy('id')->paginate(10);
 
         //$adquisicionesVistosBuenos = Adquisicion::where('estatus_general', 2)->orderBy('id')->paginate(10);
 
