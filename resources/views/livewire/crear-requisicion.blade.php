@@ -25,15 +25,20 @@
         @endif
 
         @if ($tipo == 1)
-
-        <livewire:adquisiciones-form />
-        
-        @endif
-        @if ($tipo == 2)
-
-        <livewire:solicitudes-form />
-
-        @endif
+          @php
+          $route = route('cvu.create-adquisiciones');
+          @endphp
+         @elseif ($tipo == 2)
+          @php
+          $route = route('cvu.create-solicitudes');
+          @endphp
+          @endif
+    
+          @if (!empty($route))
+              @php
+              return redirect($route);
+              @endphp
+          @endif
       </div>
     </div>
   </div>

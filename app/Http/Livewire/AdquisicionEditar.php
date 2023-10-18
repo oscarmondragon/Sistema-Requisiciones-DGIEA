@@ -34,7 +34,7 @@ class AdquisicionEditar extends Component
     public $clave_rt = '';
     public $clave_tipo_financiamiento = '';
     public $id_rubro = 0;
-    public $id_rubro_especial; //variable para determinar si es una cuenta especial (software por ejemplo)
+    public $id_rubro_especial = 0; //variable para determinar si es una cuenta especial (software por ejemplo)
     public $afecta_investigacion = '0';
     public $justificacion_academica;
     public $exclusividad = '0';
@@ -66,8 +66,9 @@ class AdquisicionEditar extends Component
     public function mount($id)
     {
         $this->adquisicion = Adquisicion::find($id);
+
         $this->id_rubro = $this->adquisicion->id_rubro;
-        $this->id_rubro_especial = $this->adquisicion->cuentas->cuentaEspecial->id;
+        $this->id_rubro_especial = $this->adquisicion->cuentas->cuentaEspecial->id ?? 0;
         $this->justificacion_academica = $this->adquisicion->justificacion_academica;
         $this->afecta_investigacion = $this->adquisicion->afecta_investigacion;
         $this->exclusividad = $this->adquisicion->exclusividad;
@@ -76,22 +77,23 @@ class AdquisicionEditar extends Component
         $this->iva = $this->adquisicion->iva;
         $this->total = $this->adquisicion->total;
 
-        $this->bienesDB = AdquisicionDetalle::where('id', $id)->get();
+        $this->bienesDB = AdquisicionDetalle::where('id_adquisicion', $id)->get();
         $this->bienes = collect($this->bienesDB);
-        //dd($this->bienes);
         $this->docsCartaExclusividad = [];
         $this->docsCotizacionesFirmadas = [];
         $this->docsCotizacionesPdf = [];
 
         $this->cuentasContables = CuentaContable::where('estatus', 1)->whereIn('tipo_requisicion', [1, 3])->get();
 
-        $this->documentos = Documento::where('id_requisicion', $id)->get();
+        $this->documentos = Documento::where('id_requisicion', $id)->where('tipo_requisicion', 1)->get();
         $this->descripcionAdq = Adquisicion::where('id', $id)->get();
     }
     public function render()
     {
         return view('livewire.adquisicion-editar', [
             'documentos' => $this->documentos,
-            'bienes' => $this->bienes, 'descripcionAdq' => $this->descripcionAdq])->layout('layouts.cvu');
+            'bienes' => $this->bienes,
+            'descripcionAdq' => $this->descripcionAdq
+        ])->layout('layouts.cvu');
     }
 }
