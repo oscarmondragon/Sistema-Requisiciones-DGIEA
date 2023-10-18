@@ -40,8 +40,8 @@ class SolicitudesForm extends Component
     public $vobo;
     public $vobo_admin = null;
     public $vobo_rt = null;
-    public $concepto="";
-    public $justificacionS="";
+    public $concepto = "";
+    public $justificacionS = "";
     public $finicial;
     public $ffinal;
 
@@ -63,7 +63,7 @@ class SolicitudesForm extends Component
 
     public function render()
     {
-        return view('livewire.solicitudes-form');
+        return view('livewire.solicitudes-form')->layout('layouts.cvu');
     }
 
     public function mount()
@@ -71,7 +71,6 @@ class SolicitudesForm extends Component
         $this->docsbitacoraPdf = [];
         $this->cuentasContables = CuentaContable::where('estatus', 1)->whereIn('tipo_requisicion', [2, 3])->get();
         $this->nombre_expedido = Session::get('name_rt');
-        $this->tipo_comprobacion;
         $this->tamanyoDocumentos = env('TAMANYO_MAX_DOCS', 2048);
         $this->tipoDocumento = env('DOCUMENTOS_PERMITIDOS', 'pdf');
     }
@@ -81,7 +80,8 @@ class SolicitudesForm extends Component
         'monto_total' => 'required|lte:35000',
         'nombre_expedido' => 'required',
         'docsbitacoraPdf' => 'required_if:id_rubro_especial,3',
-        'comprobacion' => 'required_unless:id_rubro_especial,3',
+        'comprobacion' => 'required_unless:tipo_comprobacion,"vale"|accepted',
+        'tipo_comprobacion' => 'required_if:id_rubro_especial,3',
         'aviso_privacidad' => 'accepted',
         'vobo' => 'accepted',
         'concepto' => 'required',
@@ -101,6 +101,7 @@ class SolicitudesForm extends Component
         'bitacoraPdfTemp.max' => 'El archivo no debe pesar mas de 2MB',
         'comprobacion.required_unless' => 'Debe de aceptar la condición.',
         'comprobacion.accepted' => 'Debe de aceptar la condición seleccionela.',
+        'tipo_comprobacion.required_if' => 'Debe de elegir una opción.',
         'aviso_privacidad.accepted' => 'Debe de aceptar el aviso de privacidad.',
         'vobo.accepted' => 'Debe dar el visto bueno.',
         'concepto.required' => 'El concepto no puede estar vacío.',
@@ -172,7 +173,7 @@ class SolicitudesForm extends Component
                     'importe' => $this->monto_total,
                     'periodo_inicio' => $this->finicial,
                     'periodo_fin' => $this->ffinal
-               ]);
+                ]);
                 $ruta_archivo = $clave_proyecto . '/Solicitudes/' . $id_solicitud;
                 $i = 1;
                 if (empty($this->docsbitacoraPdf) == false) {
@@ -218,7 +219,7 @@ class SolicitudesForm extends Component
         $who_vobo = Session::get('VoBo_Who');
 
         $fecha_vobo = Carbon::now()->toDateString();
-        
+
         if ($who_vobo) { //Si el deposito es por parte del Responsable técnico
             $vobo_admin = null;
             $this->vobo_rt = $fecha_vobo;
@@ -273,7 +274,7 @@ class SolicitudesForm extends Component
                     'importe' => $this->monto_total,
                     'periodo_inicio' => $this->finicial,
                     'periodo_fin' => $this->ffinal
-               ]);
+                ]);
 
                 $ruta_archivo = $clave_proyecto . '/Solicitudes/' . $id_solicitud;
                 $i = 1;
@@ -301,7 +302,7 @@ class SolicitudesForm extends Component
                 return redirect()->back()->with('error', 'Error en el proceso de guardado ' . $e->getMessage());
             }
         } else {
-            dd("Error en el ..." );
+            dd("Error en el ...");
             // No se encontró ningún proyecto  con esca clave"
             return redirect()->back()->with('error', 'No se encontró un proyecto asociado a la clave ' . $clave_proyecto);
         }
@@ -324,7 +325,7 @@ class SolicitudesForm extends Component
 
     }
 
-    
+
 
     public function eliminarArchivo($tipoArchivo, $index)
     {
@@ -343,19 +344,10 @@ class SolicitudesForm extends Component
         $this->docsbitacoraPdf = [];
     }
 
-    public function muestraMensaje($m)
-    {
-        if($m){
-            $this->tipo_comprobacion = 'vale';
-        }else{
-            $this->tipo_comprobacion = 'ficha';
-        }
-    }
-
     public function updatedbitacoraPdfTemp()
     {
         $validatedData = $this->validate([
-            'bitacoraPdfTemp' => 'mimes:' . $this->tipoDocumento . '|max:' . $this->tamanyoDocumentos.''
+            'bitacoraPdfTemp' => 'mimes:' . $this->tipoDocumento . '|max:' . $this->tamanyoDocumentos . ''
         ]);
 
         // Validar si la validación fue exitosa antes de agregar los archivos al arreglo
@@ -367,5 +359,5 @@ class SolicitudesForm extends Component
         $this->bitacoraPdfTemp = null;
     }
 
-    
+
 }

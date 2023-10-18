@@ -91,7 +91,7 @@
                       @endif
                       <th class="w-[148px]">
                         <button type="button" @click='$wire.emit("openModal", "adquisicion-description-modal",
-                                            { _id: elemento._id, descripcion: elemento.descripcion, cantidad: elemento.cantidad, precioUnitario: elemento.precioUnitario, 
+                                            { _id: elemento._id, descripcion: elemento.descripcion, cantidad: elemento.cantidad, precio_unitario: elemento.precio_unitario, 
                                               iva: elemento.iva, checkIva: elemento.checkIva, importe: elemento.importe, justificacionSoftware: elemento.justificacionSoftware,
                                               numAlumnos: elemento.numAlumnos, numProfesores: elemento.numProfesores, numAdministrativos: elemento.numAdministrativos, 
                                               id_rubro: id_rubro,
@@ -206,26 +206,6 @@
                 @endif
                 @endforeach
               </ul>
-              <!-- <table class="w-auto gap-4 text-center">
-                  <thead>
-                    <tr>
-                      <th class="w-auto">#</th>
-                      <th class="w-auto">Ruta</th>
-                      <th class="w-auto">Nombre</th>
-                      <th class="w-auto">Tipo</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @foreach ($documentos as $docCarta)
-                    <tr>
-                      <td> {{ $loop->iteration}}</td>
-                      <td class="text-verde"> {{ $docCarta->nombre_doc}} </td>
-                      <td class="text-dorado"> {{ $docCarta->nombre_documento }} </td>
-                      <td> {{ $docCarta->tipoDocumento->id == 1 }} </td>
-                    </tr>
-                    @endforeach
-                  </tbody>
-                </table> -->
             </div>
             <div class="mt-2">
               <label for="cotizacionFirmada">Cotización PDF firmada:</label>

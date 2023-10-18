@@ -16,7 +16,7 @@ use App\Models\Documento;
 use Illuminate\Support\Facades\DB;
 
 
-class SolicitudesForm extends Component
+class SolicitudesFormRespaldo extends Component
 {
     use WithFileUploads;
 

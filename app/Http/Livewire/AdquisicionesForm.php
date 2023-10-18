@@ -24,6 +24,8 @@ class AdquisicionesForm extends Component
 {
 
     use WithFileUploads;
+    public $adquisicion;
+
 
     //catalogos
     public $cuentasContables;
@@ -112,21 +114,46 @@ class AdquisicionesForm extends Component
         'addBien' => 'setBien',
     ];
 
-    public function mount()
+    public function mount($id = 0)
     {
-        $this->bienes = collect();
-        $this->docsCartaExclusividad = [];
-        $this->docsCotizacionesFirmadas = [];
-        $this->docsCotizacionesPdf = [];
         $this->tamanyoDocumentos = env('TAMANYO_MAX_DOCS', 2048);
         $this->tipoDocumento = env('DOCUMENTOS_PERMITIDOS', 'pdf');
-
-
         $this->cuentasContables = CuentaContable::where('estatus', 1)->whereIn('tipo_requisicion', [1, 3])->get();
+
+        if ($id != 0) {
+            $this->adquisicion = Adquisicion::find($id);
+            $this->id_rubro = $this->adquisicion->id_rubro;
+            $this->id_rubro_especial = $this->adquisicion->cuentas->cuentaEspecial->id ?? 0;
+            $this->justificacion_academica = $this->adquisicion->justificacion_academica;
+            $this->afecta_investigacion = $this->adquisicion->afecta_investigacion;
+            $this->exclusividad = $this->adquisicion->exclusividad;
+            //$this->docsCartaExclusividad = $this->adquisicion->docsCartaExclusividad;
+            $this->subtotal = $this->adquisicion->subtotal;
+            $this->iva = $this->adquisicion->iva;
+            $this->total = $this->adquisicion->total;
+
+            $this->bienesDB = AdquisicionDetalle::where('id_adquisicion', $id)->get();
+            $this->bienes = collect($this->bienesDB);
+            // $this->documentos = Documento::where('id_requisicion', $id)->where('tipo_requisicion', 1)->get();
+            $this->docsCartaExclusividad = [];
+            $this->docsCotizacionesFirmadas = [];
+            $this->docsCotizacionesPdf = [];
+
+
+
+
+        } else {
+
+            $this->bienes = collect();
+            $this->docsCartaExclusividad = [];
+            $this->docsCotizacionesFirmadas = [];
+            $this->docsCotizacionesPdf = [];
+        }
+
     }
     public function render()
     {
-        return view('livewire.adquisiciones-form');
+        return view('livewire.adquisiciones-form')->layout('layouts.cvu');
     }
 
     public function save()
@@ -135,7 +162,7 @@ class AdquisicionesForm extends Component
             'id_rubro' => 'required|not_in:0',
             'bienes' => 'required|array|min:1',
             'docsCartaExclusividad.*' => 'mimes:' . $this->tipoDocumento . '|max:' . $this->tamanyoDocumentos . '',
-            'docsCotizacionesFirmadas.*' => 'required|'.'mimes:' . $this->tipoDocumento . '|max:' . $this->tamanyoDocumentos . '',
+            'docsCotizacionesFirmadas.*' => 'required|' . 'mimes:' . $this->tipoDocumento . '|max:' . $this->tamanyoDocumentos . '',
             'docsCotizacionesPdf.*' => 'mimes:' . $this->tipoDocumento . '|max:' . $this->tamanyoDocumentos . '',
         ]);
 
@@ -192,13 +219,13 @@ class AdquisicionesForm extends Component
                         'id_adquisicion' => $bien['id_adquisicion'],
                         'descripcion' => $bien['descripcion'],
                         'cantidad' => $bien['cantidad'],
-                        'precio_unitario' => $bien['precioUnitario'],
+                        'precio_unitario' => $bien['precio_unitario'],
                         'iva' => $bien['iva'],
                         'importe' => $bien['importe'],
-                        'justificacion_software' => $bien['justificacionSoftware'],
-                        'alumnos' => $bien['numAlumnos'],
-                        'profesores_invest' => $bien['numProfesores'],
-                        'administrativos' => $bien['numAdministrativos'],
+                        'justificacion_software' => $bien['justificacion_software'],
+                        'alumnos' => $bien['alumnos'],
+                        'profesores_invest' => $bien['profesores_invest'],
+                        'administrativos' => $bien['administrativos'],
                         'id_emisor' => $id_user
                     ]);
                 }
@@ -364,13 +391,13 @@ class AdquisicionesForm extends Component
                         'id_adquisicion' => $bien['id_adquisicion'],
                         'descripcion' => $bien['descripcion'],
                         'cantidad' => $bien['cantidad'],
-                        'precio_unitario' => $bien['precioUnitario'],
+                        'precio_unitario' => $bien['precio_unitario'],
                         'iva' => $bien['iva'],
                         'importe' => $bien['importe'],
-                        'justificacion_software' => $bien['justificacionSoftware'],
-                        'alumnos' => $bien['numAlumnos'],
-                        'profesores_invest' => $bien['numProfesores'],
-                        'administrativos' => $bien['numAdministrativos'],
+                        'justificacion_software' => $bien['justificacion_software'],
+                        'alumnos' => $bien['alumnos'],
+                        'profesores_invest' => $bien['profesores_invest'],
+                        'administrativos' => $bien['administrativos'],
                         'id_emisor' => $id_user
                     ]);
                 }
@@ -460,14 +487,14 @@ class AdquisicionesForm extends Component
         $_id,
         $descripcion,
         $cantidad,
-        $precioUnitario,
+        $precio_unitario,
         $iva,
         $checkIva,
         $importe,
-        $justificacionSoftware,
-        $numAlumnos,
-        $numProfesores,
-        $numAdministrativos,
+        $justificacion_software,
+        $alumnos,
+        $profesores_invest,
+        $administrativos,
         $id_rubro
     ) {
         $this->bienes = collect($this->bienes); //asegurar que bienes sea una coleccion
@@ -484,17 +511,17 @@ class AdquisicionesForm extends Component
                 '_id' => $newItemId,
                 'descripcion' => $descripcion,
                 'cantidad' => $cantidad,
-                'precioUnitario' => $precioUnitario,
+                'precio_unitario' => $precio_unitario,
                 'iva' => $iva,
                 'checkIva' => $checkIva,
                 'importe' => $importe,
-                'justificacionSoftware' => $justificacionSoftware,
-                'numAlumnos' => $numAlumnos,
-                'numProfesores' => $numProfesores,
-                'numAdministrativos' => $numAdministrativos
+                'justificacion_software' => $justificacion_software,
+                'alumnos' => $alumnos,
+                'profesores_invest' => $profesores_invest,
+                'administrativos' => $administrativos
             ]);
             //Actualizamos valores de subtotal,iva y total
-            $this->subtotal += $cantidad * $precioUnitario;
+            $this->subtotal += $cantidad * $precio_unitario;
             $this->subtotal = round($this->subtotal, $precision = 2, $mode = PHP_ROUND_HALF_UP);
             $this->iva += $iva;
             $this->iva = round($this->iva, $precision = 2, $mode = PHP_ROUND_HALF_UP);
@@ -507,7 +534,7 @@ class AdquisicionesForm extends Component
             if ($item) {
 
                 //actualizamos valores de subtotal, iva y total (restamos el anterior valor)
-                $this->subtotal -= $item['cantidad'] * $item['precioUnitario'];
+                $this->subtotal -= $item['cantidad'] * $item['precio_unitario'];
                 $this->subtotal = round($this->subtotal, $precision = 2, $mode = PHP_ROUND_HALF_UP);
                 $this->iva -= $item['iva'];
                 $this->iva = round($this->iva, $precision = 2, $mode = PHP_ROUND_HALF_UP);
@@ -517,18 +544,18 @@ class AdquisicionesForm extends Component
                 //actualizamos el item si existe en la busqueda
                 $item['descripcion'] = $descripcion;
                 $item['cantidad'] = $cantidad;
-                $item['precioUnitario'] = $precioUnitario;
+                $item['precio_unitario'] = $precio_unitario;
                 $item['iva'] = $iva;
                 $item['checkIva'] = $iva;
                 $item['importe'] = $importe;
-                $item['justificacionSoftware'] = $justificacionSoftware;
-                $item['numAlumnos'] = $numAlumnos;
-                $item['numProfesores'] = $numProfesores;
-                $item['numAdministrativos'] = $numAdministrativos;
+                $item['justificacion_software'] = $justificacion_software;
+                $item['alumnos'] = $alumnos;
+                $item['profesores_invest'] = $profesores_invest;
+                $item['administrativos'] = $administrativos;
 
 
                 //sumamos los nuevos valores al subtotal,iva y total
-                $this->subtotal += $cantidad * $precioUnitario;
+                $this->subtotal += $cantidad * $precio_unitario;
                 $this->subtotal = round($this->subtotal, $precision = 2, $mode = PHP_ROUND_HALF_UP);
                 $this->iva += $iva;
                 $this->iva = round($this->iva, $precision = 2, $mode = PHP_ROUND_HALF_UP);
@@ -537,18 +564,18 @@ class AdquisicionesForm extends Component
 
 
                 //Devolvemos la nueva collecion
-                $this->bienes = $this->bienes->map(function ($bien) use ($_id, $descripcion, $cantidad, $precioUnitario, $iva, $importe, $justificacionSoftware, $numAlumnos, $numProfesores, $numAdministrativos) {
+                $this->bienes = $this->bienes->map(function ($bien) use ($_id, $descripcion, $cantidad, $precio_unitario, $iva, $importe, $justificacion_software, $alumnos, $profesores_invest, $administrativos) {
                     if ($bien['_id'] == $_id) {
                         $bien['descripcion'] = $descripcion;
                         $bien['cantidad'] = $cantidad;
-                        $bien['precioUnitario'] = $precioUnitario;
+                        $bien['precio_unitario'] = $precio_unitario;
                         $bien['iva'] = $iva;
                         $bien['checkIva'] = $iva;
                         $bien['importe'] = $importe;
-                        $bien['justificacionSoftware'] = $justificacionSoftware;
-                        $bien['numAlumnos'] = $numAlumnos;
-                        $bien['numProfesores'] = $numProfesores;
-                        $bien['numAdministrativos'] = $numAdministrativos;
+                        $bien['justificacion_software'] = $justificacion_software;
+                        $bien['alumnos'] = $alumnos;
+                        $bien['profesores_invest'] = $profesores_invest;
+                        $bien['administrativos'] = $administrativos;
                     }
                     return $bien;
                 });
@@ -562,7 +589,7 @@ class AdquisicionesForm extends Component
     {
         //EL BIEN SE ESTA ELIMINANDO CON ALPINEJS desde el front
         //actualizamos valores de subtotal, iva y total (restamos el anterior valor)
-        $this->subtotal -= $bien['cantidad'] * $bien['precioUnitario'];
+        $this->subtotal -= $bien['cantidad'] * $bien['precio_unitario'];
         //$this->subtotal = round($this->subtotal, $precision = 2, $mode = PHP_ROUND_HALF_UP);
         $this->iva -= $bien['iva'];
         //$this->iva = round($this->iva, $precision = 2, $mode = PHP_ROUND_HALF_UP);

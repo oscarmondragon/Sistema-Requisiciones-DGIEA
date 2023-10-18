@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Livewire\AdquisicionEditar;
+use App\Http\Livewire\AdquisicionesForm;
+use App\Http\Livewire\SolicitudesForm;
 use App\Models\Adquisicion;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProyectoController;
@@ -54,7 +56,8 @@ Route::middleware('auth')->group(function () {
 
 //RUTAS ADQUISICIONES
 //Route::get('/adquisiciones/{id}/editar', [AdquisicionController::class, 'edit'])->name('adquisiciones.editar');
-Route::get('/adquisiciones/{id}/editar', AdquisicionEditar::class)->middleware('CvuAuth')->name('adquisiciones.editar');
+Route::get('/adquisiciones/{id}/editar', AdquisicionesForm::class)->middleware('CvuAuth')->name('adquisiciones.editar');
+
 //Route::resource('adquisiciones', AdquisicionController::class);
 
 require __DIR__ . '/auth.php';
@@ -65,6 +68,9 @@ require __DIR__ . '/auth.php';
 Route::post('/cvu', [CvuController::class, 'cvuVerificar'])->name('cvu.verificar');
 Route::post('logout-cvu', [CvuController::class, 'destroy'])->middleware('CvuAuth')->name('logout.cvu');
 Route::get('/cvu-crear', [CvuController::class, 'create'])->middleware('CvuAuth')->name('cvu.create');
+Route::get('/cvu-crear-adquisiciones', AdquisicionesForm::class)->middleware('CvuAuth')->name('cvu.create-adquisiciones');
+Route::get('/cvu-crear-solicitudes', SolicitudesForm::class)->middleware('CvuAuth')->name('cvu.create-solicitudes');
+
 Route::get('/cvu-vobo', [CvuController::class, 'darVobo'])->middleware('CvuAuth')->name('cvu.vobo');
 Route::get('/error-cvu', [CvuController::class, 'error'])
     ->name('errores');
@@ -77,5 +83,5 @@ Route::get('/cvu', function () {
 
 
 
-Route::get('/descargar/{name}', [FilesController::class,'downloadFile'])
-->name('download');
+Route::get('/descargar/{name}', [FilesController::class, 'downloadFile'])
+    ->name('download');
