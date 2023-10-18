@@ -22,11 +22,11 @@
         @error('cantidad') <span class="text-rojo">{{ $message }}</span> @enderror
       </div>
       <div class="mb-4">
-        <label class="block mb-2" for="precioUnitario">
+        <label class="block mb-2" for="precio_unitario">
           Precio Unitario
         </label>
-        <input wire:model="precioUnitario" wire:change="calcularIvaImporte" required class="inputs-formulario" id="precioUnitario" type="number" min="1" placeholder="$ 0000.00">
-        @error('precioUnitario') <span class="text-rojo">{{ $message }}</span> @enderror
+        <input wire:model="precio_unitario" wire:change="calcularIvaImporte" required class="inputs-formulario" id="precio_unitario" type="number" min="1" placeholder="$ 0000.00">
+        @error('precio_unitario') <span class="text-rojo">{{ $message }}</span> @enderror
       </div>
       <div class="mb-4 text-right">
         <span> {{ $porcentajeIva }}%</span>
@@ -46,8 +46,8 @@
         <label class="block mb-2" for="importe">
           Descripción y justificación al cual será dedicado el software:
         </label>
-        <textarea wire:model="justificacionSoftware" required class="inputs-formulario" rows="2" cols="30" id="justificacionSoftware" placeholder="Descripción y justificación"></textarea>
-        @error('justificacionSoftware') <span class="text-rojo">{{ $message }}</span> @enderror
+        <textarea wire:model="justificacion_software" required class="inputs-formulario" rows="2" cols="30" id="justificacion_software" placeholder="Descripción y justificación"></textarea>
+        @error('justificacion_software') <span class="text-rojo">{{ $message }}</span> @enderror
       </div>
 
       <div class="mb-4">
@@ -57,20 +57,20 @@
         <label class="block mb-2" for="importe">
           Alumnos:
         </label>
-        <input wire:model="numAlumnos"  x-data="{ numAlumnos: @entangle('numAlumnos') }" x-on:focus="numAlumnos = ''" x-on:input.debounce.500ms="numAlumnos = $event.target.value"  required class="inputs-formulario" id="numAlumnos" type="number" min="0" placeholder="Número de alumnos">
-        @error('numAlumnos') <span class="text-rojo">{{ $message }}</span> @enderror
+        <input wire:model="alumnos"  x-data="{ alumnos: @entangle('alumnos') }" x-on:focus="alumnos = ''" x-on:input.debounce.500ms="alumnos = $event.target.value"  required class="inputs-formulario" id="alumnos" type="number" min="0" placeholder="Número de alumnos">
+        @error('alumnos') <span class="text-rojo">{{ $message }}</span> @enderror
 
         <label class="block mb-2 mt-4" for="importe">
           Profesores / Investigadores:
         </label>
-        <input wire:model="numProfesores"  x-data="{ numProfesores: @entangle('numProfesores') }" x-on:focus="numProfesores = ''" x-on:input.debounce.500ms="numProfesores = $event.target.value"  required class="inputs-formulario" id="numProfesores" type="number" min="0" placeholder="Número de profesores / investigadores">
-        @error('numProfesores') <span class="text-rojo">{{ $message }}</span> @enderror
+        <input wire:model="profesores_invest"  x-data="{ profesores_invest: @entangle('profesores_invest') }" x-on:focus="profesores_invest = ''" x-on:input.debounce.500ms="profesores_invest = $event.target.value"  required class="inputs-formulario" id="profesores_invest" type="number" min="0" placeholder="Número de profesores / investigadores">
+        @error('profesores_invest') <span class="text-rojo">{{ $message }}</span> @enderror
 
         <label class="block mb-2 mt-4" for="importe">
           Administrativos:
         </label>
-        <input wire:model="numAdministrativos" x-data="{ numAdministrativos: @entangle('numAdministrativos') }" x-on:focus="numAdministrativos = ''" x-on:input.debounce.500ms="numAdministrativos = $event.target.value"  required class="inputs-formulario" id="numAdministrativos" type="number" min="0" placeholder="Número de administradores">
-        @error('numAdministrativos') <span class="text-rojo">{{ $message }}</span> @enderror
+        <input wire:model="administrativos" x-data="{ administrativos: @entangle('administrativos') }" x-on:focus="administrativos = ''" x-on:input.debounce.500ms="administrativos = $event.target.value"  required class="inputs-formulario" id="administrativos" type="number" min="0" placeholder="Número de administradores">
+        @error('administrativos') <span class="text-rojo">{{ $message }}</span> @enderror
       </div>
       @endif
     </div>

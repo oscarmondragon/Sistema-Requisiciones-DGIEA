@@ -12,6 +12,17 @@ class Solicitud extends Model
     protected $connection = 'mysql';
     protected $table = "solicitudes";
 
+    public function rubroSolicitud(){
+        return $this->belongsTo(CuentaContable::class, 'id_rubro');
+    }
+
+    public function requerimientoSolicitud(){
+        return $this->belongsTo(TipoRequisicion::class, 'tipo_requisicion');
+    }
+
+    public function estatusSolicitud(){
+        return $this->belongsTo(EstatusRequisiciones::class, 'estatus_rt');
+    }
 
     protected $fillable = [
         'clave_solicitud',
@@ -30,7 +41,8 @@ class Solicitud extends Model
         'aviso_privacidad',
         'id_emisor',
         'estatus_dgiea',
-        'estatus_rt'
+        'estatus_rt',
+        'tipo_comprobacion'
     ];
 
 

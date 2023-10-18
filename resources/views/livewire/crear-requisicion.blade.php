@@ -19,21 +19,26 @@
         
          
         @if(session('success'))
-          <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+          <div class="p-4 my-4 text-sm text-green-800 rounded-lg bg-green-50" role="alert">
             <span class="font-medium"> {{ session('success') }}</span>
           </div>
         @endif
 
         @if ($tipo == 1)
-
-        <livewire:adquisiciones-form />
-        
-        @endif
-        @if ($tipo == 2)
-
-        <livewire:solicitudes-form />
-
-        @endif
+          @php
+          $route = route('cvu.create-adquisiciones');
+          @endphp
+         @elseif ($tipo == 2)
+          @php
+          $route = route('cvu.create-solicitudes');
+          @endphp
+          @endif
+    
+          @if (!empty($route))
+              @php
+              return redirect($route);
+              @endphp
+          @endif
       </div>
     </div>
   </div>
