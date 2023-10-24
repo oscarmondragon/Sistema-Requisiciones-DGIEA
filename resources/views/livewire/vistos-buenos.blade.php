@@ -4,12 +4,34 @@
       <div class="p-6 text-textos_generales">
         <div class="py-12">
           <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <h3>Requerimientos pendientes de enviar</h3>
+            <div>
+              <img src="img/ic_req_pendientes.png" alt="Image/png" class="inline-block">
+              <h3 class="inline-block text-xl pl-2">Requerimientos pendientes de enviar</h3>
+            </div>
 
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
               <div class="p-6 overflow-x-auto">
-                <input type="text" wire:model="search" placeholder="Buscar por clave, tipo...">
-                <table class="table-auto text-left text-sm w-3/4 sm:w-full mx-auto">
+                <!-- <input type="text" wire:model="search" placeholder="Buscar por clave, tipo..." class="inputs-formulario-solicitudes"> -->
+
+                <div class="inline-block w-full">
+                  <select name="" id="">
+                    <option value="">Categorias</option>
+                  </select>
+
+                  <div class="inline-block w-96">
+                    <span>
+                      <img src="{{ asset('img/ic_lock.png') }}" alt="Icono" class="absolute mr-10 ml-[345px] mt-1 w-8 h-8">
+                    </span>
+                    <input type="text" wire:model="search" class="inputs-formulario-solicitudes inline-block p-2.5 w-full" placeholder="Buscar por clave, tipo...">
+                  </div>
+
+                  <div class="inline-block ml-48">
+                    <input type="date" name="" id="" class="bg-blanco text-textos_generales rounded-md border-transparent h-10">
+                    <input type="date" name="" id="" class="bg-blanco text-textos_generales rounded-md border-transparent h-10">
+                  </div>
+                </div>
+
+                <table class="table-auto text-left text-sm w-3/4 sm:w-full mx-auto mt-6">
                   <thead>
                     <tr class="bg-blanco">
                       <th scope="col">#</th>
@@ -33,29 +55,29 @@
                       <td>
                         <a href="{{route('adquisiciones.editar', $adquisicion->id)}}" class="btn-tablas" title="Editar">
                           <img src="{{ asset('img/btn_editar.png') }}" alt="Editar">
-                      </a>
+                        </a>
                         <button type="button" @click="deleteConfirmation('{{$adquisicion->id}}')" class="btn-tablas" title="Eliminar">
                           <img src="{{ ('img/btn_eliminar.png') }}" alt="Image/png">
                         </button>
                       </td>
                     </tr>
                     @endforeach
-                  {{--   @foreach ($solicitudes as $solicitud)
+                    {{-- @foreach ($solicitudes as $solicitud)
                     <tr class="border-b-gray-200 border-transparent">
                       <td> {{ $loop->iteration }} </td>
-                      <td> {{ $solicitud->clave_solicitud }} </td>
-                      <td> {{ $solicitud->rubroSolicitud->nombre_cuenta }} </td>
-                      <td> {{ $solicitud->requerimientoSolicitud->descripcion }} </td>
-                      <td> {{ $solicitud->estatusSolicitud->descripcion }} </td>
-                      <td> {{ $solicitud->updated_at}} </td>
-                      <td>
-                        <button type="button" class="btn-tablas" title="Editar">
-                          <img src="{{ ('img/btn_editar.png') }}" alt="Image/png">
-                        </button>
-                        <button type="button" @click.stop="elementos.splice(index, 1); $wire.deleteBien(elemento)" class="btn-tablas" title="Eliminar">
-                          <img src="{{ ('img/btn_eliminar.png') }}" alt="Image/png">
-                        </button>
-                      </td>
+                    <td> {{ $solicitud->clave_solicitud }} </td>
+                    <td> {{ $solicitud->rubroSolicitud->nombre_cuenta }} </td>
+                    <td> {{ $solicitud->requerimientoSolicitud->descripcion }} </td>
+                    <td> {{ $solicitud->estatusSolicitud->descripcion }} </td>
+                    <td> {{ $solicitud->updated_at}} </td>
+                    <td>
+                      <button type="button" class="btn-tablas" title="Editar">
+                        <img src="{{ ('img/btn_editar.png') }}" alt="Image/png">
+                      </button>
+                      <button type="button" @click.stop="elementos.splice(index, 1); $wire.deleteBien(elemento)" class="btn-tablas" title="Eliminar">
+                        <img src="{{ ('img/btn_eliminar.png') }}" alt="Image/png">
+                      </button>
+                    </td>
                     </tr>
                     @endforeach --}}
                   </tbody>
@@ -65,11 +87,33 @@
             </div>
           </div>
           <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <h3>Requerimientos pendientes de visto bueno </h3>
+            <div>
+              <img src="img/ic_req_vobo.png" alt="Image/png" class="inline-block">
+              <h3 class="inline-block text-xl pl-2 mt-8">Requerimientos pendientes de visto bueno</h3>
+            </div>
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
               <div class="p-6 ">
-                <input type="text" wire:model="searchVobo" placeholder="Buscar por clave, tipo...">
-                <table class="table-auto text-left text-sm w-3/4 sm:w-full mx-auto">
+                
+
+                <div class="inline-block w-full">
+                  <select name="" id="">
+                    <option value="">Categorias</option>
+                  </select>
+
+                  <div class="inline-block w-96">
+                    <span>
+                      <img src="{{ asset('img/ic_lock.png') }}" alt="Icono" class="absolute mr-10 ml-[345px] mt-1 w-8 h-8">
+                    </span>
+                    <input type="text" wire:model="searchVobo" class="inputs-formulario-solicitudes inline-block p-2.5 w-full" placeholder="Buscar por clave, tipo...">
+                  </div>
+
+                  <div class="inline-block ml-48">
+                    <input type="date" name="" id="" class="bg-blanco text-textos_generales rounded-md border-transparent h-10">
+                    <input type="date" name="" id="" class="bg-blanco text-textos_generales rounded-md border-transparent h-10">
+                  </div>
+                </div>
+
+                <table class="table-auto text-left text-sm w-3/4 sm:w-full mx-auto mt-6">
                   <thead>
                     <tr class="bg-blanco">
                       <th scope="col">#</th>
@@ -96,8 +140,8 @@
                       <td> {{ $adquisicion->updated_at}}</td>
                       <th class="w-[148px]">
                         @if(Session::get('id_user') != $adquisicion->id_emisor)
-                        <button type="button" class="btn-primary">
-                          Visto bueno
+                        <button type="button" class="btn-tablas">
+                          <img src="{{ ('/img/btn_vobo.png') }}" alt="Image/png" title="VoBo">
                         </button>
                         @endif
                       </th>
@@ -106,18 +150,18 @@
                     {{-- @foreach ($solicitudes as $solicitud)
                     <tr class="border-b-gray-200 border-transparent">
                       <td> {{ $loop->iteration}}</td>
-                      <td> {{ $solicitud->clave_solicitud}} </td>
-                      <td> {{ $solicitud->rubroSolicitud->nombre_cuenta}} </td>
-                      <td> {{ $solicitud->requerimientoSolicitud->descripcion }} </td>
-                      <td> {{ $solicitud->vobo_rt }} </td>
-                      <td> {{ $solicitud->vobo_admin }} </td>
-                      <td> {{ $solicitud->estatusSolicitud->descripcion }} </td>
-                      <td> {{ $solicitud->updated_at}}</td>
-                      <th class="w-[148px]">
-                        <button type="button" class="btn-primary">
-                          Visto bueno
-                        </button>
-                      </th>
+                    <td> {{ $solicitud->clave_solicitud}} </td>
+                    <td> {{ $solicitud->rubroSolicitud->nombre_cuenta}} </td>
+                    <td> {{ $solicitud->requerimientoSolicitud->descripcion }} </td>
+                    <td> {{ $solicitud->vobo_rt }} </td>
+                    <td> {{ $solicitud->vobo_admin }} </td>
+                    <td> {{ $solicitud->estatusSolicitud->descripcion }} </td>
+                    <td> {{ $solicitud->updated_at}}</td>
+                    <th class="w-[148px]">
+                      <button type="button" class="btn-tablas">
+                        <img src="{{ ('/img/btn_vobo.png') }}" alt="Image/png" title="VoBo">
+                      </button>
+                    </th>
                     </tr>
                     @endforeach--}}
                   </tbody>
@@ -134,32 +178,34 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
     function deleteConfirmation(adquisicionId) {
-        // Now you can access the event object (e) directly
-     
-        Swal.fire({
-    title: '¿Estas seguro de eliminarlo?',
-    text: 'Un requerimiento eliminado no se puede recuperar.',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: '¡Si, eliminar requerimiento!',
-    cancelButtonText: 'Cancelar',
+      // Now you can access the event object (e) directly
+      Swal.fire({
+        title: '¿Estás seguro de eliminarlo?',
+        text: 'Un requerimiento eliminado no se puede recuperar.',
+        icon: 'warning',
+        iconColor: '#9D9361',
+        showCancelButton: true,
+        confirmButtonColor: '#E86562',
+        cancelButtonColor: '#62836C',
+        confirmButtonText: 'Eliminar',
+        cancelButtonText: 'Cancelar',
 
-  }).then((result) => {
-    if (result.isConfirmed) {
-      // Manda llamar el metodo liveware
-      window.livewire.emit('deleteAdquisicion',adquisicionId);
-      Swal.fire(
-        'Se eliminó el requerimiento',
-        'Eliminado correctamente',
-        'success'
-      )
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Manda llamar el metodo liveware
+          window.livewire.emit('deleteAdquisicion', adquisicionId);
+          Swal.fire({
+            icon: 'success',
+            confirmButtonText: 'Aceptar!',
+            confirmButtonColor: '#62836C',
+            title: 'Se eliminó correctamente el requerimiento',
+            showConfirmButton: false,
+            timer: 1500
+          })
+        }
+      });
     }
-  });    }
-</script>
+  </script>
 
-@endpush
+  @endpush
 </div>
-
-

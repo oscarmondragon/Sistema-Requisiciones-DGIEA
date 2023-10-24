@@ -49,7 +49,7 @@
                                     <x-dropdown-link :href="route('logout.cvu')" onclick="event.preventDefault();
                                                         this.closest('form').submit();">
                                         <div class="inline-block">
-                                            <img src="{{ asset('img/out.png') }}" alt="Icono" title="Salir">
+                                            <img src="{{ asset('img/ic_salir.png') }}" alt="Icono" title="Salir">
                                         </div>
                                     </x-dropdown-link>
                                 </button>

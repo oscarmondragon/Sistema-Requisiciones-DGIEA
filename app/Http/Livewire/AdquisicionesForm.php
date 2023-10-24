@@ -15,11 +15,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
 
-
-
-
-
-
 class AdquisicionesForm extends Component
 {
 
@@ -67,10 +62,6 @@ class AdquisicionesForm extends Component
     public $anexoOtroTemp;
 
 
-
-
-
-
     protected $rules = [
         'id_rubro' => 'required|not_in:0',
         'bienes' => 'required|array|min:1',
@@ -111,7 +102,7 @@ class AdquisicionesForm extends Component
 
     ];
     public $listeners = [
-        'addBien' => 'setBien',
+        'addBien' => 'setBien', 'save', 'saveVobo'
     ];
 
     public function mount($id = 0)
@@ -138,10 +129,6 @@ class AdquisicionesForm extends Component
             $this->docsCartaExclusividad = [];
             $this->docsCotizacionesFirmadas = [];
             $this->docsCotizacionesPdf = [];
-
-
-
-
         } else {
 
             $this->bienes = collect();
@@ -149,7 +136,6 @@ class AdquisicionesForm extends Component
             $this->docsCotizacionesFirmadas = [];
             $this->docsCotizacionesPdf = [];
         }
-
     }
     public function render()
     {
@@ -158,6 +144,7 @@ class AdquisicionesForm extends Component
 
     public function save()
     {
+
         $this->validate([
             'id_rubro' => 'required|not_in:0',
             'bienes' => 'required|array|min:1',
@@ -312,7 +299,7 @@ class AdquisicionesForm extends Component
                 }
 
                 DB::commit();
-                return redirect('/cvu-crear')->with('success', 'Su solicitud ha sido guardada correctamente con el número de clave ' . $clave_adquisicion . '. Recuerde completarla y mandarla a visto bueno.');
+                return redirect('/cvu-crear')->with('success', 'Su solicitud ha sido guardada correctamente con el número de clave '.  $clave_adquisicion . ', recuerde completarla y mandarla a visto bueno.');
             } catch (\Exception $e) {
                 DB::rollback();
                 dd("Error en catch:" . $e);
@@ -324,7 +311,6 @@ class AdquisicionesForm extends Component
             return redirect()->back()->with('error', 'No se encontró un proyecto asociado a la clave ' . $clave_proyecto);
         }
     }
-
 
     public function saveVobo()
     {
@@ -471,7 +457,7 @@ class AdquisicionesForm extends Component
 
                 DB::commit();
 
-                return redirect('/cvu-crear')->with('success', 'Su solicitud con clave ' . $clave_adquisicion . ' ha sido  registrada y se ha enviado para visto bueno.');
+                return redirect('/cvu-crear')->with('success', 'Su solicitud con clave ' . $clave_adquisicion . ' ha sido  registrada y se ha enviado para visto bueno.');                
             } catch (\Exception $e) {
                 //dd("Error en el catch".$e); 
                 return redirect()->back()->with('error', 'error en el deposito' . $e->getMessage());
