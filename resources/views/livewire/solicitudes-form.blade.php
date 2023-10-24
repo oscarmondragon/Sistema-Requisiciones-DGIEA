@@ -100,8 +100,14 @@ use Carbon\Carbon;
         <ul>
           @foreach($docsbitacoraPdf as $index => $archivo)
           <li>
-            {{ $archivo->getClientOriginalName()}}
-            <button type="button" wire:click="eliminarArchivo('docsbitacoraPdf',{{ $index }})" class="btn-eliminar-lista">Eliminar</button>
+            @if(isset($archivo['datos']['ruta_documento']))
+            <a href="#"  wire:click="descargarArchivo('{{ $archivo['datos']['ruta_documento'] }}')">  {{ $archivo['datos']['nombre_documento']}} Ver</a>
+           @else
+           {{ $archivo['datos']['nombre_documento']}}
+           @endif
+            <button type="button" class="btn-eliminar-lista" wire:click="eliminarArchivo('docsbitacoraPdf', {{ $index }})">
+              Eliminar
+            </button>
           </li>
           @endforeach
         </ul>
@@ -130,7 +136,9 @@ use Carbon\Carbon;
       </div>
 
       <div class="sm:text-right text-center mt-5">
+        @empty($solicitud)
         <button type="button" wire:click="save()" class="btn-success sm:w-auto w-3/4">Guardar</button>
+        @endempty
         <button type="submit" class="btn-primary sm:w-auto w-3/4">Enviar para VoBo</button>
         <button type="button" class="btn-warning sm:w-auto w-3/4"  onclick="window.location.href = '{{ route('cvu.create') }}'">Cancelar</button>
       </div>

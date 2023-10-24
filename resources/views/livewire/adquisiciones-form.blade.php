@@ -43,6 +43,7 @@
             <thead>
               <tr class="bg-blanco">
                 <th class="w-[26px]">#</th>
+                <th class="w-[26px]">id</th>
                 <th class="w-[200px]">Descripción</th>
                 <th class="w-[80px]">Cantidad</th>
                 <th class="w-[80px]">Precio Unitario</th>
@@ -59,6 +60,7 @@
               <template x-for="(elemento, index) in elementos" :key="index">
                 <tr class="border border-b-gray-200 border-transparent">
                   <th class="w-[26px]" x-text="index + 1"></th>
+                  <th class="w-[26px]" x-text="elemento._id"></th>
                   <th class="w-[200px]" x-text="elemento.descripcion"></th>
                   <th class="w-[80px]" x-text="elemento.cantidad"></th>
                   <th class="w-[80px]" x-text="elemento.precio_unitario"></th>
@@ -178,7 +180,11 @@
           <ul>
             @foreach($docsCartaExclusividad as $index => $docCarta)
             <li>
-              {{ $docCarta->getClientOriginalName()}}
+              @if(isset($docCarta['datos']['ruta_documento']))
+              <a href="#"  wire:click="descargarArchivo('{{ $docCarta['datos']['ruta_documento'] }}')">  {{ $docCarta['datos']['nombre_documento']}} Ver</a>
+             @else
+             {{ $docCarta['datos']['nombre_documento']}}
+             @endif
               <button type="button" class="btn-eliminar-lista" wire:click="eliminarArchivo('cartasExclusividad', {{ $index }})">
                 Eliminar
               </button>
@@ -200,7 +206,11 @@
         <ul>
           @foreach($docsCotizacionesFirmadas as $index => $docFirmadas)
           <li>
-            {{ $docFirmadas->getClientOriginalName()}}
+            @if(isset($docFirmadas['datos']['ruta_documento']))
+            <a href="#"  wire:click="descargarArchivo('{{ $docFirmadas['datos']['ruta_documento'] }}')"> {{$docFirmadas['datos']['id']}}  {{ $docFirmadas['datos']['nombre_documento']}} Ver</a>
+           @else
+           {{ $docFirmadas['datos']['nombre_documento']}}
+           @endif
             <button type="button" class="btn-eliminar-lista" wire:click="eliminarArchivo('cotizacionesFirmadas', {{ $index }})">
               Eliminar
             </button>
@@ -221,7 +231,11 @@
         <ul class="my-2">
           @foreach($docsCotizacionesPdf as $index => $docPdf)
           <li>
-            {{ $docPdf->getClientOriginalName()}}
+            @if(isset($docPdf['datos']['ruta_documento']))
+            <a href="#"  wire:click="descargarArchivo('{{ $docPdf['datos']['ruta_documento'] }}')">  {{ $docPdf['datos']['nombre_documento']}} Ver</a>
+           @else
+           {{ $docPdf['datos']['nombre_documento']}}
+           @endif
             <button type="button" class="btn-eliminar-lista" wire:click="eliminarArchivo('cotizacionesPdf', {{ $index }})">
               Eliminar
             </button>
@@ -246,7 +260,11 @@
           <ul>
             @foreach($docsAnexoOtrosDocumentos as $index => $anexoDoc)
             <li>
-              {{ $anexoDoc->getClientOriginalName()}}
+              @if(isset($anexoDoc['datos']['ruta_documento']))
+            <a href="#"  wire:click="descargarArchivo('{{ $anexoDoc['datos']['ruta_documento'] }}')">  {{ $anexoDoc['datos']['nombre_documento']}} Ver</a>
+           @else
+           {{ $anexoDoc['datos']['nombre_documento']}}
+           @endif
               <button type="button" class="btn-eliminar-lista" wire:click="eliminarArchivo('anexoDocumentos', {{ $index }})">
                 Eliminar
               </button>
@@ -265,7 +283,9 @@
 
       </div>
       <div class="sm:text-right text-center my-10 -mb-5">
+        @empty($id_adquisicion)
         <button type="button" wire:click="save()" class="btn-success sm:w-auto w-3/4">Guardar</button>
+        @endempty
         <button type="submit" class="btn-primary sm:w-auto w-3/4">Enviar para VoBo</button>
         <button type="button" class="btn-warning sm:w-auto w-3/4" onclick="window.location.href = '{{ route('cvu.create') }}'">Cancelar</button>
       </div>

@@ -22,7 +22,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    @foreach ($adquisiciones as $adquisicion)
+                     @foreach ($adquisiciones as $adquisicion)
                     <tr class="border-b-gray-200 border-transparent">
                       <td> {{ $loop->iteration}}</td>
                       <td> {{ $adquisicion->clave_adquisicion}} </td>
@@ -39,8 +39,8 @@
                         </button>
                       </td>
                     </tr>
-                    @endforeach
-                  {{--   @foreach ($solicitudes as $solicitud)
+                    @endforeach 
+                {{--   @foreach ($solicitudes as $solicitud)
                     <tr class="border-b-gray-200 border-transparent">
                       <td> {{ $loop->iteration }} </td>
                       <td> {{ $solicitud->clave_solicitud }} </td>
@@ -49,9 +49,9 @@
                       <td> {{ $solicitud->estatusSolicitud->descripcion }} </td>
                       <td> {{ $solicitud->updated_at}} </td>
                       <td>
-                        <button type="button" class="btn-tablas" title="Editar">
+                        <a href="{{route('solicitudes.editar', $solicitud->id)}}" class="btn-tablas" title="Editar">
                           <img src="{{ ('img/btn_editar.png') }}" alt="Image/png">
-                        </button>
+                        </a>
                         <button type="button" @click.stop="elementos.splice(index, 1); $wire.deleteBien(elemento)" class="btn-tablas" title="Eliminar">
                           <img src="{{ ('img/btn_eliminar.png') }}" alt="Image/png">
                         </button>

@@ -13,7 +13,7 @@ use App\Http\Controllers\SeguimientoSiiaController;
 use App\Http\Controllers\CvuController;
 
 
-
+require __DIR__ . '/auth.php';
 
 
 
@@ -60,7 +60,10 @@ Route::get('/adquisiciones/{id}/editar', AdquisicionesForm::class)->middleware('
 
 //Route::resource('adquisiciones', AdquisicionController::class);
 
-require __DIR__ . '/auth.php';
+//RUTAS ADQUISICIONES
+//Route::get('/adquisiciones/{id}/editar', [AdquisicionController::class, 'edit'])->name('adquisiciones.editar');
+Route::get('/solicitudes/{id}/editar', SolicitudesForm::class)->middleware('CvuAuth')->name('solicitudes.editar');
+
 
 
 //RUTAS DESDE CVU
