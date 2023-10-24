@@ -12,16 +12,29 @@ class Solicitud extends Model
     protected $connection = 'mysql';
     protected $table = "solicitudes";
 
-    public function rubroSolicitud(){
+    public function rubroSolicitud()
+    {
         return $this->belongsTo(CuentaContable::class, 'id_rubro');
     }
 
-    public function requerimientoSolicitud(){
+    public function requerimientoSolicitud()
+    {
         return $this->belongsTo(TipoRequisicion::class, 'tipo_requisicion');
     }
 
-    public function estatusSolicitud(){
+    public function estatusSolicitud()
+    {
         return $this->belongsTo(EstatusRequisiciones::class, 'estatus_rt');
+    }
+    public function cuentas()
+    {
+
+        return $this->belongsTo(CuentaContable::class, 'id_rubro');
+    }
+    public function solicitudDetalle()
+    {
+
+        return $this->hasOne(SolicitudDetalle::class, 'id_solicitud');
     }
 
     protected $fillable = [

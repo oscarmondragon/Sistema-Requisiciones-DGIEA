@@ -80,27 +80,33 @@ use Carbon\Carbon;
                 </div>
                 @endif
                 @if ($id_rubro_especial == '3')
-                <div class="mt-2">
-                  <label for="bitacoraPdf">Bitacora firmada PDF</label>
-                  <input type="file" id="bitacoraPdfTemp" wire:model='bitacoraPdfTemp' accept=".pdf">
-                  @empty($docsCartaExclusividad)
-                  <label for="bitacoraPdf" class="text-dorado">Sin archivos seleccionados.</label>
-                  @endempty
-                  <br>
-                  <div wire:loading wire:target="docsbitacoraPdf">Cargando archivo...</div>
-
-                  @error('bitacoraPdfTemp') <span class=" text-rojo">{{ $message }}</span> @enderror
-                  @error('docsbitacoraPdf') <span class=" text-rojo">{{ $message }}</span> @enderror
-                  <ul>
-                    @foreach($docsbitacoraPdf as $index => $archivo)
-                    <li>
-                      {{ $archivo->getClientOriginalName()}}
-                      <button type="button" wire:click="eliminarArchivo('docsbitacoraPdf',{{ $index }})" class="btn-eliminar-lista">Eliminar</button>
-                    </li>
-                    @endforeach
-                  </ul>
-                  @endif
-                </div>
+      <div class="mt-2">
+        <label for="bitacoraPdf">Bitacora firmada PDF</label>
+        <input type="file" id="bitacoraPdfTemp" wire:model='bitacoraPdfTemp'  accept=".pdf">
+        @empty($docsCartaExclusividad)
+        <label for="bitacoraPdf" class="text-dorado">Sin archivos seleccionados.</label>
+        @endempty
+        <br>
+        <div wire:loading wire:target="docsbitacoraPdf">Cargando archivo...</div>
+      
+        @error('bitacoraPdfTemp') <span class=" text-rojo">{{ $message }}</span> @enderror
+        @error('docsbitacoraPdf') <span class=" text-rojo">{{ $message }}</span> @enderror
+        <ul>
+          @foreach($docsbitacoraPdf as $index => $archivo)
+          <li>
+            @if(isset($archivo['datos']['ruta_documento']))
+            <a href="#"  wire:click="descargarArchivo('{{ $archivo['datos']['ruta_documento'] }}')">  {{ $archivo['datos']['nombre_documento']}} Ver</a>
+           @else
+           {{ $archivo['datos']['nombre_documento']}}
+           @endif
+            <button type="button" class="btn-eliminar-lista" wire:click="eliminarArchivo('docsbitacoraPdf', {{ $index }})">
+              Eliminar
+            </button>
+          </li>
+          @endforeach
+        </ul>
+        @endif
+      </div>
                 <div class="mt-4 sm:ml-10" x-show="tipoComprobacionOption != 'vale'">
                   <input type="checkbox" id="comprobacion" name="comprobacion" wire:model='comprobacion' class="mr-1">
                   <label for="comprobacion">Me obligo a comprobar esta cantidad en un plazo no mayor a 20 días naturales, a partir de la
@@ -124,7 +130,9 @@ use Carbon\Carbon;
                 </div>
 
                 <div class="sm:text-right text-center mt-5">
+                 @empty($solicitud)
                   <button type="button" @click="saveConfirmation()" class="btn-success sm:w-auto w-3/4">Guardar</button>
+                   @endempty
                   <button type="submit" @click="saveConfirmationVoBo()" class="btn-primary sm:w-auto w-3/4">Enviar para VoBo</button>
                   <button type="button" @click="cancelarSolicitud()" class="btn-warning sm:w-auto w-3/4">Cancelar</button>
                 </div>
@@ -135,7 +143,7 @@ use Carbon\Carbon;
       </div>
     </div>
   </div>
-  @push('scripts')
+ @push('scripts')
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
     function saveConfirmation() {
@@ -174,7 +182,6 @@ use Carbon\Carbon;
         cancelButtonColor: '#E86562',
         confirmButtonText: 'Enviar',
         cancelButtonText: 'Cerrar',
-
       }).then((result) => {
         if (result.isConfirmed) {
           window.livewire.emit('saveVobo');
@@ -196,6 +203,7 @@ use Carbon\Carbon;
         cancelButtonColor: '#62836C',
         confirmButtonText: 'Cancelar',
         cancelButtonText: 'Cerrar',
+
 
       }).then((result) => {
         if (result.isConfirmed) {

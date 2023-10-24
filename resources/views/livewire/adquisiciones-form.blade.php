@@ -37,36 +37,37 @@
                   @error('bienes') <span class=" text-rojo">{{ $message }}</span> @enderror
 
                 </div>
-
-                <div class="overflow-x-auto" wire:poll x-data="{ elementos: @entangle('bienes').defer, id_rubro: '{{ $id_rubro }}' }">
-                  <table class="table-auto text-left text-sm w-3/4 sm:w-full mx-auto" x-show="elementos.length > 0">
-                    <thead>
-                      <tr class="bg-blanco">
-                        <th class="w-[26px]">#</th>
-                        <th class="w-[200px]">Descripción</th>
-                        <th class="w-[80px]">Cantidad</th>
-                        <th class="w-[80px]">Precio Unitario</th>
-                        <th class="w-[80px]">IVA</th>
-                        <th class="w-[80px]">Importe</th>
-                        @if ($id_rubro_especial == '1')
-                        <th class="w-[300px]">Justificación</th>
-                        <th class="w-[180px]">Beneficiados</th>
-                        @endif
-                        <th class="w-[148px]">Acciones</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <template x-for="(elemento, index) in elementos" :key="index">
-                        <tr class="border border-b-gray-200 border-transparent">
-                          <th class="w-[26px]" x-text="index + 1"></th>
-                          <th class="w-[200px]" x-text="elemento.descripcion"></th>
-                          <th class="w-[80px]" x-text="elemento.cantidad"></th>
-                          <th class="w-[80px]" x-text="elemento.precio_unitario"></th>
-                          <th class="w-[80px]" x-text="elemento.iva"></th>
-                          <th class="w-[80px]" x-text="elemento.importe"></th>
-                          @if ($id_rubro_especial == '1')
-                          <th class="w-[300px]" x-text="elemento.justificacion_software.length > 85 ? elemento.justificacion_software.substring(0,85) + '...' : elemento.justificacion_software"></th>
-                          <th class="w-[180px]" x-html="'Alumnos: ' + elemento.alumnos +
+        <div class="overflow-x-auto" wire:poll x-data="{ elementos: @entangle('bienes').defer, id_rubro: '{{ $id_rubro }}' }">
+          <table class="table-auto text-left text-sm w-3/4 sm:w-full mx-auto" x-show="elementos.length > 0">
+            <thead>
+              <tr class="bg-blanco">
+                <th class="w-[26px]">#</th>
+                <th class="w-[26px]">id</th>
+                <th class="w-[200px]">Descripción</th>
+                <th class="w-[80px]">Cantidad</th>
+                <th class="w-[80px]">Precio Unitario</th>
+                <th class="w-[80px]">IVA</th>
+                <th class="w-[80px]">Importe</th>
+                @if ($id_rubro_especial == '1')
+                <th class="w-[300px]">Justificación</th>
+                <th class="w-[180px]">Beneficiados</th>
+                @endif
+                <th class="w-[148px]">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <template x-for="(elemento, index) in elementos" :key="index">
+                <tr class="border border-b-gray-200 border-transparent">
+                  <th class="w-[26px]" x-text="index + 1"></th>
+                  <th class="w-[26px]" x-text="elemento._id"></th>
+                  <th class="w-[200px]" x-text="elemento.descripcion"></th>
+                  <th class="w-[80px]" x-text="elemento.cantidad"></th>
+                  <th class="w-[80px]" x-text="elemento.precio_unitario"></th>
+                  <th class="w-[80px]" x-text="elemento.iva"></th>
+                  <th class="w-[80px]" x-text="elemento.importe"></th>
+                  @if ($id_rubro_especial == '1')
+                  <th class="w-[300px]" x-text="elemento.justificacion_software.length > 85 ? elemento.justificacion_software.substring(0,85) + '...' : elemento.justificacion_software"></th>
+                  <th class="w-[180px]" x-html="'Alumnos: ' + elemento.alumnos +
                             '<br>Profesores: ' + elemento.profesores_invest +
                             '<br>Administrativos: ' + elemento.administrativos"></th>
                           @endif
@@ -164,107 +165,124 @@
                     <span class="ml-2">No</span>
                   </label>
                 </div>
+        <div x-show="exclusividadSelectedOption === '1'">
+          <label for="cartaExlcusividad">Carta de exclusividad:</label>
+          <input type="file" id="cartaExclusividadTemp" wire:model='cartaExclusividadTemp'  accept=".pdf">
+          @empty($docsCartaExclusividad)
+          <label for="cartaExlcusividad" class="text-dorado">Sin archivos seleccionados.</label>
+          @endempty
+          <br>
+          <div wire:loading wire:target="docsCartaExclusividad">Cargando archivo...</div>
+          @error('cartaExclusividadTemp') <span class=" text-rojo">{{ $message }}</span> @enderror
+          @error('docsCartaExclusividad') <span class=" text-rojo">{{ $message }}</span> @enderror
+          <ul>
+            @foreach($docsCartaExclusividad as $index => $docCarta)
+            <li>
+              @if(isset($docCarta['datos']['ruta_documento']))
+              <a href="#"  wire:click="descargarArchivo('{{ $docCarta['datos']['ruta_documento'] }}')">  {{ $docCarta['datos']['nombre_documento']}} Ver</a>
+             @else
+             {{ $docCarta['datos']['nombre_documento']}}
+             @endif
+              <button type="button" class="btn-eliminar-lista" wire:click="eliminarArchivo('cartasExclusividad', {{ $index }})">
+                Eliminar
+              </button>
+            </li>
+            @endforeach
+          </ul>
+        </div>
+        <div class="mt-2">
+          <label for="cotizacionFirmada">Cotización PDF firmada:</label>
+          <input type="file" id="cotizacionFirmadaTemp" wire:model='cotizacionFirmadaTemp' accept=".pdf">
+          @empty($docsCotizacionesFirmadas)
+          <label for="cotizacionFirmada" class="text-dorado">Sin archivos seleccionados.</label>
+          @endempty
+          <br>
+          <div wire:loading wire:target="docsCotizacionesFirmadas">Cargando archivo...</div>
+        </div>
+        @error('cotizacionFirmadaTemp') <span class=" text-rojo">{{ $message }}</span> @enderror
+        @error('docsCotizacionesFirmadas') <span class=" text-rojo">{{ $message }}</span> @enderror
+        <ul>
+          @foreach($docsCotizacionesFirmadas as $index => $docFirmadas)
+          <li>
+            @if(isset($docFirmadas['datos']['ruta_documento']))
+            <a href="#"  wire:click="descargarArchivo('{{ $docFirmadas['datos']['ruta_documento'] }}')"> {{$docFirmadas['datos']['id']}}  {{ $docFirmadas['datos']['nombre_documento']}} Ver</a>
+           @else
+           {{ $docFirmadas['datos']['nombre_documento']}}
+           @endif
+            <button type="button" class="btn-eliminar-lista" wire:click="eliminarArchivo('cotizacionesFirmadas', {{ $index }})">
+              Eliminar
+            </button>
+          </li>
+          @endforeach
+        </ul>
+        <div class="mt-2">
+          <label for="cotizacionesPdf">Cotizaciones PDF (Pueden ir o no firmadas):</label>
+          <input type="file" id="cotizacionPdfTemp" wire:model='cotizacionPdfTemp' accept=".pdf">
+          @empty($docsCotizacionesPdf)
+          <label for="cotizacionesPdf" class="text-dorado">Sin archivos seleccionados.</label>
+          @endempty
+          <br>
+          <div wire:loading wire:target="docsCotizacionesPdf">Cargando archivo...</div>
+        </div>
+        @error('cotizacionPdfTemp') <span class=" text-rojo">{{ $message }}</span> @enderror
+        @error('docsCotizacionesPdf') <span class=" text-rojo">{{ $message }}</span> @enderror
+        <ul class="my-2">
+          @foreach($docsCotizacionesPdf as $index => $docPdf)
+          <li>
+            @if(isset($docPdf['datos']['ruta_documento']))
+            <a href="#"  wire:click="descargarArchivo('{{ $docPdf['datos']['ruta_documento'] }}')">  {{ $docPdf['datos']['nombre_documento']}} Ver</a>
+           @else
+           {{ $docPdf['datos']['nombre_documento']}}
+           @endif
+            <button type="button" class="btn-eliminar-lista" wire:click="eliminarArchivo('cotizacionesPdf', {{ $index }})">
+              Eliminar
+            </button>
+          </li>
+          @endforeach
+        </ul>
 
-                <div x-show="exclusividadSelectedOption === '1'">
-                  <label for="cartaExlcusividad">Carta de exclusividad:</label>
-                  <input type="file" id="cartaExclusividadTemp" wire:model='cartaExclusividadTemp' accept=".pdf">
-                  @empty($docsCartaExclusividad)
-                  <label for="cartaExlcusividad" class="text-dorado">Sin archivos seleccionados.</label>
-                  @endempty
-                  <br>
-                  <div wire:loading wire:target="docsCartaExclusividad">Cargando archivo...</div>
-                  @error('cartaExclusividadTemp') <span class=" text-rojo">{{ $message }}</span> @enderror
-                  @error('docsCartaExclusividad') <span class=" text-rojo">{{ $message }}</span> @enderror
-                  <ul>
-                    @foreach($docsCartaExclusividad as $index => $docCarta)
-                    <li>
-                      {{ $docCarta->getClientOriginalName()}}
-                      <button type="button" class="btn-eliminar-lista" wire:click="eliminarArchivo('cartasExclusividad', {{ $index }})">
-                        Eliminar
-                      </button>
-                    </li>
-                    @endforeach
-                  </ul>
-                </div>
-                <div class="mt-2">
-                  <label for="cotizacionFirmada">Cotización PDF firmada:</label>
-                  <input type="file" id="cotizacionFirmadaTemp" wire:model='cotizacionFirmadaTemp' accept=".pdf">
-                  @empty($docsCotizacionesFirmadas)
-                  <label for="cotizacionFirmada" class="text-dorado">Sin archivos seleccionados.</label>
-                  @endempty
-                  <br>
-                  <div wire:loading wire:target="docsCotizacionesFirmadas">Cargando archivo...</div>
-                </div>
-                @error('cotizacionFirmadaTemp') <span class=" text-rojo">{{ $message }}</span> @enderror
-                @error('docsCotizacionesFirmadas') <span class=" text-rojo">{{ $message }}</span> @enderror
-                <ul>
-                  @foreach($docsCotizacionesFirmadas as $index => $docFirmadas)
-                  <li>
-                    {{ $docFirmadas->getClientOriginalName()}}
-                    <button type="button" class="btn-eliminar-lista" wire:click="eliminarArchivo('cotizacionesFirmadas', {{ $index }})">
-                      Eliminar
-                    </button>
-                  </li>
-                  @endforeach
-                </ul>
-                <div class="mt-2">
-                  <label for="cotizacionesPdf">Cotizaciones PDF (Pueden ir o no firmadas):</label>
-                  <input type="file" id="cotizacionPdfTemp" wire:model='cotizacionPdfTemp' accept=".pdf">
-                  @empty($docsCotizacionesPdf)
-                  <label for="cotizacionesPdf" class="text-dorado">Sin archivos seleccionados.</label>
-                  @endempty
-                  <br>
-                  <div wire:loading wire:target="docsCotizacionesPdf">Cargando archivo...</div>
-                </div>
-                @error('cotizacionPdfTemp') <span class=" text-rojo">{{ $message }}</span> @enderror
-                @error('docsCotizacionesPdf') <span class=" text-rojo">{{ $message }}</span> @enderror
-                <ul class="my-2">
-                  @foreach($docsCotizacionesPdf as $index => $docPdf)
-                  <li>
-                    {{ $docPdf->getClientOriginalName()}}
-                    <button type="button" class="btn-eliminar-lista" wire:click="eliminarArchivo('cotizacionesPdf', {{ $index }})">
-                      Eliminar
-                    </button>
-                  </li>
-                  @endforeach
-                </ul>
-
-                <div>
-                  <label x-show="exclusividadSelectedOption === '1'" for="anexoDocumentos" class="text-rojo mt-5 block">
-                    <span class="text-verde font-bold">Nota: </span>Adjunte aquí el soporte de exclusividad.
-                  </label>
-                  <label for="anexoDocumentos">Anexo técnico u otros documentos:</label>
-                  <input type="file" id="anexoOtroTemp" wire:model='anexoOtroTemp' accept=".pdf">
-                  @empty($docsAnexoOtrosDocumentos)
-                  <label for="anexoDocumentos" class="text-dorado">Sin archivos seleccionados.</label>
-                  @endempty
-                  <br>
-                  <div wire:loading wire:target="docsAnexoOtrosDocumentos">Cargando archivo...</div>
-                  @error('anexoOtroTemp') <span class=" text-rojo">{{ $message }}</span> @enderror
-                  @error('docsAnexoOtrosDocumentos') <span class=" text-rojo">{{ $message }}</span> @enderror
-                  <ul>
-                    @foreach($docsAnexoOtrosDocumentos as $index => $anexoDoc)
-                    <li>
-                      {{ $anexoDoc->getClientOriginalName()}}
-                      <button type="button" class="btn-eliminar-lista" wire:click="eliminarArchivo('anexoDocumentos', {{ $index }})">
-                        Eliminar
-                      </button>
-                    </li>
-                    @endforeach
-                  </ul>
-                </div>
-              </div>
-              <p class="text-verde mt-5"> <span class="font-bold">Nota:</span> Las cotizaciones deben describir exactamente el mismo material, suministro, servicio general,
-                bien mueble o intangible.
-              </p>
-              <div class="mt-10">
-                <input type="checkbox" id="vobo" wire:model='vobo' name="vobo" class="rounded-full sm:ml-10">
-                <label for="vobo">VoBo al requerimiento solicitado. Se envía para VoBo del Admistrativo/Investigador</label>
-                @error('vobo') <span class=" text-rojo error">{{ $message }}</span> @enderror
-              </div>
+        <div>
+          <label x-show="exclusividadSelectedOption === '1'" for="anexoDocumentos" 
+          class="text-rojo mt-5 block">
+            <span class="text-verde font-bold">Nota: </span>Adjunte aquí el soporte de exclusividad.
+          </label>
+          <label for="anexoDocumentos">Anexo técnico u otros documentos:</label>
+          <input type="file" id="anexoOtroTemp" wire:model='anexoOtroTemp' accept=".pdf">
+          @empty($docsAnexoOtrosDocumentos)
+          <label for="anexoDocumentos" class="text-dorado">Sin archivos seleccionados.</label>
+          @endempty
+          <br>
+          <div wire:loading wire:target="docsAnexoOtrosDocumentos">Cargando archivo...</div>
+          @error('anexoOtroTemp') <span class=" text-rojo">{{ $message }}</span> @enderror
+          @error('docsAnexoOtrosDocumentos') <span class=" text-rojo">{{ $message }}</span> @enderror
+          <ul>
+            @foreach($docsAnexoOtrosDocumentos as $index => $anexoDoc)
+            <li>
+              @if(isset($anexoDoc['datos']['ruta_documento']))
+            <a href="#"  wire:click="descargarArchivo('{{ $anexoDoc['datos']['ruta_documento'] }}')">  {{ $anexoDoc['datos']['nombre_documento']}} Ver</a>
+           @else
+           {{ $anexoDoc['datos']['nombre_documento']}}
+           @endif
+              <button type="button" class="btn-eliminar-lista" wire:click="eliminarArchivo('anexoDocumentos', {{ $index }})">
+                Eliminar
+              </button>
+            </li>
+            @endforeach
+          </ul>
+        </div>
+      </div>
+      <p class="text-verde mt-5"> <span class="font-bold">Nota:</span> Las cotizaciones deben describir exactamente el mismo material, suministro, servicio general,
+        bien mueble o intangible.
+      </p>
+      <div class="mt-10">
+        <input type="checkbox" id="vobo" wire:model='vobo' name="vobo" class="rounded-full sm:ml-10">
+        <label for="vobo">VoBo al requerimiento solicitado. Se envía para VoBo del Admistrativo/Investigador</label>
+        @error('vobo') <span class=" text-rojo error">{{ $message }}</span> @enderror
 
               <div class="sm:text-right text-center my-10 -mb-5">
+               @empty($id_adquisicion)
                 <button type="button" @click="saveConfirmation()" class="btn-success sm:w-auto w-5/6">Guardar</button>
+                @endempty
                 <button type="submit" @click="saveConfirmationVoBo()" class="btn-primary sm:w-auto w-5/6">Enviar para VoBo</button>
                 <button type="button" @click="cancelarAdquisicion()" class="btn-warning sm:w-auto w-5/6">Cancelar</button>
               </div>
@@ -275,6 +293,7 @@
     </div>
   </div>
 </div>
+
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
@@ -345,5 +364,5 @@
   }
 </script>
 @endpush
-
 </div>
+
