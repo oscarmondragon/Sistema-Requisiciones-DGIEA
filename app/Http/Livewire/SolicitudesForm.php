@@ -153,6 +153,10 @@ class SolicitudesForm extends Component
 
      }*/
 
+    protected $listeners = [
+        'save', 'saveVobo'
+    ];
+
     public function save()
     {
         $this->validate([
@@ -233,13 +237,12 @@ class SolicitudesForm extends Component
                     }
                 }
                 DB::commit();
-                return redirect('/cvu-crear')->with('success', 'Su solicitud ha sido guardada correctamente con el numero.' . $clave_solicitud . ' Recuerde completarla y mandarla a visto bueno.');
+                return redirect('/cvu-crear')->with('success', 'Su solicitud ha sido guardada correctamente con el número ' . $clave_solicitud . ', recuerde completarla y mandarla a visto bueno.');
             } catch (\Exception $e) {
                 DB::rollback();
                 dd("Error en el catch" . $e);
                 return redirect()->back()->with('error', 'Error en el proceso de guardado ' . $e->getMessage());
             }
-
         } else {
             // No se encontró ningún proyecto  con esca clave"
             return redirect()->back()->with('error', 'No se encontró un proyecto asociado a la clave ' . $clave_proyecto);
@@ -248,6 +251,7 @@ class SolicitudesForm extends Component
 
     public function saveVobo()
     {
+        $this->emit('saveVoBo');
 
         $this->validate();
 
@@ -426,8 +430,6 @@ class SolicitudesForm extends Component
         $this->comprobacion = 0;
         $this->aviso_privacidad = 0;
         $this->vobo = 0;
-
-
     }
 
 
@@ -508,3 +510,4 @@ class SolicitudesForm extends Component
 
 
 }
+

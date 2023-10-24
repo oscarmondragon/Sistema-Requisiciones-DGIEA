@@ -4,40 +4,39 @@
     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
       <div class="p-6 text-gray-900">
         <div class="">
-  <div class="my-6">
-    <h1>Formulario adquisición de bienes y servicios</h1>
-    <form wire:submit.prevent="saveVobo">
-      <div>
-        <div class="my-6">
-          <label for="id_rubro">
-            Rubro:
-          </label>
-          <select class="w-auto" required id="id_rubro" name="id_rubro" wire:model="id_rubro" @change="$wire.resetearBienes($event.target.selectedOptions[0].getAttribute('data-id-especial'))">
-            <option value="0">Selecciona una opción</option>
-            @foreach ($cuentasContables as $cuentaContable)
-            <option value="{{ $cuentaContable->id }}" data-id-especial="{{ $cuentaContable->id_especial }}">{{ $cuentaContable->nombre_cuenta }}</option>
-            @endforeach
-          </select>
-          @error('id_rubro') <span class=" text-rojo">{{ $message }}</span> @enderror
-        </div>
+          <div class="my-6">
+            <h1>Formulario adquisición de bienes y servicios</h1>
+            <form x-on:submit.prevent="saveConfirmationVoBo">
+              <div>
+                <div class="my-6">
+                  <label for="id_rubro">
+                    Rubro:
+                  </label>
+                  <select class="w-auto" required id="id_rubro" name="id_rubro" wire:model="id_rubro" @change="$wire.resetearBienes($event.target.selectedOptions[0].getAttribute('data-id-especial'))">
+                    <option value="0">Selecciona una opción</option>
+                    @foreach ($cuentasContables as $cuentaContable)
+                    <option value="{{ $cuentaContable->id }}" data-id-especial="{{ $cuentaContable->id_especial }}">{{ $cuentaContable->nombre_cuenta }}</option>
+                    @endforeach
+                  </select>
+                  @error('id_rubro') <span class=" text-rojo">{{ $message }}</span> @enderror
+                </div>
 
-        <div class="mb-4">
-          <label>
-            Descripción del bien o servicio:
-          </label>
-          @if ($id_rubro != 0)
-          <button type="button" x-on:click="$wire.emit('openModal', 'adquisicion-description-modal', { 'id_rubro': {{ $id_rubro }}, 'id_rubro_especial': {{$id_rubro_especial ?: 'null'}} })" class="bg-verde w-8 h-8 py-0 px-0 rounded-full hover:bg-[#3c5042] focus:ring-2 focus:outline-none focus:ring-[#3c5042]">
-            <span class="text-white font-extrabold text-2xl">+</span>
-          </button>
-          @else
-          <p class="bg-gray-300 w-8 h-8 -pt-2 px-2 ml-1 rounded-full hover:bg-gray-200 hover:font-extrabold hover:text-gray-400 cursor-not-allowed inline-block select-none" disabled>
-            <span title="Primero selecciona un rubro." class="text-white font-extrabold text-2xl">+</span>
-          </p>
-          @endif
-          @error('bienes') <span class=" text-rojo">{{ $message }}</span> @enderror
+                <div class="mb-4">
+                  <label>
+                    Descripción del bien o servicio:
+                  </label>
+                  @if ($id_rubro != 0)
+                  <button type="button" x-on:click="$wire.emit('openModal', 'adquisicion-description-modal', { 'id_rubro': {{ $id_rubro }}, 'id_rubro_especial': {{$id_rubro_especial ?: 'null'}} })" class="bg-verde w-8 h-8 py-0 px-0 rounded-full hover:bg-[#3c5042] focus:ring-2 focus:outline-none focus:ring-[#3c5042]">
+                    <span class="text-white font-extrabold text-2xl">+</span>
+                  </button>
+                  @else
+                  <p class="bg-gray-300 w-8 h-8 -pt-2 px-2 ml-1 rounded-full hover:bg-gray-200 hover:font-extrabold hover:text-gray-400 cursor-not-allowed inline-block select-none" disabled>
+                    <span title="Primero selecciona un rubro." class="text-white font-extrabold text-2xl">+</span>
+                  </p>
+                  @endif
+                  @error('bienes') <span class=" text-rojo">{{ $message }}</span> @enderror
 
-        </div>
-
+                </div>
         <div class="overflow-x-auto" wire:poll x-data="{ elementos: @entangle('bienes').defer, id_rubro: '{{ $id_rubro }}' }">
           <table class="table-auto text-left text-sm w-3/4 sm:w-full mx-auto" x-show="elementos.length > 0">
             <thead>
@@ -71,102 +70,101 @@
                   <th class="w-[180px]" x-html="'Alumnos: ' + elemento.alumnos +
                             '<br>Profesores: ' + elemento.profesores_invest +
                             '<br>Administrativos: ' + elemento.administrativos"></th>
-                  @endif
-                  <th class="w-[148px]">
-                    <button type="button" @click='$wire.emit("openModal", "adquisicion-description-modal",
+                          @endif
+                          <th class="w-[148px]">
+                            <button type="button" @click='$wire.emit("openModal", "adquisicion-description-modal",
                         { _id: elemento._id, descripcion: elemento.descripcion, cantidad: elemento.cantidad, precio_unitario: elemento.precio_unitario, iva: elemento.iva, checkIva: elemento.checkIva, importe: elemento.importe, justificacion_software: elemento.justificacion_software,
                           alumnos: elemento.alumnos, profesores_invest: elemento.profesores_invest, administrativos: elemento.administrativos, id_rubro: id_rubro,
                           id_rubro_especial: {{$id_rubro_especial ?: 'null'}} })' class="btn-tablas">
-                      <img src="{{ ('/img/btn_editar.png') }}" alt="Image/png" title="Editar">
-                    </button>
-                    <button type="button" @click.stop="elementos.splice(index, 1); $wire.deleteBien(elemento)" class="btn-tablas">
-                      <img src="{{ ('/img/btn_eliminar.png') }}" alt="Image/png" title="Eliminar">
-                    </button>
-                  </th>
-                </tr>
-              </template>
-              <tr>
-                @if ($id_rubro_especial == '1')
-                <th></th>
-                <th></th>
-                @endif
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th>Subtotal</th>
-                <th>${{$subtotal}}</th>
-              </tr>
-              <tr>
-                @if ($id_rubro_especial == '1')
-                <th></th>
-                <th></th>
-                @endif
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th>IVA</th>
-                <th>${{$iva}}</th>
-              </tr>
+                              <img src="{{ ('/img/btn_editar.png') }}" alt="Image/png" title="Editar">
+                            </button>
+                            <button type="button" @click.stop="elementos.splice(index, 1); $wire.deleteBien(elemento)" class="btn-tablas">
+                              <img src="{{ ('/img/btn_eliminar.png') }}" alt="Image/png" title="Eliminar">
+                            </button>
+                          </th>
+                        </tr>
+                      </template>
+                      <tr>
+                        @if ($id_rubro_especial == '1')
+                        <th></th>
+                        <th></th>
+                        @endif
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th>Subtotal</th>
+                        <th>${{$subtotal}}</th>
+                      </tr>
+                      <tr>
+                        @if ($id_rubro_especial == '1')
+                        <th></th>
+                        <th></th>
+                        @endif
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th>IVA</th>
+                        <th>${{$iva}}</th>
+                      </tr>
 
-              <tr class="border border-b-gray-200 border-transparent">
-                @if ($id_rubro_especial == '1')
-                <th></th>
-                <th></th>
-                @endif
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th>Total</th>
-                <th>${{$total}}</th>
-              </tr>
+                      <tr class="border border-b-gray-200 border-transparent">
+                        @if ($id_rubro_especial == '1')
+                        <th></th>
+                        <th></th>
+                        @endif
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th>Total</th>
+                        <th>${{$total}}</th>
+                      </tr>
 
-            </tbody>
-          </table>
+                    </tbody>
+                  </table>
 
-        </div>
-        <div class="my-5" x-data x-init="afectaSelectedOption = '{{ $afecta_investigacion }}'">
-          <label for="afecta" class="text-dorado font-bold">
-            ¿El cambio de alguna de las características del bien descritas en la cotización,
-            afectan el desarrollo de la investigación?
-          </label>
-          <div class="mt-2">
-            <label class="inline-flex items-center">
-              <input type="radio" x-model="afectaSelectedOption" wire:model='afecta_investigacion' name="siAfecta" value="1">
-              <span class="ml-2">Si</span>
-            </label>
-            <label class="inline-flex items-center ml-6">
-              <input type="radio" x-model="afectaSelectedOption" wire:model='afecta_investigacion' wire:click="resetJustificacionAcademica" name="noAfecta" value="0" checked>
-              <span class="ml-2">No</span>
-            </label>
-          </div>
+                </div>
+                <div class="my-5" x-data x-init="afectaSelectedOption = '{{ $afecta_investigacion }}'">
+                  <label for="afecta" class="text-dorado font-bold">
+                    ¿El cambio de alguna de las características del bien descritas en la cotización,
+                    afectan el desarrollo de la investigación?
+                  </label>
+                  <div class="mt-2">
+                    <label class="inline-flex items-center">
+                      <input type="radio" x-model="afectaSelectedOption" wire:model='afecta_investigacion' name="siAfecta" value="1">
+                      <span class="ml-2">Si</span>
+                    </label>
+                    <label class="inline-flex items-center ml-6">
+                      <input type="radio" x-model="afectaSelectedOption" wire:model='afecta_investigacion' wire:click="resetJustificacionAcademica" name="noAfecta" value="0" checked>
+                      <span class="ml-2">No</span>
+                    </label>
+                  </div>
 
-          <div x-show="afectaSelectedOption === '1'" class="flex flex-col">
-            <label for="justificacion" class="my-2">Justificación académica:</label>
-            <textarea id="justificacion" name="justificacion" wire:model='justificacion_academica' placeholder="Justificación" class="w-3/4" rows="2" cols="30">
+                  <div x-show="afectaSelectedOption === '1'" class="flex flex-col">
+                    <label for="justificacion" class="my-2">Justificación académica:</label>
+                    <textarea id="justificacion" name="justificacion" wire:model='justificacion_academica' placeholder="Justificación" class="w-3/4" rows="2" cols="30">
               </textarea>
-          </div>
-          @error('justificacion_academica') <span class=" text-rojo">{{ $message }}</span> @enderror
-        </div>
-      </div>
+                  </div>
+                  @error('justificacion_academica') <span class=" text-rojo">{{ $message }}</span> @enderror
+                </div>
+              </div>
 
-      <div class="mb-2" x-data x-init="exclusividadSelectedOption = '{{ $exclusividad }}'">
-        <label for="afecta">
-          ¿Es bien o servicio con exclusividad?
-        </label>
-        <div class="mt-2">
-          <label class="inline-flex items-center">
-            <input type="radio" x-model="exclusividadSelectedOption" wire:model='exclusividad' name="siExclusivo" value="1">
-            <span class="ml-2">Si</span>
-          </label>
-          <label class="inline-flex items-center ml-6">
-            <input type="radio" x-model="exclusividadSelectedOption" wire:model='exclusividad' wire:click="resetdocsCartaExclusividad" name="noExclusivo" value="0" checked>
-            <span class="ml-2">No</span>
-          </label>
-        </div>
-
+              <div class="mb-2" x-data x-init="exclusividadSelectedOption = '{{ $exclusividad }}'">
+                <label for="afecta">
+                  ¿Es bien o servicio con exclusividad?
+                </label>
+                <div class="mt-2">
+                  <label class="inline-flex items-center">
+                    <input type="radio" x-model="exclusividadSelectedOption" wire:model='exclusividad' name="siExclusivo" value="1">
+                    <span class="ml-2">Si</span>
+                  </label>
+                  <label class="inline-flex items-center ml-6">
+                    <input type="radio" x-model="exclusividadSelectedOption" wire:model='exclusividad' wire:click="resetdocsCartaExclusividad" name="noExclusivo" value="0" checked>
+                    <span class="ml-2">No</span>
+                  </label>
+                </div>
         <div x-show="exclusividadSelectedOption === '1'">
           <label for="cartaExlcusividad">Carta de exclusividad:</label>
           <input type="file" id="cartaExclusividadTemp" wire:model='cartaExclusividadTemp'  accept=".pdf">
@@ -281,19 +279,90 @@
         <label for="vobo">VoBo al requerimiento solicitado. Se envía para VoBo del Admistrativo/Investigador</label>
         @error('vobo') <span class=" text-rojo error">{{ $message }}</span> @enderror
 
+              <div class="sm:text-right text-center my-10 -mb-5">
+               @empty($id_adquisicion)
+                <button type="button" @click="saveConfirmation()" class="btn-success sm:w-auto w-5/6">Guardar</button>
+                @endempty
+                <button type="submit" @click="saveConfirmationVoBo()" class="btn-primary sm:w-auto w-5/6">Enviar para VoBo</button>
+                <button type="button" @click="cancelarAdquisicion()" class="btn-warning sm:w-auto w-5/6">Cancelar</button>
+              </div>
+          </div>
+          </form>
+        </div>
       </div>
-      <div class="sm:text-right text-center my-10 -mb-5">
-        @empty($id_adquisicion)
-        <button type="button" wire:click="save()" class="btn-success sm:w-auto w-3/4">Guardar</button>
-        @endempty
-        <button type="submit" class="btn-primary sm:w-auto w-3/4">Enviar para VoBo</button>
-        <button type="button" class="btn-warning sm:w-auto w-3/4" onclick="window.location.href = '{{ route('cvu.create') }}'">Cancelar</button>
-      </div>
+    </div>
   </div>
-</form>
 </div>
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  function saveConfirmation() {
+    Swal.fire({
+      customClass: {
+        title: 'swal2-title'
+      },
+      title: '¿Solo deseas guardar el avance?',
+      text: 'Recuerda que solo sera visible para ti. Deberás completarlo y enviarlo a VoBo posteriormente.',
+      icon: 'warning',
+      iconColor: '#9D9361',
+      showCancelButton: true,
+      confirmButtonColor: '#62836C',
+      cancelButtonColor: '#E86562',
+      confirmButtonText: 'Guardar',
+      cancelButtonText: 'Cerrar',
+
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.livewire.emit('save');
+      }
+    });
+  }
+
+  function saveConfirmationVoBo() {
+    Swal.fire({
+      customClass: {
+        title: 'swal2-title'
+      },
+      title: '¿Deseas enviar tu adquisición a VoBo?',
+      text: 'Una vez enviada ya no será posible modificarlo.',
+      icon: 'warning',
+      iconColor: '#9D9361',
+      showCancelButton: true,
+      confirmButtonColor: '#62836C',
+      cancelButtonColor: '#E86562',
+      confirmButtonText: 'Enviar',
+      cancelButtonText: 'Cerrar',
+
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.livewire.emit('saveVobo');
+      }
+    });
+  }
+
+  function cancelarAdquisicion() {
+    Swal.fire({
+      customClass: {
+        title: 'swal2-title'
+      },
+      title: '¿Estás seguro que deseas cancelar?',
+      text: 'Se perderán todos los datos capturados.',
+      icon: 'warning',
+      iconColor: '#9D9361',
+      showCancelButton: true,
+      confirmButtonColor: '#E86562',
+      cancelButtonColor: '#62836C',
+      confirmButtonText: 'Cancelar',
+      cancelButtonText: 'Cerrar',
+
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = '{{ route('cvu.create') }}'
+      }
+    });
+  }
+</script>
+@endpush
 </div>
-</div>
-</div>
-</div>
-</div>
+
