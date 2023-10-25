@@ -44,42 +44,36 @@
                     </tr>
                   </thead>
                   <tbody>
-                     @foreach ($adquisiciones as $adquisicion)
-                    <tr class="border-b-gray-200 border-transparent">
-                      <td> {{ $loop->iteration}}</td>
-                      <td> {{ $adquisicion->clave_adquisicion}} </td>
-                      <td> {{ $adquisicion->cuentas->nombre_cuenta }} </td>
-                      <td> {{ $adquisicion->requerimiento->descripcion }} </td>
-                      <td> {{ $adquisicion->estatus->descripcion }} </td>
-                      <td> {{ $adquisicion->updated_at}}</td>
+
+                  @foreach ($adquisiciones as $adquisicion=>$valor)                   
+                      <tr class="border-b-gray-200 border-transparent">
+                      <td> {{ $valor->id}}</td>
+                      <td> {{ $valor->id_requerimiento}} </td>
+                      <td> {{ $valor->nombre_cuenta }} </td>
+                      <td> {{ $valor->descripcion }} </td>
+                      <td> {{ $valor->estado }} </td>
+                      <td> {{ $valor->modificacion}}</td>
+                      @if(str_contains($valor->id_requerimiento, "ADQ")) 
                       <td>
-                        <a href="{{route('adquisiciones.editar', $adquisicion->id)}}" class="btn-tablas" title="Editar">
+                        <a href="{{route('adquisiciones.editar', $valor->id)}}" class="btn-tablas" title="Editar">
                           <img src="{{ asset('img/btn_editar.png') }}" alt="Editar">
-                        </a>
-                        <button type="button" @click="deleteConfirmation('{{$adquisicion->id}}')" class="btn-tablas" title="Eliminar">
+                      </a>
+                        <button type="button" @click="deleteConfirmation('{{$valor->id}}')" class="btn-tablas" title="Eliminar">
                           <img src="{{ ('img/btn_eliminar.png') }}" alt="Image/png">
                         </button>
                       </td>
-                    </tr>
-                    @endforeach 
-                {{--   @foreach ($solicitudes as $solicitud)
-                    <tr class="border-b-gray-200 border-transparent">
-                      <td> {{ $loop->iteration }} </td>
-                      <td> {{ $solicitud->clave_solicitud }} </td>
-                      <td> {{ $solicitud->rubroSolicitud->nombre_cuenta }} </td>
-                      <td> {{ $solicitud->requerimientoSolicitud->descripcion }} </td>
-                      <td> {{ $solicitud->estatusSolicitud->descripcion }} </td>
-                      <td> {{ $solicitud->updated_at}} </td>
+                      @else
                       <td>
-                        <a href="{{route('solicitudes.editar', $solicitud->id)}}" class="btn-tablas" title="Editar">
+                      {{-- <a href="{{route('solicitudes.editar', $valor->id)}}" class="btn-tablas" title="Editar">
                           <img src="{{ ('img/btn_editar.png') }}" alt="Image/png">
-                        </a>
+                        </a>--}}
                         <button type="button" @click.stop="elementos.splice(index, 1); $wire.deleteBien(elemento)" class="btn-tablas" title="Eliminar">
                           <img src="{{ ('img/btn_eliminar.png') }}" alt="Image/png">
                         </button>
                       </td>
-                    </tr>
-                    @endforeach --}}
+                      @endif
+                    </tr>      
+                  @endforeach                  
                   </tbody>
                 </table>
                 {{$adquisiciones->links()}}
@@ -128,42 +122,36 @@
                     </tr>
                   </thead>
                   <tbody>
-                    @foreach ($adquisicionesVistosBuenos as $adquisicion)
+                    @foreach ($adquisicionesVistosBuenos as $adquisicionvobo=>$valorvobo)
+                    
                     <tr class="border-b-gray-200 border-transparent">
                       <td> {{ $loop->iteration}}</td>
-                      <td> {{ $adquisicion->clave_adquisicion}} </td>
-                      <td> {{ $adquisicion->cuentas->nombre_cuenta}} </td>
-                      <td> {{ $adquisicion->requerimiento->descripcion }} </td>
-                      <td> {{ $adquisicion->vobo_rt }} </td>
-                      <td> {{ $adquisicion->vobo_admin }} </td>
-                      <td> {{ $adquisicion->estatus->descripcion }} </td>
-                      <td> {{ $adquisicion->updated_at}}</td>
+                      <td> {{ $valorvobo->id_requerimiento}} </td>
+                      <td> {{ $valorvobo->nombre_cuenta}} </td>
+                      <td> {{ $valorvobo->descripcion }} </td>
+                      <td> {{ $valorvobo->vobo_rt }} </td>
+                      <td> {{ $valorvobo->vobo_admin }} </td>
+                      <td> {{ $valorvobo->estado}} </td>
+                      <td> {{ $valorvobo->modificacion}}</td>
+                      @if($valorvobo->getTable() == 'adquisiciones')
                       <th class="w-[148px]">
-                        @if(Session::get('id_user') != $adquisicion->id_emisor)
-                        <a href="{{route('adquisiciones.vobo', $adquisicion->id)}}" class="btn-tablas" title="Dar visto bueno">
-                          <img src="{{ ('/img/btn_vobo.png') }}" alt="Image/png" title="Dar visto bueno">
-                        </a>
+                        @if(Session::get('id_user') != $valorvobo->id_emisor)
+                        <button type="button" class="btn-primary">
+                          Visto bueno
+                        </button>
                         @endif
                       </th>
-                    </tr>
+                      @else
+                      <th class="w-[148px]">
+                        @if(Session::get('id_user') != $valorvobo->id_emisor)
+                        <button type="button" class="btn-primary">
+                          Visto bueno
+                        </button>
+                        @endif
+                      </th>
+                      @endif
+                    </tr>  
                     @endforeach
-                    {{-- @foreach ($solicitudes as $solicitud)
-                    <tr class="border-b-gray-200 border-transparent">
-                      <td> {{ $loop->iteration}}</td>
-                    <td> {{ $solicitud->clave_solicitud}} </td>
-                    <td> {{ $solicitud->rubroSolicitud->nombre_cuenta}} </td>
-                    <td> {{ $solicitud->requerimientoSolicitud->descripcion }} </td>
-                    <td> {{ $solicitud->vobo_rt }} </td>
-                    <td> {{ $solicitud->vobo_admin }} </td>
-                    <td> {{ $solicitud->estatusSolicitud->descripcion }} </td>
-                    <td> {{ $solicitud->updated_at}}</td>
-                    <th class="w-[148px]">
-                      <button type="button" class="btn-tablas">
-                        <img src="{{ ('/img/btn_vobo.png') }}" alt="Image/png" title="VoBo">
-                      </button>
-                    </th>
-                    </tr>
-                    @endforeach--}}
                   </tbody>
                 </table>
                 {{$adquisicionesVistosBuenos->links()}}
