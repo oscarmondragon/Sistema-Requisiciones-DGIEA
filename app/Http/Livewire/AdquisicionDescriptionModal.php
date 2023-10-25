@@ -12,15 +12,15 @@ class AdquisicionDescriptionModal extends ModalComponent
     public $_id = 0;
     public string $descripcion = '';
     public $cantidad;
-    public $precioUnitario;
+    public $precio_unitario;
     public $checkIva = 1;
     public $iva;
     public $porcentajeIva;
     public $importe = 0;
-    public $justificacionSoftware;
-    public $numAlumnos = 0;
-    public $numProfesores = 0;
-    public $numAdministrativos = 0;
+    public $justificacion_software;
+    public $alumnos = 0;
+    public $profesores_invest = 0;
+    public $administrativos = 0;
 
 
 
@@ -33,12 +33,12 @@ class AdquisicionDescriptionModal extends ModalComponent
     protected $rules = [
         'descripcion' => 'required',
         'cantidad' => 'required|gte:1',
-        'precioUnitario' => 'required|gte:1',
+        'precio_unitario' => 'required|gte:1',
         'importe' => 'required',
-        'justificacionSoftware' => 'required_if:id_rubro_especial,1',
-        'numAlumnos' => 'required_if:id_rubro_especial,1|gte:0',
-        'numProfesores' => 'required_if:id_rubro_especial,1|gte:0',
-        'numAdministrativos' => 'required_if:id_rubro_especial,1|gte:0'
+        'justificacion_software' => 'required_if:id_rubro_especial,1',
+        'alumnos' => 'required_if:id_rubro_especial,1|gte:0',
+        'profesores_invest' => 'required_if:id_rubro_especial,1|gte:0',
+        'administrativos' => 'required_if:id_rubro_especial,1|gte:0'
 
     ];
 
@@ -47,17 +47,17 @@ class AdquisicionDescriptionModal extends ModalComponent
         'descripcion.required' => 'La descripción no puede estar vacía.',
         'cantidad.required' => 'La cantidad no puede estar vacía.',
         'cantidad.gte' => 'La cantidad no puede ser menor a 1.',
-        'precioUnitario.required' => 'El precio unitario no puede estar vacío.',
-        'precioUnitario.gte' => 'El precio unitario no puede ser menor a 1.',
+        'precio_unitario.required' => 'El precio unitario no puede estar vacío.',
+        'precio_unitario.gte' => 'El precio unitario no puede ser menor a 1.',
         'importe.required' => 'El importe no puede estar vacío.',
-        'justificacionSoftware.required_if' => 'La justificación no puede estar vacía.',
-        'numAlumnos.required_if' => 'El número de alumnos no puede estar vacío.',
-        'numAlumnos.gte' => 'El número de alumnos no puede ser negativo.',
-        'numProfesores.required' => 'El número de profesores no puede estar vacío.',
-        'numProfesores.required_if' => 'El número de profesores no puede estar vacío.',
-        'numProfesores.gte' => 'El número de profesores no puede ser negativo.',
-        'numAdministrativos.required_if' => 'El número de los administrativos no puede estar vacío.',
-        'numAdministrativos.gte' => 'El número de administrativos no puede ser negativo.',
+        'justificacion_software.required_if' => 'La justificación no puede estar vacía.',
+        'alumnos.required_if' => 'El número de alumnos no puede estar vacío.',
+        'alumnos.gte' => 'El número de alumnos no puede ser negativo.',
+        'profesores_invest.required' => 'El número de profesores no puede estar vacío.',
+        'profesores_invest.required_if' => 'El número de profesores no puede estar vacío.',
+        'profesores_invest.gte' => 'El número de profesores no puede ser negativo.',
+        'administrativos.required_if' => 'El número de los administrativos no puede estar vacío.',
+        'administrativos.gte' => 'El número de administrativos no puede ser negativo.',
 
     ];
     public function render()
@@ -79,12 +79,12 @@ class AdquisicionDescriptionModal extends ModalComponent
         if (!is_numeric($this->cantidad)) {
             $this->cantidad = null;
         }
-        if (!is_numeric($this->precioUnitario)) {
-            $this->precioUnitario = null;
+        if (!is_numeric($this->precio_unitario)) {
+            $this->precio_unitario = null;
         }
 
         //Calcula IMPORTE SIN IVA
-        $importe = $this->cantidad * $this->precioUnitario;
+        $importe = $this->cantidad * $this->precio_unitario;
         //number_format($importe, 2, ',', '.');
         $importe = round($importe, $precision = 2, $mode = PHP_ROUND_HALF_UP);
 
@@ -114,14 +114,14 @@ class AdquisicionDescriptionModal extends ModalComponent
                     $this->_id,
                     $this->descripcion,
                     $this->cantidad,
-                    $this->precioUnitario,
+                    $this->precio_unitario,
                     $this->iva,
                     $this->checkIva,
                     $this->importe,
-                    $this->justificacionSoftware,
-                    $this->numAlumnos,
-                    $this->numProfesores,
-                    $this->numAdministrativos,
+                    $this->justificacion_software,
+                    $this->alumnos,
+                    $this->profesores_invest,
+                    $this->administrativos,
                     $this->id_rubro
                 ]
             ] // Ejecuta el metodo y le envia los valores del formulario            
@@ -129,7 +129,7 @@ class AdquisicionDescriptionModal extends ModalComponent
         //reseteamos los valores
         $this->descripcion = "";
         $this->cantidad = 0;
-        $this->precioUnitario = 0;
+        $this->precio_unitario = 0;
         $this->iva = 0;
         $this->importe = 0;
     }

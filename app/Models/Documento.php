@@ -14,16 +14,18 @@ class Documento extends Model
 
     //return $this->hasOne('App\Profile');
 
-    public function tipoDocumento(){
+    public function tipoDocumento()
+    {
         return $this->belongsTo(TipoDocumentos::class, 'tipo_documento');
     }
 
 
     protected $fillable = [
         'id_requisicion',
-        'nombre_doc',
+        'ruta_documento',
         'tipo_documento',
         'tipo_requisicion',
-        'nombre_documento'
+        'nombre_documento',
+        'extension_documento',
     ];
 }

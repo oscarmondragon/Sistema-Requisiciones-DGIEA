@@ -130,3 +130,10 @@
         @apply bg-blanco text-textos_generales rounded-md border-verde h-10;
     }
 }
+
+/* .swal2-styled.swal2-confirm.swalBtnColor {
+    color: #FFC900
+  } */
+  .swal2-html-container, .swal2-title{
+    color: #4D4D4D !important;
+  }
