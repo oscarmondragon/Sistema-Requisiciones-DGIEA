@@ -179,7 +179,7 @@
             @foreach($docsCartaExclusividad as $index => $docCarta)
             <li>
               @if(isset($docCarta['datos']['ruta_documento']))
-              <a href="#"  wire:click="descargarArchivo('{{ $docCarta['datos']['ruta_documento'] }}')">  {{ $docCarta['datos']['nombre_documento']}} Ver</a>
+              <a href="#"  wire:click="descargarArchivo('{{ $docCarta['datos']['ruta_documento'] }}', '{{ $docCarta['datos']['nombre_documento']}}')">  {{ $docCarta['datos']['nombre_documento']}} Ver</a>
              @else
              {{ $docCarta['datos']['nombre_documento']}}
              @endif
@@ -205,7 +205,7 @@
           @foreach($docsCotizacionesFirmadas as $index => $docFirmadas)
           <li>
             @if(isset($docFirmadas['datos']['ruta_documento']))
-            <a href="#"  wire:click="descargarArchivo('{{ $docFirmadas['datos']['ruta_documento'] }}')"> {{$docFirmadas['datos']['id']}}  {{ $docFirmadas['datos']['nombre_documento']}} Ver</a>
+            <a href="#"  wire:click="descargarArchivo('{{ $docFirmadas['datos']['ruta_documento'] }}', '{{ $docFirmadas['datos']['nombre_documento']}}')"> {{ $docFirmadas['datos']['nombre_documento']}} Ver</a>
            @else
            {{ $docFirmadas['datos']['nombre_documento']}}
            @endif
@@ -230,7 +230,7 @@
           @foreach($docsCotizacionesPdf as $index => $docPdf)
           <li>
             @if(isset($docPdf['datos']['ruta_documento']))
-            <a href="#"  wire:click="descargarArchivo('{{ $docPdf['datos']['ruta_documento'] }}')">  {{ $docPdf['datos']['nombre_documento']}} Ver</a>
+            <a href="#"  wire:click="descargarArchivo('{{ $docPdf['datos']['ruta_documento'] }}', '{{ $docPdf['datos']['nombre_documento']}}')">  {{ $docPdf['datos']['nombre_documento']}} Ver</a>
            @else
            {{ $docPdf['datos']['nombre_documento']}}
            @endif
@@ -259,7 +259,7 @@
             @foreach($docsAnexoOtrosDocumentos as $index => $anexoDoc)
             <li>
               @if(isset($anexoDoc['datos']['ruta_documento']))
-            <a href="#"  wire:click="descargarArchivo('{{ $anexoDoc['datos']['ruta_documento'] }}')">  {{ $anexoDoc['datos']['nombre_documento']}} Ver</a>
+            <a href="#"  wire:click="descargarArchivo('{{ $anexoDoc['datos']['ruta_documento'] }}', '{{ $anexoDoc['datos']['nombre_documento']}}')">  {{ $anexoDoc['datos']['nombre_documento']}} Ver</a>
            @else
            {{ $anexoDoc['datos']['nombre_documento']}}
            @endif

@@ -140,9 +140,9 @@
                       <td> {{ $adquisicion->updated_at}}</td>
                       <th class="w-[148px]">
                         @if(Session::get('id_user') != $adquisicion->id_emisor)
-                        <button type="button" class="btn-tablas">
-                          <img src="{{ ('/img/btn_vobo.png') }}" alt="Image/png" title="VoBo">
-                        </button>
+                        <a href="{{route('adquisiciones.vobo', $adquisicion->id)}}" class="btn-tablas" title="Dar visto bueno">
+                          <img src="{{ ('/img/btn_vobo.png') }}" alt="Image/png" title="Dar visto bueno">
+                        </a>
                         @endif
                       </th>
                     </tr>

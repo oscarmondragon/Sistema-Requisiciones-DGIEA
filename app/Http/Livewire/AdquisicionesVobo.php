@@ -15,18 +15,18 @@ use Carbon\Carbon;
 
 use Illuminate\Support\Collection;
 use Monolog\Handler\IFTTTHandler;
+use Illuminate\Support\Facades\Storage;
 
-class AdquisicionEditar extends Component
+
+class AdquisicionesVobo extends Component
 {
 
     public $adquisicion;
-
-    use WithFileUploads;
-
-    //catalogos
+    public $documentos;
     public $cuentasContables;
 
     //atributos de una adquisicion
+    public $id_adquisicion; //recupera id en editar
     public $clave_requisicion = '';
     public $tipo_requisicion = '1';
     public $clave_proyecto = '';
@@ -34,7 +34,7 @@ class AdquisicionEditar extends Component
     public $clave_rt = '';
     public $clave_tipo_financiamiento = '';
     public $id_rubro = 0;
-    public $id_rubro_especial = 0; //variable para determinar si es una cuenta especial (software por ejemplo)
+    public $id_rubro_especial; //variable para determinar si es una cuenta especial (software por ejemplo)
     public $afecta_investigacion = '0';
     public $justificacion_academica;
     public $exclusividad = '0';
@@ -54,15 +54,6 @@ class AdquisicionEditar extends Component
     public $docsAnexoOtrosDocumentos = [];
     public $ruta_archivo = '';
 
-    public $documentos = [];
-    public $descripcionAdq;
-    public $bienesDB;
-
-    //variables para validar documentos antes de agregarlos al arreglo
-    public $cartaExclusividadTemp;
-    public $cotizacionFirmadaTemp;
-    public $cotizacionPdfTemp;
-    public $anexoOtroTemp;
     public function mount($id)
     {
         $this->adquisicion = Adquisicion::find($id);
@@ -79,21 +70,49 @@ class AdquisicionEditar extends Component
 
         $this->bienesDB = AdquisicionDetalle::where('id_adquisicion', $id)->get();
         $this->bienes = collect($this->bienesDB);
-        $this->docsCartaExclusividad = [];
-        $this->docsCotizacionesFirmadas = [];
-        $this->docsCotizacionesPdf = [];
-
         $this->cuentasContables = CuentaContable::where('estatus', 1)->whereIn('tipo_requisicion', [1, 3])->get();
 
         $this->documentos = Documento::where('id_requisicion', $id)->where('tipo_requisicion', 1)->get();
-        $this->descripcionAdq = Adquisicion::where('id', $id)->get();
+
+        foreach ($this->documentos as $documento) {
+            if ($documento->tipo_documento == 1) {
+                $this->docsCartaExclusividad[] = $documento;
+                //  dd($this->docsCartaExclusividad);
+            }
+        }
+        //  dd($this->docsCartaExclusividad[0]['nombre_documento']);
+        foreach ($this->documentos as $documento) {
+            if ($documento->tipo_documento == 2) {
+                $this->docsCotizacionesFirmadas[] = $documento;
+
+            }
+        }
+
+        foreach ($this->documentos as $documento) {
+            if ($documento->tipo_documento == 3) {
+                $this->docsCotizacionesPdf[] = $documento;
+            }
+        }
+
+        foreach ($this->documentos as $documento) {
+            if ($documento->tipo_documento == 5) {
+                $this->docsAnexoOtrosDocumentos[] = $documento;
+            }
+        }
     }
     public function render()
     {
-        return view('livewire.adquisicion-editar', [
-            'documentos' => $this->documentos,
-            'bienes' => $this->bienes,
-            'descripcionAdq' => $this->descripcionAdq
-        ])->layout('layouts.cvu');
+        return view('livewire.adquisiciones-vobo')->layout('layouts.cvu');
+    }
+
+    public function descargarArchivo($rutaDocumento, $nombreDocumento)
+    {
+        $rutaArchivo = storage_path('app/' . $rutaDocumento);
+
+        if (Storage::exists($rutaDocumento)) {
+            return response()->download(storage_path('app/' . $rutaDocumento), $nombreDocumento);
+        } else {
+            abort(404);
+        }
     }
 }

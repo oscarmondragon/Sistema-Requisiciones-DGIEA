@@ -102,7 +102,9 @@ class AdquisicionesForm extends Component
 
     ];
     public $listeners = [
-        'addBien' => 'setBien', 'save', 'saveVobo'
+        'addBien' => 'setBien',
+        'save',
+        'saveVobo'
     ];
 
     public function mount($id = 0)
@@ -328,7 +330,7 @@ class AdquisicionesForm extends Component
                 }
 
                 DB::commit();
-                return redirect('/cvu-crear')->with('success', 'Su solicitud ha sido guardada correctamente con el número de clave '.  $clave_adquisicion . ', recuerde completarla y mandarla a visto bueno.');
+                return redirect('/cvu-crear')->with('success', 'Su solicitud ha sido guardada correctamente con el número de clave ' . $clave_adquisicion . ', recuerde completarla y mandarla a visto bueno.');
             } catch (\Exception $e) {
                 DB::rollback();
                 dd("Error en catch:" . $e);
@@ -1062,12 +1064,12 @@ class AdquisicionesForm extends Component
         $this->validateOnly($id_rubro);
     }
 
-    public function descargarArchivo($rutaDocumento)
+    public function descargarArchivo($rutaDocumento, $nombreDocumento)
     {
         $rutaArchivo = storage_path('app/' . $rutaDocumento);
 
         if (Storage::exists($rutaDocumento)) {
-            return response()->download(storage_path('app/' . $rutaDocumento));
+            return response()->download(storage_path('app/' . $rutaDocumento), $nombreDocumento);
         } else {
             abort(404);
         }

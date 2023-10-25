@@ -95,7 +95,7 @@ use Carbon\Carbon;
           @foreach($docsbitacoraPdf as $index => $archivo)
           <li>
             @if(isset($archivo['datos']['ruta_documento']))
-            <a href="#"  wire:click="descargarArchivo('{{ $archivo['datos']['ruta_documento'] }}')">  {{ $archivo['datos']['nombre_documento']}} Ver</a>
+            <a href="#"  wire:click="descargarArchivo('{{ $archivo['datos']['ruta_documento'] }}', '{{ $archivo['datos']['nombre_documento']}}')">  {{ $archivo['datos']['nombre_documento']}} Ver</a>
            @else
            {{ $archivo['datos']['nombre_documento']}}
            @endif

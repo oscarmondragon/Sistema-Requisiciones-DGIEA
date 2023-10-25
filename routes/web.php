@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Livewire\AdquisicionEditar;
 use App\Http\Livewire\AdquisicionesForm;
+use App\Http\Livewire\AdquisicionesVobo;
 use App\Http\Livewire\SolicitudesForm;
 use App\Models\Adquisicion;
 use Illuminate\Support\Facades\Route;
@@ -57,12 +58,15 @@ Route::middleware('auth')->group(function () {
 //RUTAS ADQUISICIONES
 //Route::get('/adquisiciones/{id}/editar', [AdquisicionController::class, 'edit'])->name('adquisiciones.editar');
 Route::get('/adquisiciones/{id}/editar', AdquisicionesForm::class)->middleware('CvuAuth')->name('adquisiciones.editar');
+Route::get('/adquisiciones/{id}/vobo', AdquisicionesVobo::class)->middleware('CvuAuth')->name('adquisiciones.vobo');
+
 
 //Route::resource('adquisiciones', AdquisicionController::class);
 
-//RUTAS ADQUISICIONES
-//Route::get('/adquisiciones/{id}/editar', [AdquisicionController::class, 'edit'])->name('adquisiciones.editar');
+//RUTAS SOLICITUDES
 Route::get('/solicitudes/{id}/editar', SolicitudesForm::class)->middleware('CvuAuth')->name('solicitudes.editar');
+//Route::get('/solicitudes/{id}/vobo', SolicitudVobo::class)->middleware('CvuAuth')->name('solicitudes.vobo');
+
 
 
 
@@ -83,8 +87,3 @@ Route::get('/cvu', function () {
     // return view('cvu.create');
     return redirect()->route('cvu.create');
 })->middleware('CvuAuth')->name('cvu.verificado');
-
-
-
-Route::get('/descargar/{name}', [FilesController::class, 'downloadFile'])
-    ->name('download');
