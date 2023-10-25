@@ -136,9 +136,9 @@
                       @if($valorvobo->getTable() == 'adquisiciones')
                       <th class="w-[148px]">
                         @if(Session::get('id_user') != $valorvobo->id_emisor)
-                        <button type="button" class="btn-primary">
-                          Visto bueno
-                        </button>
+                        <a href="{{route('adquisiciones.vobo', $valorvobo->id)}}" class="btn-tablas" title="Dar visto bueno">
+                          <img src="{{ ('/img/btn_vobo.png') }}" alt="Image/png" title="Dar visto bueno">
+                        </a>
                         @endif
                       </th>
                       @else
