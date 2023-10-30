@@ -373,6 +373,8 @@ class AdquisicionesForm extends Component
                         $adquisicion->justificacion_academica = $this->justificacion_academica;
                         $adquisicion->exclusividad = $this->exclusividad;
                         $adquisicion->estatus_general = 2;
+                        $adquisicion->vobo_admin = $vobo_admin;
+                        $adquisicion->vobo_rt = $vobo_rt;
                         $adquisicion->subtotal = $this->subtotal;
                         $adquisicion->iva = $this->iva;
                         $adquisicion->total = $this->total;
@@ -518,6 +520,7 @@ class AdquisicionesForm extends Component
 
                     }
                 } catch (\Exception $e) {
+                    DB::rollback();
                     return redirect()->back()->with('error', 'error en el deposito' . $e->getMessage());
                 }
             } else {
@@ -663,6 +666,7 @@ class AdquisicionesForm extends Component
                     return redirect('/cvu-crear')->with('success', 'Su solicitud con clave ' . $clave_adquisicion . ' ha sido  registrada y se ha enviado para visto bueno.');
                 } catch (\Exception $e) {
                     //dd("Error en el catch".$e); 
+                    DB::rollback();
                     return redirect()->back()->with('error', 'error en el deposito' . $e->getMessage());
                 }
             }

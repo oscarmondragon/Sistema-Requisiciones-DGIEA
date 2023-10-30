@@ -8,7 +8,20 @@
               <img src="img/ic_req_pendientes.png" alt="Image/png" class="inline-block">
               <h3 class="inline-block text-xl pl-2">Requerimientos pendientes de enviar</h3>
             </div>
-
+            @if(session('success'))
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+          <script>
+            Swal.fire({
+              position: 'top-center',
+              icon: 'success',
+              text: '{{ session('success') }}',
+              confirmButtonText: 'Aceptar!',
+              confirmButtonColor: '#62836C',
+              showConfirmButton: true,
+              //timer: 2500
+            })
+          </script>
+          @endif
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
               <div class="p-6 overflow-x-auto">
                 <!-- <input type="text" wire:model="search" placeholder="Buscar por clave, tipo..." class="inputs-formulario-solicitudes"> -->
@@ -136,7 +149,7 @@
                       @if($valorvobo->getTable() == 'adquisiciones')
                       <th class="w-[148px]">
                         @if(Session::get('id_user') != $valorvobo->id_emisor)
-                        <a href="{{route('adquisiciones.vobo', $valorvobo->id)}}" class="btn-tablas" title="Dar visto bueno">
+                        <a href="{{route('solicitud.vobo', $valorvobo->id)}}" class="btn-tablas" title="Dar visto bueno">
                           <img src="{{ ('/img/btn_vobo.png') }}" alt="Image/png" title="Dar visto bueno">
                         </a>
                         @endif

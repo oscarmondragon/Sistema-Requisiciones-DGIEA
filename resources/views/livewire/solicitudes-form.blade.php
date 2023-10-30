@@ -11,6 +11,7 @@ use Carbon\Carbon;
           <div>
             <h1 class="mt-6">Formulario solicitudes</h1>
             <form x-on:submit.prevent="saveConfirmationVoBo">
+              @csrf
               <div>
                 <div class="mt-6">
                   <label for="id_rubro">

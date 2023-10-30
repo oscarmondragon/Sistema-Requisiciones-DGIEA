@@ -7,6 +7,7 @@
           <div class="my-6">
             <h1>Formulario adquisición de bienes y servicios</h1>
             <form x-on:submit.prevent="saveConfirmationVoBo">
+              @csrf
               <div>
                 <div class="my-6">
                   <label for="id_rubro">
