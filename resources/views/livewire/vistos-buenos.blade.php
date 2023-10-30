@@ -14,8 +14,11 @@
                 <!-- <input type="text" wire:model="search" placeholder="Buscar por clave, tipo..." class="inputs-formulario-solicitudes"> -->
 
                 <div class="inline-block w-full">
-                  <select name="" id="">
-                    <option value="">Categorias</option>
+                  <select class="w-auto" id="categoria" name="categoria" wire:model="categoria"  @change="$wire.filterByCategory($event.target.selectedOptions[0].getAttribute('data-id-especial'))">
+                    <option value="0">Categorias</option>
+                    @foreach ($tipoRequisicion as $tipo)
+                    <option value="{{ $tipo->id }}" data-id-especial="{{ $tipo->id }}" >{{ $tipo->descripcion }}</option>
+                    @endforeach
                   </select>
 
                   <div class="inline-block w-96">
@@ -26,15 +29,14 @@
                   </div>
 
                   <div class="inline-block ml-48">
-                    <input type="date" name="" id="" class="bg-blanco text-textos_generales rounded-md border-transparent h-10">
-                    <input type="date" name="" id="" class="bg-blanco text-textos_generales rounded-md border-transparent h-10">
+                    <input type="date" name="f_inicial" id="f_inicial" wire:model="f_inicial"  class="bg-blanco text-textos_generales rounded-md border-transparent h-10">
+                    <input type="date" name="f_final" id="f_final" wire:model="f_final" class="bg-blanco text-textos_generales rounded-md border-transparent h-10">
                   </div>
                 </div>
 
                 <table class="table-auto text-left text-sm w-3/4 sm:w-full mx-auto mt-6">
                   <thead>
                     <tr class="bg-blanco">
-                      <th scope="col">#</th>
                       <th scope="col">Clave requerimiento</th>
                       <th scope="col">Rubro</th>
                       <th scope="col">Tipo requerimiento</th>
@@ -47,7 +49,6 @@
 
                   @foreach ($adquisiciones as $adquisicion=>$valor)                   
                       <tr class="border-b-gray-200 border-transparent">
-                      <td> {{ $valor->id}}</td>
                       <td> {{ $valor->id_requerimiento}} </td>
                       <td> {{ $valor->nombre_cuenta }} </td>
                       <td> {{ $valor->descripcion }} </td>
@@ -64,10 +65,10 @@
                       </td>
                       @else
                       <td>
-                      {{-- <a href="{{route('solicitudes.editar', $valor->id)}}" class="btn-tablas" title="Editar">
+                       <a href="{{route('solicitudes.editar', $valor->id)}}" class="btn-tablas" title="Editar">
                           <img src="{{ ('img/btn_editar.png') }}" alt="Image/png">
-                        </a>--}}
-                        <button type="button" @click.stop="elementos.splice(index, 1); $wire.deleteBien(elemento)" class="btn-tablas" title="Eliminar">
+                        </a>
+                        <button type="button" @click="deleteSolicitud('{{$valor->id}}')" class="btn-tablas" title="Eliminar">
                           <img src="{{ ('img/btn_eliminar.png') }}" alt="Image/png">
                         </button>
                       </td>
@@ -90,8 +91,11 @@
                 
 
                 <div class="inline-block w-full">
-                  <select name="" id="">
-                    <option value="">Categorias</option>
+                  <select class="w-auto" id="categoriaVobo" name="categoriaVobo" wire:model="categoriaVobo"  @change="$wire.filterByCategoryVobo($event.target.selectedOptions[0].getAttribute('data-id-especial'))">
+                    <option value="0">Categorias</option>
+                    @foreach ($tipoRequisicion as $tipo)
+                    <option value="{{ $tipo->id }}" data-id-especial="{{ $tipo->id }}" >{{ $tipo->descripcion }}</option>
+                    @endforeach
                   </select>
 
                   <div class="inline-block w-96">
@@ -110,7 +114,6 @@
                 <table class="table-auto text-left text-sm w-3/4 sm:w-full mx-auto mt-6">
                   <thead>
                     <tr class="bg-blanco">
-                      <th scope="col">#</th>
                       <th scope="col">Clave requerimiento</th>
                       <th scope="col">Rubro</th>
                       <th scope="col">Tipo requerimiento</th>
@@ -125,7 +128,6 @@
                     @foreach ($adquisicionesVistosBuenos as $adquisicionvobo=>$valorvobo)
                     
                     <tr class="border-b-gray-200 border-transparent">
-                      <td> {{ $loop->iteration}}</td>
                       <td> {{ $valorvobo->id_requerimiento}} </td>
                       <td> {{ $valorvobo->nombre_cuenta}} </td>
                       <td> {{ $valorvobo->descripcion }} </td>
@@ -182,6 +184,34 @@
         if (result.isConfirmed) {
           // Manda llamar el metodo liveware
           window.livewire.emit('deleteAdquisicion', adquisicionId);
+          Swal.fire({
+            icon: 'success',
+            confirmButtonText: 'Aceptar!',
+            confirmButtonColor: '#62836C',
+            title: 'Se eliminó correctamente el requerimiento',
+            showConfirmButton: false,
+            timer: 1500
+          })
+        }
+      });
+    }
+    function deleteSolicitud(solicitudId) {
+      // Now you can access the event object (e) directly
+      Swal.fire({
+        title: '¿Estás seguro de eliminarlo?',
+        text: 'Un requerimiento eliminado no se puede recuperar.',
+        icon: 'warning',
+        iconColor: '#9D9361',
+        showCancelButton: true,
+        confirmButtonColor: '#E86562',
+        cancelButtonColor: '#62836C',
+        confirmButtonText: 'Eliminar',
+        cancelButtonText: 'Cancelar',
+
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Manda llamar el metodo liveware
+          window.livewire.emit('deleteSolicitud', solicitudId);
           Swal.fire({
             icon: 'success',
             confirmButtonText: 'Aceptar!',
