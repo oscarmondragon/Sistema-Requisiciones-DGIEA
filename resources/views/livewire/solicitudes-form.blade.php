@@ -16,7 +16,7 @@ use Carbon\Carbon;
                   <label for="id_rubro">
                     Rubro:
                   </label>
-                  <select class="w-auto" id="id_rubro" name="id_rubro" wire:model="id_rubro" @change="$wire.resetearRecursos($event.target.selectedOptions[0].getAttribute('data-id-especial'))">
+                  <select class="sm:w-auto w-full" id="id_rubro" name="id_rubro" wire:model="id_rubro" @change="$wire.resetearRecursos($event.target.selectedOptions[0].getAttribute('data-id-especial'))">
                     <option value="0">Selecciona una opción</option>
                     @foreach ($cuentasContables as $cuentaContable)
                     <option value="{{ $cuentaContable->id }}" data-id-especial="{{ $cuentaContable->id_especial }}">{{ $cuentaContable->nombre_cuenta }}</option>
@@ -80,33 +80,35 @@ use Carbon\Carbon;
                 </div>
                 @endif
                 @if ($id_rubro_especial == '3')
-      <div class="mt-2">
-        <label for="bitacoraPdf">Bitacora firmada PDF</label>
-        <input type="file" id="bitacoraPdfTemp" wire:model='bitacoraPdfTemp'  accept=".pdf">
-        @empty($docsCartaExclusividad)
-        <label for="bitacoraPdf" class="text-dorado">Sin archivos seleccionados.</label>
-        @endempty
-        <br>
-        <div wire:loading wire:target="docsbitacoraPdf">Cargando archivo...</div>
-      
-        @error('bitacoraPdfTemp') <span class=" text-rojo">{{ $message }}</span> @enderror
-        @error('docsbitacoraPdf') <span class=" text-rojo">{{ $message }}</span> @enderror
-        <ul>
-          @foreach($docsbitacoraPdf as $index => $archivo)
-          <li>
-            @if(isset($archivo['datos']['ruta_documento']))
-            <a href="#"  wire:click="descargarArchivo('{{ $archivo['datos']['ruta_documento'] }}')">  {{ $archivo['datos']['nombre_documento']}} Ver</a>
-           @else
-           {{ $archivo['datos']['nombre_documento']}}
-           @endif
-            <button type="button" class="btn-eliminar-lista" wire:click="eliminarArchivo('docsbitacoraPdf', {{ $index }})">
-              Eliminar
-            </button>
-          </li>
-          @endforeach
-        </ul>
-        @endif
-      </div>
+                <div class="mt-2">
+                  <label for="bitacoraPdf">Bitacora firmada PDF</label>
+                  <input type="file" id="bitacoraPdfTemp" wire:model='bitacoraPdfTemp' accept=".pdf">
+                  @empty($docsCartaExclusividad)
+                  <label for="bitacoraPdf" class="text-dorado">Sin archivos seleccionados.</label>
+                  @endempty
+                  <br>
+                  <div wire:loading wire:target="docsbitacoraPdf">Cargando archivo...</div>
+
+                  @error('bitacoraPdfTemp') <span class=" text-rojo">{{ $message }}</span> @enderror
+                  @error('docsbitacoraPdf') <span class=" text-rojo">{{ $message }}</span> @enderror
+                  <ul>
+                    @foreach($docsbitacoraPdf as $index => $archivo)
+                    <li>
+                      @if(isset($archivo['datos']['ruta_documento']))
+                      <a href="#" wire:click="descargarArchivo('{{ $archivo['datos']['ruta_documento'] }}')" class="text-dorado"> {{ $archivo['datos']['nombre_documento']}}
+                      <button type="button" class="btn-ver">Ver</button></a>
+                      </a>
+                      @else
+                      {{ $archivo['datos']['nombre_documento']}}
+                      @endif
+                      <button type="button" class="btn-eliminar-lista" wire:click="eliminarArchivo('docsbitacoraPdf', {{ $index }})">
+                        Eliminar
+                      </button>
+                    </li>
+                    @endforeach
+                  </ul>
+                  @endif
+                </div>
                 <div class="mt-4 sm:ml-10" x-show="tipoComprobacionOption != 'vale'">
                   <input type="checkbox" id="comprobacion" name="comprobacion" wire:model='comprobacion' class="mr-1">
                   <label for="comprobacion">Me obligo a comprobar esta cantidad en un plazo no mayor a 20 días naturales, a partir de la
@@ -130,11 +132,11 @@ use Carbon\Carbon;
                 </div>
 
                 <div class="sm:text-right text-center mt-5">
-                 @empty($solicitud)
-                  <button type="button" @click="saveConfirmation()" class="btn-success sm:w-auto w-3/4">Guardar</button>
-                   @endempty
-                  <button type="submit" @click="saveConfirmationVoBo()" class="btn-primary sm:w-auto w-3/4">Enviar para VoBo</button>
-                  <button type="button" @click="cancelarSolicitud()" class="btn-warning sm:w-auto w-3/4">Cancelar</button>
+                  @empty($solicitud)
+                  <button type="button" @click="saveConfirmation()" class="btn-success sm:w-auto w-5/6">Guardar</button>
+                  @endempty
+                  <button type="submit" @click="saveConfirmationVoBo()" class="btn-primary sm:w-auto w-5/6">Enviar para VoBo</button>
+                  <button type="button" @click="cancelarSolicitud()" class="btn-warning sm:w-auto w-5/6">Cancelar</button>
                 </div>
               </div>
             </form>
@@ -143,7 +145,7 @@ use Carbon\Carbon;
       </div>
     </div>
   </div>
- @push('scripts')
+  @push('scripts')
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
     function saveConfirmation() {
@@ -207,8 +209,13 @@ use Carbon\Carbon;
 
       }).then((result) => {
         if (result.isConfirmed) {
-          window.location.href = '{{route('cvu.create')}}'
+          if (window.location == "{{ route('cvu.create-solicitudes') }}") {
+            window.location.href = '{{ route('cvu.create') }}'
+          } else {
+            window.location.href = '{{ route('cvu.vobo') }}'
+          }
         }
+
       });
     }
   </script>

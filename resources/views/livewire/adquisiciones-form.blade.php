@@ -12,7 +12,7 @@
                   <label for="id_rubro">
                     Rubro:
                   </label>
-                  <select class="w-auto" required id="id_rubro" name="id_rubro" wire:model="id_rubro" @change="$wire.resetearBienes($event.target.selectedOptions[0].getAttribute('data-id-especial'))">
+                  <select class="sm:w-auto w-full" required id="id_rubro" name="id_rubro" wire:model="id_rubro" @change="$wire.resetearBienes($event.target.selectedOptions[0].getAttribute('data-id-especial'))">
                     <option value="0">Selecciona una opción</option>
                     @foreach ($cuentasContables as $cuentaContable)
                     <option value="{{ $cuentaContable->id }}" data-id-especial="{{ $cuentaContable->id_especial }}">{{ $cuentaContable->nombre_cuenta }}</option>
@@ -144,7 +144,7 @@
 
                   <div x-show="afectaSelectedOption === '1'" class="flex flex-col">
                     <label for="justificacion" class="my-2">Justificación académica:</label>
-                    <textarea id="justificacion" name="justificacion" wire:model='justificacion_academica' placeholder="Justificación" class="w-3/4" rows="2" cols="30">
+                    <textarea id="justificacion" name="justificacion" wire:model='justificacion_academica' placeholder="Justificación" class="sm:w-3/4 w-full" rows="2" cols="30">
               </textarea>
                   </div>
                   @error('justificacion_academica') <span class=" text-rojo">{{ $message }}</span> @enderror
@@ -179,7 +179,8 @@
             @foreach($docsCartaExclusividad as $index => $docCarta)
             <li>
               @if(isset($docCarta['datos']['ruta_documento']))
-              <a href="#"  wire:click="descargarArchivo('{{ $docCarta['datos']['ruta_documento'] }}')">  {{ $docCarta['datos']['nombre_documento']}} Ver</a>
+              <a href="#"  wire:click="descargarArchivo('{{ $docCarta['datos']['ruta_documento'] }}')" class="text-dorado">  {{ $docCarta['datos']['nombre_documento']}} 
+                <button type="button" class="btn-ver">Ver</button></a>
              @else
              {{ $docCarta['datos']['nombre_documento']}}
              @endif
@@ -205,7 +206,9 @@
           @foreach($docsCotizacionesFirmadas as $index => $docFirmadas)
           <li>
             @if(isset($docFirmadas['datos']['ruta_documento']))
-            <a href="#"  wire:click="descargarArchivo('{{ $docFirmadas['datos']['ruta_documento'] }}')"> {{$docFirmadas['datos']['id']}}  {{ $docFirmadas['datos']['nombre_documento']}} Ver</a>
+            <a href="#"  wire:click="descargarArchivo('{{ $docFirmadas['datos']['ruta_documento'] }}')" class="text-dorado"> {{$docFirmadas['datos']['id']}}  {{ $docFirmadas['datos']['nombre_documento']}}
+            <button type="button" class="btn-ver">Ver</button>
+            </a>
            @else
            {{ $docFirmadas['datos']['nombre_documento']}}
            @endif
@@ -230,7 +233,9 @@
           @foreach($docsCotizacionesPdf as $index => $docPdf)
           <li>
             @if(isset($docPdf['datos']['ruta_documento']))
-            <a href="#"  wire:click="descargarArchivo('{{ $docPdf['datos']['ruta_documento'] }}')">  {{ $docPdf['datos']['nombre_documento']}} Ver</a>
+            <a href="#"  wire:click="descargarArchivo('{{ $docPdf['datos']['ruta_documento'] }}')" class="text-dorado">  {{ $docPdf['datos']['nombre_documento']}}
+            <button type="button" class="btn-ver">Ver</button>
+            </a>
            @else
            {{ $docPdf['datos']['nombre_documento']}}
            @endif
@@ -259,7 +264,9 @@
             @foreach($docsAnexoOtrosDocumentos as $index => $anexoDoc)
             <li>
               @if(isset($anexoDoc['datos']['ruta_documento']))
-            <a href="#"  wire:click="descargarArchivo('{{ $anexoDoc['datos']['ruta_documento'] }}')">  {{ $anexoDoc['datos']['nombre_documento']}} Ver</a>
+            <a href="#"  wire:click="descargarArchivo('{{ $anexoDoc['datos']['ruta_documento'] }}')" class="text-dorado">  {{ $anexoDoc['datos']['nombre_documento']}}
+            <button type="button" class="btn-ver">Ver</button>
+            </a>
            @else
            {{ $anexoDoc['datos']['nombre_documento']}}
            @endif
@@ -358,7 +365,12 @@
 
     }).then((result) => {
       if (result.isConfirmed) {
-        window.location.href = '{{ route('cvu.create') }}'
+        //alert(window.location + "\n" + "{{ route('cvu.create-adquisiciones') }}");
+        if (window.location == "{{ route('cvu.create-adquisiciones') }}") {
+            window.location.href = '{{ route('cvu.create') }}'
+          } else {
+            window.location.href = '{{ route('cvu.vobo') }}'
+          }
       }
     });
   }
