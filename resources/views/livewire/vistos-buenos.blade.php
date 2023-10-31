@@ -28,7 +28,7 @@
 
                 <div class="inline-block w-full">
                   <select class="w-auto" id="categoria" name="categoria" wire:model="categoria"  @change="$wire.filterByCategory($event.target.selectedOptions[0].getAttribute('data-id-especial'))">
-                    <option value="0">Categorias</option>
+                    <option value="0">Todo</option>
                     @foreach ($tipoRequisicion as $tipo)
                     <option value="{{ $tipo->id }}" data-id-especial="{{ $tipo->id }}" >{{ $tipo->descripcion }}</option>
                     @endforeach
@@ -105,7 +105,7 @@
 
                 <div class="inline-block w-full">
                   <select class="w-auto" id="categoriaVobo" name="categoriaVobo" wire:model="categoriaVobo"  @change="$wire.filterByCategoryVobo($event.target.selectedOptions[0].getAttribute('data-id-especial'))">
-                    <option value="0">Categorias</option>
+                    <option value="0">Todo</option>
                     @foreach ($tipoRequisicion as $tipo)
                     <option value="{{ $tipo->id }}" data-id-especial="{{ $tipo->id }}" >{{ $tipo->descripcion }}</option>
                     @endforeach
@@ -148,10 +148,10 @@
                       <td> {{ $valorvobo->vobo_admin }} </td>
                       <td> {{ $valorvobo->estado}} </td>
                       <td> {{ $valorvobo->modificacion}}</td>
-                      @if($valorvobo->getTable() == 'adquisiciones')
+                      @if(str_contains($valorvobo->id_requerimiento, "ADQ"))
                       <th class="w-[148px]">
                         @if(Session::get('id_user') != $valorvobo->id_emisor)
-                        <a href="{{route('solicitud.vobo', $valorvobo->id)}}" class="btn-tablas" title="Dar visto bueno">
+                        <a href="{{route('adquisicion.vobo', $valorvobo->id)}}" class="btn-tablas" title="Dar visto bueno">
                           <img src="{{ ('/img/btn_vobo.png') }}" alt="Image/png" title="Dar visto bueno">
                         </a>
                         @endif
@@ -159,9 +159,9 @@
                       @else
                       <th class="w-[148px]">
                         @if(Session::get('id_user') != $valorvobo->id_emisor)
-                        <button type="button" class="btn-primary">
-                          Visto bueno
-                        </button>
+                        <a href="{{route('solicitud.vobo', $valorvobo->id)}}" class="btn-tablas" title="Dar visto bueno">
+                          <img src="{{ ('/img/btn_vobo.png') }}" alt="Image/png" title="Dar visto bueno">
+                        </a>
                         @endif
                       </th>
                       @endif

@@ -90,12 +90,20 @@ class SolicitudVobo extends Component
 
 
         $this->documentos = Documento::where('id_requisicion', $id)->where('tipo_requisicion', 2)->get();
-        foreach ($this->documentos as $documento) {
+        /* foreach ($this->documentos as $documento) {
             if ($documento->tipo_documento == 4) {
                 $this->docsbitacoraPdf[] = $documento;
                 // dd($this->docsbitacoraPdf);
             }
+        } */
+
+        foreach ($this->documentos as $documento) {
+            if ($documento->tipo_documento == 4) {
+                $this->docsbitacoraPdf[] = ['datos' => $documento];
+                //  dd($this->docsCartaExclusividad);
+            }
         }
+
 
     }
 
@@ -107,12 +115,43 @@ class SolicitudVobo extends Component
     public function darVobo()
     {
         $this->validate();
-        dd("paso");
+        
+        $who_vobo = Session::get('VoBo_Who');
+        $fecha_vobo = Carbon::now()->toDateString();
+        $id_user = Session::get('id_user');
+        try {
+            DB::beginTransaction();
+            $solicitud = Solicitud::where('id', $this->solicitud->id)->first();
+            if ($solicitud) {
+                $clave_solicitud = $solicitud->clave_solicitud;
+                $solicitud->estatus_rt = 3;
+                $solicitud->estatus_dgiea = 3;
+
+                if ($who_vobo) { //Si el deposito es por parte del Responsable técnico
+                    $solicitud->vobo_rt = $fecha_vobo;
+                } else { //Si el depósito es por parte del administrativo
+                    $solicitud->vobo_admin = $fecha_vobo;
+                }
+                $solicitud->save();
+
+            }
+            DB::commit();
+            return redirect('/cvu-vobo')->with('success', 'Su solicitud con clave ' . $clave_solicitud . ' ha sido  enviada para revision a la DGIEA.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'error al intentar confirmar visto bueno. Intente más tarde.' . $e->getMessage());
+        }
+
+
+
+
     }
     public function updated($vobo)
     {
         $this->validateOnly($vobo);
     }
+
     public function descargarArchivo($rutaDocumento, $nombreDocumento)
     {
         $rutaArchivo = storage_path('app/' . $rutaDocumento);
