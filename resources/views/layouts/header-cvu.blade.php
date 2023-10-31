@@ -1,5 +1,5 @@
-<x-slot name="header">
-    <h2 class="mb-2">
+<x-slot  name="header">
+    <h2 class="-mt-3 mb-2">
         @if ($accion == 1)
         {{ __('Crear requerimientos') }}
 
@@ -22,7 +22,7 @@
         <p class="mt-2">Tipo de Financiamiento: <span class="text-dorado">{{Session::get('tipo_financiamiento')}}</span>
         </p>
     </div>
-    <div>
+    <div class="-mb-4">
         <p class="mt-2">Clave y Nombre del Proyecto:
             <span class="text-dorado">{{Session::get('id_proyecto')}} - {{Session::get('name_proyecto')}}</span>
         </p>
