@@ -6,18 +6,32 @@
           <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
           <h3>Requerimientos enviados a DGIEA </h3>
-
-          <br>
-          <h1>¡Aqui van los filtros FILTROS!</h1>
-          <br>
-
-
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6 ">
+                      <div class="flex flex-wrap items-center gap-2 mb-8">
+                        <div class="w-2/3">
+                            <select class="w-auto" id="categoriaVobo" name="categoriaVobo" wire:model="categoriaVobo"  @change="$wire.filterByCategoryVobo($event.target.selectedOptions[0].getAttribute('data-id-especial'))">
+                          <option value="0">Todo</option>
+                          @foreach ($tipoRequisicion as $tipo)
+                          <option value="{{ $tipo->id }}" data-id-especial="{{ $tipo->id }}" >{{ $tipo->descripcion }}</option>
+                          @endforeach
+                        </select>
+                            <input type="text" wire:model="search"
+                                class="inputs-formulario-solicitudes md:mt-0 mt-2 p-2.5 sm:w-96 w-auto"
+                                placeholder="Buscar por clave, tipo...">
+                        </div>
+      
+                        <div class="flex-1 md:mt-0 mt-2">
+                            <p class="text-verde font-semibold">Filtrar por fecha</p>
+                            <input type="date" name="" id=""
+                                class="bg-blanco text-textos_generales rounded-md border-transparent h-10">
+                            <input type="date" name="" id=""
+                                class="bg-blanco text-textos_generales rounded-md border-transparent h-10 md:mt-0 mt-2">
+                        </div>
+                    </div>
                       <table class="table-auto text-left text-sm w-3/4 sm:w-full mx-auto">
                         <thead>
                           <tr class="bg-blanco">
-                            <th scope="col">#</th>
                             <th scope="col">Clave requerimiento</th>
                             <th scope="col">Rubro</th>
                             <th scope="col">Tipo requerimiento</th>
@@ -28,24 +42,26 @@
                           </tr>
                         </thead>
                         <tbody>
-                          @foreach ($adquisiciones as $adquisicion)
+                          @foreach ($requerimientos as $adquisicion=>$valor)
                           <tr class="border-b-gray-200 border-transparent">
-                      <td>{{$loop->iteration}}</td>
-                      <td> {{$adquisicion->clave_adquisicion}} </td>
-                      <td>SEMILLA </td>
-                      <td> Adquisicion </td>
-                      <td class="text-dorado"> En revision DGIEA </td>
-                      <td>{{$adquisicion->updated_at}}</td>
+                      <td> {{$valor->id_requerimiento}} </td>
+                      <td>{{$valor->nombre_cuenta}}</td>
+                      <td> {{$valor->descripcion }}</td>
+                      <td><span class="bg-dorado text-white rounded-full p-1 px-2 font-bold">
+                        {{ $valor->estado }}
+                       </td>
+                      <td>{{$valor->modificacion}}</td>
                       <td></td>
                       <th class="w-[148px]">
-                        <button type="button" class="btn-primary">
-                          Ver
-                        </button>
+                        <a href=""  title="Ver">
+                          <button class="btn-tablas" title="Ver">
+                            <img src="{{ ('img/btn_ver.jpeg') }}" alt="Image/png">
+                          </button>
+                          </a>
                       </th>
                     </tr>
                   @endforeach
                   <tr class="border-b-gray-200 border-transparent">
-                    <td>50</td>
                     <td> 20231006ADQ50</td>
                     <td>SEMILLA </td>
                     <td> Adquisicion </td>
@@ -53,13 +69,14 @@
                     <td>2023-10-06 14:22:59</td>
                     <td>No coiciden cotizaciones</td>
                     <th class="w-[148px]">
-                      <button type="button" class="btn-success">
-                        Corregir
-                      </button>
+                      <a href="{{route('adquisiciones.editar', $valor->id)}}"  title="Editar">
+                        <button class="btn-tablas" title="Editar">
+                          <img src="{{ ('img/btn_editar.png') }}" alt="Image/png">
+                        </button>
+                        </a>
                     </th>
                   </tr>
                   <tr class="border-b-gray-200 border-transparent">
-                    <td>51</td>
                     <td>20231006ADQ51</td>
                     <td>SEMILLA </td>
                     <td> Adquisicion </td>
@@ -67,28 +84,16 @@
                     <td>2023-10-06 14:22:59</td>
                     <td></td>
                     <th class="w-[148px]">
-                      <button type="button" class="btn-primary">
-                        Ver
-                      </button>
-                    </th>
-                  </tr>
-                  <tr class="border-b-gray-200 border-transparent">
-                    <td>51</td>
-                    <td>20231007ADQ52</td>
-                    <td>COMBUSTIBLE </td>
-                    <td> Solicitud </td>
-                    <td class="text-dorado"> En revisión DGIEA </td>
-                    <td>2023-10-06 14:22:59</td>
-                    <td></td>
-                    <th class="w-[148px]">
-                      <button type="button" class="btn-primary">
-                        Ver
-                      </button>
+                      <a href=""  title="Ver">
+                        <button class="btn-tablas" title="Ver">
+                          <img src="{{ ('img/btn_ver.jpeg') }}" alt="Image/png">
+                        </button>
+                        </a>
                     </th>
                   </tr>
                 </tbody>
               </table>
-              {{$adquisiciones->links()}}
+              {{$requerimientos->links()}}
                     </div>
                 </div>
             </div>

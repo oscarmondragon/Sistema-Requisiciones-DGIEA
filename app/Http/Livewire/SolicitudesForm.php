@@ -154,7 +154,8 @@ class SolicitudesForm extends Component
      }*/
 
     protected $listeners = [
-        'save', 'saveVobo'
+        'save',
+        'saveVobo'
     ];
 
     public function save()
@@ -314,18 +315,18 @@ class SolicitudesForm extends Component
                                 $ruta_archivo = $clave_proyecto . '/Solicitudes/' . $id_solicitud;
                                 //almacenamos archivo en servidor y obtenemos la ruta para agregar a la BD
                                 if (empty($dbp['datos']['id'])) {
-                                $pathBD = $dbp['datos']['archivo']->storeAs($ruta_archivo . '/Bitacoras', 'doc_bitacora-editar' . $i . '.' . $extension);
-                                $i++;
-                                $documento = Documento::create([
-                                    'id_requisicion' => $id_solicitud,
-                                    'ruta_documento' => $pathBD,
-                                    'tipo_documento' => '4',
-                                    'tipo_requisicion' => '2',
-                                    'nombre_documento' => $nombre_doc,
-                                    'extension_documento' => $extension,
-                                ]);
+                                    $pathBD = $dbp['datos']['archivo']->storeAs($ruta_archivo . '/Bitacoras', 'doc_bitacora-editar' . $i . '.' . $extension);
+                                    $i++;
+                                    $documento = Documento::create([
+                                        'id_requisicion' => $id_solicitud,
+                                        'ruta_documento' => $pathBD,
+                                        'tipo_documento' => '4',
+                                        'tipo_requisicion' => '2',
+                                        'nombre_documento' => $nombre_doc,
+                                        'extension_documento' => $extension,
+                                    ]);
+                                }
                             }
-                        }
                         }
                     }
                     DB::commit();
@@ -497,12 +498,12 @@ class SolicitudesForm extends Component
         $this->bitacoraPdfTemp = null;
     }
 
-    public function descargarArchivo($rutaDocumento)
+    public function descargarArchivo($rutaDocumento, $nombreDocumento)
     {
         $rutaArchivo = storage_path('app/' . $rutaDocumento);
 
         if (Storage::exists($rutaDocumento)) {
-            return response()->download(storage_path('app/' . $rutaDocumento));
+            return response()->download(storage_path('app/' . $rutaDocumento), $nombreDocumento);
         } else {
             abort(404);
         }

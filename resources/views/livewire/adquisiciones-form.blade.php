@@ -7,6 +7,7 @@
           <div class="my-6">
             <h1>Formulario adquisición de bienes y servicios</h1>
             <form x-on:submit.prevent="saveConfirmationVoBo">
+              @csrf
               <div>
                 <div class="my-6">
                   <label for="id_rubro">
@@ -179,8 +180,8 @@
             @foreach($docsCartaExclusividad as $index => $docCarta)
             <li>
               @if(isset($docCarta['datos']['ruta_documento']))
-              <a href="#"  wire:click="descargarArchivo('{{ $docCarta['datos']['ruta_documento'] }}')" class="text-dorado">  {{ $docCarta['datos']['nombre_documento']}} 
-                <button type="button" class="btn-ver">Ver</button></a>
+
+              <a href="#" class="text-dorado"  wire:click="descargarArchivo('{{ $docCarta['datos']['ruta_documento'] }}', '{{ $docCarta['datos']['nombre_documento']}}')">  {{ $docCarta['datos']['nombre_documento']}} <button type="button" class="btn-ver">Ver</button></a>
              @else
              {{ $docCarta['datos']['nombre_documento']}}
              @endif
@@ -206,9 +207,7 @@
           @foreach($docsCotizacionesFirmadas as $index => $docFirmadas)
           <li>
             @if(isset($docFirmadas['datos']['ruta_documento']))
-            <a href="#"  wire:click="descargarArchivo('{{ $docFirmadas['datos']['ruta_documento'] }}')" class="text-dorado"> {{$docFirmadas['datos']['id']}}  {{ $docFirmadas['datos']['nombre_documento']}}
-            <button type="button" class="btn-ver">Ver</button>
-            </a>
+            <a href="#" class="text-dorado"  wire:click="descargarArchivo('{{ $docFirmadas['datos']['ruta_documento'] }}', '{{ $docFirmadas['datos']['nombre_documento']}}')"> {{ $docFirmadas['datos']['nombre_documento']}} <button type="button" class="btn-ver">Ver</button></a>
            @else
            {{ $docFirmadas['datos']['nombre_documento']}}
            @endif
@@ -233,9 +232,7 @@
           @foreach($docsCotizacionesPdf as $index => $docPdf)
           <li>
             @if(isset($docPdf['datos']['ruta_documento']))
-            <a href="#"  wire:click="descargarArchivo('{{ $docPdf['datos']['ruta_documento'] }}')" class="text-dorado">  {{ $docPdf['datos']['nombre_documento']}}
-            <button type="button" class="btn-ver">Ver</button>
-            </a>
+            <a href="#" class="text-dorado"  wire:click="descargarArchivo('{{ $docPdf['datos']['ruta_documento'] }}', '{{ $docPdf['datos']['nombre_documento']}}')">  {{ $docPdf['datos']['nombre_documento']}} <button type="button" class="btn-ver">Ver</button></a>
            @else
            {{ $docPdf['datos']['nombre_documento']}}
            @endif
@@ -264,9 +261,7 @@
             @foreach($docsAnexoOtrosDocumentos as $index => $anexoDoc)
             <li>
               @if(isset($anexoDoc['datos']['ruta_documento']))
-            <a href="#"  wire:click="descargarArchivo('{{ $anexoDoc['datos']['ruta_documento'] }}')" class="text-dorado">  {{ $anexoDoc['datos']['nombre_documento']}}
-            <button type="button" class="btn-ver">Ver</button>
-            </a>
+            <a href="#" class="text-dorado"  wire:click="descargarArchivo('{{ $anexoDoc['datos']['ruta_documento'] }}', '{{ $anexoDoc['datos']['nombre_documento']}}')">  {{ $anexoDoc['datos']['nombre_documento']}} <button type="button" class="btn-ver">Ver</button></a>
            @else
            {{ $anexoDoc['datos']['nombre_documento']}}
            @endif

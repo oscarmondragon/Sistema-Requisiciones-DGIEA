@@ -11,6 +11,7 @@ use Carbon\Carbon;
           <div>
             <h1 class="mt-6">Formulario solicitudes</h1>
             <form x-on:submit.prevent="saveConfirmationVoBo">
+              @csrf
               <div>
                 <div class="mt-6">
                   <label for="id_rubro">
@@ -80,35 +81,33 @@ use Carbon\Carbon;
                 </div>
                 @endif
                 @if ($id_rubro_especial == '3')
-                <div class="mt-2">
-                  <label for="bitacoraPdf">Bitacora firmada PDF</label>
-                  <input type="file" id="bitacoraPdfTemp" wire:model='bitacoraPdfTemp' accept=".pdf">
-                  @empty($docsCartaExclusividad)
-                  <label for="bitacoraPdf" class="text-dorado">Sin archivos seleccionados.</label>
-                  @endempty
-                  <br>
-                  <div wire:loading wire:target="docsbitacoraPdf">Cargando archivo...</div>
-
-                  @error('bitacoraPdfTemp') <span class=" text-rojo">{{ $message }}</span> @enderror
-                  @error('docsbitacoraPdf') <span class=" text-rojo">{{ $message }}</span> @enderror
-                  <ul>
-                    @foreach($docsbitacoraPdf as $index => $archivo)
-                    <li>
-                      @if(isset($archivo['datos']['ruta_documento']))
-                      <a href="#" wire:click="descargarArchivo('{{ $archivo['datos']['ruta_documento'] }}')" class="text-dorado"> {{ $archivo['datos']['nombre_documento']}}
-                      <button type="button" class="btn-ver">Ver</button></a>
-                      </a>
-                      @else
-                      {{ $archivo['datos']['nombre_documento']}}
-                      @endif
-                      <button type="button" class="btn-eliminar-lista" wire:click="eliminarArchivo('docsbitacoraPdf', {{ $index }})">
-                        Eliminar
-                      </button>
-                    </li>
-                    @endforeach
-                  </ul>
-                  @endif
-                </div>
+      <div class="mt-2">
+        <label for="bitacoraPdf">Bitacora firmada PDF</label>
+        <input type="file" id="bitacoraPdfTemp" wire:model='bitacoraPdfTemp'  accept=".pdf">
+        @empty($docsCartaExclusividad)
+        <label for="bitacoraPdf" class="text-dorado">Sin archivos seleccionados.</label>
+        @endempty
+        <br>
+        <div wire:loading wire:target="docsbitacoraPdf">Cargando archivo...</div>
+      
+        @error('bitacoraPdfTemp') <span class=" text-rojo">{{ $message }}</span> @enderror
+        @error('docsbitacoraPdf') <span class=" text-rojo">{{ $message }}</span> @enderror
+        <ul>
+          @foreach($docsbitacoraPdf as $index => $archivo)
+          <li>
+            @if(isset($archivo['datos']['ruta_documento']))
+            <a href="#" class="text-dorado" wire:click="descargarArchivo('{{ $archivo['datos']['ruta_documento'] }}', '{{ $archivo['datos']['nombre_documento']}}')">  {{ $archivo['datos']['nombre_documento']}}  <button type="button" class="btn-ver">Ver</button></a></a>
+           @else
+           {{ $archivo['datos']['nombre_documento']}}
+           @endif
+            <button type="button" class="btn-eliminar-lista" wire:click="eliminarArchivo('docsbitacoraPdf', {{ $index }})">
+              Eliminar
+            </button>
+          </li>
+          @endforeach
+        </ul>
+        @endif
+      </div>
                 <div class="mt-4 sm:ml-10" x-show="tipoComprobacionOption != 'vale'">
                   <input type="checkbox" id="comprobacion" name="comprobacion" wire:model='comprobacion' class="mr-1">
                   <label for="comprobacion">Me obligo a comprobar esta cantidad en un plazo no mayor a 20 días naturales, a partir de la
