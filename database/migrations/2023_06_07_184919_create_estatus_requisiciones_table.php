@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->string('descripcion', 20);
             $table->unsignedBigInteger('tipo');
             $table->boolean('estatus');
+            $table->bigInteger('id_usuario_sesion', 20);
             $table->timestamps();
 
             $table->foreign('tipo')->references('id')->on('tipos_estatus');

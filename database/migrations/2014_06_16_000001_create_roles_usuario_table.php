@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->string('descripcion', 20);
             $table->boolean('estatus');
+            $table->int('id_usuario_sesion');
             $table->timestamps();
         });
     }

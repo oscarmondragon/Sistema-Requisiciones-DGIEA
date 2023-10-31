@@ -13,8 +13,12 @@ return new class extends Migration {
         Schema::create('documentos', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_requisicion');
-            $table->string('nombre_doc', 255);
-            $table->unsignedBigInteger('tipo_documento');
+            $table->unsignedBigInteger('tipo_requisicion');
+            $table->string('ruta_documento', 255);
+            $table->string('extension_documento', 10);
+            $table->string('nombre_documento', 255);
+            $table->bigInteger('tipo_documento');
+            $table->timestamps('deleted_at');
             $table->timestamps();
 
             $table->foreign('tipo_documento')->references('id')->on('tipo_documentos');

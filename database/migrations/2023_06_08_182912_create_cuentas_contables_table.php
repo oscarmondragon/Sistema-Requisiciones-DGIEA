@@ -12,10 +12,12 @@ return new class extends Migration {
     {
         Schema::create('cuentas_contables', function (Blueprint $table) {
             $table->id();
-            $table->integer('clave_cuenta');
-            $table->string('nombre_cuenta', 120);
-            $table->unsignedBigInteger('tipo_requisicion');
+            $table->integer('id_cuenta');
+            $table->string('nombre_cuenta');
+            $table->integer('tipo_requisicion');
+            $table->int('id_especial');
             $table->boolean('estatus');
+            $table->integer('id_usuario_sesion', 20);
             $table->timestamps();
 
             $table->foreign('tipo_requisicion')->references('id')->on('tipo_requisiciones');

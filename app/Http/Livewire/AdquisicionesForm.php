@@ -330,7 +330,8 @@ class AdquisicionesForm extends Component
                 }
 
                 DB::commit();
-                return redirect('/cvu-crear')->with('success', 'Su solicitud ha sido guardada correctamente con el número de clave ' . $clave_adquisicion . ', recuerde completarla y mandarla a visto bueno.');
+                return redirect('/cvu-crear')->with('success', 'Su solicitud ha sido guardada correctamente con el número de clave '.  $clave_adquisicion . '. Recuerde completarla y mandarla a visto bueno.');
+
             } catch (\Exception $e) {
                 DB::rollback();
                 dd("Error en catch:" . $e);

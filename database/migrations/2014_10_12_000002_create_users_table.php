@@ -20,6 +20,7 @@ return new class extends Migration {
             $table->string('password');
             $table->unsignedBigInteger('rol');
             $table->rememberToken();
+            $table->bigInteger('id_usuario_sesion', 20);
             $table->timestamps();
 
 
