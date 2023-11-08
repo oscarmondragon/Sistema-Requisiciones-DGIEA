@@ -15,7 +15,6 @@ class Seguimiento extends Component
     public $tipo;
     public $search = '';
     public $categoria = 0;
-    public $categoriaVobo = 0;
     public $tipoRequisicion;
     public $f_inicial = 0;
     public $f_final = 0;
@@ -111,5 +110,11 @@ class Seguimiento extends Component
     {
         $this->tipoRequisicion = TipoRequisicion::select('id', 'descripcion')->where('estatus', 1)->get();
         //  $this->adquisiciones = Adquisicion::where('tipo_requisicion', 1)->orderBy('id')->paginate(3);
+    }
+
+    public function filterByCategory($categoria)
+    {
+        $this->categoria = $categoria;
+        // dd($this->categoria);
     }
 }

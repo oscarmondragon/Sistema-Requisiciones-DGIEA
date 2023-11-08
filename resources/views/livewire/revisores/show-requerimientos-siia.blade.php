@@ -1,0 +1,33 @@
+<div>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Requerimientos de proyectos en SIIA') }}
+        </h2>
+    </x-slot>
+  
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 ">
+                  <table class="table-auto">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">id</th>
+                        <th scope="col">id tipo</th>
+                        <th scope="col">clave</th>
+                        <th scope="col">id proyecto</th>
+                        <th scope="col">id rubro</th>
+                        <th scope="col">Ultima modificacion</th>        
+                      </tr>
+                    </thead>
+                    <tbody>
+                    
+            </tbody>
+          </table>
+         
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

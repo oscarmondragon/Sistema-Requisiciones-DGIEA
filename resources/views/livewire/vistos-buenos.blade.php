@@ -28,8 +28,12 @@
 
                 <div class="flex flex-wrap items-center gap-2">
                   <div class="w-2/3">
-                      <select name="" id="">
-                          <option value="">Categorias</option>
+                          <select class="w-auto" id="categoria" name="categoria" wire:model="categoria"  @change="$wire.filterByCategory($event.target.selectedOptions[0].getAttribute('data-id-especial'))">
+                            <option value="0">Todo</option>
+                            @foreach ($tipoRequisicion as $tipo)
+                            <option value="{{ $tipo->id }}" data-id-especial="{{ $tipo->id }}" >{{ $tipo->descripcion }}</option>
+                            @endforeach
+                          </select>
                       </select>
                       <input type="text" wire:model="search"
                           class="inputs-formulario-solicitudes md:mt-0 mt-2 p-2.5 sm:w-96 w-auto"
@@ -126,7 +130,7 @@
                           class="bg-blanco text-textos_generales rounded-md border-transparent h-10 md:mt-0 mt-2">
                   </div>
               </div>
-
+              <div class="overflow-x-auto">
                 <table class="table-auto text-left text-sm w-3/4 sm:w-full mx-auto mt-6">
                   <thead>
                     <tr class="bg-blanco">
@@ -178,8 +182,8 @@
                     @endforeach
                   </tbody>
                 </table>
-                {{$adquisicionesVistosBuenos->links()}}
               </div>
+                {{$adquisicionesVistosBuenos->links()}}
             </div>
           </div>
         </div>

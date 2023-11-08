@@ -10,7 +10,7 @@
                     <div class="p-6 ">
                       <div class="flex flex-wrap items-center gap-2 mb-8">
                         <div class="w-2/3">
-                            <select class="w-auto" id="categoriaVobo" name="categoriaVobo" wire:model="categoriaVobo"  @change="$wire.filterByCategoryVobo($event.target.selectedOptions[0].getAttribute('data-id-especial'))">
+                            <select class="w-auto" id="categoria" name="categoria" wire:model="categoria"  @change="$wire.filterByCategory($event.target.selectedOptions[0].getAttribute('data-id-especial'))">
                           <option value="0">Todo</option>
                           @foreach ($tipoRequisicion as $tipo)
                           <option value="{{ $tipo->id }}" data-id-especial="{{ $tipo->id }}" >{{ $tipo->descripcion }}</option>
@@ -29,6 +29,7 @@
                                 class="bg-blanco text-textos_generales rounded-md border-transparent h-10 md:mt-0 mt-2">
                         </div>
                     </div>
+                    <div class="overflow-x-auto">
                       <table class="table-auto text-left text-sm w-3/4 sm:w-full mx-auto">
                         <thead>
                           <tr class="bg-blanco">
@@ -69,7 +70,7 @@
                     <td>2023-10-06 14:22:59</td>
                     <td>No coiciden cotizaciones</td>
                     <th class="w-[148px]">
-                      <a href="{{route('adquisiciones.editar', $valor->id)}}"  title="Editar">
+                      <a href=""  title="Editar">
                         <button class="btn-tablas" title="Editar">
                           <img src="{{ ('img/btn_editar.png') }}" alt="Image/png">
                         </button>
@@ -93,6 +94,7 @@
                   </tr>
                 </tbody>
               </table>
+            </div>
               {{$requerimientos->links()}}
                     </div>
                 </div>
