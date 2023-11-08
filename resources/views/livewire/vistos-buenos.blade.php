@@ -26,8 +26,8 @@
                             <div class="p-6 overflow-x-auto">
                                 <!-- <input type="text" wire:model="search" placeholder="Buscar por clave, tipo..." class="inputs-formulario-solicitudes"> -->
                 <div class="flex flex-wrap items-center gap-2">
-                  <div class="w-2/3  w-full">
-                          <select class="w-auto  w-full" id="categoria" name="categoria" wire:model="categoria"  @change="$wire.filterByCategory($event.target.selectedOptions[0].getAttribute('data-id-especial'))">
+                  <div class="sm:w-2/3  w-full">
+                          <select class="sm:w-auto  w-full" id="categoria" name="categoria" wire:model="categoria"  @change="$wire.filterByCategory($event.target.selectedOptions[0].getAttribute('data-id-especial'))">
                             <option value="0">Todo</option>
                             @foreach ($tipoRequisicion as $tipo)
                             <option value="{{ $tipo->id }}" data-id-especial="{{ $tipo->id }}" >{{ $tipo->descripcion }}</option>
@@ -35,14 +35,14 @@
                           </select>
                       </select>
                       <input type="text" wire:model="search"
-                          class="inputs-formulario-solicitudes md:mt-0 mt-2 p-2.5 sm:w-96 w-auto"
+                          class="inputs-formulario-solicitudes md:mt-0 mt-2 p-2.5 sm:w-96 w-full"
                           placeholder="Buscar por clave, tipo...">
                   </div>
 
                   <div class="flex-1 md:mt-0 mt-2">
                    <p class="text-verde font-semibold">Filtrar por fecha</p>
-                    <input type="date" name="f_inicial" id="f_inicial" wire:model="f_inicial" class="bg-blanco text-textos_generales rounded-md border-transparent h-10">
-                    <input type="date" name="f_final" id="f_final" wire:model="f_final" class="bg-blanco text-textos_generales rounded-md border-transparent h-10 md:mt-0 mt-2">
+                    <input type="date" name="f_inicial" id="f_inicial" wire:model="f_inicial" class="bg-blanco text-textos_generales rounded-md border-transparent h-10 sm:w-auto w-full">
+                    <input type="date" name="f_final" id="f_final" wire:model="f_final" class="bg-blanco text-textos_generales rounded-md border-transparent h-10 md:mt-0 mt-2 sm:w-auto w-full">
                   </div>
               </div>
                 <table class="table-auto text-left text-sm w-3/4 sm:w-full mx-auto mt-6">
@@ -125,16 +125,16 @@
                                             @endforeach
                                         </select>
                                         <input type="text" wire:model="searchVobo"
-                                            class="inputs-formulario-solicitudes md:mt-0 mt-2 p-2.5 sm:w-auto w-full"
+                                            class="inputs-formulario-solicitudes md:mt-0 mt-2 p-2.5 sm:w-96 w-full"
                                             placeholder="Buscar por clave, tipo...">
                                     </div>
 
                                     <div class="flex-1 md:mt-0 mt-2">
                                           <p class="text-verde font-semibold">Filtrar por fecha</p>
                                         <input type="date" name="f_inicial_vobo" id="f_inicial_vobo" wire:model="f_inicial_vobo"
-                                            class="bg-blanco text-textos_generales rounded-md border-transparent h-10">
+                                            class="bg-blanco text-textos_generales rounded-md border-transparent h-10 sm:w-auto w-full">
                                         <input type="date" name="f_final_vobo" id="f_final_vobo" wire:model="f_final_vobo"
-                                            class="bg-blanco text-textos_generales rounded-md border-transparent h-10 md:mt-0 mt-2">
+                                            class="bg-blanco text-textos_generales rounded-md border-transparent h-10 md:mt-0 mt-2 sm:w-auto w-full">
                                     </div>
                                 </div>
 
