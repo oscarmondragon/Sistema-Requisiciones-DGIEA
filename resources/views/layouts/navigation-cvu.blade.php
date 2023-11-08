@@ -43,9 +43,9 @@
                             @csrf
                             <div>
                                 <div class="inline-block">
-                                    <p class="md:text-sm"><span class="font-bold">En sesión: </span>{{Session::get('name_user')}}</p>
+                                    <p class="md:text-sm -mr-5"><span class="font-bold">En sesión: </span>{{Session::get('name_user')}}</p>
                                 </div>
-                                <button class="inline-block py-0 px-0 border border-transparent hover:text-gray-700" title="Salir">
+                                <button class="inline-block py-0 px-0 border border-transparent hover:bg-transparent" title="Salir">
                                     <x-dropdown-link :href="route('logout.cvu')" onclick="event.preventDefault();
                                                         this.closest('form').submit();">
                                         <div class="inline-block">

@@ -4,46 +4,33 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use App\Models\Adquisicion;
-use Livewire\WithFileUploads;
 use App\Models\AdquisicionDetalle;
 use App\Models\Documento;
 use App\Models\CuentaContable;
-use App\Models\Proyecto;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
-
-use Illuminate\Support\Collection;
-use Monolog\Handler\IFTTTHandler;
 use Illuminate\Support\Facades\Storage;
 
 
-class AdquisicionesVobo extends Component
-{
 
+class AdquisicionVobo extends Component
+{
+    public $vobo = 0;
     public $adquisicion;
     public $documentos;
     public $cuentasContables;
 
     //atributos de una adquisicion
-    public $id_adquisicion; //recupera id en editar
-    public $clave_requisicion = '';
-    public $tipo_requisicion = '1';
-    public $clave_proyecto = '';
-    public $clave_espacio_academico = '';
-    public $clave_rt = '';
-    public $clave_tipo_financiamiento = '';
+    public $id_adquisicion; //recupera id 
     public $id_rubro = 0;
     public $id_rubro_especial; //variable para determinar si es una cuenta especial (software por ejemplo)
     public $afecta_investigacion = '0';
     public $justificacion_academica;
     public $exclusividad = '0';
     public $id_carta_exclusividad;
-    public $vobo;
     public $id_emisor;
-    public $id_revisor;
     public $estatus_general;
-    public $observaciones;
     public $subtotal = 0;
     public $iva = 0;
     public $total = 0;
@@ -52,9 +39,15 @@ class AdquisicionesVobo extends Component
     public $docsCotizacionesFirmadas = [];
     public $docsCotizacionesPdf = [];
     public $docsAnexoOtrosDocumentos = [];
-    public $ruta_archivo = '';
 
-    public function mount($id)
+    protected $rules = [
+        'vobo' => 'accepted'
+    ];
+    protected $messages = [
+        'vobo.accepted' => 'Debe dar el visto bueno.'
+    ];
+
+    public function mount($id = 0)
     {
         $this->adquisicion = Adquisicion::find($id);
 
@@ -67,6 +60,7 @@ class AdquisicionesVobo extends Component
         $this->subtotal = $this->adquisicion->subtotal;
         $this->iva = $this->adquisicion->iva;
         $this->total = $this->adquisicion->total;
+        $this->vobo = 0;
 
         $this->bienesDB = AdquisicionDetalle::where('id_adquisicion', $id)->get();
         $this->bienes = collect($this->bienesDB);
@@ -102,7 +96,48 @@ class AdquisicionesVobo extends Component
     }
     public function render()
     {
-        return view('livewire.adquisiciones-vobo')->layout('layouts.cvu');
+        return view('livewire.adquisicion-vobo')->layout('layouts.cvu');
+    }
+
+    public function darVobo()
+    {
+        $this->validate();
+
+        $who_vobo = Session::get('VoBo_Who');
+        $fecha_vobo = Carbon::now()->toDateString();
+        $id_user = Session::get('id_user');
+
+
+
+
+
+        try {
+            DB::beginTransaction();
+            $adquisicion = Adquisicion::where('id', $this->adquisicion->id)->first();
+            if ($adquisicion) {
+                $clave_adquisicion = $adquisicion->clave_adquisicion;
+                $adquisicion->estatus_general = 3;
+                if ($who_vobo) { //Si el deposito es por parte del Responsable técnico
+                    $adquisicion->vobo_rt = $fecha_vobo;
+                } else { //Si el depósito es por parte del administrativo
+                    $adquisicion->vobo_admin = $fecha_vobo;
+                }
+                $adquisicion->save();
+
+            }
+            DB::commit();
+            return redirect('/cvu-vobo')->with('success', 'Su solicitud con clave ' . $clave_adquisicion . ' ha sido  enviada para revision a la DGIEA.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'error al intentar confirmar visto bueno. Intente más tarde.' . $e->getMessage());
+        }
+
+    }
+
+    public function updated($vobo)
+    {
+        $this->validateOnly($vobo);
     }
 
     public function descargarArchivo($rutaDocumento, $nombreDocumento)
@@ -115,4 +150,5 @@ class AdquisicionesVobo extends Component
             abort(404);
         }
     }
+
 }

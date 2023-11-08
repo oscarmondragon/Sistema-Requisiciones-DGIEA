@@ -96,6 +96,10 @@
         @apply text-rojo italic;
     }
 
+    .btn-ver {
+        @apply text-verde -mr-6;
+    }
+
     .btn-tablas {
         @apply py-0 px-0 hover:bg-blanco;
     }
@@ -134,6 +138,7 @@
 /* .swal2-styled.swal2-confirm.swalBtnColor {
     color: #FFC900
   } */
-  .swal2-html-container, .swal2-title{
-    color: #4D4D4D !important;
-  }
+.swal2-html-container,
+.swal2-title {
+    color: #4d4d4d !important;
+}

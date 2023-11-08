@@ -20,6 +20,7 @@ class VistosBuenos extends Component
     public $tipo;
     public $search = '';
     public $searchVobo = '';
+
     public $categoria=0;
     public $categoriaVobo=0;
     public $tipoRequisicion ;
@@ -28,7 +29,7 @@ class VistosBuenos extends Component
     public $f_inicial_vobo=0;
     public $f_final_vobo=0;
 
-    protected $listeners = ['deleteAdquisicion','deleteSolicitud'];
+    protected $listeners = ['deleteAdquisicion', 'deleteSolicitud'];
 
     public function updatingSearch()
     {
@@ -151,6 +152,7 @@ class VistosBuenos extends Component
             });
 
             $solicitudesVistosBuenos->where(function ($query) {
+
                 $query->where('clave_solicitud', 'like', '%' . $this->searchVobo . '%')
                     ->orWhereHas('requerimientoSolicitud', function ($query) {
                         $query->where('descripcion', 'like', '%' . $this->searchVobo . '%');
@@ -195,17 +197,17 @@ class VistosBuenos extends Component
             $juntasvobo =$adquisicionesVistosBuenos->union($solicitudesVistosBuenos)->orderBy('id')->paginate(10, pageName: 'vobo');           
          }else if($this->categoriaVobo==1 ){
             //dd($this->f_final.''.$this->f_inicial);
-            $juntasvobo =$adquisicionesVistosBuenos->orderBy('id')->paginate(10, pageName: 'vobo');
-         }else if($this->categoriaVobo==2 ){
-            $juntasvobo =$solicitudesVistosBuenos->orderBy('id')->paginate(10, pageName: 'vobo');
+            $juntasvobo = $adquisicionesVistosBuenos->orderBy('id')->paginate(5, pageName: 'vobo');
+        } else if ($this->categoriaVobo == 2) {
+            $juntasvobo = $solicitudesVistosBuenos->orderBy('id')->paginate(5, pageName: 'vobo');
             //dd($this->f_final.''.$this->f_inicial);
-         }
+        }
 
         //$requerimientos = $adquisiciones->union($solicitudes)->orderBy('id')->paginate(10,pageName: 'pendientes');
 
         return view(
             'livewire.vistos-buenos',
-            ['adquisiciones' => $requerimientos, 'adquisicionesVistosBuenos' => $juntasvobo ]
+            ['adquisiciones' => $requerimientos, 'adquisicionesVistosBuenos' => $juntasvobo]
         );
     }
 
@@ -227,13 +229,15 @@ class VistosBuenos extends Component
         $adquisicion = Solicitud::findOrFail($id);
         $adquisicion->delete();
     }
-    public function filterByCategory($categoria){
-       $this->categoria = $categoria;
-      // dd($this->categoria);
+    public function filterByCategory($categoria)
+    {
+        $this->categoria = $categoria;
+        // dd($this->categoria);
     }
-    public function filterByCategoryVobo($categoria){
-       $this->categoriaVobo = $categoria;
-      // dd($this->categoria);
+    public function filterByCategoryVobo($categoria)
+    {
+        $this->categoriaVobo = $categoria;
+        // dd($this->categoria);
     }
 
 }
