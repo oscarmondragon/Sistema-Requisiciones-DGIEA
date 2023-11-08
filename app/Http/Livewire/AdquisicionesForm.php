@@ -104,7 +104,8 @@ class AdquisicionesForm extends Component
     public $listeners = [
         'addBien' => 'setBien',
         'save',
-        'saveVobo'
+        'saveVobo',
+        'eliminarArchivo'
     ];
 
     public function mount($id = 0)
