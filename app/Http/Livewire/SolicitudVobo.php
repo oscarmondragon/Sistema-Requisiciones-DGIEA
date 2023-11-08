@@ -112,6 +112,10 @@ class SolicitudVobo extends Component
         return view('livewire.solicitud-vobo')->layout('layouts.cvu');
     }
 
+    protected $listeners = [
+        'darVobo'
+    ];
+
     public function darVobo()
     {
         $this->validate();

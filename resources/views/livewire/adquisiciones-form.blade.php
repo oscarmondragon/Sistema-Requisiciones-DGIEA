@@ -1,10 +1,10 @@
 @include('layouts.header-cvu', ['accion' => 1])
-<div x-data class="py-12">
+<div x-data class="py-6">
   <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
       <div class="p-6 text-gray-900">
-        <div class="">
-          <div class="my-6">
+        <div>
+          <div class="mb-6">
             <h1>Formulario adquisición de bienes y servicios</h1>
             <form x-on:submit.prevent="saveConfirmationVoBo">
               @csrf
@@ -19,7 +19,7 @@
                     <option value="{{ $cuentaContable->id }}" data-id-especial="{{ $cuentaContable->id_especial }}">{{ $cuentaContable->nombre_cuenta }}</option>
                     @endforeach
                   </select>
-                  @error('id_rubro') <span class=" text-rojo">{{ $message }}</span> @enderror
+                  @error('id_rubro') <span class=" text-rojo sm:inline-block block">{{ $message }}</span> @enderror
                 </div>
 
                 <div class="mb-4">
@@ -35,7 +35,7 @@
                     <span title="Primero selecciona un rubro." class="text-white font-extrabold text-2xl">+</span>
                   </p>
                   @endif
-                  @error('bienes') <span class=" text-rojo">{{ $message }}</span> @enderror
+                  @error('bienes') <span class=" text-rojo sm:inline-block block">{{ $message }}</span> @enderror
 
                 </div>
         <div class="overflow-x-auto" wire:poll x-data="{ elementos: @entangle('bienes').defer, id_rubro: '{{ $id_rubro }}' }">
@@ -148,7 +148,7 @@
                     <textarea id="justificacion" name="justificacion" wire:model='justificacion_academica' placeholder="Justificación" class="sm:w-3/4 w-full" rows="2" cols="30">
               </textarea>
                   </div>
-                  @error('justificacion_academica') <span class=" text-rojo">{{ $message }}</span> @enderror
+                  @error('justificacion_academica') <span class=" text-rojo sm:inline-block block">{{ $message }}</span> @enderror
                 </div>
               </div>
 
@@ -167,15 +167,15 @@
                   </label>
                 </div>
         <div x-show="exclusividadSelectedOption === '1'">
-          <label for="cartaExlcusividad">Carta de exclusividad:</label>
+          <label for="cartaExclusividadTemp">Carta de exclusividad:</label>
           <input type="file" id="cartaExclusividadTemp" wire:model='cartaExclusividadTemp'  accept=".pdf">
           @empty($docsCartaExclusividad)
-          <label for="cartaExlcusividad" class="text-dorado">Sin archivos seleccionados.</label>
+          <label for="cartaExclusividadTemp" class="text-dorado">Sin archivos seleccionados.</label>
           @endempty
           <br>
           <div wire:loading wire:target="docsCartaExclusividad">Cargando archivo...</div>
-          @error('cartaExclusividadTemp') <span class=" text-rojo">{{ $message }}</span> @enderror
-          @error('docsCartaExclusividad') <span class=" text-rojo">{{ $message }}</span> @enderror
+          @error('cartaExclusividadTemp') <span class=" text-rojo sm:inline-block block">{{ $message }}</span> @enderror
+          @error('docsCartaExclusividad') <span class=" text-rojo sm:inline-block block">{{ $message }}</span> @enderror
           <ul>
             @foreach($docsCartaExclusividad as $index => $docCarta)
             <li>
@@ -185,7 +185,8 @@
              @else
              {{ $docCarta['datos']['nombre_documento']}}
              @endif
-              <button type="button" class="btn-eliminar-lista" wire:click="eliminarArchivo('cartasExclusividad', {{ $index }})">
+              {{-- <button type="button" class="btn-eliminar-lista" wire:click="eliminarArchivo('cartasExclusividad', {{ $index }})"> --}}
+              <button type="button" class="btn-eliminar-lista" @click="eliminarDocumento('cartasExclusividad', '{{$index}}')">
                 Eliminar
               </button>
             </li>
@@ -193,16 +194,16 @@
           </ul>
         </div>
         <div class="mt-2">
-          <label for="cotizacionFirmada">Cotización PDF firmada:</label>
+          <label for="cotizacionFirmadaTemp">Cotización PDF firmada:</label>
           <input type="file" id="cotizacionFirmadaTemp" wire:model='cotizacionFirmadaTemp' accept=".pdf">
           @empty($docsCotizacionesFirmadas)
-          <label for="cotizacionFirmada" class="text-dorado">Sin archivos seleccionados.</label>
+          <label for="cotizacionFirmadaTemp" class="text-dorado">Sin archivos seleccionados.</label>
           @endempty
           <br>
           <div wire:loading wire:target="docsCotizacionesFirmadas">Cargando archivo...</div>
         </div>
-        @error('cotizacionFirmadaTemp') <span class=" text-rojo">{{ $message }}</span> @enderror
-        @error('docsCotizacionesFirmadas') <span class=" text-rojo">{{ $message }}</span> @enderror
+        @error('cotizacionFirmadaTemp') <span class=" text-rojo sm:inline-block block">{{ $message }}</span> @enderror
+        @error('docsCotizacionesFirmadas') <span class=" text-rojo sm:inline-block block">{{ $message }}</span> @enderror
         <ul>
           @foreach($docsCotizacionesFirmadas as $index => $docFirmadas)
           <li>
@@ -211,23 +212,23 @@
            @else
            {{ $docFirmadas['datos']['nombre_documento']}}
            @endif
-            <button type="button" class="btn-eliminar-lista" wire:click="eliminarArchivo('cotizacionesFirmadas', {{ $index }})">
+            <button type="button" class="btn-eliminar-lista" @click="eliminarDocumento('cotizacionesFirmadas', '{{$index}}')">
               Eliminar
             </button>
           </li>
           @endforeach
         </ul>
         <div class="mt-2">
-          <label for="cotizacionesPdf">Cotizaciones PDF (Pueden ir o no firmadas):</label>
+          <label for="cotizacionPdfTemp">Cotizaciones PDF (Pueden ir o no firmadas):</label>
           <input type="file" id="cotizacionPdfTemp" wire:model='cotizacionPdfTemp' accept=".pdf">
           @empty($docsCotizacionesPdf)
-          <label for="cotizacionesPdf" class="text-dorado">Sin archivos seleccionados.</label>
+          <label for="cotizacionPdfTemp" class="text-dorado">Sin archivos seleccionados.</label>
           @endempty
           <br>
           <div wire:loading wire:target="docsCotizacionesPdf">Cargando archivo...</div>
         </div>
-        @error('cotizacionPdfTemp') <span class=" text-rojo">{{ $message }}</span> @enderror
-        @error('docsCotizacionesPdf') <span class=" text-rojo">{{ $message }}</span> @enderror
+        @error('cotizacionPdfTemp') <span class=" text-rojo sm:inline-block block">{{ $message }}</span> @enderror
+        @error('docsCotizacionesPdf') <span class=" text-rojo sm:inline-block block">{{ $message }}</span> @enderror
         <ul class="my-2">
           @foreach($docsCotizacionesPdf as $index => $docPdf)
           <li>
@@ -236,7 +237,7 @@
            @else
            {{ $docPdf['datos']['nombre_documento']}}
            @endif
-            <button type="button" class="btn-eliminar-lista" wire:click="eliminarArchivo('cotizacionesPdf', {{ $index }})">
+            <button type="button" class="btn-eliminar-lista" @click="eliminarDocumento('cotizacionesPdf', '{{$index}}')">
               Eliminar
             </button>
           </li>
@@ -248,15 +249,15 @@
           class="text-rojo mt-5 block">
             <span class="text-verde font-bold">Nota: </span>Adjunte aquí el soporte de exclusividad.
           </label>
-          <label for="anexoDocumentos">Anexo técnico u otros documentos:</label>
+          <label for="anexoOtroTemp">Anexo técnico u otros documentos:</label>
           <input type="file" id="anexoOtroTemp" wire:model='anexoOtroTemp' accept=".pdf">
           @empty($docsAnexoOtrosDocumentos)
-          <label for="anexoDocumentos" class="text-dorado">Sin archivos seleccionados.</label>
+          <label for="anexoOtroTemp" class="text-dorado">Sin archivos seleccionados.</label>
           @endempty
           <br>
           <div wire:loading wire:target="docsAnexoOtrosDocumentos">Cargando archivo...</div>
-          @error('anexoOtroTemp') <span class=" text-rojo">{{ $message }}</span> @enderror
-          @error('docsAnexoOtrosDocumentos') <span class=" text-rojo">{{ $message }}</span> @enderror
+          @error('anexoOtroTemp') <span class=" text-rojo sm:inline-block block">{{ $message }}</span> @enderror
+          @error('docsAnexoOtrosDocumentos') <span class=" text-rojo sm:inline-block block">{{ $message }}</span> @enderror
           <ul>
             @foreach($docsAnexoOtrosDocumentos as $index => $anexoDoc)
             <li>
@@ -265,7 +266,7 @@
            @else
            {{ $anexoDoc['datos']['nombre_documento']}}
            @endif
-              <button type="button" class="btn-eliminar-lista" wire:click="eliminarArchivo('anexoDocumentos', {{ $index }})">
+              <button type="button" class="btn-eliminar-lista" @click="eliminarDocumento('anexoDocumentos', '{{$index}}')">
                 Eliminar
               </button>
             </li>
@@ -279,7 +280,7 @@
       <div class="mt-10">
         <input type="checkbox" id="vobo" wire:model='vobo' name="vobo" class="rounded-full sm:ml-10">
         <label for="vobo">VoBo al requerimiento solicitado. Se envía para VoBo del Admistrativo/Investigador</label>
-        @error('vobo') <span class=" text-rojo error">{{ $message }}</span> @enderror
+        @error('vobo') <span class=" text-rojo error sm:inline-block block">{{ $message }}</span> @enderror
 
               <div class="sm:text-right text-center my-10 -mb-5">
                @empty($id_adquisicion)
@@ -355,7 +356,7 @@
       showCancelButton: true,
       confirmButtonColor: '#E86562',
       cancelButtonColor: '#62836C',
-      confirmButtonText: 'Cancelar',
+      confirmButtonText: 'Si, cancelar',
       cancelButtonText: 'Cerrar',
 
     }).then((result) => {
@@ -369,6 +370,30 @@
       }
     });
   }
+
+    function eliminarDocumento(tipoArchivo, index) {
+    Swal.fire({
+      customClass: {
+        title: 'swal2-title'
+      },
+      title: '¿Estás seguro que deseas eliminar el documento?',
+      text: 'Una vez eliminado no sera posible recuperarlo.',
+      icon: 'warning',
+      iconColor: '#9D9361',
+      showCancelButton: true,
+      confirmButtonColor: '#E86562',
+      cancelButtonColor: '#62836C',
+      confirmButtonText: 'Si, eliminar',
+      cancelButtonText: 'Cerrar',
+
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.livewire.emit('eliminarArchivo', tipoArchivo, index);
+      }
+    });
+  }
+
+
 </script>
 @endpush
 </div>

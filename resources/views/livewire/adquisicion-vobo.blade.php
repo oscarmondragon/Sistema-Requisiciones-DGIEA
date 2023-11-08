@@ -8,7 +8,7 @@
           <div class="">
             <div>
               <h1 class="mt-6">Visto bueno para adquisición  con clave: {{$adquisicion->clave_adquisicion}}</h1>
-              <form wire:submit.prevent="darVobo">
+              <form x-on:submit.prevent="confirmationVoBo">
                 @csrf
                 <div>
                     <div class="my-6">
@@ -149,7 +149,9 @@
                         @if($docCarta->tipoDocumento->id == 1)
                         <li>
                           @if(isset($docCarta->ruta_documento))
-                          <a href="#"  wire:click="descargarArchivo('{{ $docCarta->ruta_documento }}', '{{ $docCarta->nombre_documento}}')">  {{ $docCarta->nombre_documento}} Ver</a>
+                          <a href="#" class="text-dorado" wire:click="descargarArchivo('{{ $docCarta->ruta_documento }}', '{{ $docCarta->nombre_documento}}')">  {{ $docCarta->nombre_documento}}
+                            <button type="button" class="btn-ver">Ver</button>
+                          </a>
                           @endif
                         </li>
                         @endif
@@ -166,7 +168,9 @@
                         @if($docCotFirmadas->tipoDocumento->id == 2)
                         <li>
                           @if(isset($docCotFirmadas->ruta_documento))
-                          <a href="#"  wire:click="descargarArchivo('{{ $docCotFirmadas->ruta_documento}}', '{{ $docCotFirmadas->nombre_documento}}')">  {{ $docCotFirmadas->nombre_documento}} Ver</a>
+                          <a href="#" class="text-dorado"  wire:click="descargarArchivo('{{ $docCotFirmadas->ruta_documento}}', '{{ $docCotFirmadas->nombre_documento}}')">  {{ $docCotFirmadas->nombre_documento}} 
+                            <button type="button" class="btn-ver">Ver</button>
+                          </a>
                           @endif
                         </li>
                         @endif
@@ -185,7 +189,9 @@
                       @if($docPdf->tipoDocumento->id == 3)
                       <li>
                         @if(isset($docPdf->ruta_documento))
-                          <a href="#"  wire:click="descargarArchivo('{{ $docPdf->ruta_documento}}', '{{ $docPdf->nombre_documento}}')">  {{ $docPdf->nombre_documento}} Ver</a>
+                          <a href="#" class="text-dorado"  wire:click="descargarArchivo('{{ $docPdf->ruta_documento}}', '{{ $docPdf->nombre_documento}}')">  {{ $docPdf->nombre_documento}} 
+                            <button type="button" class="btn-ver">Ver</button>
+                          </a>
                        @endif
                       </li>
                      
@@ -202,7 +208,9 @@
                         @if($anexoDoc->tipoDocumento->id == 5)
                         <li>
                           @if(isset($anexoDoc->ruta_documento))
-                          <a href="#"  wire:click="descargarArchivo('{{ $anexoDoc->ruta_documento}}', '{{ $anexoDoc->nombre_documento}}')">  {{ $anexoDoc->nombre_documento}} Ver</a>
+                          <a href="#" class="text-dorado" wire:click="descargarArchivo('{{ $anexoDoc->ruta_documento}}', '{{ $anexoDoc->nombre_documento}}')">  {{ $anexoDoc->nombre_documento}}
+                            <button type="button" class="btn-ver">Ver</button>
+                          </a>
                          @endif
                         </li>
                         @endif
@@ -215,9 +223,10 @@
                     <label for="vobo">Dar mi visto bueno a este requerimiento.</label>
                     @error('vobo') <span class=" text-rojo error">{{ $message }}</span> @enderror
                 </div>
-                <div class="sm:text-right text-center my-10 -mb-5">
-                    <button type="submit" class="btn-primary sm:w-auto w-3/4">Confirmar VoBo</button>
-                    <button type="button" class="btn-warning sm:w-auto w-3/4" x-on:click="window.location.href = '{{ route('cvu.vobo') }}'">Cancelar</button>
+                <div class="sm:text-right text-center my-10 -mb-2">
+                    <button type="submit" class="btn-primary sm:w-auto w-5/6" @click="confirmationVoBo()">Confirmar VoBo</button>
+                    <button type="button" class="btn-danger sm:w-auto w-5/6" @click="rechazarVoBo()">Rechazar VoBo</button>
+                    <button type="button" class="btn-warning sm:w-auto w-5/6" x-on:click="window.location.href = '{{ route('cvu.vobo') }}'">Cancelar</button>
                   </div>
               </div>
               </form>
@@ -226,5 +235,51 @@
         </div>
       </div>
     </div>
+    @push('scripts')
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            function confirmationVoBo() {
+                Swal.fire({
+                    customClass: {
+                        title: 'swal2-title'
+                    },
+                    title: '¿Confirmar VoBo?',
+                    icon: 'warning',
+                    iconColor: '#9D9361',
+                    showCancelButton: true,
+                    confirmButtonColor: '#62836C',
+                    cancelButtonColor: '#E86562',
+                    confirmButtonText: 'Si, confirmar',
+                    cancelButtonText: 'Cerrar',
+
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.livewire.emit('darVobo');
+                    }
+                });
+            }
+
+            function rechazarVoBo() {
+                Swal.fire({
+                    customClass: {
+                        title: 'swal2-title'
+                    },
+                    text: 'El requerimiento estará disponible nuevamente para edición en el perfil del emisor',
+                    icon: 'warning',
+                    iconColor: '#9D9361',
+                    showCancelButton: true,
+                    confirmButtonColor: '#62836C',
+                    cancelButtonColor: '#E86562',
+                    confirmButtonText: 'Aceptar',
+                    cancelButtonText: 'Cerrar',
+
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        //window.livewire.emit('darVobo');
+                    }
+                });
+            }
+        </script>
+    @endpush
   </div>
 
