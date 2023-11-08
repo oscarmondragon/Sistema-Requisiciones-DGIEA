@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 
+use RealRashid\SweetAlert\Facades\Alert;
+
 
 class SolicitudesForm extends Component
 {
@@ -100,42 +102,38 @@ class SolicitudesForm extends Component
                     //  dd($this->docsCartaExclusividad);
                 }
             }
-
         } else {
 
             $this->docsbitacoraPdf = [];
-
         }
-
-
-
     }
 
     protected $rules = [
         'id_rubro' => 'required|not_in:0',
-        'monto_total' => 'required|lte:35000',
+        'monto_total' => 'required|lte:35000|gte:1',
         'nombre_expedido' => 'required',
         'docsbitacoraPdf' => 'required_if:id_rubro_especial,3',
-        'comprobacion' => 'required_unless:tipo_comprobacion,"vale"|accepted',
         'tipo_comprobacion' => 'required_if:id_rubro_especial,3',
+        //'comprobacion' => 'required_unless:tipo_comprobacion,"vale"|accepted_if:tipo_comprobacion,"ficha"',
         'aviso_privacidad' => 'accepted',
         'vobo' => 'accepted',
         'concepto' => 'required',
         'justificacionS' => 'required',
-        'finicial' => 'required_if:id_rubro_especial,2',
-        'ffinal' => 'nullable|date|required_if:id_rubro_especial,2|after_or_equal:finicial'
+        'finicial' => 'nullable|date|required_if:id_rubro_especial,2|after_or_equal:14 days',
+        'ffinal' => 'nullable|date|required_if:id_rubro_especial,2|after_or_equal:finicial',
     ];
     protected $messages = [
         'id_rubro.required' => 'Debe seleccionar un rubro.',
         'id_rubro.not_in' => 'Debe seleccionar un rubro.',
         'monto_total.required' => 'El monto no puede estar vacío.',
         'monto_total.lte' => 'El monto no puede ser mayor a $35000.',
-        'monto_total.gte' => 'El monto no puede ser menor a la suma de los importes de los recursos solicitados o igual a 0.',
+        'monto_total.gte' => 'El monto no puede ser menor o igual a 0.',
         'nombre_expedido.required' => 'El nombre de quien expide no puede estar vacío',
         'docsbitacoraPdf.required_if' => 'Debe adjuntar la bitacora.',
         'bitacoraPdfTemp' => 'Solo puedes adjuntar archivos con extensión pdf ',
         'bitacoraPdfTemp.max' => 'El archivo no debe pesar mas de 2MB',
-        'comprobacion.required_unless' => 'Debe de aceptar la condición.',
+        //'comprobacion.required_unless' => 'Debe de aceptar la condición.',
+        //'comprobacion.accepted_if' => 'Debe de aceptar la condición seleccionela.',
         'comprobacion.accepted' => 'Debe de aceptar la condición seleccionela.',
         'tipo_comprobacion.required_if' => 'Debe de elegir una opción.',
         'aviso_privacidad.accepted' => 'Debe de aceptar el aviso de privacidad.',
@@ -144,8 +142,9 @@ class SolicitudesForm extends Component
         'importe.required' => 'El importe no puede estar vacío.',
         'justificacionS.required' => 'La justificación no puede estar vacía.',
         'finicial.required_if' => 'La fecha inicial no puede estar vacía.',
+        'finicial.after_or_equal' => 'La fecha inicial debe ser una fecha posterior o igual a 15 días.',
         'ffinal.required_if' => 'La fecha final no puede estar vacía.',
-        'ffinal.after_or_equal' => 'La fecha final debe ser mayor o igual a la fecha inicial.'
+        'ffinal.after_or_equal' => 'La fecha final debe ser mayor o igual a la fecha inicial.',
     ];
 
     /* public function updated($propertyName){
@@ -155,15 +154,33 @@ class SolicitudesForm extends Component
 
     protected $listeners = [
         'save',
-        'saveVobo'
+        'saveVobo',
+        'eliminarArchivo'
     ];
 
     public function save()
     {
+        //dd($this->finicial);
         $this->validate([
             'id_rubro' => 'required|not_in:0',
-            'monto_total' => 'required|lte:35000'
+            'monto_total' => 'required|lte:35000',
         ]);
+
+        if ($this->finicial != "") {
+            $this->validate([
+                'finicial' => 'nullable|date|after_or_equal:14 days',
+            ]);
+        } else {
+            $this->finicial = null;
+        }
+
+        if ($this->ffinal != "") {
+            $this->validate([
+                'ffinal' => 'nullable|date|after_or_equal:finicial',
+            ]);
+        } else {
+            $this->ffinal = null;
+        }
 
         $clave_proyecto = Session::get('id_proyecto');
         $id_user = Session::get('id_user');
@@ -303,7 +320,6 @@ class SolicitudesForm extends Component
                             $solicitudDetalle->periodo_fin = $this->ffinal;
 
                             $solicitudDetalle->save();
-
                         }
                         $i = 1;
                         if (empty($this->docsbitacoraPdf) == false) {
@@ -398,8 +414,6 @@ class SolicitudesForm extends Component
                                 'nombre_documento' => $nombre_doc,
                                 'extension_documento' => $extension,
                             ]);
-
-
                         }
                     }
                     $i = 1;
@@ -410,7 +424,6 @@ class SolicitudesForm extends Component
                     dd("Error en el catch" . $e);
                     return redirect()->back()->with('error', 'Error en el proceso de guardado ' . $e->getMessage());
                 }
-
             }
         } else {
             // No se encontró ningún proyecto  con esca clave"
@@ -428,6 +441,11 @@ class SolicitudesForm extends Component
         $this->id_rubro_especial = $idRubroEspecial; //asigna un valor a la variable rubro_especial para las validaciones de cuentas contables
         $this->resetdocsBitacora();
         $this->monto_total = null;
+        $this->concepto = "";
+        $this->justificacionS = "";
+        $this->finicial = null;
+        $this->ffinal = null;
+        $this->tipo_comprobacion = null;
         $this->comprobacion = 0;
         $this->aviso_privacidad = 0;
         $this->vobo = 0;
@@ -453,15 +471,12 @@ class SolicitudesForm extends Component
                     }
                     //Eliminamos de bd
                     $documentoFound->delete();
-
                 }
-
             }
             // Eliminar el archivo del array usando el índice
             unset($this->docsbitacoraPdf[$index]);
             // Reindexar el array para asegurar una secuencia numérica continua
             $this->docsbitacoraPdf = array_values($this->docsbitacoraPdf);
-
         }
     }
 
@@ -509,6 +524,12 @@ class SolicitudesForm extends Component
         }
     }
 
-
+    public function rules()
+    {
+        $rules = $this->rules;
+        if ($this->tipo_comprobacion != 'vale') {
+            $rules['comprobacion'][] = 'accepted';
+        }
+        return $rules;
+    }
 }
-
