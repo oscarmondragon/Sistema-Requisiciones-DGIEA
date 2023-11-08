@@ -41,11 +41,9 @@
                   </div>
 
                   <div class="flex-1 md:mt-0 mt-2">
-                      <p class="text-verde font-semibold">Filtrar por fecha</p>
-                      <input type="date" name="" id=""
-                          class="bg-blanco text-textos_generales rounded-md border-transparent h-10">
-                      <input type="date" name="" id=""
-                          class="bg-blanco text-textos_generales rounded-md border-transparent h-10 md:mt-0 mt-2">
+                   <p class="text-verde font-semibold">Filtrar por fecha</p>
+                    <input type="date" name="f_inicial" id="f_inicial" wire:model="f_inicial" class="bg-blanco text-textos_generales rounded-md border-transparent h-10">
+                    <input type="date" name="f_final" id="f_final" wire:model="f_final" class="bg-blanco text-textos_generales rounded-md border-transparent h-10 md:mt-0 mt-2">
                   </div>
               </div>
                 <table class="table-auto text-left text-sm w-3/4 sm:w-full mx-auto mt-6">
@@ -124,9 +122,9 @@
 
                   <div class="flex-1 md:mt-0 mt-2">
                       <p class="text-verde font-semibold">Filtrar por fecha</p>
-                      <input type="date" name="" id=""
+                      <input type="date" name="f_inicial_vobo" id="f_inicial_vobo" wire:model="f_inicial_vobo"
                           class="bg-blanco text-textos_generales rounded-md border-transparent h-10">
-                      <input type="date" name="" id=""
+                      <input type="date" name="f_final_vobo" id="f_final_vobo" wire:model="f_final_vobo"
                           class="bg-blanco text-textos_generales rounded-md border-transparent h-10 md:mt-0 mt-2">
                   </div>
               </div>
