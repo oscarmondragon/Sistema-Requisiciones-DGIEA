@@ -29,7 +29,7 @@
                   </div>
 
                   <div class="inline-block ml-48">
-                    <input type="date" name="f_inicial" id="f_inicial" wire:model="f_inicial"  class="bg-blanco text-textos_generales rounded-md border-transparent h-10">
+                    <input type="date" name="f_inicial" id="f_inicial" wire:model="f_inicial" class="bg-blanco text-textos_generales rounded-md border-transparent h-10">
                     <input type="date" name="f_final" id="f_final" wire:model="f_final" class="bg-blanco text-textos_generales rounded-md border-transparent h-10">
                   </div>
                 </div>
@@ -102,12 +102,12 @@
                     <span>
                       <img src="{{ asset('img/ic_lock.png') }}" alt="Icono" class="absolute mr-10 ml-[345px] mt-1 w-8 h-8">
                     </span>
-                    <input type="text" wire:model="searchVobo" class="inputs-formulario-solicitudes inline-block p-2.5 w-full" placeholder="Buscar por clave, tipo...">
+                    <input type="text" id="searchVobo" name="searchVobo" wire:model="searchVobo" class="inputs-formulario-solicitudes inline-block p-2.5 w-full" placeholder="Buscar por clave, tipo...">
                   </div>
 
                   <div class="inline-block ml-48">
-                    <input type="date" name="" id="" class="bg-blanco text-textos_generales rounded-md border-transparent h-10">
-                    <input type="date" name="" id="" class="bg-blanco text-textos_generales rounded-md border-transparent h-10">
+                    <input type="date" name="f_inicial_vobo" id="f_inicial_vobo" wire:model="f_inicial_vobo" class="bg-blanco text-textos_generales rounded-md border-transparent h-10">
+                    <input type="date" name="f_final_vobo" id="f_final_vobo" wire:model="f_final_vobo" class="bg-blanco text-textos_generales rounded-md border-transparent h-10">
                   </div>
                 </div>
 
