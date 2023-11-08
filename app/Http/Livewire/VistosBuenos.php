@@ -33,40 +33,18 @@ class VistosBuenos extends Component
 
     public function updatingSearch()
     {
-        //dd('entró');
         $this->resetPage();
     }
     public function updatingSearchVobo()
     {
-        //dd('entró');
         $this->resetPage();
     }
     public function updatingCategoria()
     {
-       // dd('entró');
         $this->resetPage();
     }
     public function updatingCategoriaVobo()
     {
-       // dd('entró');
-        $this->resetPage();
-    }
-    public function resetFinicial()
-    {
-       // dd('bien');
-       $this->resetPage();
-       // $this->justificacion_academica = '';
-    }
-    public function resetFinicialVobo()
-    {
-       // dd('bien');
-       $this->resetPage();
-       // $this->justificacion_academica = '';
-    }
-    
-    public function updatingF_inicial()
-    {
-        dd('Entre');
         $this->resetPage();
     }
 
@@ -105,12 +83,10 @@ class VistosBuenos extends Component
                     });
                 }
                 if($this->f_inicial != 0 and $this->f_final==0 ){
-                    //dd('f inicial solo'.$this->f_final.''.$this->f_inicial);
                     $adquisiciones->where('adquisiciones.created_at', 'like', '%' . $this->f_inicial .'%');
                     $solicitudes->where('solicitudes.created_at', 'like', '%' . $this->f_inicial .'%');
                 }
                 if($this->f_final != 0 and $this->f_inicial==0){
-                    //dd('f final solo'.$this->f_final.''.$this->f_inicial);
                     $adquisiciones->where('adquisiciones.created_at', 'like', '%' . $this->f_final .'%');
                     $solicitudes->where('solicitudes.created_at', 'like', '%' . $this->f_final .'%');
                 }
@@ -163,26 +139,22 @@ class VistosBuenos extends Component
         }
 
         if($this->f_inicial_vobo != 0 and $this->f_final_vobo==0 ){
-            //dd('f inicial solo'.$this->f_final.''.$this->f_inicial);
             $adquisicionesVistosBuenos->where('adquisiciones.created_at', 'like', '%' . $this->f_inicial_vobo .'%');
             $solicitudesVistosBuenos->where('solicitudes.created_at', 'like', '%' . $this->f_inicial_vobo .'%');
         }
         if($this->f_final_vobo != 0 and $this->f_inicial_vobo==0){
-            //dd('f final solo'.$this->f_final.''.$this->f_inicial);
             $adquisicionesVistosBuenos->where('adquisiciones.created_at', 'like', '%' . $this->f_final_vobo .'%');
             $solicitudesVistosBuenos->where('solicitudes.created_at', 'like', '%' . $this->f_final_vobo .'%');
         }
         if($this->f_final_vobo != 0 and $this->f_inicial_vobo != 0){
-           // dd('las dos'.$this->f_final.''.$this->f_inicial);
            $adquisicionesVistosBuenos->whereDate('adquisiciones.created_at','>=', $this->f_inicial_vobo)
            ->whereDate('adquisiciones.created_at','<=', $this->f_final_vobo);
            $solicitudesVistosBuenos->whereDate('solicitudes.created_at','>=', $this->f_inicial_vobo)
            ->whereDate('solicitudes.created_at','<=', $this->f_final_vobo);
-           //whereBetween('solicitudes.created_at', [$this->f_inicial_vobo, $this->f_final_vobo]);
         }
             
-        $adquisicionesVistosBuenos->where('estatus_general', 1)->where('id_emisor', '=', session('id_user'));               
-        $solicitudesVistosBuenos->where('estatus_rt', 1)->where('id_emisor', '=', session('id_user'));
+        $adquisicionesVistosBuenos->where('estatus_general', 2);               
+        $solicitudesVistosBuenos->where('estatus_rt', 2);
 
         if($this->categoria == 0){
             $requerimientos = $adquisiciones->union($solicitudes)->orderBy('id')->paginate(10,pageName: 'pendientes');            
@@ -193,17 +165,12 @@ class VistosBuenos extends Component
          }
 
          if($this->categoriaVobo == 0){
-            //dd("entro");
             $juntasvobo =$adquisicionesVistosBuenos->union($solicitudesVistosBuenos)->orderBy('id')->paginate(10, pageName: 'vobo');           
          }else if($this->categoriaVobo==1 ){
-            //dd($this->f_final.''.$this->f_inicial);
             $juntasvobo = $adquisicionesVistosBuenos->orderBy('id')->paginate(5, pageName: 'vobo');
         } else if ($this->categoriaVobo == 2) {
             $juntasvobo = $solicitudesVistosBuenos->orderBy('id')->paginate(5, pageName: 'vobo');
-            //dd($this->f_final.''.$this->f_inicial);
         }
-
-        //$requerimientos = $adquisiciones->union($solicitudes)->orderBy('id')->paginate(10,pageName: 'pendientes');
 
         return view(
             'livewire.vistos-buenos',
