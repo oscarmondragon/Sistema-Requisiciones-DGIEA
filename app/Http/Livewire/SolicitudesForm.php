@@ -75,7 +75,7 @@ class SolicitudesForm extends Component
 
     public function mount($id = 0)
     {
-
+        $this->referer = $_SERVER['HTTP_REFERER'];
         $this->cuentasContables = CuentaContable::where('estatus', 1)->whereIn('tipo_requisicion', [2, 3])->get();
         $this->nombre_expedido = Session::get('name_rt');
         $this->tamanyoDocumentos = env('TAMANYO_MAX_DOCS', 2048);
@@ -279,11 +279,11 @@ class SolicitudesForm extends Component
         $fecha_vobo = Carbon::now()->toDateString();
 
         if ($who_vobo) { //Si el deposito es por parte del Responsable técnico
-            $vobo_admin = null;
+            $this->vobo_admin = null;
             $this->vobo_rt = $fecha_vobo;
         } else { //Si el depósito es por parte del administrativo
             $this->vobo_admin = $fecha_vobo;
-            $vobo_rt = null;
+            $this->vobo_rt = null;
         }
 
         //Busca el proyecto por la clave
@@ -302,8 +302,8 @@ class SolicitudesForm extends Component
                         $solicitud->monto_total = $this->monto_total;
                         $solicitud->nombre_expedido = $this->nombre_expedido;
                         $solicitud->tipo_comprobacion = $this->tipo_comprobacion;
-                        // $solicitud->vobo_admin = $this->$this->vobo_admin;
-                        //  $solicitud->vobo_rt = $this->$this->vobo_rt;
+                        $solicitud->vobo_admin = $this->vobo_admin;
+                        $solicitud->vobo_rt = $this->vobo_rt;
                         $solicitud->estatus_rt = 2;
                         $solicitud->obligo_comprobar = $this->comprobacion;
                         $solicitud->aviso_privacidad = $this->aviso_privacidad;

@@ -32,6 +32,11 @@ class Adquisicion extends Model
         return $this->belongsTo(TipoRequisicion::class, 'tipo_requisicion');
     }
 
+    public function detalless()
+    {
+        return $this->hasMany(AdquisicionDetalle::class, 'id_adquisicion');
+    }
+
     protected $fillable = [
         'clave_adquisicion',
         'tipo_requisicion',

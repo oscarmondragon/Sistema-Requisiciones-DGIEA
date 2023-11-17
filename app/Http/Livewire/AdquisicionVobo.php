@@ -39,6 +39,7 @@ class AdquisicionVobo extends Component
     public $docsCotizacionesFirmadas = [];
     public $docsCotizacionesPdf = [];
     public $docsAnexoOtrosDocumentos = [];
+    public $referer ='';
 
     public $observacionesVobo;
 
@@ -51,6 +52,8 @@ class AdquisicionVobo extends Component
 
     public function mount($id = 0)
     {
+        $this->referer = $_SERVER['HTTP_REFERER'];
+       // dd($referer);
         $this->adquisicion = Adquisicion::find($id);
 
         $this->id_rubro = $this->adquisicion->id_rubro;

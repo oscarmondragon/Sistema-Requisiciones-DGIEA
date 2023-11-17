@@ -52,47 +52,32 @@ class VistosBuenos extends Component
         $this->resetPage();
     }
 
+
     public function render()
     {
+        
         // $adquisiciones = Adquisicion::where('estatus_general', 1)->orderBy('id')->paginate(3);        
-        $adquisiciones = Adquisicion::join("cuentas_contables", "adquisiciones.id_rubro", "=", "cuentas_contables.id")
-            ->join("tipo_requisiciones", "adquisiciones.tipo_requisicion", "=", "tipo_requisiciones.id")
-            ->join("estatus_requisiciones", "adquisiciones.estatus_general", "=", "estatus_requisiciones.id")
-            ->select(
-                'adquisiciones.id as id',
-                'adquisiciones.clave_adquisicion as id_requerimiento',
-                'estatus_requisiciones.descripcion as estado',
-                'adquisiciones.updated_at as modificacion',
-                'cuentas_contables.nombre_cuenta',
-                'tipo_requisiciones.descripcion',
-                'adquisiciones.tipo_requisicion as  tipo_requerimiento',
-                'adquisiciones.vobo_admin as vobo_admin',
-                'adquisiciones.vobo_rt as vobo_rt'
-            );
-
-        $solicitudes =  Solicitud::join("cuentas_contables", "solicitudes.id_rubro", "=", "cuentas_contables.id")
-            ->join("tipo_requisiciones", "solicitudes.tipo_requisicion", "=", "tipo_requisiciones.id")
-            ->join("estatus_requisiciones", "solicitudes.estatus_rt", "=", "estatus_requisiciones.id")
-            ->select(
-                'solicitudes.id as id',
-                'solicitudes.clave_solicitud as id_requerimiento',
-                'estatus_requisiciones.descripcion as estado',
-                'solicitudes.updated_at as modificacion',
-                'cuentas_contables.nombre_cuenta',
-                'tipo_requisiciones.descripcion',
-                'solicitudes.tipo_requisicion as  tipo_requerimiento',
-                'solicitudes.vobo_admin as vobo_admin',
-                'solicitudes.vobo_rt as vobo_rt'
-            );
-
-        //si palabra clave esta vacia no se ejecuta
-        if (!empty($this->search)) {
-            $adquisiciones->where(function ($query) {
-                $query->where('clave_adquisicion', 'like', '%' . $this->search . '%')
-                    ->orWhereHas('requerimiento', function ($query) {
-                        $query->where('descripcion', 'like', '%' . $this->search . '%');
-                    })->orWhereHas('cuentas', function ($query) {
-                        $query->where('nombre_cuenta', 'like', '%' . $this->search . '%');
+                $adquisiciones = Adquisicion::join("cuentas_contables", "adquisiciones.id_rubro", "=", "cuentas_contables.id")
+                ->join("tipo_requisiciones", "adquisiciones.tipo_requisicion", "=", "tipo_requisiciones.id")
+                ->join("estatus_requisiciones", "adquisiciones.estatus_general", "=", "estatus_requisiciones.id")
+                ->select('adquisiciones.id as id','adquisiciones.clave_adquisicion as id_requerimiento','estatus_requisiciones.descripcion as estado',
+                'adquisiciones.updated_at as modificacion','cuentas_contables.nombre_cuenta', 'tipo_requisiciones.descripcion')  
+                ->where('estatus_general', 1)->where('id_emisor', '=', session('id_user'));
+                $solicitudes =  Solicitud::join("cuentas_contables", "solicitudes.id_rubro", "=", "cuentas_contables.id")
+                ->join("tipo_requisiciones", "solicitudes.tipo_requisicion", "=", "tipo_requisiciones.id")
+                ->join("estatus_requisiciones", "solicitudes.estatus_rt", "=", "estatus_requisiciones.id")
+                ->select('solicitudes.id as id','solicitudes.clave_solicitud as id_requerimiento','estatus_requisiciones.descripcion as estado',
+                'solicitudes.updated_at as modificacion','cuentas_contables.nombre_cuenta', 'tipo_requisiciones.descripcion')
+                ->where('estatus_rt', 1)->where('id_emisor', '=', session('id_user'));
+                //si palabra clave esta vacia no se ejecuta
+                if(!empty($this->search)){
+                    $adquisiciones->where(function ($query) {
+                        $query->where('clave_adquisicion', 'like', '%' . $this->search . '%')
+                        ->orWhereHas('requerimiento', function ($query) {
+                            $query->where('descripcion', 'like', '%' . $this->search . '%');
+                            })->orWhereHas('cuentas', function ($query) {
+                            $query->where('nombre_cuenta', 'like', '%' . $this->search . '%');
+                            });
                     });
             });
 
@@ -103,73 +88,46 @@ class VistosBuenos extends Component
                     })->orWhereHas('rubroSolicitud', function ($query) {
                         $query->where('nombre_cuenta', 'like', '%' . $this->search . '%');
                     });
-            });
-        }
-
-
-
-        if ($this->f_inicial != 0 and $this->f_final == 0) {
-            $adquisiciones->where('adquisiciones.created_at', 'like', '%' . $this->f_inicial . '%');
-            $solicitudes->where('solicitudes.created_at', 'like', '%' . $this->f_inicial . '%');
-        }
-
-
-        if ($this->f_inicial != 0 and $this->f_final == 0) {
-            $adquisiciones->where('adquisiciones.created_at', 'like', '%' . $this->f_inicial . '%');
-            $solicitudes->where('solicitudes.created_at', 'like', '%' . $this->f_inicial . '%');
-        }
-        if ($this->f_final != 0 and $this->f_inicial == 0) {
-            $adquisiciones->where('adquisiciones.created_at', 'like', '%' . $this->f_final . '%');
-            $solicitudes->where('solicitudes.created_at', 'like', '%' . $this->f_final . '%');
-        }
-        if ($this->f_final != 0 and $this->f_inicial != 0) {
-            // dd('las dos'.$this->f_final.''.$this->f_inicial);
-            /* $adquisiciones->whereBetween('adquisiciones.created_at', [$this->f_inicial, $this->f_final]);
+                }
+                if($this->f_inicial != 0 and ($this->f_final==0 or $this->f_final=='')) {
+                    $adquisiciones->where('adquisiciones.created_at', 'like', '%' . $this->f_inicial .'%');
+                    $solicitudes->where('solicitudes.created_at', 'like', '%' . $this->f_inicial .'%');
+                   // dd('Inicial 1-'.$this->f_inicial.' 2-'.$this->f_final);
+                }
+                if($this->f_final != 0 and ($this->f_inicial==0 or $this->f_inicial=='')){
+                    $adquisiciones->where('adquisiciones.created_at', 'like', '%' . $this->f_final .'%');
+                    $solicitudes->where('solicitudes.created_at', 'like', '%' . $this->f_final .'%');
+                    //dd('final 1-'.$this->f_inicial.' 2-'.$this->f_final);
+                }
+                if(($this->f_final != 0 and $this->f_final !='') and ($this->f_inicial != 0 and $this->f_inicial !='')){
+                 //   dd('las dos'.$this->f_final.''.$this->f_inicial);
+                  /* $adquisiciones->whereBetween('adquisiciones.created_at', [$this->f_inicial, $this->f_final]);
                    $solicitudes->whereBetween('solicitudes.created_at', [$this->f_inicial, $this->f_final]);*/
-            $adquisiciones->whereDate('adquisiciones.created_at', '>=', $this->f_inicial)
-                ->whereDate('adquisiciones.created_at', '<=', $this->f_final);
-            $solicitudes->whereDate('solicitudes.created_at', '>=', $this->f_inicial)
-                ->whereDate('solicitudes.created_at', '<=', $this->f_final);
-        }
+                   $adquisiciones->whereDate('adquisiciones.created_at','>=', $this->f_inicial)
+                                ->whereDate('adquisiciones.created_at','<=', $this->f_final);
+                   $solicitudes->whereDate('solicitudes.created_at','>=', $this->f_inicial)
+                                ->whereDate('solicitudes.created_at','<=', $this->f_final);
+                               // dd('ambos 1-'.$this->f_inicial.' 2-'.$this->f_final);
+                }
 
-        $adquisiciones->whereIn('estatus_general', [1, 4])->where('id_emisor', '=', session('id_user'));
-        $solicitudes->whereIn('estatus_rt', [1, 4])->where('id_emisor', '=', session('id_user'));
-
+       
         $adquisicionesVistosBuenos = Adquisicion::join("cuentas_contables", "adquisiciones.id_rubro", "=", "cuentas_contables.id")
-            ->join("tipo_requisiciones", "adquisiciones.tipo_requisicion", "=", "tipo_requisiciones.id")
-            ->join("estatus_requisiciones", "adquisiciones.estatus_general", "=", "estatus_requisiciones.id")
-            ->select(
-                'adquisiciones.id as id',
-                'adquisiciones.clave_adquisicion as id_requerimiento',
-                'estatus_general as estador',
-                'adquisiciones.vobo_admin as vobo_admin',
-                'adquisiciones.vobo_rt as vobo_rt',
-                'estatus_requisiciones.descripcion as estado',
-                'adquisiciones.updated_at as modificacion',
-                'cuentas_contables.nombre_cuenta',
-                'tipo_requisiciones.descripcion',
-                'adquisiciones.id_emisor',
-                'adquisiciones.tipo_requisicion as tipo_requerimiento_v',
-            );
-
+        ->join("tipo_requisiciones", "adquisiciones.tipo_requisicion", "=", "tipo_requisiciones.id")
+        ->join("estatus_requisiciones", "adquisiciones.estatus_general", "=", "estatus_requisiciones.id")
+        ->select('adquisiciones.id as id','adquisiciones.clave_adquisicion as id_requerimiento','estatus_general as estador',
+        'adquisiciones.vobo_admin as vobo_admin','adquisiciones.vobo_rt as vobo_rt','estatus_requisiciones.descripcion as estado',
+        'adquisiciones.updated_at as modificacion','cuentas_contables.nombre_cuenta', 'tipo_requisiciones.descripcion', 
+        'adquisiciones.id_emisor')
+        ->where('estatus_general', 2); 
         $solicitudesVistosBuenos = Solicitud::join("cuentas_contables", "solicitudes.id_rubro", "=", "cuentas_contables.id")
-            ->join("tipo_requisiciones", "solicitudes.tipo_requisicion", "=", "tipo_requisiciones.id")
-            ->join("estatus_requisiciones", "solicitudes.estatus_rt", "=", "estatus_requisiciones.id")
-            ->select(
-                'solicitudes.id as id',
-                'solicitudes.clave_solicitud as id_requerimiento',
-                'solicitudes.estatus_rt as estador',
-                'solicitudes.vobo_admin as vobo_admin',
-                'solicitudes.vobo_rt as vobo_rt',
-                'estatus_requisiciones.descripcion as estado',
-                'solicitudes.updated_at as modificacion',
-                'cuentas_contables.nombre_cuenta',
-                'tipo_requisiciones.descripcion',
-                'solicitudes.id_emisor',
-                'solicitudes.tipo_requisicion as tipo_requerimiento_v',
-            );
-
-        if (!empty($this->searchVobo)) {
+        ->join("tipo_requisiciones", "solicitudes.tipo_requisicion", "=", "tipo_requisiciones.id")
+        ->join("estatus_requisiciones", "solicitudes.estatus_rt", "=", "estatus_requisiciones.id")
+        ->select('solicitudes.id as id','solicitudes.clave_solicitud as id_requerimiento','solicitudes.estatus_rt as estador',
+        'solicitudes.vobo_admin as vobo_admin','solicitudes.vobo_rt as vobo_rt','estatus_requisiciones.descripcion as estado',
+        'solicitudes.updated_at as modificacion','cuentas_contables.nombre_cuenta', 'tipo_requisiciones.descripcion', 
+        'solicitudes.id_emisor')
+        ->where('estatus_rt', 2);
+        if(!empty($this->searchVobo)){            
             $adquisicionesVistosBuenos->where(function ($query) {
                 $query->where('clave_adquisicion', 'like', '%' . $this->searchVobo . '%')
                     ->orWhereHas('requerimiento', function ($query) {
@@ -190,23 +148,21 @@ class VistosBuenos extends Component
             });
         }
 
-        if ($this->f_inicial_vobo != 0 and $this->f_final_vobo == 0) {
-            $adquisicionesVistosBuenos->where('adquisiciones.created_at', 'like', '%' . $this->f_inicial_vobo . '%');
-            $solicitudesVistosBuenos->where('solicitudes.created_at', 'like', '%' . $this->f_inicial_vobo . '%');
-        }
-        if ($this->f_final_vobo != 0 and $this->f_inicial_vobo == 0) {
-            $adquisicionesVistosBuenos->where('adquisiciones.created_at', 'like', '%' . $this->f_final_vobo . '%');
-            $solicitudesVistosBuenos->where('solicitudes.created_at', 'like', '%' . $this->f_final_vobo . '%');
-        }
-        if ($this->f_final_vobo != 0 and $this->f_inicial_vobo != 0) {
-            $adquisicionesVistosBuenos->whereDate('adquisiciones.created_at', '>=', $this->f_inicial_vobo)
-                ->whereDate('adquisiciones.created_at', '<=', $this->f_final_vobo);
-            $solicitudesVistosBuenos->whereDate('solicitudes.created_at', '>=', $this->f_inicial_vobo)
-                ->whereDate('solicitudes.created_at', '<=', $this->f_final_vobo);
-        }
 
-        $adquisicionesVistosBuenos->where('estatus_general', 2);
-        $solicitudesVistosBuenos->where('estatus_rt', 2);
+        if($this->f_inicial_vobo != 0 and ($this->f_final_vobo==0 or $this->f_final_vobo=='')){
+            $adquisicionesVistosBuenos->where('adquisiciones.created_at', 'like', '%' . $this->f_inicial_vobo .'%');
+            $solicitudesVistosBuenos->where('solicitudes.created_at', 'like', '%' . $this->f_inicial_vobo .'%');
+        }
+        if($this->f_final_vobo != 0 and ($this->f_inicial_vobo==0 or $this->f_inicial_vobo=='')){
+            $adquisicionesVistosBuenos->where('adquisiciones.created_at', 'like', '%' . $this->f_final_vobo .'%');
+            $solicitudesVistosBuenos->where('solicitudes.created_at', 'like', '%' . $this->f_final_vobo .'%');
+        }
+        if($this->f_final_vobo != 0 and $this->f_final_vobo != '' and $this->f_inicial_vobo != 0 and $this->f_inicial_vobo != ''){
+           $adquisicionesVistosBuenos->whereDate('adquisiciones.created_at','>=', $this->f_inicial_vobo)
+           ->whereDate('adquisiciones.created_at','<=', $this->f_final_vobo);
+           $solicitudesVistosBuenos->whereDate('solicitudes.created_at','>=', $this->f_inicial_vobo)
+           ->whereDate('solicitudes.created_at','<=', $this->f_final_vobo);
+        }
 
         if ($this->categoria == 0) {
             $requerimientos = $adquisiciones->union($solicitudes)->orderBy($this->sortColumn, $this->sortDirection)->paginate(10, pageName: 'pendientes');
@@ -252,7 +208,6 @@ class VistosBuenos extends Component
     public function mount()
     {
         $this->tipoRequisicion = TipoRequisicion::select('id', 'descripcion')->where('estatus', 1)->get();
-        //  $this->adquisiciones = Adquisicion::where('tipo_requisicion', 1)->orderBy('id')->paginate(3);
     }
 
     public function deleteAdquisicion($id)

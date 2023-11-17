@@ -11,6 +11,11 @@ class SolicitudDetalle extends Model
 
     protected $connection = 'mysql';
     protected $table = "solicitud_detalles";
+    
+    public function estatusSolicitud()
+    {
+        return $this->belongsTo(EstatusRequisiciones::class, 'estatus_rt');
+    }
 
 
     protected $fillable = [
