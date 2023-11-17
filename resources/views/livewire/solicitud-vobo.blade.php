@@ -5,7 +5,7 @@
     use Carbon\Carbon;
     ?>
     @include('layouts.header-cvu', ['accion' => 1])
-    <div x-data class="py-12">
+    <div x-data class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
@@ -18,7 +18,8 @@
                                     <label for="id_rubro">
                                         Rubro:
                                     </label>
-                                    <select class="w-auto" id="id_rubro" name="id_rubro" wire:model="id_rubro" disabled>
+                                    <select class="sm:w-auto w-full" title="Este campo no se puede modificar."
+                                        id="id_rubro" name="id_rubro" wire:model="id_rubro" disabled>
                                         @foreach ($cuentasContables as $cuentaContable)
                                             <option value="{{ $cuentaContable->id }}"
                                                 data-id-especial="{{ $cuentaContable->id_especial }}">
@@ -30,8 +31,8 @@
                                 <div class="mt-8" x-data x-init="tipoComprobacionOption = '{{ $tipo_comprobacion }}'">
                                     <label for="monto_total">Monto a solicitar: </label>
                                     <input type="number" id="monto_total" name="monto_total" wire:model="monto_total"
-                                        class="inputs-formulario-solicitudes w-40" min="0"
-                                        placeholder="$ 0000.00" disabled>
+                                        class="inputs-formulario-solicitudes w-40"
+                                        title="Este campo no se puede modificar." min="0" placeholder="$ 0000.00" disabled>
 
                                 </div>
 
@@ -39,20 +40,21 @@
                                     <label for="nombre_expedido">Expedido a nombre de: </label>
                                     <input type="text" readonly id="nombre_expedido" wire:model="nombre_expedido"
                                         class="inputs-formulario-solicitudes sm:w-96 w-full cursor-not-allowed"
-                                        placeholder="Nombre" disabled>
+                                        placeholder="Nombre" title="Este campo no se puede modificar." disabled>
                                 </div>
 
                                 <div class="mt-8">
                                     <label for="concepto"> Concepto</label>
                                     <input wire:model="concepto"
-                                        class="inputs-formulario-solicitudes sm:w-[477px] w-full" id="concepto"
-                                        type="text" placeholder="Concepto" disabled>
+                                        class="inputs-formulario-solicitudes sm:w-[477px] w-full"
+                                        id="concepto" type="text" placeholder="Concepto" title="Este campo no se puede modificar."
+                                        disabled>
                                 </div>
 
                                 <div class="mt-8">
                                     <label for="justificacionS">Justificación</label>
-                                    <textarea wire:model="justificacionS" class="sm:w-3/4 w-full block" rows="3" cols="30" id="justificacionS"
-                                        placeholder="Justificación" disabled></textarea>
+                                    <textarea wire:model="justificacionS" class="sm:w-3/4 w-full block" rows="3" cols="30"
+                                        id="justificacionS" placeholder="Justificación" title="Este campo no se puede modificar." disabled></textarea>
                                 </div>
 
                                 @if ($id_rubro_especial == '2')
@@ -62,15 +64,18 @@
                                             class="mt-2 sm:ml-10 sm:grid sm:grid-cols-2 gap-4 flex-col sm:w-3/4 w-full">
                                             <div class="flex-col">
                                                 <label class="block mb-1" for="finicial">Fecha inicial:</label>
-                                                <input wire:model="finicial" class="inputs-formulario" id="finicial"
-                                                    type="date" placeholder=""
+                                                <input wire:model="finicial"
+                                                    class="inputs-formulario"
+                                                    title="Este campo no se puede modificar." id="finicial" type="date"
+                                                    placeholder=""
                                                     min="{{ Carbon::now()->addDay(15)->format('Y-m-d') }}" disabled>
                                             </div>
                                             <div class="flex-col">
                                                 <label class="block mb-1 sm:mt-0 mt-4" for="ffinal">Fecha
                                                     final:</label>
-                                                <input wire:model="ffinal" class="inputs-formulario" id="ffinal"
-                                                    type="date" placeholder=""
+                                                <input wire:model="ffinal" class="inputs-formulario"
+                                                    title="Este campo no se puede modificar." id="ffinal" type="date"
+                                                    placeholder=""
                                                     min="{{ Carbon::now()->addDay(15)->format('Y-m-d') }}" disabled>
                                             </div>
                                         </div>
@@ -84,13 +89,15 @@
                                             <label class=" items-center">
                                                 <input type="radio" x-model="tipoComprobacionOption"
                                                     wire:model='tipo_comprobacion' name="tipo_comprobacion"
-                                                    value="vale" disabled>
+                                                    value="vale"
+                                                    title="Este campo no se puede modificar." disabled>
                                                 <span class="ml-2">Vales</span>
                                             </label>
                                             <label class=" items-center ml-6">
                                                 <input type="radio" x-model="tipoComprobacionOption"
                                                     wire:model='tipo_comprobacion' name="tipo_comprobacion"
-                                                    value="ficha" disabled>
+                                                    value="ficha"
+                                                    title="Este campo no se puede modificar." disabled>
                                                 <span class="ml-2">Ficha de gasto</span>
                                             </label>
                                         </div>
@@ -123,15 +130,17 @@
                                     <label for="vobo">VoBo al requerimiento solicitado. Se envía para VoBo del
                                         Admistrativo/Investigador.</label>
                                     @error('vobo')
-                                        <span class=" text-rojo">{{ $message }}</span>
+                                        <span class=" text-rojo sm:inline-block block">{{ $message }}</span>
                                     @enderror
                                 </div>
 
                                 <div class="sm:text-right text-center mt-5">
-                                    <button type="submit" @click="confirmationVoBo()" class="btn-primary sm:w-auto w-5/6">Confirmar VoBo</button>
-                                    <button type="button" class="btn-danger sm:w-auto w-5/6" @click="rechazarVoBo()">Rechazar VoBo</button>
+                                    <button type="submit" @click="confirmationVoBo()"
+                                        class="btn-primary sm:w-auto w-5/6">Confirmar VoBo</button>
+                                    <button type="button" class="btn-danger sm:w-auto w-5/6"
+                                        @click="rechazarVoBo()">Rechazar VoBo</button>
                                     <button type="button" class="btn-warning sm:w-auto w-5/6"
-                                       x-on:click="window.location.href = '{{ route('cvu.vobo') }}'">Cancelar</button>
+                                        x-on:click="window.location.href = '{{ route('cvu.vobo') }}'">Cancelar</button>
                                 </div>
                             </form>
                         </div>
@@ -154,7 +163,7 @@
                     showCancelButton: true,
                     confirmButtonColor: '#62836C',
                     cancelButtonColor: '#E86562',
-                    confirmButtonText: 'Guardar',
+                    confirmButtonText: 'Si, enviar',
                     cancelButtonText: 'Cerrar',
 
                 }).then((result) => {
@@ -166,25 +175,41 @@
 
             function rechazarVoBo() {
                 Swal.fire({
-                    customClass: {
-                        title: 'swal2-title'
-                    },
-                    text: 'El requerimiento estará disponible nuevamente para edición en el perfil del emisor',
-                    icon: 'warning',
-                    iconColor: '#9D9361',
-                    showCancelButton: true,
-                    confirmButtonColor: '#62836C',
-                    cancelButtonColor: '#E86562',
-                    confirmButtonText: 'Aceptar',
-                    cancelButtonText: 'Cerrar',
-
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        //window.livewire.emit('darVobo');
-                    }
-                });
+                        title: '¿Estás seguro que deseas rechazar el requerimiento?',
+                        text: 'El requerimiento estará disponible nuevamente para edición en el perfil del emisor.',
+                        icon: 'warning',
+                        iconColor: '#9D9361',
+                        input: "textarea",
+                        inputPlaceholder: 'Motivo de rechazo',
+                        customClass:{
+                            input: 'textarea'
+                        },
+                        inputAttributes: {
+                            autocapitalize: "off"
+                        },
+                        showCancelButton: true,
+                        confirmButtonColor: '#62836C',
+                        cancelButtonColor: '#E86562',
+                        confirmButtonText: 'Si, aceptar',
+                        cancelButtonText: 'Cerrar',
+                        showLoaderOnConfirm: true,
+                        inputValidator: motivoRechazo => {
+                            // Si motivoRechazo es válido, debe regresar undefined. Si no, una cadena
+                            if (!motivoRechazo) {
+                                return "El motivo de rechazo no puede estar vacío.";
+                            } else {
+                                return undefined;
+                            }
+                        }
+                    })
+                    .then(resultado => {
+                        if (resultado.value) {
+                            motivoRechazo = resultado.value;
+                            //alert("Motivo de rechazo:\n " + motivoRechazo);
+                            window.livewire.emit('rechazarVobo', motivoRechazo);
+                        }
+                    });
             }
-
         </script>
     @endpush
 </div>

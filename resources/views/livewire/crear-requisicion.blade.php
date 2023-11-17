@@ -25,7 +25,7 @@
             position: 'top-center',
             icon: 'success',
             text: '{{ session('success') }}',
-            confirmButtonText: 'Aceptar!',
+            confirmButtonText: 'Aceptar',
             confirmButtonColor: '#62836C',
             showConfirmButton: true,
             //timer: 2500

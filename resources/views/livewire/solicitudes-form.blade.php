@@ -15,7 +15,7 @@ use Carbon\Carbon;
                             <div>
                                 <div class="mt-6">
                                     <label for="id_rubro">
-                                        Rubro:
+                                        Rubro*:
                                     </label>
                                     <select class="sm:w-auto w-full" id="id_rubro" name="id_rubro" wire:model="id_rubro"
                                         @change="$wire.resetearRecursos($event.target.selectedOptions[0].getAttribute('data-id-especial'))">
@@ -31,7 +31,7 @@ use Carbon\Carbon;
                                     @enderror
                                 </div>
                                 <div class="mt-8" x-data x-init="tipoComprobacionOption = '{{ $tipo_comprobacion }}'">
-                                    <label for="monto_total">Monto a solicitar: </label>
+                                    <label for="monto_total">Monto a solicitar*: </label>
                                     <input type="number" id="monto_total" name="monto_total" wire:model="monto_total"
                                         class="inputs-formulario-solicitudes w-40" min="0"
                                         placeholder="$ 0000.00">
@@ -42,14 +42,14 @@ use Carbon\Carbon;
                                 <div class="mt-8">
                                     <label for="nombre_expedido">Expedido a nombre de: </label>
                                     <input type="text" readonly id="nombre_expedido" wire:model="nombre_expedido"
-                                        class="inputs-formulario-solicitudes sm:w-96 w-full cursor-not-allowed"
+                                        class="inputs-formulario-solicitudes sm:w-96 w-full cursor-not-allowed" title="No se puede editar."
                                         placeholder="Nombre">
                                     @error('nombre_expedido')
                                         <span class="text-rojo sm:inline-block block">{{ $message }}</span>
                                     @enderror
                                 </div>
                                 <div class="mt-8">
-                                    <label for="concepto"> Concepto</label>
+                                    <label for="concepto"> Concepto*:</label>
                                     <input wire:model="concepto"
                                         class="inputs-formulario-solicitudes sm:w-[477px] w-full" id="concepto"
                                         type="text" placeholder="Concepto">
@@ -58,7 +58,7 @@ use Carbon\Carbon;
                                     @enderror
                                 </div>
                                 <div class="mt-8">
-                                    <label for="justificacionS">Justificación</label>
+                                    <label for="justificacionS">Justificación*:</label>
                                     <textarea wire:model="justificacionS" class="sm:w-3/4 w-full block" rows="3" cols="30" id="justificacionS"
                                         placeholder="Justificación"></textarea>
                                     @error('justificacionS')
@@ -69,10 +69,11 @@ use Carbon\Carbon;
                                 @if ($id_rubro_especial == '2')
                                     <div class="mt-8">
                                         <label>Periodo</label>
+                                        <p class="sm:ml-10 text-verde"><span class="font-bold">Nota: </span>Recuerda que tus requerimientos tiene un periodo de solicitud de 15 días previos.</p>
                                         <div
                                             class="mt-2 sm:ml-10 sm:grid sm:grid-cols-2 gap-4 flex-col sm:w-3/4 w-full">
                                             <div class="flex-col">
-                                                <label class="block mb-1" for="finicial">Fecha inicial:</label>
+                                                <label class="block mb-1" for="finicial">Fecha inicial*:</label>
                                                 <input wire:model="finicial" class="inputs-formulario" id="finicial"
                                                     type="date"
                                                     min="{{ Carbon::now()->addDay(15)->format('Y-m-d') }}">
@@ -82,7 +83,7 @@ use Carbon\Carbon;
                                             </div>
                                             <div class="flex-col">
                                                 <label class="block mb-1 sm:mt-0 mt-4" for="ffinal">Fecha
-                                                    final:</label>
+                                                    final*:</label>
                                                 <input wire:model="ffinal" class="inputs-formulario" id="ffinal"
                                                     type="date"
                                                     min="{{ Carbon::now()->addDay(15)->format('Y-m-d') }}">
@@ -96,7 +97,7 @@ use Carbon\Carbon;
 
                                 @if ($id_rubro_especial == '3')
                                     <div class="my-5">
-                                        <label for="tipo_comprobacion">Tipo de solicitud</label>
+                                        <label for="tipo_comprobacion">Tipo de solicitud*:</label>
                                         <div class="sm:ml-10 mt-2">
                                             <label class=" items-center">
                                                 <input type="radio" x-model="tipoComprobacionOption"
@@ -118,7 +119,7 @@ use Carbon\Carbon;
                                 @endif
                                 @if ($id_rubro_especial == '3')
                                     <div class="mt-2">
-                                        <label for="bitacoraPdfTemp">Bitacora firmada PDF</label>
+                                        <label for="bitacoraPdfTemp">Bitacora firmada PDF*:</label>
                                         <input type="file" id="bitacoraPdfTemp" wire:model='bitacoraPdfTemp'
                                             accept=".pdf">
                                     @empty($docsCartaExclusividad)
@@ -160,7 +161,7 @@ use Carbon\Carbon;
                             <label for="comprobacion">Me obligo a comprobar esta cantidad en un plazo no mayor a 20
                                 días naturales, a partir de la
                                 recepción del cheque y/o transferencia, en caso contrario autorizo a la U.A.E.M.
-                                para que se descuente vía nómina.
+                                para que se descuente vía nómina*.
                             </label>
                             @error('comprobacion')
                                 <span class=" text-rojo sm:inline-block block">{{ $message }}</span>
@@ -171,7 +172,7 @@ use Carbon\Carbon;
                             <input type="checkbox" id="aviso_privacidad" name="aviso_privacidad"
                                 wire:model='aviso_privacidad' class="mr-1">
                             <label for="aviso_privacidad">Acepto aviso de privacidad simplificada de la
-                                UAEMEX.</label>
+                                UAEMEX*.</label>
                             @error('aviso_privacidad')
                                 <span class=" text-rojo sm:inline-block block">{{ $message }}</span>
                             @enderror
@@ -180,7 +181,7 @@ use Carbon\Carbon;
                             <input type="checkbox" id="vobo" name="vobo" wire:model='vobo'
                                 class="mr-1">
                             <label for="vobo">VoBo al requerimiento solicitado. Se envía para VoBo del
-                                Admistrativo/Investigador.</label>
+                                Admistrativo/Investigador*.</label>
                             @error('vobo')
                                 <span class=" text-rojo sm:inline-block block">{{ $message }}</span>
                             @enderror
@@ -218,7 +219,7 @@ use Carbon\Carbon;
             showCancelButton: true,
             confirmButtonColor: '#62836C',
             cancelButtonColor: '#E86562',
-            confirmButtonText: 'Guardar',
+            confirmButtonText: 'Si, guardar',
             cancelButtonText: 'Cerrar',
 
         }).then((result) => {
@@ -240,7 +241,7 @@ use Carbon\Carbon;
             showCancelButton: true,
             confirmButtonColor: '#62836C',
             cancelButtonColor: '#E86562',
-            confirmButtonText: 'Enviar',
+            confirmButtonText: 'Si, enviar',
             cancelButtonText: 'Cerrar',
         }).then((result) => {
             if (result.isConfirmed) {
