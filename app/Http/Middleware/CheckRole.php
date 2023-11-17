@@ -15,7 +15,10 @@ class CheckRole
      */
     public function handle(Request $request, Closure $next, $role): Response
     {
-        if ($request->user() && $request->user()->rol != $role) {
+
+        $allowedRoles = [1, 2];
+
+        if ($request->user() && !in_array($request->user()->rol, $allowedRoles)) {
             abort(403, 'Acceso no autorizado.');
         }
         return $next($request);
