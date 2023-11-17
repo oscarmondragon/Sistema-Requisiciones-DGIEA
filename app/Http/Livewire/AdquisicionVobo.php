@@ -41,6 +41,8 @@ class AdquisicionVobo extends Component
     public $docsAnexoOtrosDocumentos = [];
     public $referer ='';
 
+    public $observacionesVobo;
+
     protected $rules = [
         'vobo' => 'accepted'
     ];
@@ -103,7 +105,8 @@ class AdquisicionVobo extends Component
     }
 
     protected $listeners = [
-        'darVobo'
+        'darVobo',
+        'rechazarVobo'
     ];
 
     public function darVobo()
@@ -113,10 +116,6 @@ class AdquisicionVobo extends Component
         $who_vobo = Session::get('VoBo_Who');
         $fecha_vobo = Carbon::now()->toDateString();
         $id_user = Session::get('id_user');
-
-
-
-
 
         try {
             DB::beginTransaction();
@@ -140,6 +139,28 @@ class AdquisicionVobo extends Component
             return redirect()->back()->with('error', 'error al intentar confirmar visto bueno. Intente más tarde.' . $e->getMessage());
         }
 
+    }
+
+    public function rechazarVobo($motivo) {
+        $this->observacionesVobo = $motivo;
+        try {
+            DB::beginTransaction();
+            $adquisicion = Adquisicion::where('id', $this->adquisicion->id)->first();
+            if ($adquisicion) {
+                $clave_adquisicion = $adquisicion->clave_adquisicion;
+                $adquisicion->estatus_general = 4;
+                $adquisicion->observaciones_vobo = $this->observacionesVobo;
+                $adquisicion->save();
+
+            }
+            DB::commit();
+            return redirect('/cvu-vobo')->with('success', 'Su solicitud con clave ' . $clave_adquisicion . ' ha sido  rechazada.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'error al intentar rechazar visto bueno. Intente más tarde.' . $e->getMessage());
+        }
+        
     }
 
     public function updated($vobo)

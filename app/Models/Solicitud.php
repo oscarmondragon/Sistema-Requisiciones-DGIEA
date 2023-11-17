@@ -61,7 +61,8 @@ class Solicitud extends Model
         'id_emisor',
         'estatus_dgiea',
         'estatus_rt',
-        'tipo_comprobacion'
+        'tipo_comprobacion',
+        'observaciones_vobo'
     ];
 
 

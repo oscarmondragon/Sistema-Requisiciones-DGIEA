@@ -55,6 +55,7 @@ class Adquisicion extends Model
         'id_revisor',
         'estatus_general',
         'observaciones',
+        'observaciones_vobo',
         'subtotal',
         'iva',
         'total'

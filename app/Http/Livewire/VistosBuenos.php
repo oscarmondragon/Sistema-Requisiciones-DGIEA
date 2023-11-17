@@ -21,13 +21,17 @@ class VistosBuenos extends Component
     public $search = '';
     public $searchVobo = '';
 
-    public $categoria=0;
-    public $categoriaVobo=0;
-    public $tipoRequisicion ;
-    public $f_inicial=0;
-    public $f_final=0;
-    public $f_inicial_vobo=0;
-    public $f_final_vobo=0;
+    public $categoria = 0;
+    public $categoriaVobo = 0;
+    public $tipoRequisicion;
+    public $f_inicial = 0;
+    public $f_final = 0;
+    public $f_inicial_vobo = 0;
+    public $f_final_vobo = 0;
+
+    
+    public $sortColumn = 'id';
+    public $sortDirection = 'asc';
 
     protected $listeners = ['deleteAdquisicion', 'deleteSolicitud'];
 
@@ -75,14 +79,14 @@ class VistosBuenos extends Component
                             $query->where('nombre_cuenta', 'like', '%' . $this->search . '%');
                             });
                     });
+            });
 
-                    $solicitudes->where(function ($query) {
-                        $query->where('clave_solicitud', 'like', '%' . $this->search . '%')
-                            ->orWhereHas('requerimientoSolicitud', function ($query) {
-                                $query->where('descripcion', 'like', '%' . $this->search . '%');
-                            })->orWhereHas('rubroSolicitud', function ($query) {
-                            $query->where('nombre_cuenta', 'like', '%' . $this->search . '%');
-                        });
+            $solicitudes->where(function ($query) {
+                $query->where('clave_solicitud', 'like', '%' . $this->search . '%')
+                    ->orWhereHas('requerimientoSolicitud', function ($query) {
+                        $query->where('descripcion', 'like', '%' . $this->search . '%');
+                    })->orWhereHas('rubroSolicitud', function ($query) {
+                        $query->where('nombre_cuenta', 'like', '%' . $this->search . '%');
                     });
                 }
                 if($this->f_inicial != 0 and ($this->f_final==0 or $this->f_final=='')) {
@@ -129,8 +133,8 @@ class VistosBuenos extends Component
                     ->orWhereHas('requerimiento', function ($query) {
                         $query->where('descripcion', 'like', '%' . $this->searchVobo . '%');
                     })->orWhereHas('cuentas', function ($query) {
-                    $query->where('nombre_cuenta', 'like', '%' . $this->searchVobo . '%');
-                });
+                        $query->where('nombre_cuenta', 'like', '%' . $this->searchVobo . '%');
+                    });
             });
 
             $solicitudesVistosBuenos->where(function ($query) {
@@ -139,10 +143,11 @@ class VistosBuenos extends Component
                     ->orWhereHas('requerimientoSolicitud', function ($query) {
                         $query->where('descripcion', 'like', '%' . $this->searchVobo . '%');
                     })->orWhereHas('rubroSolicitud', function ($query) {
-                    $query->where('nombre_cuenta', 'like', '%' . $this->searchVobo . '%');
-                });
+                        $query->where('nombre_cuenta', 'like', '%' . $this->searchVobo . '%');
+                    });
             });
         }
+
 
         if($this->f_inicial_vobo != 0 and ($this->f_final_vobo==0 or $this->f_final_vobo=='')){
             $adquisicionesVistosBuenos->where('adquisiciones.created_at', 'like', '%' . $this->f_inicial_vobo .'%');
@@ -159,29 +164,46 @@ class VistosBuenos extends Component
            ->whereDate('solicitudes.created_at','<=', $this->f_final_vobo);
         }
 
-        if($this->categoria == 0){
-            $requerimientos = $adquisiciones->union($solicitudes)->orderBy('id')->paginate(10,pageName: 'pendientes');            
-         }else if($this->categoria==1 ){                       
-            $requerimientos = $adquisiciones->orderBy('id')->paginate(10,pageName: 'pendientes');             
-         }else if($this->categoria==2 ){
-            $requerimientos = $solicitudes->orderBy('id')->paginate(10,pageName: 'pendientes');            
-         }
-
-         if($this->categoriaVobo == 0){
-            $juntasvobo =$adquisicionesVistosBuenos->union($solicitudesVistosBuenos)->orderBy('id')->paginate(10, pageName: 'vobo');           
-         }else if($this->categoriaVobo==1 ){
-            $juntasvobo = $adquisicionesVistosBuenos->orderBy('id')->paginate(5, pageName: 'vobo');
-        } else if ($this->categoriaVobo == 2) {
-            $juntasvobo = $solicitudesVistosBuenos->orderBy('id')->paginate(5, pageName: 'vobo');
+        if ($this->categoria == 0) {
+            $requerimientos = $adquisiciones->union($solicitudes)->orderBy($this->sortColumn, $this->sortDirection)->paginate(10, pageName: 'pendientes');
+            //dd($requerimientos);
+        } else if ($this->categoria == 1) {
+            $requerimientos = $adquisiciones->orderBy($this->sortColumn, $this->sortDirection)->paginate(10, pageName: 'pendientes');
+        } else if ($this->categoria == 2) {
+            $requerimientos = $solicitudes->orderBy($this->sortColumn, $this->sortDirection)->paginate(10, pageName: 'pendientes');
+        } else if ($this->categoria == 3) {
+            $adquisiciones->where('estatus_general', 1);
+            $solicitudes->where('estatus_rt', 1);
+            $requerimientos = $adquisiciones->union($solicitudes)->orderBy($this->sortColumn, $this->sortDirection)->paginate(10, pageName: 'pendientes');
+            //dd($requerimientos);
+        } else if ($this->categoria == 4) {
+            $adquisiciones->where('estatus_general', 4);
+            $solicitudes->where('estatus_rt', 4);
+            $requerimientos = $adquisiciones->union($solicitudes)->orderBy($this->sortColumn, $this->sortDirection)->paginate(10, pageName: 'pendientes');
         }
+
+        if ($this->categoriaVobo == 0) {
+            $juntasvobo = $adquisicionesVistosBuenos->union($solicitudesVistosBuenos)->orderBy($this->sortColumn, $this->sortDirection)->paginate(10, pageName: 'vobo');
+        } else if ($this->categoriaVobo == 1) {
+            $juntasvobo = $adquisicionesVistosBuenos->orderBy($this->sortColumn, $this->sortDirection)->paginate(10, pageName: 'vobo');
+        } else if ($this->categoriaVobo == 2) {
+            $juntasvobo = $solicitudesVistosBuenos->orderBy($this->sortColumn, $this->sortDirection)->paginate(10, pageName: 'vobo');
+        }
+
+        //dd($requerimientos);
+
 
         return view(
             'livewire.vistos-buenos',
-            ['adquisiciones' => $requerimientos, 'adquisicionesVistosBuenos' => $juntasvobo]
+            ['adquisiciones' => $requerimientos, 'adquisicionesVistosBuenos' => $juntasvobo,]
         );
     }
 
-
+    public function sort($column) {
+        $this->sortColumn = $column;
+        $this->sortDirection = $this->sortDirection == 'asc' ? 'desc' : 'asc';
+        //dd($this->sortColumn);
+    }
 
     public function mount()
     {
@@ -208,5 +230,4 @@ class VistosBuenos extends Component
         $this->categoriaVobo = $categoria;
         // dd($this->categoria);
     }
-
 }

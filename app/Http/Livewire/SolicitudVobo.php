@@ -52,6 +52,7 @@ class SolicitudVobo extends Component
     public $estatus_dgiea;
     public $estatus_rt;
     public $observaciones;
+    public $observacionesVobo;
 
     public $tipo_comprobacion;
     public $docsbitacoraPdf = [];
@@ -113,7 +114,8 @@ class SolicitudVobo extends Component
     }
 
     protected $listeners = [
-        'darVobo'
+        'darVobo',
+        'rechazarVobo'
     ];
 
     public function darVobo()
@@ -151,6 +153,31 @@ class SolicitudVobo extends Component
 
 
     }
+
+    public function rechazarVobo($motivo){
+        $this->observacionesVobo = $motivo;
+        try {
+            DB::beginTransaction();
+            $solicitud = Solicitud::where('id', $this->solicitud->id)->first();
+            if ($solicitud) {
+                $clave_solicitud = $solicitud->clave_solicitud;
+                $solicitud->estatus_rt = 4;
+                $solicitud->estatus_dgiea = 4;
+                $solicitud->observaciones_vobo = $this->observacionesVobo;
+
+                $solicitud->save();
+
+            }
+            DB::commit();
+            return redirect('/cvu-vobo')->with('success', 'Su solicitud con clave ' . $clave_solicitud . ' ha sido rechazada.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'error al intentar rechazar visto bueno. Intente más tarde.' . $e->getMessage());
+        }
+
+    }
+
     public function updated($vobo)
     {
         $this->validateOnly($vobo);

@@ -11,5 +11,6 @@ class Proyecto extends Model
 
     protected $connection = 'sqlsrv';
     protected $table = "View_1_OcaPry"; //nombre de la vista
+    protected $primaryKey = 'CveEntPry';
 
 }
