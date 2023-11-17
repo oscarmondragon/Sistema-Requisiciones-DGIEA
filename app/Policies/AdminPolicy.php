@@ -12,6 +12,6 @@ class AdminPolicy
      */
     public function admin(User $user)
     {
-        return $user->rol === 1;
+        return $user->rol === 1 || $user->rol === 2;
     }
 }

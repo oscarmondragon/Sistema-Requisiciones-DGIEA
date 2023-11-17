@@ -47,7 +47,7 @@ Route::get('/seguimiento-siia', ShowRequerimientosSIIA::class)
 
 
 Route::get('/asignacion-proyectos', AsignacionProyectos::class)
-    ->middleware(['auth', 'verified', CheckRole::class . ':1'])->name('admin.asignacion');
+    ->middleware(['auth', 'verified', CheckRole::class . ':1,2'])->name('admin.asignacion');
 
 
 Route::middleware('auth')->group(function () {
