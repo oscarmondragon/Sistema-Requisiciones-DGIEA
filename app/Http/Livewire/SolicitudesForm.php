@@ -216,7 +216,7 @@ class SolicitudesForm extends Component
 
                 // Genera la clave_solicitud con fecha y id
                 $id_solicitud = $solicitud->id;
-                $fecha_actual = date('y');
+                $fecha_actual = date('ymd');
                 $clave_solicitud = 'S' . $clave_proyecto . $fecha_actual . $id_solicitud;
 
                 // Actualiza la clave de solicitud en el registro de la solicitud
@@ -378,7 +378,7 @@ class SolicitudesForm extends Component
 
                     // Genera la clave_solicitud con clave_proyecto, fecha y id
                     $id_solicitud = $solicitud->id;
-                    $fecha_actual = date('y');
+                    $fecha_actual = date('ymd');
                     $clave_solicitud = 'S' . $clave_proyecto . $fecha_actual . $id_solicitud;
 
                     // Actualiza la clave de solicitud en el registro de la solicitud

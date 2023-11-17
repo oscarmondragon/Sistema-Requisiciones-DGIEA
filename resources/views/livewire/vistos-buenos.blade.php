@@ -84,7 +84,7 @@
                                                         <td> {{ $valor->nombre_cuenta }} </td>
                                                         <td> {{ $valor->descripcion }} </td>
                                                         <td class="sm:text-center">
-                                                            @if ($valor->estado == 'Creada')
+                                                            @if ($valor->id_estatus == 1)
                                                                 <span
                                                                     class="bg-yellow-100 text-yellow-700 rounded-full p-1 px-2 font-bold text-center block mx-1">
                                                                     {{ $valor->estado }}

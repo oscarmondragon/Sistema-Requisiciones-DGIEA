@@ -7,7 +7,7 @@
           <label for="idRevisorAsignados">
               Revisor:
             </label>
-            <select class="sm:w-auto w-full"  id="nuevoRevisor" name="nuevoRevisor" wire:model="nuevoRevisor" >
+            <select class="w-full"  id="nuevoRevisor" name="nuevoRevisor" wire:model="nuevoRevisor" >
               <option value="0">Seleccione una opción</option>
               @foreach ($revisores as $revisor)
               @if ($revisor['id']!= $id_revisor)
