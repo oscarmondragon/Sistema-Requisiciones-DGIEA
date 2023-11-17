@@ -1,10 +1,10 @@
 <div>
     {{-- Do your work, then step back. --}}
 @include('layouts.header-cvu', ['accion' => 2])
-<div x-data class="py-12">
+<div x-data class="py-6">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
       <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-        <div class="p-6 text-gray-900">
+        <div class="p-6">
           <div class="">
             <div>
               <h1 class="mt-6">Visto bueno para adquisición  con clave: {{$adquisicion->clave_adquisicion}}</h1>
@@ -15,7 +15,7 @@
                       <label for="id_rubro">
                         Rubro:
                       </label>
-                      <select class="w-auto" required id="id_rubro" name="id_rubro" wire:model="id_rubro" disabled >
+                      <select class="sm:w-auto w-full" required id="id_rubro" name="id_rubro" wire:model="id_rubro" title="Este campo no se puede modificar." disabled >
                         @foreach ($cuentasContables as $cuentaContable)
                         <option value="{{ $cuentaContable->id }}" data-id-especial="{{ $cuentaContable->id_especial }}">{{ $cuentaContable->nombre_cuenta }}</option>
                         @endforeach
@@ -109,18 +109,22 @@
                       </label>
                       <div class="mt-2">
                         <label class="inline-flex items-center">
-                          <input type="radio" x-model="afectaSelectedOption" wire:model='afecta_investigacion' name="siAfecta" value="1" disabled>
+                          <input type="radio" x-model="afectaSelectedOption" wire:model='afecta_investigacion' name="siAfecta" value="1"
+                          title="Este campo no se puede modificar." disabled>
                           <span class="ml-2">Si</span>
                         </label>
                         <label class="inline-flex items-center ml-6">
-                          <input type="radio" x-model="afectaSelectedOption" wire:model='afecta_investigacion'  name="noAfecta" value="0"  disabled>
+                          <input type="radio" x-model="afectaSelectedOption" wire:model='afecta_investigacion'  name="noAfecta" value="0"
+                          title="Este campo no se puede modificar." disabled>
                           <span class="ml-2">No</span>
                         </label>
                       </div>
         
                       <div x-show="afectaSelectedOption === '1'" class="flex flex-col">
                         <label for="justificacion" class="my-2">Justificación académica:</label>
-                        <textarea value="{{ $adquisicion->justificacion_academica }}" id="justificacion" name="justificacion" wire:model='justificacion_academica' placeholder="Justificación" class="w-3/4" rows="2" cols="30" disabled>
+                        <textarea value="{{ $adquisicion->justificacion_academica }}" id="justificacion" name="justificacion" 
+                          wire:model='justificacion_academica' placeholder="Justificación" title="Este campo no se puede modificar."
+                          class="sm:w-3/4 w-full" rows="2" cols="30" disabled>
                         </textarea>
                       </div>
                   </div>
@@ -131,11 +135,13 @@
                     </label>
                     <div class="mt-2">
                       <label class="inline-flex items-center">
-                        <input type="radio" x-model="exclusividadSelectedOption" wire:model='exclusividad' name="siExclusivo" value="1" disabled>
+                        <input type="radio" x-model="exclusividadSelectedOption" wire:model='exclusividad' name="siExclusivo" value="1"
+                        title="Este campo no se puede modificar." disabled>
                         <span class="ml-2">Si</span>
                       </label>
                       <label class="inline-flex items-center ml-6">
-                        <input type="radio" x-model="exclusividadSelectedOption" wire:model='exclusividad' wire:click="resetdocsCartaExclusividad" name="noExclusivo" value="0"  disabled>
+                        <input type="radio" x-model="exclusividadSelectedOption" wire:model='exclusividad' wire:click="resetdocsCartaExclusividad" name="noExclusivo" value="0"
+                        title="Este campo no se puede modificar."  disabled>
                         <span class="ml-2">No</span>
                       </label>
                     </div>
@@ -261,23 +267,42 @@
 
             function rechazarVoBo() {
                 Swal.fire({
-                    customClass: {
-                        title: 'swal2-title'
-                    },
-                    text: 'El requerimiento estará disponible nuevamente para edición en el perfil del emisor',
-                    icon: 'warning',
-                    iconColor: '#9D9361',
-                    showCancelButton: true,
-                    confirmButtonColor: '#62836C',
-                    cancelButtonColor: '#E86562',
-                    confirmButtonText: 'Aceptar',
-                    cancelButtonText: 'Cerrar',
-
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        //window.livewire.emit('darVobo');
-                    }
-                });
+                        title: '¿Estás seguro que deseas rechazar el requerimiento?',
+                        text: 'El requerimiento estará disponible nuevamente para edición en el perfil del emisor.',
+                        icon: 'warning',
+                        iconColor: '#9D9361',
+                        input: "textarea",
+                        backdrop: true,
+                        inputPlaceholder: 'Motivo de rechazo',
+                        customClass:{
+                          input: 'textarea'
+                        },
+                        //html: `<textarea class="w-full" rows="3" cols="30" placeholder="Motivo de rechazo"></textarea>`,
+                        inputAttributes: {
+                            autocapitalize: "off"
+                        },
+                        showCancelButton: true,
+                        confirmButtonColor: '#62836C',
+                        cancelButtonColor: '#E86562',
+                        confirmButtonText: 'Si, aceptar',
+                        cancelButtonText: 'Cerrar',
+                        showLoaderOnConfirm: true,
+                        inputValidator: motivoRechazo => {
+                            // Si motivoRechazo es válido, debe regresar undefined. Si no, una cadena
+                            if (!motivoRechazo) {
+                                return "El motivo de rechazo no puede estar vacío.";
+                            } else {
+                                return undefined;
+                            }
+                        }
+                    })
+                    .then(resultado => {
+                        if (resultado.value) {
+                            motivo = resultado.value;
+                            //alert("Motivo de rechazo:\n " + motivo);
+                            window.livewire.emit('rechazarVobo', motivo);
+                        }
+                    });
             }
         </script>
     @endpush
