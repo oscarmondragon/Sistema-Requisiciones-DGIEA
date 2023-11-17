@@ -110,6 +110,7 @@ class AdquisicionesForm extends Component
 
     public function mount($id = 0)
     {
+        $this->referer = $_SERVER['HTTP_REFERER'];
         $this->tamanyoDocumentos = env('TAMANYO_MAX_DOCS', 2048);
         $this->tipoDocumento = env('DOCUMENTOS_PERMITIDOS', 'pdf');
         $this->cuentasContables = CuentaContable::where('estatus', 1)->whereIn('tipo_requisicion', [1, 3])->get();

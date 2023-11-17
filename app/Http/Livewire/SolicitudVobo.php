@@ -59,7 +59,7 @@ class SolicitudVobo extends Component
     public $bitacoraPdfTemp;
 
     public $tamanyoDocumentos;
-
+    public $referer ='';
 
 
     protected $rules = [
@@ -71,7 +71,7 @@ class SolicitudVobo extends Component
 
     public function mount($id = 0)
     {
-
+        $this->referer = $_SERVER['HTTP_REFERER'];
         $this->solicitud = Solicitud::find($id);
 
         $this->cuentasContables = CuentaContable::where('estatus', 1)->whereIn('tipo_requisicion', [2, 3])->get();

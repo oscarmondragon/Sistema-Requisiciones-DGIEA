@@ -118,6 +118,7 @@
                                 @endif
 
                                 <div class="mt-4 sm:ml-10">
+                                @if (str_contains($referer, 'vobo'))
                                     <input type="checkbox" id="vobo" name="vobo" wire:model='vobo'
                                         class="mr-1">
                                     <label for="vobo">VoBo al requerimiento solicitado. Se envía para VoBo del
@@ -125,13 +126,18 @@
                                     @error('vobo')
                                         <span class=" text-rojo">{{ $message }}</span>
                                     @enderror
+                                @endif
                                 </div>
 
                                 <div class="sm:text-right text-center mt-5">
+                                @if (str_contains($referer, 'vobo'))
                                     <button type="submit" @click="confirmationVoBo()" class="btn-primary sm:w-auto w-5/6">Confirmar VoBo</button>
                                     <button type="button" class="btn-danger sm:w-auto w-5/6" @click="rechazarVoBo()">Rechazar VoBo</button>
                                     <button type="button" class="btn-warning sm:w-auto w-5/6"
                                        x-on:click="window.location.href = '{{ route('cvu.vobo') }}'">Cancelar</button>
+                                       @else
+                    <button type="button" class="btn-warning sm:w-auto w-5/6" x-on:click="window.location.href = '{{ route('cvu.seguimiento') }}'">Regresar</button>
+                    @endif
                                 </div>
                             </form>
                         </div>
