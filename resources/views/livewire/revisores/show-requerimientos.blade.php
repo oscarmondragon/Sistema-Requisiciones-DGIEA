@@ -1,33 +1,141 @@
-<div>
-        <x-slot name="header">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Requerimientos de proyectos en DGIEA') }}
-            </h2>
-        </x-slot>
-      
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6 ">
-                      <table class="table-auto">
-                        <thead>
-                          <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">id</th>
-                            <th scope="col">id tipo</th>
-                            <th scope="col">clave</th>
-                            <th scope="col">id proyecto</th>
-                            <th scope="col">id rubro</th>
-                            <th scope="col">Ultima modificacion</th>        
-                          </tr>
-                        </thead>
-                        <tbody>
-                        
-                </tbody>
-              </table>
-             
-                    </div>
-                </div>
-            </div>
-        </div>
-</div>
+<div x-data class="py-6">
+  <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+      <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+          <div class="p-6 text-textos_generales">
+              <div>
+                  <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                      <div>
+                         {{--  <img src="img/ic_req_pendientes.png" alt="Image/png" class="inline-block"> --}}
+                          <h3 class="inline-block text-xl pl-2">Requerimientos en revisión</h3>
+                      </div>
+                      @if (session('success'))
+                          <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                          <script>
+                              Swal.fire({
+                                  position: 'top-center',
+                                  icon: 'success',
+                                  text: '{{ session('success') }}',
+                                  confirmButtonText: 'Aceptar',
+                                  confirmButtonColor: '#62836C',
+                                  showConfirmButton: true,
+                                  //timer: 2500
+                              })
+                          </script>
+                      @endif
+                      <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                          <div class="p-6">
+                              <!-- <input type="text" wire:model="search" placeholder="Buscar por clave, tipo..." class="inputs-formulario-solicitudes"> -->
+                              <div class="flex flex-wrap items-center gap-2">
+                                  <div class="sm:w-2/3  w-full">
+                                      <select class="sm:w-auto  w-full" id="categoria" name="categoria"
+                                          wire:model="categoria">
+                                          <option value="0">Todo</option>
+                                          @foreach ($tipoRequisicion as $tipo)
+                                              <option value="{{ $tipo->id }}">{{ $tipo->descripcion }}</option>
+                                          @endforeach
+                                          <option value="3">Creada</option>
+                                          <option value="4">Rechazado VoBo</option>
+                                      </select>
+                                      <input type="text" wire:model="search" onfocus="this.value=null"
+                                          class="inputs-formulario-solicitudes md:mt-0 mt-2 p-2.5 sm:w-96 w-full"
+                                          placeholder="Buscar por clave, tipo...">
+
+                                  </div>
+
+                                  <div class="flex-1 md:mt-0 mt-2">
+                                      <p class="text-verde font-semibold">Filtrar por fecha</p>
+                                      <input type="date" name="f_inicial" id="f_inicial" wire:model="f_inicial"
+                                          class="bg-blanco text-textos_generales rounded-md border-transparent h-10 sm:w-auto w-full">
+                                      <input type="date" name="f_final" id="f_final" wire:model="f_final"
+                                          class="bg-blanco text-textos_generales rounded-md border-transparent h-10 md:mt-0 mt-2 sm:w-auto w-full">
+                                  </div>
+                              </div>
+                              @if ($adquisiciones->first())
+                                  <div class="overflow-x-auto">
+                                      <table class="table-auto text-left text-sm w-3/4 sm:w-full mx-auto mt-6">
+                                          <thead>
+                                              <tr class="bg-blanco">
+                                                  <th class="w-[13%] cursor-pointer"
+                                                      wire:click="sort('id_requerimiento')">
+                                                      Clave requerimiento
+                                                  </th>
+                                                  <th class="w-[30%] cursor-pointer"
+                                                      wire:click="sort('nombre_cuenta')">
+                                                      Rubro
+                                                  </th>
+                                                  <th class="w-[17%] cursor-pointer" wire:click="sort('descripcion')">
+                                                      Tipo requerimiento
+                                                  </th>
+                                                  <th class="w-[13%] sm:text-center cursor-pointer"
+                                                      wire:click="sort('estado')">
+                                                      Estatus
+                                                  </th>
+                                                  <th class="w-[15%] cursor-pointer"
+                                                      wire:click="sort('modificacion')">
+                                                      Ultima modificación</th>
+                                                  <th class="w-[12%]">Acciones</th>
+                                              </tr>
+                                          </thead>
+                                          <tbody>
+
+                                              @foreach ($adquisiciones as $adquisicion)
+                                                  <tr class="border-b-gray-200 border-transparent">
+                                                      <td> {{ $adquisicion->id_requerimiento }} </td>
+                                                      <td> {{ $adquisicion->nombre_cuenta }} </td>
+                                                      <td> {{ $adquisicion->descripcion }} </td>
+                                                      <td class="sm:text-center">
+                                                          @if ($adquisicion->id_estatus == 3)
+                                                              <span
+                                                                  class="bg-yellow-100 text-yellow-700 rounded-full p-1 px-2 font-bold text-center block mx-1">
+                                                                  {{ $adquisicion->estado }}
+                                                              </span>
+                                                          @elseif($adquisicion->id_estatus == 5)
+                                                              <span
+                                                                  class="bg-red-100 text-red-500 rounded-full p-1 font-bold text-center block mx-1">
+                                                                  {{ $adquisicion->estado }}
+                                                              </span>
+                                                          @elseif($adquisicion->id_estatus == 6)
+                                                            <span
+                                                            class="bg-green-100 text-green-700 rounded-full p-1 font-bold text-center block mx-1">
+                                                            {{ $adquisicion->estado }}
+                                                        </span>
+                                                          @endif
+                                                      </td>
+                                                      <td> {{ $adquisicion->modificacion }}</td>
+                                                      @if ($adquisicion->tipo_requerimiento == 1)
+                                                          <td>
+                                                              <a href="{{ route('adquisiciones.editar', $adquisicion->id) }}"
+                                                                  title="Editar">
+                                                                  <button class="btn-primary sm:w-auto w-5/6" title="Revisar">
+                                                                      Revisar
+                                                                  </button>
+                                                              </a>
+                                                          </td>
+                                                      @else
+                                                          <td>
+                                                              <a  href="{{ route('solicitudes.editar', $adquisicion->id) }}"
+                                                                  title="Revisar">
+                                                                  <button class="btn-primary sm:w-auto w-5/6" title="Revisar">
+                                                                    Revisar
+                                                                </button>
+                                                              </a>
+                                                          </td>
+                                                      @endif
+                                                  </tr>
+                                              @endforeach
+
+                                          </tbody>
+                                      </table>
+                                  </div>
+                              @else
+                                  <td colspan="6">
+                                      <h2 class="text-center font-bold mt-5">No hay requerimientos pendientes de
+                                          envío.</h2>
+                                  </td>
+                              @endif
+                              <div class="mt-5">
+                                  {{ $adquisiciones->links() }}
+                              </div>
+                          </div>
+                      </div>
+                  </div>
