@@ -324,15 +324,29 @@
     @endif
     @if (session('success-asignacion'))
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <script>
-            Swal.fire({
-                position: 'top-center',
-                icon: 'success',
-                text: '{{ session('success') }}',
-                confirmButtonColor: '#62836C',
-                showConfirmButton: false,
-                timer: 1000
-            })
-        </script>
-    @endif
-</div>
+      <script>
+        Swal.fire({
+          position: 'top-center',
+          icon: 'success',
+          text: '{{ session('success-asignacion') }}',
+          confirmButtonColor: '#62836C',
+          showConfirmButton: false,
+          timer: 1000
+        })
+      </script>
+      @endif
+      @if(session('success'))
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+      <script>
+        Swal.fire({
+          position: 'top-center',
+          icon: 'success',
+          text: '{{ session('success') }}',
+          confirmButtonColor: '#62836C',
+          showConfirmButton: false,
+          timer: 1000
+        })
+      </script>
+      @endif
+ </div>
+

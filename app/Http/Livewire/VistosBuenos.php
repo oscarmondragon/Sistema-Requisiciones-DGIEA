@@ -29,7 +29,7 @@ class VistosBuenos extends Component
     public $f_inicial_vobo = 0;
     public $f_final_vobo = 0;
 
-    
+
     public $sortColumn = 'id';
     public $sortDirection = 'asc';
 
@@ -52,8 +52,10 @@ class VistosBuenos extends Component
         $this->resetPage();
     }
 
+
     public function render()
     {
+
         // $adquisiciones = Adquisicion::where('estatus_general', 1)->orderBy('id')->paginate(3);        
         $adquisiciones = Adquisicion::join("cuentas_contables", "adquisiciones.id_rubro", "=", "cuentas_contables.id")
             ->join("tipo_requisiciones", "adquisiciones.tipo_requisicion", "=", "tipo_requisiciones.id")
@@ -94,8 +96,8 @@ class VistosBuenos extends Component
                     ->orWhereHas('requerimiento', function ($query) {
                         $query->where('descripcion', 'like', '%' . $this->search . '%');
                     })->orWhereHas('cuentas', function ($query) {
-                        $query->where('nombre_cuenta', 'like', '%' . $this->search . '%');
-                    });
+                    $query->where('nombre_cuenta', 'like', '%' . $this->search . '%');
+                });
             });
 
             $solicitudes->where(function ($query) {
@@ -103,39 +105,35 @@ class VistosBuenos extends Component
                     ->orWhereHas('requerimientoSolicitud', function ($query) {
                         $query->where('descripcion', 'like', '%' . $this->search . '%');
                     })->orWhereHas('rubroSolicitud', function ($query) {
-                        $query->where('nombre_cuenta', 'like', '%' . $this->search . '%');
-                    });
+                    $query->where('nombre_cuenta', 'like', '%' . $this->search . '%');
+                });
             });
         }
-
-
-
-        if ($this->f_inicial != 0 and $this->f_final == 0) {
+        if ($this->f_inicial != 0 and ($this->f_final == 0 or $this->f_final == '')) {
             $adquisiciones->where('adquisiciones.created_at', 'like', '%' . $this->f_inicial . '%');
             $solicitudes->where('solicitudes.created_at', 'like', '%' . $this->f_inicial . '%');
+            // dd('Inicial 1-'.$this->f_inicial.' 2-'.$this->f_final);
         }
-
-
-        if ($this->f_inicial != 0 and $this->f_final == 0) {
-            $adquisiciones->where('adquisiciones.created_at', 'like', '%' . $this->f_inicial . '%');
-            $solicitudes->where('solicitudes.created_at', 'like', '%' . $this->f_inicial . '%');
-        }
-        if ($this->f_final != 0 and $this->f_inicial == 0) {
+        if ($this->f_final != 0 and ($this->f_inicial == 0 or $this->f_inicial == '')) {
             $adquisiciones->where('adquisiciones.created_at', 'like', '%' . $this->f_final . '%');
             $solicitudes->where('solicitudes.created_at', 'like', '%' . $this->f_final . '%');
+            //dd('final 1-'.$this->f_inicial.' 2-'.$this->f_final);
         }
-        if ($this->f_final != 0 and $this->f_inicial != 0) {
-            // dd('las dos'.$this->f_final.''.$this->f_inicial);
+        if (($this->f_final != 0 and $this->f_final != '') and ($this->f_inicial != 0 and $this->f_inicial != '')) {
+            //   dd('las dos'.$this->f_final.''.$this->f_inicial);
             /* $adquisiciones->whereBetween('adquisiciones.created_at', [$this->f_inicial, $this->f_final]);
-                   $solicitudes->whereBetween('solicitudes.created_at', [$this->f_inicial, $this->f_final]);*/
+             $solicitudes->whereBetween('solicitudes.created_at', [$this->f_inicial, $this->f_final]);*/
             $adquisiciones->whereDate('adquisiciones.created_at', '>=', $this->f_inicial)
                 ->whereDate('adquisiciones.created_at', '<=', $this->f_final);
             $solicitudes->whereDate('solicitudes.created_at', '>=', $this->f_inicial)
                 ->whereDate('solicitudes.created_at', '<=', $this->f_final);
+            // dd('ambos 1-'.$this->f_inicial.' 2-'.$this->f_final);
         }
+
 
         // $adquisiciones->whereIn('estatus_general', [1, 4])->where('id_emisor', '=', session('id_user'));
         // $solicitudes->whereIn('estatus_rt', [1, 4])->where('id_emisor', '=', session('id_user'));
+
 
         $adquisicionesVistosBuenos = Adquisicion::join("cuentas_contables", "adquisiciones.id_rubro", "=", "cuentas_contables.id")
             ->join("tipo_requisiciones", "adquisiciones.tipo_requisicion", "=", "tipo_requisiciones.id")
@@ -153,6 +151,7 @@ class VistosBuenos extends Component
                 'adquisiciones.id_emisor',
                 'adquisiciones.tipo_requisicion as tipo_requerimiento_v',
             )->where('estatus_general', 2);
+
 
         $solicitudesVistosBuenos = Solicitud::join("cuentas_contables", "solicitudes.id_rubro", "=", "cuentas_contables.id")
             ->join("tipo_requisiciones", "solicitudes.tipo_requisicion", "=", "tipo_requisiciones.id")
@@ -177,8 +176,8 @@ class VistosBuenos extends Component
                     ->orWhereHas('requerimiento', function ($query) {
                         $query->where('descripcion', 'like', '%' . $this->searchVobo . '%');
                     })->orWhereHas('cuentas', function ($query) {
-                        $query->where('nombre_cuenta', 'like', '%' . $this->searchVobo . '%');
-                    });
+                    $query->where('nombre_cuenta', 'like', '%' . $this->searchVobo . '%');
+                });
             });
 
             $solicitudesVistosBuenos->where(function ($query) {
@@ -187,20 +186,21 @@ class VistosBuenos extends Component
                     ->orWhereHas('requerimientoSolicitud', function ($query) {
                         $query->where('descripcion', 'like', '%' . $this->searchVobo . '%');
                     })->orWhereHas('rubroSolicitud', function ($query) {
-                        $query->where('nombre_cuenta', 'like', '%' . $this->searchVobo . '%');
-                    });
+                    $query->where('nombre_cuenta', 'like', '%' . $this->searchVobo . '%');
+                });
             });
         }
 
-        if ($this->f_inicial_vobo != 0 and $this->f_final_vobo == 0) {
+
+        if ($this->f_inicial_vobo != 0 and ($this->f_final_vobo == 0 or $this->f_final_vobo == '')) {
             $adquisicionesVistosBuenos->where('adquisiciones.created_at', 'like', '%' . $this->f_inicial_vobo . '%');
             $solicitudesVistosBuenos->where('solicitudes.created_at', 'like', '%' . $this->f_inicial_vobo . '%');
         }
-        if ($this->f_final_vobo != 0 and $this->f_inicial_vobo == 0) {
+        if ($this->f_final_vobo != 0 and ($this->f_inicial_vobo == 0 or $this->f_inicial_vobo == '')) {
             $adquisicionesVistosBuenos->where('adquisiciones.created_at', 'like', '%' . $this->f_final_vobo . '%');
             $solicitudesVistosBuenos->where('solicitudes.created_at', 'like', '%' . $this->f_final_vobo . '%');
         }
-        if ($this->f_final_vobo != 0 and $this->f_inicial_vobo != 0) {
+        if ($this->f_final_vobo != 0 and $this->f_final_vobo != '' and $this->f_inicial_vobo != 0 and $this->f_inicial_vobo != '') {
             $adquisicionesVistosBuenos->whereDate('adquisiciones.created_at', '>=', $this->f_inicial_vobo)
                 ->whereDate('adquisiciones.created_at', '<=', $this->f_final_vobo);
             $solicitudesVistosBuenos->whereDate('solicitudes.created_at', '>=', $this->f_inicial_vobo)
@@ -245,7 +245,8 @@ class VistosBuenos extends Component
         );
     }
 
-    public function sort($column) {
+    public function sort($column)
+    {
         $this->sortColumn = $column;
         $this->sortDirection = $this->sortDirection == 'asc' ? 'desc' : 'asc';
         //dd($this->sortColumn);
@@ -254,7 +255,6 @@ class VistosBuenos extends Component
     public function mount()
     {
         $this->tipoRequisicion = TipoRequisicion::select('id', 'descripcion')->where('estatus', 1)->get();
-        //  $this->adquisiciones = Adquisicion::where('tipo_requisicion', 1)->orderBy('id')->paginate(3);
     }
 
     public function deleteAdquisicion($id)

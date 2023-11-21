@@ -41,15 +41,12 @@
                                             placeholder="Buscar por clave, tipo...">
 
                                     </div>
-
-                                    <div class="flex-1 md:mt-0 mt-2">
-                                        <p class="text-verde font-semibold">Filtrar por fecha</p>
-                                        <input type="date" name="f_inicial" id="f_inicial" wire:model="f_inicial"
-                                            class="bg-blanco text-textos_generales rounded-md border-transparent h-10 sm:w-auto w-full">
-                                        <input type="date" name="f_final" id="f_final" wire:model="f_final"
-                                            class="bg-blanco text-textos_generales rounded-md border-transparent h-10 md:mt-0 mt-2 sm:w-auto w-full">
-                                    </div>
-                                </div>
+                  <div class="flex-1 md:mt-0 mt-2">
+                   <p class="text-verde font-semibold">Filtrar por fecha</p>
+                    <input type="date" name="f_inicial" id="f_inicial" wire:model.live="f_inicial" class="bg-blanco text-textos_generales rounded-md border-transparent h-10 sm:w-auto w-full">
+                    <input type="date" name="f_final" id="f_final" wire:model.live="f_final" class="bg-blanco text-textos_generales rounded-md border-transparent h-10 md:mt-0 mt-2 sm:w-auto w-full">
+                  </div>
+              </div     
                                 @if ($adquisiciones->first())
                                     <div class="overflow-x-auto">
                                         <table class="table-auto text-left text-sm w-3/4 sm:w-full mx-auto mt-6">
@@ -132,7 +129,6 @@
                                                         @endif
                                                     </tr>
                                                 @endforeach
-
                                             </tbody>
                                         </table>
                                     </div>
@@ -173,12 +169,11 @@
                                     </div>
 
                                     <div class="flex-1 md:mt-0 mt-2">
-                                        <p class="text-verde font-semibold">Filtrar por fecha</p>
-                                        <input type="date" name="f_inicial_vobo" id="f_inicial_vobo"
-                                            wire:model="f_inicial_vobo"
+                                          <p class="text-verde font-semibold">Filtrar por fecha</p>
+                                        <input type="date" name="f_inicial_vobo" id="f_inicial_vobo" wire:model.live="f_inicial_vobo"
                                             class="bg-blanco text-textos_generales rounded-md border-transparent h-10 sm:w-auto w-full">
-                                        <input type="date" name="f_final_vobo" id="f_final_vobo"
-                                            wire:model="f_final_vobo"
+                                        <input type="date" name="f_final_vobo" id="f_final_vobo" wire:model.live="f_final_vobo"
+
                                             class="bg-blanco text-textos_generales rounded-md border-transparent h-10 md:mt-0 mt-2 sm:w-auto w-full">
                                     </div>
                                 </div>

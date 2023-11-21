@@ -12,6 +12,11 @@ class AdquisicionDetalle extends Model
     protected $connection = 'mysql';
     protected $table = "adquisicion_detalles";
 
+    public function estatus()
+    {
+        return $this->belongsTo(EstatusRequisiciones::class, 'estatus_rt');
+    }
+
     protected $fillable = [
         'id_adquisicion',
         'descripcion',

@@ -62,12 +62,18 @@ Route::middleware('auth')->group(function () {
 Route::get('/adquisiciones/{id}/editar', AdquisicionesForm::class)->middleware('CvuAuth')->name('adquisiciones.editar');
 Route::get('/adquisiciones/{id}/vobo', AdquisicionVobo::class)->middleware('CvuAuth')->name('adquisicion.vobo');
 
+Route::get('/adquisicionesS/{id}/editar', AdquisicionesForm::class)->middleware('CvuAuth')->name('adquisiciones.seguimiento.editar');
+Route::get('/adquisiciones/{id}/ver', AdquisicionVobo::class)->middleware('CvuAuth')->name('adquisicion.ver');
+
 
 
 
 //RUTAS SOLICITUDES
 Route::get('/solicitudes/{id}/editar', SolicitudesForm::class)->middleware('CvuAuth')->name('solicitudes.editar');
 Route::get('/solicitudes/{id}/vobo', SolicitudVobo::class)->middleware('CvuAuth')->name('solicitud.vobo');
+
+Route::get('/solicitudesS/{id}/editar', SolicitudesForm::class)->middleware('CvuAuth')->name('solicitudes.seguimiento.editar');
+Route::get('/solicitudes/{id}/ver', SolicitudVobo::class)->middleware('CvuAuth')->name('solicitud.ver');
 
 //RUTAS DESDE CVU
 
