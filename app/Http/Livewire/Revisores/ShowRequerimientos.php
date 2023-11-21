@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Revisores;
 
+use App\Models\AsignacionProyecto;
 use Livewire\Component;
 use App\Models\Adquisicion;
 use App\Models\Solicitud;
@@ -60,13 +61,19 @@ class ShowRequerimientos extends Component
 
     public function render()
     {
-        // $adquisiciones = Adquisicion::where('estatus_general', 1)->orderBy('id')->paginate(3);        
+        //Usuario logueado
+        $user = auth()->user();
+        //traemos los proyectos asignados al usuario logueado
+        $proyectosAsignados = AsignacionProyecto::select('id_proyecto')->where('id_revisor', $user->id)->pluck('id_proyecto');
+
+        //  dd($proyectosAsignados);
         $adquisiciones = Adquisicion::join("cuentas_contables", "adquisiciones.id_rubro", "=", "cuentas_contables.id")
             ->join("tipo_requisiciones", "adquisiciones.tipo_requisicion", "=", "tipo_requisiciones.id")
             ->join("estatus_requisiciones", "adquisiciones.estatus_general", "=", "estatus_requisiciones.id")
             ->select(
                 'adquisiciones.id as id',
                 'adquisiciones.clave_adquisicion as id_requerimiento',
+                'adquisiciones.clave_proyecto as clave_proyecto',
                 'estatus_requisiciones.descripcion as estado',
                 'adquisiciones.updated_at as modificacion',
                 'cuentas_contables.nombre_cuenta',
@@ -75,7 +82,8 @@ class ShowRequerimientos extends Component
                 'adquisiciones.vobo_admin as vobo_admin',
                 'adquisiciones.vobo_rt as vobo_rt',
                 'adquisiciones.estatus_general as id_estatus',
-            )->whereIn('estatus_general', [3, 5, 6]);
+            )->whereIn('estatus_general', [3, 5, 6])->whereIn('clave_proyecto', $proyectosAsignados);
+
 
         $solicitudes = Solicitud::join("cuentas_contables", "solicitudes.id_rubro", "=", "cuentas_contables.id")
             ->join("tipo_requisiciones", "solicitudes.tipo_requisicion", "=", "tipo_requisiciones.id")
@@ -83,6 +91,7 @@ class ShowRequerimientos extends Component
             ->select(
                 'solicitudes.id as id',
                 'solicitudes.clave_solicitud as id_requerimiento',
+                'solicitudes.clave_proyecto as clave_proyecto',
                 'estatus_requisiciones.descripcion as estado',
                 'solicitudes.updated_at as modificacion',
                 'cuentas_contables.nombre_cuenta',
@@ -92,7 +101,7 @@ class ShowRequerimientos extends Component
                 'solicitudes.vobo_rt as vobo_rt',
                 'solicitudes.estatus_rt as id_estatus',
 
-            )->whereIn('estatus_rt', [3, 5, 6]);
+            )->whereIn('estatus_rt', [3, 5, 6])->whereIn('clave_proyecto', $proyectosAsignados);
 
         //si palabra clave esta vacia no se ejecuta
         if (!empty($this->search)) {

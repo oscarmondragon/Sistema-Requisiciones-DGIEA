@@ -59,6 +59,10 @@
                                                       wire:click="sort('id_requerimiento')">
                                                       Clave requerimiento
                                                   </th>
+                                                  <th class="w-[13%] cursor-pointer"
+                                                  wire:click="sort('id_requerimiento')">
+                                                  Clave proyecto
+                                              </th>
                                                   <th class="w-[30%] cursor-pointer"
                                                       wire:click="sort('nombre_cuenta')">
                                                       Rubro
@@ -81,6 +85,7 @@
                                               @foreach ($adquisiciones as $adquisicion)
                                                   <tr class="border-b-gray-200 border-transparent">
                                                       <td> {{ $adquisicion->id_requerimiento }} </td>
+                                                      <td> {{ $adquisicion->clave_proyecto }} </td>
                                                       <td> {{ $adquisicion->nombre_cuenta }} </td>
                                                       <td> {{ $adquisicion->descripcion }} </td>
                                                       <td class="sm:text-center">
