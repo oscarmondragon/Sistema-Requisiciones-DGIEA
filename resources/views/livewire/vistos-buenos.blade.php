@@ -25,7 +25,7 @@
                         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                             <div class="p-6">
                                 <!-- <input type="text" wire:model="search" placeholder="Buscar por clave, tipo..." class="inputs-formulario-solicitudes"> -->
-                                <div class="flex flex-wrap items-center gap-2">
+                                <div class="flex flex-wrap items-end gap-x-2">
                                     <div class="sm:w-2/3  w-full">
                                         <select class="sm:w-auto  w-full" id="categoria" name="categoria"
                                             wire:model="categoria">
@@ -45,14 +45,17 @@
                                     <div class="flex-1 md:mt-0 mt-2">
                                         <p class="text-verde font-semibold">Filtrar por fecha</p>
                                         <input type="date" name="f_inicial" id="f_inicial" wire:model="f_inicial"
-                                            class="bg-blanco text-textos_generales rounded-md border-transparent h-10 sm:w-auto w-full">
+                                            class="bg-blanco text-textos_generales rounded-md border-transparent h-10 sm:w-[160px] w-full">
                                         <input type="date" name="f_final" id="f_final" wire:model="f_final"
-                                            class="bg-blanco text-textos_generales rounded-md border-transparent h-10 md:mt-0 mt-2 sm:w-auto w-full">
+                                            class="bg-blanco text-textos_generales rounded-md border-transparent h-10 sm:ml-4 md:mt-0 mt-2 sm:w-[160px] w-full">
                                     </div>
+                                </div>
+                                <div class="text-end mt-3">
+                                    <button class="bg-gray-400" wire:click="limpiarFiltros">Limpiar filtros</button>
                                 </div>
                                 @if ($adquisiciones->first())
                                     <div class="overflow-x-auto">
-                                        <table class="table-auto text-left text-sm w-3/4 sm:w-full mx-auto mt-6">
+                                        <table class="table-auto text-left text-sm w-3/4 sm:w-full mx-auto mt-4">
                                             <thead>
                                                 <tr class="bg-blanco">
                                                     <th class="w-[13%] cursor-pointer"
@@ -155,7 +158,7 @@
                         </div>
                         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                             <div class="p-6 ">
-                                <div class="flex flex-wrap items-center gap-2">
+                                <div class="flex flex-wrap items-end gap-2">
                                     <div class="sm:w-2/3 w-full">
                                         <select class="sm:w-auto w-full" id="categoriaVobo" name="categoriaVobo"
                                             wire:model="categoriaVobo"
@@ -176,11 +179,14 @@
                                         <p class="text-verde font-semibold">Filtrar por fecha</p>
                                         <input type="date" name="f_inicial_vobo" id="f_inicial_vobo"
                                             wire:model="f_inicial_vobo"
-                                            class="bg-blanco text-textos_generales rounded-md border-transparent h-10 sm:w-auto w-full">
+                                            class="bg-blanco text-textos_generales rounded-md border-transparent h-10 sm:w-[160px] w-full">
                                         <input type="date" name="f_final_vobo" id="f_final_vobo"
                                             wire:model="f_final_vobo"
-                                            class="bg-blanco text-textos_generales rounded-md border-transparent h-10 md:mt-0 mt-2 sm:w-auto w-full">
+                                            class="bg-blanco text-textos_generales rounded-md border-transparent h-10 sm:ml-4 md:mt-0 mt-2 sm:w-[160px] w-full">
                                     </div>
+                                </div>
+                                <div class="text-end mt-3">
+                                    <button class="bg-gray-400" wire:click="limpiarFiltrosVobo">Limpiar filtros</button>
                                 </div>
 
                                 @if ($adquisicionesVistosBuenos->first())
