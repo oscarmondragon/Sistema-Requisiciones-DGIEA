@@ -17,8 +17,15 @@ use Carbon\Carbon;
                                     <label for="id_rubro">
                                         Rubro<samp class="text-rojo">*</samp>:
                                     </label>
-                                    <select class="sm:w-auto w-full" id="id_rubro" name="id_rubro" wire:model="id_rubro"
+                                    @if (str_contains($referer, 'vobo')|| str_contains($referer, 'seguimiento'))
+                                        <select class="w-auto" id="id_rubro" name="id_rubro" wire:model="id_rubro" disabled>                                      
+                                    
+                                    @else
+                                        <select disabledclass="sm:w-auto w-full" id="id_rubro" name="id_rubro" wire:model="id_rubro"
                                         @change="$wire.resetearRecursos($event.target.selectedOptions[0].getAttribute('data-id-especial'))">
+
+                                    @endif
+                                    
                                         <option value="0">Selecciona una opción</option>
                                         @foreach ($cuentasContables as $cuentaContable)
                                             <option value="{{ $cuentaContable->id }}"
@@ -188,6 +195,7 @@ use Carbon\Carbon;
                         </div>
 
                         <div class="sm:text-right text-center mt-5">
+                        @if (str_contains($referer, 'vobo'))
                             @empty($solicitud)
                                 <button type="button" @click="saveConfirmation()"
                                     class="btn-success sm:w-auto w-5/6">Guardar</button>
@@ -196,6 +204,11 @@ use Carbon\Carbon;
                                 class="btn-primary sm:w-auto w-5/6">Enviar para VoBo</button>
                             <button type="button" @click="cancelarSolicitud()"
                                 class="btn-warning sm:w-auto w-5/6">Cancelar</button>
+                                 @else
+                                 <button type="submit" @click="saveConfirmationVoBo()"
+                                class="btn-primary sm:w-auto w-5/6">Enviar para VoBo</button>
+                <button type="button" class="btn-warning sm:w-auto w-5/6" x-on:click="window.location.href = '{{ route('cvu.seguimiento') }}'">Regresar</button>
+                @endif
                         </div>
                 </div>
                 </form>

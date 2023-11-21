@@ -38,6 +38,10 @@ class Solicitud extends Model
 
         return $this->hasOne(SolicitudDetalle::class, 'id_solicitud');
     }
+    public function detalless()
+    {
+        return $this->hasMany(AdquisicionDetalle::class, 'id_adquisicion');
+    }
 
     protected $fillable = [
         'clave_solicitud',

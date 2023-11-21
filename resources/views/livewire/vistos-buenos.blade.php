@@ -42,6 +42,7 @@
 
                                     </div>
 
+
                                     <div class="flex-1 md:mt-0 mt-2">
                                         <p class="text-verde font-semibold">Filtrar por fecha</p>
                                         <input type="date" name="f_inicial" id="f_inicial" wire:model="f_inicial"
@@ -53,6 +54,7 @@
                                 <div class="text-end mt-3">
                                     <button class="bg-gray-400" wire:click="limpiarFiltros">Limpiar filtros</button>
                                 </div>
+
                                 @if ($adquisiciones->first())
                                     <div class="overflow-x-auto">
                                         <table class="table-auto text-left text-sm w-3/4 sm:w-full mx-auto mt-4">
@@ -135,7 +137,6 @@
                                                         @endif
                                                     </tr>
                                                 @endforeach
-
                                             </tbody>
                                         </table>
                                     </div>
@@ -176,6 +177,7 @@
                                     </div>
 
                                     <div class="flex-1 md:mt-0 mt-2">
+
                                         <p class="text-verde font-semibold">Filtrar por fecha</p>
                                         <input type="date" name="f_inicial_vobo" id="f_inicial_vobo"
                                             wire:model="f_inicial_vobo"
@@ -183,6 +185,7 @@
                                         <input type="date" name="f_final_vobo" id="f_final_vobo"
                                             wire:model="f_final_vobo"
                                             class="bg-blanco text-textos_generales rounded-md border-transparent h-10 sm:ml-4 md:mt-0 mt-2 sm:w-[160px] w-full">
+
                                     </div>
                                 </div>
                                 <div class="text-end mt-3">

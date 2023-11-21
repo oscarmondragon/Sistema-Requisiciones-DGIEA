@@ -13,7 +13,14 @@
                   <label for="id_rubro">
                     Rubro<samp class="text-rojo">*</samp>:
                   </label>
-                  <select class="sm:w-auto w-full" required id="id_rubro" name="id_rubro" wire:model="id_rubro" @change="$wire.resetearBienes($event.target.selectedOptions[0].getAttribute('data-id-especial'))">
+                  @if (str_contains($referer, 'vobo')|| str_contains($referer, 'seguimiento'))
+                                        <select class="w-auto" id="id_rubro" name="id_rubro" wire:model="id_rubro" disabled>                                      
+                                    
+                                    @else
+                                    <select class="sm:w-auto w-full" required id="id_rubro" name="id_rubro" 
+                                    wire:model="id_rubro" @change="$wire.resetearBienes($event.target.selectedOptions[0].getAttribute('data-id-especial'))">
+                                    @endif
+                  
                     <option value="0">Selecciona una opción</option>
                     @foreach ($cuentasContables as $cuentaContable)
                     <option value="{{ $cuentaContable->id }}" data-id-especial="{{ $cuentaContable->id_especial }}">{{ $cuentaContable->nombre_cuenta }}</option>
@@ -283,11 +290,16 @@
         @error('vobo') <span class=" text-rojo error sm:inline-block block">{{ $message }}</span> @enderror
 
               <div class="sm:text-right text-center my-10 -mb-5">
+              @if (str_contains($referer, 'vobo'))
                @empty($id_adquisicion)
                 <button type="button" @click="saveConfirmation()" class="btn-success sm:w-auto w-5/6">Guardar</button>
                 @endempty
                 <button type="submit" @click="saveConfirmationVoBo()" class="btn-primary sm:w-auto w-5/6">Enviar para VoBo</button>
                 <button type="button" @click="cancelarAdquisicion()" class="btn-warning sm:w-auto w-5/6">Cancelar</button>
+                @else
+                <button type="submit" @click="saveConfirmationVoBo()" class="btn-primary sm:w-auto w-5/6">Enviar para VoBo</button>
+                <button type="button" class="btn-warning sm:w-auto w-5/6" x-on:click="window.location.href = '{{ route('cvu.seguimiento') }}'">Regresar</button>
+                @endif
               </div>
           </div>
           </form>

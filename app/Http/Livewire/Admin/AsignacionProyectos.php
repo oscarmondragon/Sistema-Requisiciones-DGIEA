@@ -161,7 +161,7 @@ class AsignacionProyectos extends Component
                 ->whereIn('CveEntPry', $idAsignados);
 
         }
-        $proyectosAsignados = $queryAsignados->get();
+        //$proyectosAsignados = $queryAsignados->get();
 
 
         //Buscador proyectos asignados
@@ -208,7 +208,7 @@ class AsignacionProyectos extends Component
         }
 
         //PAGINAMOS LOS PROYECTOS ASIGNADOS
-        $proyectosAsignados = $queryAsignados->orderBy($this->sortColumn, $this->sortDirection)->paginate(5, pageName: 'asignados');
+        $proyectosAsignados = $queryAsignados->orderBy('NomCenCos')->paginate(5, pageName: 'asignados');
         //AGREGAMOS LOS DATOS DEL REVISOR 
         $id_revisoresAsignados = $proyectosAsignados->getCollection()->map(function ($proyecto) {
             // Obtenemos el id de cada revisor 
@@ -223,7 +223,6 @@ class AsignacionProyectos extends Component
         });
         //asignamos los datos del revisor a proyectosAsignados
         $proyectosAsignados->setCollection($id_revisoresAsignados);
-
         // Filtrar por id_revisor
         /*   if ($this->idRevisorAsignados) {
               $idRevisor = $this->idRevisorAsignados;
@@ -235,7 +234,9 @@ class AsignacionProyectos extends Component
 
 
         return view('livewire.admin.asignacion-proyectos', [
-            'proyectosSinAsignar' => $proyectosSinAsignar->orderBy($this->sortColumn, $this->sortDirection)->paginate(5, pageName: 'sinasignar'),
+
+            'proyectosSinAsignar' => $proyectosSinAsignar->orderBy('NomCenCos')->paginate(5, pageName: 'sinasignar'),
+
             'proyectosAsignados' => $proyectosAsignados
         ]);
     }
