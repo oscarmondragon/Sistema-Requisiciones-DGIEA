@@ -11,7 +11,7 @@
               <div>
                 <div class="my-6">
                   <label for="id_rubro">
-                    Rubro*:
+                    Rubro<samp class="text-rojo">*</samp>:
                   </label>
                   @if (str_contains($referer, 'vobo')|| str_contains($referer, 'seguimiento'))
                                         <select class="w-auto" id="id_rubro" name="id_rubro" wire:model="id_rubro" disabled>                                      
@@ -31,7 +31,7 @@
 
                 <div class="mb-4">
                   <label>
-                    Descripción del bien o servicio*:
+                    Descripción del bien o servicio<samp class="text-rojo">*</samp>:
                   </label>
                   @if ($id_rubro != 0)
                   <button type="button" x-on:click="$wire.emit('openModal', 'adquisicion-description-modal', { 'id_rubro': {{ $id_rubro }}, 'id_rubro_especial': {{$id_rubro_especial ?: 'null'}} })" class="bg-verde w-8 h-8 py-0 px-0 rounded-full hover:bg-[#3c5042] focus:ring-2 focus:outline-none focus:ring-[#3c5042]">
@@ -151,7 +151,7 @@
                   </div>
 
                   <div x-show="afectaSelectedOption === '1'" class="flex flex-col">
-                    <label for="justificacion" class="my-2">Justificación académica*:</label>
+                    <label for="justificacion" class="my-2">Justificación académica<samp class="text-rojo">*</samp>:</label>
                     <textarea id="justificacion" name="justificacion" wire:model='justificacion_academica' placeholder="Justificación" class="sm:w-3/4 w-full" rows="2" cols="30">
               </textarea>
                   </div>
@@ -174,7 +174,7 @@
                   </label>
                 </div>
         <div x-show="exclusividadSelectedOption === '1'">
-          <label for="cartaExclusividadTemp">Carta de exclusividad*:</label>
+          <label for="cartaExclusividadTemp">Carta de exclusividad<samp class="text-rojo">*</samp>:</label>
           <input type="file" id="cartaExclusividadTemp" wire:model='cartaExclusividadTemp'  accept=".pdf">
           @empty($docsCartaExclusividad)
           <label for="cartaExclusividadTemp" class="text-dorado">Sin archivos seleccionados.</label>
@@ -201,7 +201,7 @@
           </ul>
         </div>
         <div class="mt-2">
-          <label for="cotizacionFirmadaTemp">Cotización PDF firmada*:</label>
+          <label for="cotizacionFirmadaTemp">Cotización PDF firmada<samp class="text-rojo">*</samp>:</label>
           <input type="file" id="cotizacionFirmadaTemp" wire:model='cotizacionFirmadaTemp' accept=".pdf">
           @empty($docsCotizacionesFirmadas)
           <label for="cotizacionFirmadaTemp" class="text-dorado">Sin archivos seleccionados.</label>
@@ -226,7 +226,7 @@
           @endforeach
         </ul>
         <div class="mt-2">
-          <label for="cotizacionPdfTemp">Cotizaciones PDF (Pueden ir o no firmadas)*:</label>
+          <label for="cotizacionPdfTemp">Cotizaciones PDF (Pueden ir o no firmadas)<samp class="text-rojo">*</samp>:</label>
           <input type="file" id="cotizacionPdfTemp" wire:model='cotizacionPdfTemp' accept=".pdf">
           @empty($docsCotizacionesPdf)
           <label for="cotizacionPdfTemp" class="text-dorado">Sin archivos seleccionados.</label>
@@ -286,7 +286,7 @@
       </p>
       <div class="mt-10">
         <input type="checkbox" id="vobo" wire:model='vobo' name="vobo" class="rounded-full sm:ml-10">
-        <label for="vobo">VoBo al requerimiento solicitado. Se envía para VoBo del Admistrativo/Investigador*</label>
+        <label for="vobo">VoBo al requerimiento solicitado. Se envía para VoBo del Admistrativo/Investigador<samp class="text-rojo">*</samp></label>
         @error('vobo') <span class=" text-rojo error sm:inline-block block">{{ $message }}</span> @enderror
 
               <div class="sm:text-right text-center my-10 -mb-5">

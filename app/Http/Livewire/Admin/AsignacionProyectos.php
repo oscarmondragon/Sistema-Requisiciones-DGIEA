@@ -33,6 +33,9 @@ class AsignacionProyectos extends Component
     public $convocatorias;
     public $tipoProyectos;
 
+    public $sortColumn = 'NomCenCos';
+    public $sortDirection = 'asc';
+
     public $espaciosAcademicos;
     public $proyectosSeleccionados = [];
     public $activeTab = 1;
@@ -231,10 +234,19 @@ class AsignacionProyectos extends Component
 
 
         return view('livewire.admin.asignacion-proyectos', [
+
             'proyectosSinAsignar' => $proyectosSinAsignar->orderBy('NomCenCos')->paginate(5, pageName: 'sinasignar'),
+
             'proyectosAsignados' => $proyectosAsignados
         ]);
     }
+
+    public function sort($column) {
+        $this->sortColumn = $column;
+        $this->sortDirection = $this->sortDirection == 'asc' ? 'desc' : 'asc';
+        //dd($this->sortColumn);
+    }
+
     public function toggleProyectoSeleccionado($cveEntPry)
     {
         if (in_array($cveEntPry, $this->proyectosSeleccionados)) {
@@ -285,6 +297,20 @@ class AsignacionProyectos extends Component
     {
         $this->proyectosSeleccionados = [];
         session()->forget('proyectos_seleccionados');
+    }
+
+    public function limpiarFiltros() {
+        $this->idConvocatoria = 0;
+        $this->idTipoProyecto = 0;
+        $this->idEspacioAcademico = 0;
+        $this->search = "";
+    }
+
+    public function limpiarFiltrosProyAsignados() {
+        $this->idConvocatoriaAsignados = 0;
+        $this->idTipoProyectoAsignados = 0;
+        $this->idEspacioAcademicoAsignados = 0;
+        $this->searchAsignados = "";
     }
 
 }

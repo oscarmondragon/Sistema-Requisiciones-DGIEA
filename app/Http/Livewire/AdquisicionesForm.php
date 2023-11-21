@@ -213,7 +213,7 @@ class AdquisicionesForm extends Component
 
                 // Genera la clave_adquisición con fecha y id
                 $id_adquisicion = $adquisicion->id;
-                $fecha_actual = date('y');
+                $fecha_actual = date('ymd');
                 $clave_adquisicion = 'R' . $clave_proyecto . $fecha_actual . $id_adquisicion;
 
                 // Actualiza la clave de adquisición en el registro de la adquisición
@@ -553,7 +553,7 @@ class AdquisicionesForm extends Component
 
                     // Genera la clave_adquisición con fecha y id
                     $id_adquisicion = $adquisicion->id;
-                    $fecha_actual = date('y');
+                    $fecha_actual = date('ymd');
                     $clave_adquisicion = 'R' . $clave_proyecto . $fecha_actual . $id_adquisicion;
 
                     // Actualiza la clave de adquisición en el registro de la adquisición
