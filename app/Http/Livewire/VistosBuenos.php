@@ -277,4 +277,18 @@ class VistosBuenos extends Component
         $this->categoriaVobo = $categoria;
         // dd($this->categoria);
     }
+
+    public function limpiarFiltros() {
+        $this->categoria = 0;
+        $this->search = '';
+        $this->f_inicial = 0;
+        $this->f_final = 0;
+    }
+
+    public function limpiarFiltrosVobo() {
+        $this->categoriaVobo = 0;
+        $this->searchVobo = '';
+        $this->f_inicial_vobo = 0;
+        $this->f_final_vobo = 0;
+    }
 }

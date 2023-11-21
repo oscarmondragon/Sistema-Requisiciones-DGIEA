@@ -113,6 +113,7 @@
                                         </div>
                                     </div>
 
+                                    @if ($proyectosSinAsignar->first())
                                     <div class="overflow-x-auto mt-4">
                                         <table class="table-auto text-left text-sm w-3/4 sm:w-full mx-auto">
                                             <thead>
@@ -151,6 +152,9 @@
                                             {{ $proyectosSinAsignar->links() }}
                                         </div>
                                     </div>
+                                    @else
+                                        <h2 class="text-center font-bold mt-5">No hay proyectos disponibles para asignar.</h2>
+                                    @endif
                                     <div class="mt-14">
                                         <label for="idRevisor">
                                             Seleccione el revisor:
@@ -167,7 +171,7 @@
                                             <span class=" text-rojo">{{ $message }}</span>
                                         @enderror
                                     </div>
-                                    <div class="mt-8 text-end">
+                                    <div class="mt-8 sm:text-end text-center">
                                         <button type="submit" @click="saveConfirmation()"
                                             class="btn-success sm:w-auto w-5/6">Guardar</button>
                                     </div>
@@ -298,7 +302,9 @@
                                             {{ $proyectosAsignados->links() }}
                                         </div>
                                     @else
-                                        No hay proyectos asignados
+                                    <h2 class="text-center font-bold mt-5">
+                                        No hay proyectos asignados.
+                                    </h2>
                                     @endif
                                 </div>
                             </div>
