@@ -209,7 +209,7 @@ class ShowRequerimientos extends Component
         return view(
             'livewire.revisores.show-requerimientos',
             [
-                'adquisiciones' => $requerimientos->paginate(5, pageName: 'pendientes')
+                'requerimientos' => $requerimientos->orderBy('id_requerimiento')->paginate(5, pageName: 'pendientes')
             ]
         );
     }

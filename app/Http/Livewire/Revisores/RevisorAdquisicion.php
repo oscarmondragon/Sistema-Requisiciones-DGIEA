@@ -58,7 +58,7 @@ class RevisorAdquisicion extends Component
 
     public function mount($id = 0)
     {
-        $this->estatus_generales = EstatusRequisiciones::whereIn('id', [3, 5, 6])->get();
+        $this->estatus_generales = EstatusRequisiciones::whereIn('id', [3, 5, 6, 7])->get();
 
         $this->adquisicion = Adquisicion::find($id);
 

@@ -52,7 +52,7 @@
                                           class="bg-blanco text-textos_generales rounded-md border-transparent h-10 md:mt-0 mt-2 sm:w-auto w-full">
                                   </div>
                               </div>
-                              @if ($adquisiciones->first())
+                              @if ($requerimientos->first())
                                   <div class="overflow-x-auto">
                                       <table class="table-auto text-left text-sm w-3/4 sm:w-full mx-auto mt-6">
                                           <thead>
@@ -88,45 +88,45 @@
                                           </thead>
                                           <tbody>
 
-                                              @foreach ($adquisiciones as $adquisicion)
+                                              @foreach ($requerimientos as $requerimiento)
                                                   <tr class="border-b-gray-200 border-transparent">
-                                                      <td> {{ $adquisicion->id_requerimiento }} </td>
-                                                      <td>  {{ $adquisicion->concepto }} </td>  
-                                                      <td> {{ $adquisicion->clave_proyecto }} </td>
-                                                      <td> {{ $adquisicion->nombre_cuenta }} </td>
-                                                      <td> {{ $adquisicion->descripcion }} </td>
+                                                      <td> {{ $requerimiento->id_requerimiento }} </td>
+                                                      <td>  {{ $requerimiento->concepto }} </td>  
+                                                      <td> {{ $requerimiento->clave_proyecto }} </td>
+                                                      <td> {{ $requerimiento->nombre_cuenta }} </td>
+                                                      <td> {{ $requerimiento->descripcion }} </td>
                                                       <td class="sm:text-center">
-                                                          @if ($adquisicion->id_estatus == 3)
+                                                          @if ($requerimiento->id_estatus == 3)
                                                               <span
                                                                   class="bg-yellow-100 text-yellow-700 rounded-full p-1 px-2 font-bold text-center block mx-1">
-                                                                  {{ $adquisicion->estado }}
+                                                                  {{ $requerimiento->estado }}
                                                               </span>
-                                                          @elseif($adquisicion->id_estatus == 5)
+                                                          @elseif($requerimiento->id_estatus == 5)
                                                               <span
                                                                   class="bg-red-100 text-red-500 rounded-full p-1 font-bold text-center block mx-1">
-                                                                  {{ $adquisicion->estado }}
+                                                                  {{ $requerimiento->estado }}
                                                               </span>
-                                                          @elseif($adquisicion->id_estatus == 6)
+                                                          @elseif($requerimiento->id_estatus == 6)
                                                             <span
                                                             class="bg-green-100 text-green-700 rounded-full p-1 font-bold text-center block mx-1">
-                                                            {{ $adquisicion->estado }}
+                                                            {{ $requerimiento->estado }}
                                                         </span>
                                                         @else
                                                         <span
                                                         class="bg-yellow-100 text-yellow-700 rounded-full p-1 px-2 font-bold text-center block mx-1">
-                                                        {{ $adquisicion->estado }}
+                                                        {{ $requerimiento->estado }}
                                                         </span>
                                                         
                                                           @endif
                                                       </td>
-                                                      <td> {{ $adquisicion->modificacion }}</td>
+                                                      <td> {{ $requerimiento->modificacion }}</td>
 
-                                                      @if ($adquisicion->tipo_requerimiento == 1 )
-                                                            @if(in_array($adquisicion->id_estatus, [3,5,6]))
+                                                      @if ($requerimiento->tipo_requerimiento == 1 )
+                                                            @if(in_array($requerimiento->id_estatus, [3,5,6]))
                                                                 <td>
-                                                                    <a href="{{ route('adquisicion.revisar', $adquisicion->id) }}"
+                                                                    <a href="{{ route('adquisicion.revisar', $requerimiento->id) }}"
                                                                         title="Editar">
-                                                                        @if ($adquisicion->id_estatus == 3)
+                                                                        @if ($requerimiento->id_estatus == 3)
                                                                         <button class="btn-primary sm:w-auto w-5/6" title="Revisar">
                                                                             Revisar
                                                                         </button>
@@ -139,7 +139,7 @@
                                                                 </td>
                                                             @else
                                                                 <td>
-                                                                    <a  href="{{ route('adquisicion.revisar', $adquisicion->id) }}"
+                                                                    <a  href="{{ route('adquisicion.revisar', $requerimiento->id) }}"
                                                                         title="Revisar">
                                                                         <button class="btn-primary sm:w-auto w-5/6" title="Actualizar adqui">
                                                                           Actualizar  detalles adqui
@@ -147,11 +147,11 @@
                                                                     </a>
                                                                 </td>
                                                             @endif
-                                                    @elseif($adquisicion->tipo_requerimiento == 2)
+                                                    @elseif($requerimiento->tipo_requerimiento == 2)
                                                     <td>
-                                                        <a  href="{{ route('solicitud.revisar', $adquisicion->id) }}"
+                                                        <a  href="{{ route('solicitud.revisar', $requerimiento->id) }}"
                                                             title="Revisar">
-                                                            @if ($adquisicion->id_estatus == 3)
+                                                            @if ($requerimiento->id_estatus == 3)
                                                             <button class="btn-primary sm:w-auto w-5/6" title="Revisar">
                                                                 Revisar
                                                             </button>
@@ -176,7 +176,7 @@
                                   </td>
                               @endif
                               <div class="mt-5">
-                                  {{ $adquisiciones->links() }}
+                                  {{ $requerimientos->links() }}
                               </div>
                           </div>
                       </div>
