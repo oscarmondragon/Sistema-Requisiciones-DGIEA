@@ -1,10 +1,10 @@
 <x-modal>
     <x-slot name="title">
-      Reasignar proyecto con clave: {{$id_proyecto}}
+      Reasignar proyecto con clave: {{$clave_digcyn == null ? $clave_uaem : $clave_digcyn}}
     </x-slot>
     <x-slot name="content">
       <div class="w-full">
-          <label for="idRevisorAsignados">
+        <label for="idRevisorAsignados">
               Revisor:
             </label>
             <select class="w-full"  id="nuevoRevisor" name="nuevoRevisor" wire:model="nuevoRevisor" >
