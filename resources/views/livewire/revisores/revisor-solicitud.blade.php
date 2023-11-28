@@ -1,13 +1,15 @@
 <div>
-    {{-- Nothing in the world is as soft and yielding as water. --}}
-    @include('layouts.header-cvu', ['accion' => 1])
+    <?php
+    
+    use Carbon\Carbon;
+    ?>
     <div x-data class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     <div class="">
                         <div>
-                            <h1 class="mt-6">Formulario solicitudes</h1>
+                            <h1 class="mt-6">Revisión para  solicitud  con clave: {{$solicitud->clave_solicitud}}</h1>
                             <form x-on:submit.prevent="confirmationVoBo">
                                 @csrf
                             @include('components.solicitud-ver-form')

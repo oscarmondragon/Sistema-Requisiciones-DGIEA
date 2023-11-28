@@ -73,7 +73,7 @@ class VistosBuenos extends Component
                 'adquisiciones.estatus_general as id_estatus'
             )->whereIn('estatus_general', [1, 4])->where('id_emisor', '=', session('id_user'));
 
-        $solicitudes =  Solicitud::join("cuentas_contables", "solicitudes.id_rubro", "=", "cuentas_contables.id")
+        $solicitudes = Solicitud::join("cuentas_contables", "solicitudes.id_rubro", "=", "cuentas_contables.id")
             ->join("tipo_requisiciones", "solicitudes.tipo_requisicion", "=", "tipo_requisiciones.id")
             ->join("estatus_requisiciones", "solicitudes.estatus_rt", "=", "estatus_requisiciones.id")
             ->select(
@@ -150,7 +150,7 @@ class VistosBuenos extends Component
                 'tipo_requisiciones.descripcion',
                 'adquisiciones.id_emisor',
                 'adquisiciones.tipo_requisicion as tipo_requerimiento_v',
-            )->where('estatus_general', 2);
+            )->where('estatus_general', 2)->where('clave_proyecto', session('id_proyecto'));
 
 
         $solicitudesVistosBuenos = Solicitud::join("cuentas_contables", "solicitudes.id_rubro", "=", "cuentas_contables.id")
@@ -168,7 +168,7 @@ class VistosBuenos extends Component
                 'tipo_requisiciones.descripcion',
                 'solicitudes.id_emisor',
                 'solicitudes.tipo_requisicion as tipo_requerimiento_v',
-            )->where('estatus_rt', 2);
+            )->where('estatus_rt', 2)->where('clave_proyecto', session('id_proyecto'));
 
         if (!empty($this->searchVobo)) {
             $adquisicionesVistosBuenos->where(function ($query) {
@@ -278,14 +278,16 @@ class VistosBuenos extends Component
         // dd($this->categoria);
     }
 
-    public function limpiarFiltros() {
+    public function limpiarFiltros()
+    {
         $this->categoria = 0;
         $this->search = '';
         $this->f_inicial = 0;
         $this->f_final = 0;
     }
 
-    public function limpiarFiltrosVobo() {
+    public function limpiarFiltrosVobo()
+    {
         $this->categoriaVobo = 0;
         $this->searchVobo = '';
         $this->f_inicial_vobo = 0;

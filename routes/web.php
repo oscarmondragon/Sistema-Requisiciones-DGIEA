@@ -7,7 +7,10 @@ use App\Http\Livewire\SolicitudVobo;
 use App\Http\Livewire\SolicitudesForm;
 use App\Http\Livewire\Revisores\ShowRequerimientos;
 use App\Http\Livewire\Revisores\ShowRequerimientosSIIA;
+use App\Http\Livewire\Revisores\RevisorAdquisicion;
+use App\Http\Livewire\Revisores\RevisorSolicitud;
 use App\Http\Livewire\Admin\AsignacionProyectos;
+
 
 
 
@@ -39,11 +42,11 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/requerimientos-dgiea', ShowRequerimientos::class)
-    ->middleware(['auth', 'verified'])->name('requerimientos.index');
+Route::get('/requerimientos-dgiea', ShowRequerimientos::class)->middleware(['auth', 'verified'])->name('requerimientos.index');
+Route::get('/adquisiciones/{id}/revisar', RevisorAdquisicion::class)->middleware(['auth', 'verified'])->name('adquisicion.revisar');
+Route::get('/solicitudes/{id}/revisar', RevisorSolicitud::class)->middleware(['auth', 'verified'])->name('solicitud.revisar');
 
-Route::get('/seguimiento-siia', ShowRequerimientosSIIA::class)
-    ->middleware(['auth', 'verified'])->name('requerimientos-siia.index');
+Route::get('/seguimiento-siia', ShowRequerimientosSIIA::class)->middleware(['auth', 'verified'])->name('requerimientos-siia.index');
 
 
 Route::get('/asignacion-proyectos', AsignacionProyectos::class)
@@ -55,6 +58,8 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+
 
 
 //RUTAS ADQUISICIONES
@@ -80,11 +85,11 @@ Route::get('/solicitudes/{id}/ver', SolicitudVobo::class)->middleware('CvuAuth')
 Route::post('/cvu', [CvuController::class, 'cvuVerificar'])->name('cvu.verificar');
 Route::post('logout-cvu', [CvuController::class, 'destroy'])->middleware('CvuAuth')->name('logout.cvu');
 Route::get('/cvu-crear', [CvuController::class, 'create'])->middleware('CvuAuth')->name('cvu.create');
+//Route::get('/cvu-crear', [CvuController::class, 'create'])->middleware(['cors', 'CvuAuth'])->name('cvu.create');
+//Route::get('/cvu-crear', [CvuController::class, 'create'])->middleware('CvuAuth')->name('cvu.create');
 Route::get('/cvu-crear-adquisiciones', AdquisicionesForm::class)->middleware('CvuAuth')->name('cvu.create-adquisiciones');
 Route::get('/cvu-crear-solicitudes', SolicitudesForm::class)->middleware('CvuAuth')->name('cvu.create-solicitudes');
 Route::get('/cvu-vobo', [CvuController::class, 'darVobo'])->middleware('CvuAuth')->name('cvu.vobo');
 Route::get('/error-cvu', [CvuController::class, 'error'])->name('errores');
 Route::get('/cvu-seguimiento', [CvuController::class, 'seguimiento'])->middleware('CvuAuth')->name('cvu.seguimiento');
-Route::get('/cvu', function () {
-    return redirect()->route('cvu.create');
-})->middleware('CvuAuth')->name('cvu.verificado');
+Route::get('/cvu', [CvuController::class, 'crearSesion'])->name('cvu.verificado');

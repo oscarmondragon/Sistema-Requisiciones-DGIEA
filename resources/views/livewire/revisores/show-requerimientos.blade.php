@@ -33,8 +33,10 @@
                                           @foreach ($tipoRequisicion as $tipo)
                                               <option value="{{ $tipo->id }}">{{ $tipo->descripcion }}</option>
                                           @endforeach
-                                          <option value="3">Creada</option>
-                                          <option value="4">Rechazado VoBo</option>
+                                          <option value="3">Pendientes de revisar</option>
+                                          <option value="4">En DGIEA</option>
+                                          <option value="5">En SIIA</option>
+
                                       </select>
                                       <input type="text" wire:model="search" onfocus="this.value=null"
                                           class="inputs-formulario-solicitudes md:mt-0 mt-2 p-2.5 sm:w-96 w-full"
@@ -61,6 +63,10 @@
                                                   </th>
                                                   <th class="w-[13%] cursor-pointer"
                                                   wire:click="sort('id_requerimiento')">
+                                                  Concepto
+                                              </th>
+                                                  <th class="w-[13%] cursor-pointer"
+                                                  wire:click="sort('id_requerimiento')">
                                                   Clave proyecto
                                               </th>
                                                   <th class="w-[30%] cursor-pointer"
@@ -85,6 +91,7 @@
                                               @foreach ($adquisiciones as $adquisicion)
                                                   <tr class="border-b-gray-200 border-transparent">
                                                       <td> {{ $adquisicion->id_requerimiento }} </td>
+                                                      <td>  {{ $adquisicion->concepto }} </td>  
                                                       <td> {{ $adquisicion->clave_proyecto }} </td>
                                                       <td> {{ $adquisicion->nombre_cuenta }} </td>
                                                       <td> {{ $adquisicion->descripcion }} </td>
@@ -104,28 +111,58 @@
                                                             class="bg-green-100 text-green-700 rounded-full p-1 font-bold text-center block mx-1">
                                                             {{ $adquisicion->estado }}
                                                         </span>
+                                                        @else
+                                                        <span
+                                                        class="bg-yellow-100 text-yellow-700 rounded-full p-1 px-2 font-bold text-center block mx-1">
+                                                        {{ $adquisicion->estado }}
+                                                        </span>
+                                                        
                                                           @endif
                                                       </td>
                                                       <td> {{ $adquisicion->modificacion }}</td>
-                                                      @if ($adquisicion->tipo_requerimiento == 1)
-                                                          <td>
-                                                              <a href="{{ route('adquisiciones.editar', $adquisicion->id) }}"
-                                                                  title="Editar">
-                                                                  <button class="btn-primary sm:w-auto w-5/6" title="Revisar">
-                                                                      Revisar
-                                                                  </button>
-                                                              </a>
-                                                          </td>
-                                                      @else
-                                                          <td>
-                                                              <a  href="{{ route('solicitudes.editar', $adquisicion->id) }}"
-                                                                  title="Revisar">
-                                                                  <button class="btn-primary sm:w-auto w-5/6" title="Revisar">
-                                                                    Revisar
-                                                                </button>
-                                                              </a>
-                                                          </td>
-                                                      @endif
+
+                                                      @if ($adquisicion->tipo_requerimiento == 1 )
+                                                            @if(in_array($adquisicion->id_estatus, [3,5,6]))
+                                                                <td>
+                                                                    <a href="{{ route('adquisicion.revisar', $adquisicion->id) }}"
+                                                                        title="Editar">
+                                                                        @if ($adquisicion->id_estatus == 3)
+                                                                        <button class="btn-primary sm:w-auto w-5/6" title="Revisar">
+                                                                            Revisar
+                                                                        </button>
+                                                                        @else
+                                                                        <button class="btn-primary sm:w-auto w-5/6" title="Revisar">
+                                                                            Actualizar
+                                                                        </button>
+                                                                        @endif
+                                                                    </a>
+                                                                </td>
+                                                            @else
+                                                                <td>
+                                                                    <a  href="{{ route('adquisicion.revisar', $adquisicion->id) }}"
+                                                                        title="Revisar">
+                                                                        <button class="btn-primary sm:w-auto w-5/6" title="Actualizar adqui">
+                                                                          Actualizar  detalles adqui
+                                                                        </button>
+                                                                    </a>
+                                                                </td>
+                                                            @endif
+                                                    @elseif($adquisicion->tipo_requerimiento == 2)
+                                                    <td>
+                                                        <a  href="{{ route('solicitud.revisar', $adquisicion->id) }}"
+                                                            title="Revisar">
+                                                            @if ($adquisicion->id_estatus == 3)
+                                                            <button class="btn-primary sm:w-auto w-5/6" title="Revisar">
+                                                                Revisar
+                                                            </button>
+                                                            @else
+                                                            <button class="btn-primary sm:w-auto w-5/6" title="Revisar">
+                                                                Actualizar
+                                                            </button>
+                                                            @endif
+                                                        </a>
+                                                    </td>
+                                                    @endif
                                                   </tr>
                                               @endforeach
 
