@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\Revisores;
 
 use Livewire\Component;
-use App\Models\Proyecto;
 use App\Models\CuentaContable;
 use Illuminate\Support\Facades\Session;
 use App\Models\Solicitud;
@@ -13,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 
-class SolicitudVobo extends Component
+class RevisorSolicitud extends Component
 {
 
 
@@ -107,91 +106,8 @@ class SolicitudVobo extends Component
 
 
     }
-
     public function render()
     {
-        return view('livewire.solicitud-vobo')->layout('layouts.cvu');
-    }
-
-    protected $listeners = [
-        'darVobo',
-        'rechazarVobo'
-    ];
-
-    public function darVobo()
-    {
-        $this->validate();
-
-        $who_vobo = Session::get('VoBo_Who');
-        $fecha_vobo = Carbon::now()->toDateString();
-        $id_user = Session::get('id_user');
-        try {
-            DB::beginTransaction();
-            $solicitud = Solicitud::where('id', $this->solicitud->id)->first();
-            if ($solicitud) {
-                $clave_solicitud = $solicitud->clave_solicitud;
-                $solicitud->estatus_rt = 4;
-                $solicitud->estatus_dgiea = 4;
-
-                if ($who_vobo) { //Si el deposito es por parte del Responsable técnico
-                    $solicitud->vobo_rt = $fecha_vobo;
-                } else { //Si el depósito es por parte del administrativo
-                    $solicitud->vobo_admin = $fecha_vobo;
-                }
-                $solicitud->save();
-
-            }
-            DB::commit();
-            return redirect('/cvu-vobo')->with('success', 'Su solicitud con clave ' . $clave_solicitud . ' ha sido  enviada para revision a la DGIEA.');
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect()->back()->with('error', 'error al intentar confirmar visto bueno. Intente más tarde.' . $e->getMessage());
-        }
-
-
-
-
-    }
-
-    public function rechazarVobo($motivo)
-    {
-        $this->observacionesVobo = $motivo;
-        try {
-            DB::beginTransaction();
-            $solicitud = Solicitud::where('id', $this->solicitud->id)->first();
-            if ($solicitud) {
-                $clave_solicitud = $solicitud->clave_solicitud;
-                $solicitud->estatus_rt = 3;
-                $solicitud->estatus_dgiea = 3;
-                $solicitud->observaciones_vobo = $this->observacionesVobo;
-
-                $solicitud->save();
-
-            }
-            DB::commit();
-            return redirect('/cvu-vobo')->with('success', 'Su solicitud con clave ' . $clave_solicitud . ' ha sido rechazada.');
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect()->back()->with('error', 'error al intentar rechazar visto bueno. Intente más tarde.' . $e->getMessage());
-        }
-
-    }
-
-    public function updated($vobo)
-    {
-        $this->validateOnly($vobo);
-    }
-
-    public function descargarArchivo($rutaDocumento, $nombreDocumento)
-    {
-        $rutaArchivo = storage_path('app/' . $rutaDocumento);
-
-        if (Storage::exists($rutaDocumento)) {
-            return response()->download(storage_path('app/' . $rutaDocumento), $nombreDocumento);
-        } else {
-            abort(404);
-        }
+        return view('livewire.revisores.revisor-solicitud');
     }
 }

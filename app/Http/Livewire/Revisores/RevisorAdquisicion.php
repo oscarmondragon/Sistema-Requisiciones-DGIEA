@@ -1,28 +1,30 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\Revisores;
 
+use App\Models\EstatusRequisiciones;
 use Livewire\Component;
 use App\Models\Adquisicion;
 use App\Models\AdquisicionDetalle;
 use App\Models\Documento;
 use App\Models\CuentaContable;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Session;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 
-
-
-class AdquisicionVobo extends Component
+class RevisorAdquisicion extends Component
 {
-    public $vobo = 0;
+    //Campos que se llenan en este formulario
+    public $estatus;
+    public $observaciones_estatus;
+    public $estatus_generales;
+    //atrubutos de la requisicion recuperada
     public $adquisicion;
     public $documentos;
     public $cuentasContables;
 
     //atributos de una adquisicion
     public $id_adquisicion; //recupera id 
+    public $id_adquisicion_detalle; //recupera id 
+
     public $id_rubro = 0;
     public $id_rubro_especial; //variable para determinar si es una cuenta especial (software por ejemplo)
     public $afecta_investigacion = '0';
@@ -39,21 +41,37 @@ class AdquisicionVobo extends Component
     public $docsCotizacionesFirmadas = [];
     public $docsCotizacionesPdf = [];
     public $docsAnexoOtrosDocumentos = [];
-    public $referer = '';
 
     public $observacionesVobo;
 
     protected $rules = [
-        'vobo' => 'accepted'
+        'estatus' => 'required|not_in:0',
+        'observaciones_estatus' => 'required_if:estatus,5'
     ];
     protected $messages = [
-        'vobo.accepted' => 'Debe dar el visto bueno.'
+        'estatus.required' => 'Debe seleccionar un estado.',
+        'estatus.not_in' => 'Debe seleccionar un estado.',
+
+        'observaciones_estatus.required_if' => 'Debe escribir las observaciones o motivos de rechazo.',
+
     ];
 
-    public function mount($id = 0)
+    public $listeners = [
+        'save',
+    ];
+
+    public function mount($id = 0, $id_requisicion_detalle = 0)
     {
-        $this->referer = $_SERVER['HTTP_REFERER'];
-        // dd($referer);
+        //Recuperamos valores enviados en la ruta
+        $this->id_adquisicion = $id;
+        $this->id_adquisicion_detalle = $id_requisicion_detalle;
+
+        if ($this->id_adquisicion_detalle != 0) {
+            $this->estatus_generales = EstatusRequisiciones::whereIn('tipo', [3, 5])->get();
+        } else {
+            $this->estatus_generales = EstatusRequisiciones::whereIn('tipo', [2, 3, 5])->get();
+        }
+
         $this->adquisicion = Adquisicion::find($id);
 
         $this->id_rubro = $this->adquisicion->id_rubro;
@@ -67,7 +85,15 @@ class AdquisicionVobo extends Component
         $this->total = $this->adquisicion->total;
         $this->vobo = 0;
 
-        $this->bienesDB = AdquisicionDetalle::where('id_adquisicion', $id)->get();
+        if ($this->id_adquisicion_detalle != 0) {
+            $this->bienesDB = AdquisicionDetalle::where('id_adquisicion', $id)->where('id', $this->id_adquisicion_detalle)->get();
+
+        } else {
+            $this->bienesDB = AdquisicionDetalle::where('id_adquisicion', $id)->get();
+
+
+        }
+
         $this->bienes = collect($this->bienesDB);
         $this->cuentasContables = CuentaContable::where('estatus', 1)->whereIn('tipo_requisicion', [1, 3])->get();
 
@@ -101,73 +127,9 @@ class AdquisicionVobo extends Component
     }
     public function render()
     {
-        return view('livewire.adquisicion-vobo')->layout('layouts.cvu');
+        return view('livewire.revisores.revisor-adquisicion');
     }
 
-    protected $listeners = [
-        'darVobo',
-        'rechazarVobo'
-    ];
-
-    public function darVobo()
-    {
-        $this->validate();
-
-        $who_vobo = Session::get('VoBo_Who');
-        $fecha_vobo = Carbon::now()->toDateString();
-        $id_user = Session::get('id_user');
-
-        try {
-            DB::beginTransaction();
-            $adquisicion = Adquisicion::where('id', $this->adquisicion->id)->first();
-            if ($adquisicion) {
-                $clave_adquisicion = $adquisicion->clave_adquisicion;
-                $adquisicion->estatus_general = 4;
-                if ($who_vobo) { //Si el deposito es por parte del Responsable técnico
-                    $adquisicion->vobo_rt = $fecha_vobo;
-                } else { //Si el depósito es por parte del administrativo
-                    $adquisicion->vobo_admin = $fecha_vobo;
-                }
-                $adquisicion->save();
-
-            }
-            DB::commit();
-            return redirect('/cvu-vobo')->with('success', 'Su solicitud con clave ' . $clave_adquisicion . ' ha sido  enviada para revision a la DGIEA.');
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect()->back()->with('error', 'error al intentar confirmar visto bueno. Intente más tarde.' . $e->getMessage());
-        }
-
-    }
-
-    public function rechazarVobo($motivo)
-    {
-        $this->observacionesVobo = $motivo;
-        try {
-            DB::beginTransaction();
-            $adquisicion = Adquisicion::where('id', $this->adquisicion->id)->first();
-            if ($adquisicion) {
-                $clave_adquisicion = $adquisicion->clave_adquisicion;
-                $adquisicion->estatus_general = 3;
-                $adquisicion->observaciones_vobo = $this->observacionesVobo;
-                $adquisicion->save();
-
-            }
-            DB::commit();
-            return redirect('/cvu-vobo')->with('success', 'Su solicitud con clave ' . $clave_adquisicion . ' ha sido  rechazada.');
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect()->back()->with('error', 'error al intentar rechazar visto bueno. Intente más tarde.' . $e->getMessage());
-        }
-
-    }
-
-    public function updated($vobo)
-    {
-        $this->validateOnly($vobo);
-    }
 
     public function descargarArchivo($rutaDocumento, $nombreDocumento)
     {
@@ -179,5 +141,10 @@ class AdquisicionVobo extends Component
             abort(404);
         }
     }
+    public function save()
+    {
 
+        $this->validate();
+        dd('entro aqui');
+    }
 }

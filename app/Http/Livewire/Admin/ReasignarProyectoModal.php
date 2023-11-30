@@ -16,6 +16,8 @@ class ReasignarProyectoModal extends ModalComponent
     public $nuevoRevisor;
     public $id_proyecto;
     public $id_revisor;
+    public $clave_uaem;
+    public $clave_digcyn;
 
 
     protected $rules = [

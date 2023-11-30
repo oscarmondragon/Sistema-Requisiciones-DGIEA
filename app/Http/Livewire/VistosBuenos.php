@@ -66,9 +66,13 @@ class VistosBuenos extends Component
                 'estatus_requisiciones.descripcion as estado',
                 'adquisiciones.updated_at as modificacion',
                 'cuentas_contables.nombre_cuenta',
-                'tipo_requisiciones.descripcion'
-            )
-            ->where('estatus_general', 1)->where('id_emisor', '=', session('id_user'));
+                'tipo_requisiciones.descripcion',
+                'adquisiciones.tipo_requisicion as  tipo_requerimiento',
+                'adquisiciones.vobo_admin as vobo_admin',
+                'adquisiciones.vobo_rt as vobo_rt',
+                'adquisiciones.estatus_general as id_estatus'
+            )->whereIn('estatus_general', [1, 3])->where('id_emisor', '=', session('id_user'));
+
         $solicitudes = Solicitud::join("cuentas_contables", "solicitudes.id_rubro", "=", "cuentas_contables.id")
             ->join("tipo_requisiciones", "solicitudes.tipo_requisicion", "=", "tipo_requisiciones.id")
             ->join("estatus_requisiciones", "solicitudes.estatus_rt", "=", "estatus_requisiciones.id")
@@ -78,9 +82,13 @@ class VistosBuenos extends Component
                 'estatus_requisiciones.descripcion as estado',
                 'solicitudes.updated_at as modificacion',
                 'cuentas_contables.nombre_cuenta',
-                'tipo_requisiciones.descripcion'
-            )
-            ->where('estatus_rt', 1)->where('id_emisor', '=', session('id_user'));
+                'tipo_requisiciones.descripcion',
+                'solicitudes.tipo_requisicion as  tipo_requerimiento',
+                'solicitudes.vobo_admin as vobo_admin',
+                'solicitudes.vobo_rt as vobo_rt',
+                'solicitudes.estatus_rt as id_estatus'
+            )->whereIn('estatus_rt', [1, 3])->where('id_emisor', '=', session('id_user'));
+
         //si palabra clave esta vacia no se ejecuta
         if (!empty($this->search)) {
             $adquisiciones->where(function ($query) {
@@ -123,6 +131,10 @@ class VistosBuenos extends Component
         }
 
 
+        // $adquisiciones->whereIn('estatus_general', [1, 4])->where('id_emisor', '=', session('id_user'));
+        // $solicitudes->whereIn('estatus_rt', [1, 4])->where('id_emisor', '=', session('id_user'));
+
+
         $adquisicionesVistosBuenos = Adquisicion::join("cuentas_contables", "adquisiciones.id_rubro", "=", "cuentas_contables.id")
             ->join("tipo_requisiciones", "adquisiciones.tipo_requisicion", "=", "tipo_requisiciones.id")
             ->join("estatus_requisiciones", "adquisiciones.estatus_general", "=", "estatus_requisiciones.id")
@@ -136,9 +148,11 @@ class VistosBuenos extends Component
                 'adquisiciones.updated_at as modificacion',
                 'cuentas_contables.nombre_cuenta',
                 'tipo_requisiciones.descripcion',
-                'adquisiciones.id_emisor'
-            )
-            ->where('estatus_general', 2);
+                'adquisiciones.id_emisor',
+                'adquisiciones.tipo_requisicion as tipo_requerimiento_v',
+            )->where('estatus_general', 2)->where('clave_proyecto', session('id_proyecto'));
+
+
         $solicitudesVistosBuenos = Solicitud::join("cuentas_contables", "solicitudes.id_rubro", "=", "cuentas_contables.id")
             ->join("tipo_requisiciones", "solicitudes.tipo_requisicion", "=", "tipo_requisiciones.id")
             ->join("estatus_requisiciones", "solicitudes.estatus_rt", "=", "estatus_requisiciones.id")
@@ -152,9 +166,10 @@ class VistosBuenos extends Component
                 'solicitudes.updated_at as modificacion',
                 'cuentas_contables.nombre_cuenta',
                 'tipo_requisiciones.descripcion',
-                'solicitudes.id_emisor'
-            )
-            ->where('estatus_rt', 2);
+                'solicitudes.id_emisor',
+                'solicitudes.tipo_requisicion as tipo_requerimiento_v',
+            )->where('estatus_rt', 2)->where('clave_proyecto', session('id_proyecto'));
+
         if (!empty($this->searchVobo)) {
             $adquisicionesVistosBuenos->where(function ($query) {
                 $query->where('clave_adquisicion', 'like', '%' . $this->searchVobo . '%')
@@ -191,6 +206,9 @@ class VistosBuenos extends Component
             $solicitudesVistosBuenos->whereDate('solicitudes.created_at', '>=', $this->f_inicial_vobo)
                 ->whereDate('solicitudes.created_at', '<=', $this->f_final_vobo);
         }
+
+        // $adquisicionesVistosBuenos->where('estatus_general', 2);
+        // $solicitudesVistosBuenos->where('estatus_rt', 2);
 
         if ($this->categoria == 0) {
             $requerimientos = $adquisiciones->union($solicitudes)->orderBy($this->sortColumn, $this->sortDirection)->paginate(10, pageName: 'pendientes');
@@ -258,5 +276,21 @@ class VistosBuenos extends Component
     {
         $this->categoriaVobo = $categoria;
         // dd($this->categoria);
+    }
+
+    public function limpiarFiltros()
+    {
+        $this->categoria = 0;
+        $this->search = '';
+        $this->f_inicial = 0;
+        $this->f_final = 0;
+    }
+
+    public function limpiarFiltrosVobo()
+    {
+        $this->categoriaVobo = 0;
+        $this->searchVobo = '';
+        $this->f_inicial_vobo = 0;
+        $this->f_final_vobo = 0;
     }
 }
