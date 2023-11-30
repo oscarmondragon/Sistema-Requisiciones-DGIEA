@@ -193,7 +193,6 @@ use Carbon\Carbon;
                                 <span class=" text-rojo sm:inline-block block">{{ $message }}</span>
                             @enderror
                         </div>
-
                         <div class="sm:text-right text-center mt-5">             
                             @empty($solicitud)
                                 <button type="button" @click="saveConfirmation()"
@@ -201,8 +200,8 @@ use Carbon\Carbon;
                             @endempty
                             <button type="submit" @click="saveConfirmationVoBo()"
                                 class="btn-primary sm:w-auto w-5/6">Enviar para VoBo</button>
-                            @if (str_contains($referer, 'vobo'))
-                                <button type="button" @click="cancelarSolicitud()"
+                            @if (str_contains($referer, 'vobo')|| str_contains($referer, 'crear'))
+                                 <button type="button" @click="cancelarSolicitud()"
                                 class="btn-warning sm:w-auto w-5/6">Cancelar</button>
                             @else
                                 <button type="button" class="btn-warning sm:w-auto w-5/6" 

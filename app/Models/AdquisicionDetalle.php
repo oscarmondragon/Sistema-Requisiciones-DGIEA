@@ -14,7 +14,12 @@ class AdquisicionDetalle extends Model
 
     public function estatus()
     {
+
         return $this->belongsTo(EstatusRequisiciones::class, 'estatus_rt');
+    }
+    public function adquisicion()
+    {
+        return $this->belongsTo(Adquisicion::class, 'id_adquisicion');
     }
 
     protected $fillable = [
