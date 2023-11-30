@@ -71,7 +71,7 @@ class VistosBuenos extends Component
                 'adquisiciones.vobo_admin as vobo_admin',
                 'adquisiciones.vobo_rt as vobo_rt',
                 'adquisiciones.estatus_general as id_estatus'
-            )->whereIn('estatus_general', [1, 4])->where('id_emisor', '=', session('id_user'));
+            )->whereIn('estatus_general', [1, 3])->where('id_emisor', '=', session('id_user'));
 
         $solicitudes = Solicitud::join("cuentas_contables", "solicitudes.id_rubro", "=", "cuentas_contables.id")
             ->join("tipo_requisiciones", "solicitudes.tipo_requisicion", "=", "tipo_requisiciones.id")
@@ -87,7 +87,7 @@ class VistosBuenos extends Component
                 'solicitudes.vobo_admin as vobo_admin',
                 'solicitudes.vobo_rt as vobo_rt',
                 'solicitudes.estatus_rt as id_estatus'
-            )->whereIn('estatus_rt', [1, 4])->where('id_emisor', '=', session('id_user'));
+            )->whereIn('estatus_rt', [1, 3])->where('id_emisor', '=', session('id_user'));
 
         //si palabra clave esta vacia no se ejecuta
         if (!empty($this->search)) {

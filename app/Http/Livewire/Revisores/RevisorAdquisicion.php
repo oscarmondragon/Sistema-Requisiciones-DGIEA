@@ -23,6 +23,8 @@ class RevisorAdquisicion extends Component
 
     //atributos de una adquisicion
     public $id_adquisicion; //recupera id 
+    public $id_adquisicion_detalle; //recupera id 
+
     public $id_rubro = 0;
     public $id_rubro_especial; //variable para determinar si es una cuenta especial (software por ejemplo)
     public $afecta_investigacion = '0';
@@ -43,11 +45,13 @@ class RevisorAdquisicion extends Component
     public $observacionesVobo;
 
     protected $rules = [
-        'estatus' => 'required',
+        'estatus' => 'required|not_in:0',
         'observaciones_estatus' => 'required_if:estatus,5'
     ];
     protected $messages = [
         'estatus.required' => 'Debe seleccionar un estado.',
+        'estatus.not_in' => 'Debe seleccionar un estado.',
+
         'observaciones_estatus.required_if' => 'Debe escribir las observaciones o motivos de rechazo.',
 
     ];
@@ -56,9 +60,17 @@ class RevisorAdquisicion extends Component
         'save',
     ];
 
-    public function mount($id = 0)
+    public function mount($id = 0, $id_requisicion_detalle = 0)
     {
-        $this->estatus_generales = EstatusRequisiciones::whereIn('id', [3, 5, 6, 7])->get();
+        //Recuperamos valores enviados en la ruta
+        $this->id_adquisicion = $id;
+        $this->id_adquisicion_detalle = $id_requisicion_detalle;
+
+        if ($this->id_adquisicion_detalle != 0) {
+            $this->estatus_generales = EstatusRequisiciones::whereIn('tipo', [3, 5])->get();
+        } else {
+            $this->estatus_generales = EstatusRequisiciones::whereIn('tipo', [2, 3, 5])->get();
+        }
 
         $this->adquisicion = Adquisicion::find($id);
 
@@ -73,7 +85,15 @@ class RevisorAdquisicion extends Component
         $this->total = $this->adquisicion->total;
         $this->vobo = 0;
 
-        $this->bienesDB = AdquisicionDetalle::where('id_adquisicion', $id)->get();
+        if ($this->id_adquisicion_detalle != 0) {
+            $this->bienesDB = AdquisicionDetalle::where('id_adquisicion', $id)->where('id', $this->id_adquisicion_detalle)->get();
+
+        } else {
+            $this->bienesDB = AdquisicionDetalle::where('id_adquisicion', $id)->get();
+
+
+        }
+
         $this->bienes = collect($this->bienesDB);
         $this->cuentasContables = CuentaContable::where('estatus', 1)->whereIn('tipo_requisicion', [1, 3])->get();
 
@@ -109,10 +129,7 @@ class RevisorAdquisicion extends Component
     {
         return view('livewire.revisores.revisor-adquisicion');
     }
-    public function updated($estatus)
-    {
-        $this->validateOnly($estatus);
-    }
+
 
     public function descargarArchivo($rutaDocumento, $nombreDocumento)
     {
@@ -126,6 +143,8 @@ class RevisorAdquisicion extends Component
     }
     public function save()
     {
+
+        $this->validate();
         dd('entro aqui');
     }
 }

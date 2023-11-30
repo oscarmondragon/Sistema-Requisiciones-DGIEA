@@ -5,7 +5,7 @@
             <div class="p-6">
               <div class="">
                 <div>
-                  <h1 class="mt-6">Revisión para  adquisición  con clave: {{$adquisicion->clave_adquisicion}}</h1>
+                  <h1 class="mt-6">Revisión para  adquisición  con clave: {{$adquisicion->clave_adquisicion}} - {{$id_adquisicion_detalle}}</h1>
                   <form x-on:submit.prevent="saveConfirmation">
                     @csrf
                     <div>
@@ -14,10 +14,13 @@
                     <div class="my-5" x-data x-init="ifRechazo = '{{ $estatus }}'">
                       <h2>Actualizar estado</h2>
                       <div class="my-6">
-                        <label for="id_rubro">
+                        <label for="estatus">
                         Estado<samp class="text-rojo">*</samp>:
                         </label>
+                        {{$estatus}}
+
                         <select class="sm:w-auto w-full" required id="estatus" name="estatus" wire:model="estatus">
+                        <option value="0">Seleccione una opcion</option>
                         @foreach ($estatus_generales as $estatus_generales)
                         <option value="{{ $estatus_generales->id }}">{{ $estatus_generales->descripcion }}</option>
                         @endforeach

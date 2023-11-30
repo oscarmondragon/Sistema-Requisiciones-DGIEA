@@ -62,6 +62,10 @@
                                                       Clave requerimiento
                                                   </th>
                                                   <th class="w-[13%] cursor-pointer"
+                                                  wire:click="sort('clave_siia')">
+                                                  Clave SIIA
+                                              </th>
+                                                  <th class="w-[13%] cursor-pointer"
                                                   wire:click="sort('id_requerimiento')">
                                                   Concepto
                                               </th>
@@ -91,12 +95,13 @@
                                               @foreach ($requerimientos as $requerimiento)
                                                   <tr class="border-b-gray-200 border-transparent">
                                                       <td> {{ $requerimiento->id_requerimiento }} </td>
+                                                      <td> {{ $requerimiento->clave_siia }} </td>
                                                       <td>  {{ $requerimiento->concepto }} </td>  
                                                       <td> {{ $requerimiento->clave_proyecto }} </td>
                                                       <td> {{ $requerimiento->nombre_cuenta }} </td>
                                                       <td> {{ $requerimiento->descripcion }} </td>
                                                       <td class="sm:text-center">
-                                                          @if ($requerimiento->id_estatus == 3)
+                                                          @if ($requerimiento->id_estatus == 4)
                                                               <span
                                                                   class="bg-yellow-100 text-yellow-700 rounded-full p-1 px-2 font-bold text-center block mx-1">
                                                                   {{ $requerimiento->estado }}
@@ -122,11 +127,11 @@
                                                       <td> {{ $requerimiento->modificacion }}</td>
 
                                                       @if ($requerimiento->tipo_requerimiento == 1 )
-                                                            @if(in_array($requerimiento->id_estatus, [3,5,6]))
+                                                            @if(in_array($requerimiento->tipo_estado, [2]))
                                                                 <td>
-                                                                    <a href="{{ route('adquisicion.revisar', $requerimiento->id) }}"
+                                                                    <a href="{{ route('adquisicion.revisar', ['id' => $requerimiento->id, 'id_requisicion_detalle' => 0]) }}"
                                                                         title="Editar">
-                                                                        @if ($requerimiento->id_estatus == 3)
+                                                                        @if ($requerimiento->id_estatus == 4)
                                                                         <button class="btn-primary sm:w-auto w-5/6" title="Revisar">
                                                                             Revisar
                                                                         </button>
@@ -139,7 +144,7 @@
                                                                 </td>
                                                             @else
                                                                 <td>
-                                                                    <a  href="{{ route('adquisicion.revisar', $requerimiento->id) }}"
+                                                                    <a  href="{{ route('adquisicion.revisar', [$requerimiento->id, $requerimiento->id_requisicion_detalle]) }}"
                                                                         title="Revisar">
                                                                         <button class="btn-primary sm:w-auto w-5/6" title="Actualizar adqui">
                                                                           Actualizar  detalles adqui
@@ -151,12 +156,12 @@
                                                     <td>
                                                         <a  href="{{ route('solicitud.revisar', $requerimiento->id) }}"
                                                             title="Revisar">
-                                                            @if ($requerimiento->id_estatus == 3)
+                                                            @if ($requerimiento->id_estatus == 4)
                                                             <button class="btn-primary sm:w-auto w-5/6" title="Revisar">
                                                                 Revisar
                                                             </button>
                                                             @else
-                                                            <button class="btn-primary sm:w-auto w-5/6" title="Revisar">
+                                                            <button class="btn-primary sm:w-auto w-5/6" title="Actualizar">
                                                                 Actualizar
                                                             </button>
                                                             @endif

@@ -39,7 +39,7 @@ class AdquisicionVobo extends Component
     public $docsCotizacionesFirmadas = [];
     public $docsCotizacionesPdf = [];
     public $docsAnexoOtrosDocumentos = [];
-    public $referer ='';
+    public $referer = '';
 
     public $observacionesVobo;
 
@@ -53,7 +53,7 @@ class AdquisicionVobo extends Component
     public function mount($id = 0)
     {
         $this->referer = $_SERVER['HTTP_REFERER'];
-       // dd($referer);
+        // dd($referer);
         $this->adquisicion = Adquisicion::find($id);
 
         $this->id_rubro = $this->adquisicion->id_rubro;
@@ -122,7 +122,7 @@ class AdquisicionVobo extends Component
             $adquisicion = Adquisicion::where('id', $this->adquisicion->id)->first();
             if ($adquisicion) {
                 $clave_adquisicion = $adquisicion->clave_adquisicion;
-                $adquisicion->estatus_general = 3;
+                $adquisicion->estatus_general = 4;
                 if ($who_vobo) { //Si el deposito es por parte del Responsable técnico
                     $adquisicion->vobo_rt = $fecha_vobo;
                 } else { //Si el depósito es por parte del administrativo
@@ -141,14 +141,15 @@ class AdquisicionVobo extends Component
 
     }
 
-    public function rechazarVobo($motivo) {
+    public function rechazarVobo($motivo)
+    {
         $this->observacionesVobo = $motivo;
         try {
             DB::beginTransaction();
             $adquisicion = Adquisicion::where('id', $this->adquisicion->id)->first();
             if ($adquisicion) {
                 $clave_adquisicion = $adquisicion->clave_adquisicion;
-                $adquisicion->estatus_general = 4;
+                $adquisicion->estatus_general = 3;
                 $adquisicion->observaciones_vobo = $this->observacionesVobo;
                 $adquisicion->save();
 
@@ -160,7 +161,7 @@ class AdquisicionVobo extends Component
             DB::rollBack();
             return redirect()->back()->with('error', 'error al intentar rechazar visto bueno. Intente más tarde.' . $e->getMessage());
         }
-        
+
     }
 
     public function updated($vobo)

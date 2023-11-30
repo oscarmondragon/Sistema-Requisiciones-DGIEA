@@ -43,7 +43,7 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/requerimientos-dgiea', ShowRequerimientos::class)->middleware(['auth', 'verified'])->name('requerimientos.index');
-Route::get('/adquisiciones/{id}/revisar', RevisorAdquisicion::class)->middleware(['auth', 'verified'])->name('adquisicion.revisar');
+Route::get('/adquisiciones/{id}/revisar/{id_requisicion_detalle}', RevisorAdquisicion::class)->middleware(['auth', 'verified'])->name('adquisicion.revisar');
 Route::get('/solicitudes/{id}/revisar', RevisorSolicitud::class)->middleware(['auth', 'verified'])->name('solicitud.revisar');
 
 Route::get('/seguimiento-siia', ShowRequerimientosSIIA::class)->middleware(['auth', 'verified'])->name('requerimientos-siia.index');
