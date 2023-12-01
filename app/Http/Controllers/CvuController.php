@@ -80,7 +80,9 @@ class CvuController extends Controller
             'name_rt',
             'id_administrativo',
             'name_administrativo',
-            'tipo_financiamiento'
+            'tipo_financiamiento',
+            'clave_uaem',
+            'clave_dygcyn',
         ]);
         //revisamos quien se loguio si administrativo o responsable 1:rt 0:administrativo
         if ($id_user == $proyecto->CveEntEmp_Responsable) {
@@ -104,6 +106,8 @@ class CvuController extends Controller
         Session::put('name_administrativo', $proyecto->Nombre_Administrativo . ' ' . $proyecto->APaterno_Administrativo . ' ' . $proyecto->AMaterno_Administrativo);
         Session::put('tipo_financiamiento', $proyecto->Tipo_Proyecto);
         Session::put('VoBo_Who', $VoBo_Who);
+        Session::put('clave_uaem', $proyecto->CvePryUaem);
+        Session::put('clave_dygcyn', $proyecto->Clave_DIGCYN);
 
         //redireccionamos de acuerdo a la accion seleccionada
         if ($accion == 1) {

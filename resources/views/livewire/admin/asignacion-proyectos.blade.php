@@ -374,7 +374,7 @@
                 position: 'top-center',
                 icon: 'error',
                 text: '{{ session('error') }}',
-                confirmButtonText: 'Aceptar!',
+                confirmButtonText: 'Aceptar',
                 confirmButtonColor: '#62836C',
                 showConfirmButton: true,
                 //timer: 2500
