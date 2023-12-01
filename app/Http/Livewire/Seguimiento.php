@@ -5,9 +5,13 @@ namespace App\Http\Livewire;
 use Livewire\WithPagination;
 use Livewire\Component;
 use App\Models\Adquisicion;
+use App\Models\AdquisicionDetalle;
 use App\Models\Solicitud;
 use App\Models\TipoRequisicion;
+use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\DB;
+//use App\Http\Livewire\DB;
 
 class Seguimiento extends Component
 {
@@ -34,142 +38,114 @@ class Seguimiento extends Component
 
     public function render()
     {
-        $adquisiciones = Adquisicion::join("cuentas_contables", "adquisiciones.id_rubro", "=", "cuentas_contables.id")
+        $adquisicionesDgiea = Adquisicion::join("cuentas_contables", "adquisiciones.id_rubro", "=", "cuentas_contables.id")
             ->join("tipo_requisiciones", "adquisiciones.tipo_requisicion", "=", "tipo_requisiciones.id")
             ->join("estatus_requisiciones", "adquisiciones.estatus_general", "=", "estatus_requisiciones.id")
-            ->select( 'adquisiciones.id as id', 'adquisiciones.id_emisor as id_emisor',
-                'adquisiciones.clave_adquisicion as id_requerimiento', 'adquisiciones.tipo_requisicion as tRequisicion',
-                'estatus_requisiciones.descripcion as estado', 'adquisiciones.estatus_general as estadoReq',
-                'adquisiciones.updated_at as modificacion', 'cuentas_contables.nombre_cuenta',
-                'tipo_requisiciones.descripcion', 'adquisiciones.observaciones as observaciones')
-            ->whereIn('estatus_general', [3, 6, 5])->where('clave_proyecto', '=', session('id_proyecto'));
-        $solicitudes = Solicitud::join("cuentas_contables", "solicitudes.id_rubro", "=", "cuentas_contables.id")
+            ->select(
+                'adquisiciones.id as id',
+                'adquisiciones.clave_adquisicion as id_requerimiento',
+                DB::raw('null as concepto'),
+                DB::raw('null as claveSIIA'),
+                'estatus_requisiciones.descripcion as estado',
+                'adquisiciones.updated_at as modificacion',
+                'cuentas_contables.nombre_cuenta',
+                'tipo_requisiciones.descripcion as req',
+                'adquisiciones.tipo_requisicion as  tipo_requerimiento',
+                'adquisiciones.estatus_general as id_estatus',
+                'adquisiciones.observaciones as observaciones',
+                'adquisiciones.id_emisor as emisor'
+            )->whereIn('estatus_requisiciones.tipo', [2,3,5])->where('clave_proyecto', '=', session('id_proyecto'));
+        
+        $adquisicionD = AdquisicionDetalle::join('adquisiciones', 'adquisicion_detalles.id_adquisicion', '=', 'adquisiciones.id')
+            ->join("tipo_requisiciones", "adquisiciones.tipo_requisicion", "=", "tipo_requisiciones.id")
+            ->join("cuentas_contables", "adquisiciones.id_rubro", "=", "cuentas_contables.id")
+            ->join("estatus_requisiciones", "adquisicion_detalles.estatus_rt", "=", "estatus_requisiciones.id")
+            ->select(
+                'adquisiciones.id as id',
+                'adquisiciones.clave_adquisicion as id_requerimiento',
+                'adquisicion_detalles.descripcion as concepto',
+                'adquisicion_detalles.clave_siia as claveSIIA',
+                'estatus_requisiciones.descripcion as estado',
+                'adquisicion_detalles.updated_at as modificacion',
+                'cuentas_contables.nombre_cuenta',
+                'tipo_requisiciones.descripcion as req',
+                'adquisiciones.tipo_requisicion as  tipo_requerimiento',
+                'adquisicion_detalles.estatus_rt as id_estatus',
+                'adquisicion_detalles.observaciones as observaciones',
+                'adquisiciones.id_emisor as emisor'
+            )->whereIn('estatus_requisiciones.tipo', [2,3,5])
+            ->where('clave_proyecto', '=', session('id_proyecto'));
+
+        $solicitudes = Solicitud::join('solicitud_detalles', 'solicitudes.id', '=', 'solicitud_detalles.id_solicitud')
+            ->join("cuentas_contables", "solicitudes.id_rubro", "=", "cuentas_contables.id")
             ->join("tipo_requisiciones", "solicitudes.tipo_requisicion", "=", "tipo_requisiciones.id")
             ->join("estatus_requisiciones", "solicitudes.estatus_rt", "=", "estatus_requisiciones.id")
-            ->select('solicitudes.id as id', 'solicitudes.id_emisor as id_emisor',
-                'solicitudes.clave_solicitud as id_requerimiento', 'solicitudes.tipo_requisicion as tRequisicion',
-                'estatus_requisiciones.descripcion as estado', 'solicitudes.estatus_rt as estadoReq',
-                'solicitudes.updated_at as modificacion',  'cuentas_contables.nombre_cuenta',
-                'tipo_requisiciones.descripcion','solicitudes.observaciones as observaciones' )
-            ->whereIn('estatus_rt', [3, 6, 5])->where('clave_proyecto', '=', session('id_proyecto'));    
-        //si palabra clave esta vacia no se ejecuta
-        if (!empty($this->search)) {
-            $adquisiciones->where(function ($query) {
-                $query->where('clave_adquisicion', 'like', '%' . $this->search . '%')
-                    ->orWhereHas('requerimiento', function ($query) {
-                        $query->where('descripcion', 'like', '%' . $this->search . '%');
-                    })->orWhereHas('cuentas', function ($query) {
-                    $query->where('nombre_cuenta', 'like', '%' . $this->search . '%');
+            ->select(
+                'solicitudes.id as id',
+                'solicitudes.clave_solicitud as id_requerimiento',
+                'solicitud_detalles.concepto as concepto',
+                'solicitud_detalles.clave_siia as claveSIIA',
+                'estatus_requisiciones.descripcion as estado',
+                'solicitudes.updated_at as modificacion',
+                'cuentas_contables.nombre_cuenta',
+                'tipo_requisiciones.descripcion as req',
+                'solicitudes.tipo_requisicion as  tipo_requerimiento',
+                'solicitudes.estatus_rt as id_estatus',
+                'solicitudes.observaciones as observaciones',
+                'solicitudes.id_emisor as emisor'
+            )->whereIn('estatus_requisiciones.tipo', [2,4,5])->where('clave_proyecto', '=', session('id_proyecto'));
+
+            if (!empty($this->search)) {
+                $adquisicionesDgiea->where(function ($query) {
+                    $query-> where('adquisiciones.clave_adquisicion', 'like', '%' .$this->search. '%')
+                    ->orWhere('cuentas_contables.nombre_cuenta', 'like', '%' .$this->search. '%')
+                    ->orWhere('tipo_requisiciones.descripcion', 'like', '%' .$this->search. '%');
                 });
-            });
-            $solicitudes->where(function ($query) {
-                $query->where('clave_solicitud', 'like', '%' . $this->search . '%')
-                    ->orWhereHas('requerimientoSolicitud', function ($query) {
-                        $query->where('descripcion', 'like', '%' . $this->search . '%');
-                    })->orWhereHas('rubroSolicitud', function ($query) {
-                    $query->where('nombre_cuenta', 'like', '%' . $this->search . '%');
+                $adquisicionD->where(function ($query) {
+                    $query-> where('adquisiciones.clave_adquisicion', 'like', '%' .$this->search. '%')
+                    ->orWhere('cuentas_contables.nombre_cuenta', 'like', '%' .$this->search. '%')
+                    ->orWhere('adquisicion_detalles.descripcion', 'like', '%' .$this->search. '%')
+                    ->orWhere('tipo_requisiciones.descripcion', 'like', '%' .$this->search. '%');
                 });
-            });
-        }
-        if ($this->f_inicial != 0 and ($this->f_final == 0 or $this->f_final =='')) {
-            $adquisiciones->where('adquisiciones.updated_at', 'like', '%' . $this->f_inicial . '%');
-            $solicitudes->where('solicitudes.updated_at', 'like', '%' . $this->f_inicial . '%');
-           // dd('inicial '.$this->f_final.'-fin-'.$this->f_inicial.'-');
-        }
-        if ($this->f_final != 0 and ($this->f_inicial == 0 or $this->f_inicial == '')) {
-            $adquisiciones->where('adquisiciones.updated_at', 'like', '%' . $this->f_final . '%');
-            $solicitudes->where('solicitudes.updated_at', 'like', '%' . $this->f_final . '%');
-            //dd('final'.$this->f_final.'-inic-'.$this->f_inicial);
-        }
-        if ($this->f_final != 0 and $this->f_final != '' and $this->f_inicial != 0 and $this->f_inicial != '') {
-            $adquisiciones->whereDate('adquisiciones.updated_at','>=', $this->f_inicial)
-                        ->whereDate('adquisiciones.updated_at','<=', $this->f_final);
-            $solicitudes->whereDate('solicitudes.updated_at','>=', $this->f_inicial)
-                        ->whereDate('solicitudes.updated_at','<=', $this->f_final);
-          // dd('las dos'.$this->f_final.''.$this->f_inicial);
+                $solicitudes->where(function ($query) {
+                    $query-> where('solicitudes.clave_solicitud', 'like', '%' .$this->search. '%')
+                    ->orWhere('cuentas_contables.nombre_cuenta', 'like', '%' .$this->search. '%')
+                    ->orWhere('solicitud_detalles.concepto', 'like', '%' .$this->search. '%')
+                    ->orWhere('tipo_requisiciones.descripcion', 'like', '%' .$this->search. '%')
+                    ->orWhere('estatus_requisiciones.descripcion', 'like', '%' .$this->search. '%');
+                });
+            }
 
-        }
+            if ($this->f_inicial != 0 and ($this->f_final == 0 or $this->f_final =='')) {
+                $adquisicionesDgiea->where('adquisiciones.updated_at', 'like', '%' . $this->f_inicial . '%');
+                $adquisicionD->where('adquisicion_detalles.updated_at', 'like', '%' . $this->f_inicial . '%');
+                $solicitudes->where('solicitudes.updated_at', 'like', '%' . $this->f_inicial . '%');
+            }
+            if ($this->f_final != 0 and ($this->f_inicial == 0 or $this->f_inicial == '')) {
+                $adquisicionesDgiea->where('adquisiciones.updated_at', 'like', '%' . $this->f_final . '%');
+                $adquisicionD->where('adquisicion_detalles.updated_at', 'like', '%' . $this->f_final . '%');
+                $solicitudes->where('solicitudes.updated_at', 'like', '%' . $this->f_final . '%');
+            }
+            if ($this->f_final != 0 and $this->f_final != '' and $this->f_inicial != 0 and $this->f_inicial != '') {
+                $adquisicionesDgiea->whereDate('adquisiciones.updated_at','>=', $this->f_inicial)
+                            ->whereDate('adquisiciones.updated_at','<=', $this->f_final);
+                $adquisicionD->whereDate('adquisicion_detalles.updated_at','>=', $this->f_inicial)
+                            ->whereDate('adquisicion_detalles.updated_at','<=', $this->f_final);                       
+                $solicitudes->whereDate('solicitudes.updated_at','>=', $this->f_inicial)
+                            ->whereDate('solicitudes.updated_at','<=', $this->f_final);    
+            }
 
-        if ($this->categoria == 0) {
-            $requerimientos = $adquisiciones->union($solicitudes);
-
-        } else if ($this->categoria == 1) {
-
-            $requerimientos = $adquisiciones;
-
-        } else if ($this->categoria == 2) {
-            $requerimientos = $solicitudes;
-        }
-
-        $adquisicionesSIIA = Adquisicion::join("cuentas_contables", "adquisiciones.id_rubro", "=", "cuentas_contables.id")
-        ->join("tipo_requisiciones", "adquisiciones.tipo_requisicion", "=", "tipo_requisiciones.id")
-        ->join("estatus_requisiciones", "adquisiciones.estatus_general", "=", "estatus_requisiciones.id")
-        ->select( 'adquisiciones.id as id', 'adquisiciones.id_emisor as id_emisor',
-            'adquisiciones.clave_adquisicion as id_requerimiento', 'adquisiciones.tipo_requisicion as tRequisicion',
-            'estatus_requisiciones.descripcion as estado', 'adquisiciones.estatus_general as estadoReq',
-            'adquisiciones.updated_at as modificacion', 'cuentas_contables.nombre_cuenta',
-            'tipo_requisiciones.descripcion', 'adquisiciones.observaciones as observaciones')
-        ->whereIn('estatus_general', [7,8,9,10,11,12,13])->where('clave_proyecto', '=', session('id_proyecto'));
-    $solicitudesSIIA = Solicitud::join("cuentas_contables", "solicitudes.id_rubro", "=", "cuentas_contables.id")
-        ->join("tipo_requisiciones", "solicitudes.tipo_requisicion", "=", "tipo_requisiciones.id")
-        ->join("estatus_requisiciones", "solicitudes.estatus_rt", "=", "estatus_requisiciones.id")
-        ->select('solicitudes.id as id', 'solicitudes.id_emisor as id_emisor',
-            'solicitudes.clave_solicitud as id_requerimiento', 'solicitudes.tipo_requisicion as tRequisicion',
-            'estatus_requisiciones.descripcion as estado', 'solicitudes.estatus_rt as estadoReq',
-            'solicitudes.updated_at as modificacion',  'cuentas_contables.nombre_cuenta',
-            'tipo_requisiciones.descripcion','solicitudes.observaciones as observaciones' )
-        ->whereIn('estatus_rt', [7,8,9,10,11,12,13])->where('clave_proyecto', '=', session('id_proyecto'));    
-    //si palabra clave esta vacia no se ejecuta
-    if (!empty($this->searchSIIA)) {
-        $adquisicionesSIIA->where(function ($query) {
-            $query->where('clave_adquisicion', 'like', '%' . $this->searchSIIA . '%')
-                ->orWhereHas('detalless', function ($query) {
-                    $query->where('descripcion', 'like', '%' . $this->searchSIIA . '%');
-                })->orWhereHas('estatus', function ($query) {
-                $query->where('descripcion', 'like', '%' . $this->searchSIIA . '%');
-            });
-        });
-        $solicitudesSIIA->where(function ($query) {
-            $query->where('clave_solicitud', 'like', '%' . $this->searchSIIA . '%')
-                ->orWhereHas('detalless', function ($query) {
-                    $query->where('descripcion', 'like', '%' . $this->searchSIIA . '%');
-                })->orWhereHas('estatusSolicitud', function ($query) {
-                $query->where('descripcion', 'like', '%' . $this->searchSIIA . '%');
-            });
-        });
-    }
-    if ($this->f_inicialSIIA != 0 and ($this->f_finalSIIA == 0 or $this->f_finalSIIA =='')) {
-        $adquisicionesSIIA->where('adquisiciones.updated_at', 'like', '%' . $this->f_inicialSIIA . '%');
-        $solicitudesSIIA->where('solicitudes.updated_at', 'like', '%' . $this->f_inicialSIIA . '%');
-       // dd('inicial '.$this->f_final.'-fin-'.$this->f_inicial.'-');
-    }
-    if ($this->f_finalSIIA != 0 and ($this->f_inicialSIIA == 0 or $this->f_inicialSIIA == '')) {
-        $adquisicionesSIIA->where('adquisiciones.updated_at', 'like', '%' . $this->f_finalSIIA . '%');
-        $solicitudesSIIA->where('solicitudes.updated_at', 'like', '%' . $this->f_finalSIIA . '%');
-        //dd('final'.$this->f_final.'-inic-'.$this->f_inicial);
-    }
-    if ($this->f_finalSIIA != 0 and $this->f_finalSIIA != '' and $this->f_inicialSIIA != 0 and $this->f_inicialSIIA != '') {
-        $adquisicionesSIIA->whereDate('adquisiciones.updated_at','>=', $this->f_inicialSIIA)
-                    ->whereDate('adquisiciones.updated_at','<=', $this->f_finalSIIA);
-        $solicitudesSIIA->whereDate('solicitudes.updated_at','>=', $this->f_inicialSIIA)
-                    ->whereDate('solicitudes.updated_at','<=', $this->f_finalSIIA);
-      // dd('las dos'.$this->f_final.''.$this->f_inicial);
-
-    }
-
-    if ($this->categoriaSIIA == 0) {
-        $requerimientosSIIA = $adquisicionesSIIA->union($solicitudesSIIA)->orderBy('id')->paginate(5, pageName: 'pendientesSIIA');
-        
-    } else if ($this->categoriaSIIA == 1) {
-        $requerimientosSIIA = $adquisicionesSIIA->orderBy('id')->paginate(5, pageName: 'pendientesSIIA');
-
-    } else if ($this->categoriaSIIA == 2) {
-        $requerimientosSIIA = $solicitudesSIIA->orderBy('id')->paginate(5, pageName: 'pendientesSIIA');
-    }
+            if ($this->categoria == 0) {
+                $requerimientos = $adquisicionesDgiea->union($adquisicionD)->union($solicitudes);    
+            } else if ($this->categoria == 1) {    
+                $requerimientos = $adquisicionesDgiea->union($adquisicionD);    
+            } else if ($this->categoria == 2) {
+                $requerimientos = $solicitudes;
+            }     
 
         return view(
             'livewire.seguimiento',
-            ['requerimientos' => $requerimientos->orderBy('id')->paginate(5, pageName: 'pendientes'), 'requerimientosSIIA'=> $requerimientosSIIA]
+            ['requerimientos' => $requerimientos->paginate(5, pageName: 'pendientes')  ]
         );
     }
 
@@ -181,6 +157,5 @@ class Seguimiento extends Component
     public function filterByCategory($categoria)
     {
         $this->categoria = $categoria;
-        // dd($this->categoria);
     }
 }

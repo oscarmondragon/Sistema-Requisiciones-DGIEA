@@ -368,28 +368,56 @@
                                 @error('vobo')
                                     <span class=" text-rojo error sm:inline-block block">{{ $message }}</span>
                                 @enderror
-
-                                <div class="sm:text-right text-center my-10 -mb-5">
-
-                                    @empty($id_adquisicion)
-                                        <button type="button" @click="saveConfirmation()"
-                                            class="btn-success sm:w-auto w-5/6">Guardar</button>
-                                    @endempty
-                                    <button type="submit" @click="saveConfirmationVoBo()"
-                                        class="btn-primary sm:w-auto w-5/6">Enviar para VoBo</button>
-                                    @if (str_contains($referer, 'vobo'))
-                                        <button type="button" @click="cancelarAdquisicion()"
-                                            class="btn-warning sm:w-auto w-5/6">Cancelar</button>
-                                    @else
-                                        <button type="button" class="btn-warning sm:w-auto w-5/6"
-                                            x-on:click="window.location.href = '{{ route('cvu.seguimiento') }}'">Regresar</button>
-                                    @endif
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+        <div>
+          <label x-show="exclusividadSelectedOption === '1'" for="anexoDocumentos" 
+          class="text-rojo mt-5 block">
+            <span class="text-verde font-bold">Nota: </span>Adjunte aquí el soporte de exclusividad.
+          </label>
+          <label for="anexoOtroTemp">Anexo técnico u otros documentos:</label>
+          <input type="file" id="anexoOtroTemp" wire:model='anexoOtroTemp' accept=".pdf">
+          @empty($docsAnexoOtrosDocumentos)
+          <label for="anexoOtroTemp" class="text-dorado">Sin archivos seleccionados.</label>
+          @endempty
+          <br>
+          <div wire:loading wire:target="docsAnexoOtrosDocumentos">Cargando archivo...</div>
+          @error('anexoOtroTemp') <span class=" text-rojo sm:inline-block block">{{ $message }}</span> @enderror
+          @error('docsAnexoOtrosDocumentos') <span class=" text-rojo sm:inline-block block">{{ $message }}</span> @enderror
+          <ul>
+            @foreach($docsAnexoOtrosDocumentos as $index => $anexoDoc)
+            <li>
+              @if(isset($anexoDoc['datos']['ruta_documento']))
+            <a href="#" class="text-dorado"  wire:click="descargarArchivo('{{ $anexoDoc['datos']['ruta_documento'] }}', '{{ $anexoDoc['datos']['nombre_documento']}}')">  {{ $anexoDoc['datos']['nombre_documento']}} <button type="button" class="btn-ver">Ver</button></a>
+           @else
+           {{ $anexoDoc['datos']['nombre_documento']}}
+           @endif
+              <button type="button" class="btn-eliminar-lista" @click="eliminarDocumento('anexoDocumentos', '{{$index}}')">
+                Eliminar
+              </button>
+            </li>
+            @endforeach
+          </ul>
+        </div>
+      </div>
+      <p class="text-verde mt-5"> <span class="font-bold">Nota:</span> Las cotizaciones deben describir exactamente el mismo material, suministro, servicio general,
+        bien mueble o intangible.
+      </p>
+      <div class="mt-10">
+        <input type="checkbox" id="vobo" wire:model='vobo' name="vobo" class="rounded-full sm:ml-10">
+        <label for="vobo">VoBo al requerimiento solicitado. Se envía para VoBo del Admistrativo/Investigador<samp class="text-rojo">*</samp></label>
+        @error('vobo') <span class=" text-rojo error sm:inline-block block">{{ $message }}</span> @enderror
+              <div class="sm:text-right text-center my-10 -mb-5">
+              
+               @empty($id_adquisicion)
+                <button type="button" @click="saveConfirmation()" class="btn-success sm:w-auto w-5/6">Guardar</button>
+                @endempty
+                <button type="submit" @click="saveConfirmationVoBo()" class="btn-primary sm:w-auto w-5/6">Enviar para VoBo</button>
+                @if (str_contains($referer, 'vobo') || str_contains($referer, 'crear'))
+                    <button type="button" @click="cancelarAdquisicion()" class="btn-warning sm:w-auto w-5/6">Cancelar</button>
+                @else
+                    <button type="button" class="btn-warning sm:w-auto w-5/6" x-on:click="window.location.href = '{{ route('cvu.seguimiento') }}'">Regresar</button>
+                @endif
+          </div>
+          </form>
         </div>
     </div>
 

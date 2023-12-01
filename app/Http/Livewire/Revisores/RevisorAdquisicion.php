@@ -69,6 +69,7 @@ class RevisorAdquisicion extends Component
         'save',
     ];
 
+
     public function mount($id = 0, $id_requisicion_detalle = null)
     {
         //Recuperamos valores enviados en la ruta
@@ -143,6 +144,7 @@ class RevisorAdquisicion extends Component
     {
         $this->validateOnly($estatus);
     }
+
 
     public function descargarArchivo($rutaDocumento, $nombreDocumento)
     {

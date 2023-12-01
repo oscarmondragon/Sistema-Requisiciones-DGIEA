@@ -60,7 +60,7 @@ class SolicitudVobo extends Component
     public $bitacoraPdfTemp;
 
     public $tamanyoDocumentos;
-    public $referer ='';
+    public $referer = '';
 
 
     protected $rules = [
@@ -121,7 +121,7 @@ class SolicitudVobo extends Component
     public function darVobo()
     {
         $this->validate();
-        
+
         $who_vobo = Session::get('VoBo_Who');
         $fecha_vobo = Carbon::now()->toDateString();
         $id_user = Session::get('id_user');
@@ -130,8 +130,8 @@ class SolicitudVobo extends Component
             $solicitud = Solicitud::where('id', $this->solicitud->id)->first();
             if ($solicitud) {
                 $clave_solicitud = $solicitud->clave_solicitud;
-                $solicitud->estatus_rt = 3;
-                $solicitud->estatus_dgiea = 3;
+                $solicitud->estatus_rt = 4;
+                $solicitud->estatus_dgiea = 4;
 
                 if ($who_vobo) { //Si el deposito es por parte del Responsable técnico
                     $solicitud->vobo_rt = $fecha_vobo;
@@ -154,15 +154,16 @@ class SolicitudVobo extends Component
 
     }
 
-    public function rechazarVobo($motivo){
+    public function rechazarVobo($motivo)
+    {
         $this->observacionesVobo = $motivo;
         try {
             DB::beginTransaction();
             $solicitud = Solicitud::where('id', $this->solicitud->id)->first();
             if ($solicitud) {
                 $clave_solicitud = $solicitud->clave_solicitud;
-                $solicitud->estatus_rt = 4;
-                $solicitud->estatus_dgiea = 4;
+                $solicitud->estatus_rt = 3;
+                $solicitud->estatus_dgiea = 3;
                 $solicitud->observaciones_vobo = $this->observacionesVobo;
 
                 $solicitud->save();
