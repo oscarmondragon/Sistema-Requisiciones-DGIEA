@@ -23,8 +23,11 @@
         </p>
     </div>
     <div class="-mb-4">
-        <p class="mt-1">Clave y Nombre del Proyecto:
-            <span class="text-dorado">{{Session::get('id_proyecto')}} - {{Session::get('name_proyecto')}}</span>
+        <p class="mt-1">Clave y Nombre del Proyecto: 
+            <span class="text-dorado">
+                {{Session::get('clave_dygcyn') == null ? Session::get('clave_uaem') : Session::get('clave_dygcyn') }}
+                 - {{Session::get('name_proyecto')}}
+            </span>
         </p>
     </div>
 
