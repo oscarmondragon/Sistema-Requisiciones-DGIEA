@@ -261,10 +261,9 @@ class ShowRequerimientos extends Component
                     ->orWhereHas('requerimiento', function ($query) {
                         $query->where('descripcion', 'like', '%' . $this->search . '%');
                     })->orWhereHas('cuentas', function ($query) {
-                    $query->where('nombre_cuenta', 'like', '%' . $this->search . '%');
-                });
+                        $query->where('nombre_cuenta', 'like', '%' . $this->search . '%');
+                    });
             });
-
         }
 
 
@@ -298,5 +297,4 @@ class ShowRequerimientos extends Component
             ]
         );
     }
-
 }
