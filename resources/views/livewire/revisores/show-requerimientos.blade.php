@@ -1,4 +1,9 @@
 <div x-data class="py-6">
+<x-slot name="header">
+        <h2 class="font-semibold text-xl leading-tight">
+            {{ __('Estatus general de Requerimientos') }}
+        </h2>
+    </x-slot>
   <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
       <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
           <div class="p-6 text-textos_generales">
@@ -65,10 +70,12 @@
                                                   wire:click="sort('clave_siia')">
                                                   Clave SIIA
                                               </th>
+                                              @if($rol != 2)                                             
                                                   <th class="w-[13%] cursor-pointer"
                                                   wire:click="sort('id_requerimiento')">
                                                   Concepto
                                               </th>
+                                              @endif
                                                   <th class="w-[13%] cursor-pointer"
                                                   wire:click="sort('id_requerimiento')">
                                                   Clave proyecto
@@ -96,7 +103,9 @@
                                                   <tr class="border-b-gray-200 border-transparent">
                                                       <td> {{ $requerimiento->id_requerimiento }} </td>
                                                       <td> {{ $requerimiento->clave_siia }} </td>
+                                                      @if($rol != 2)
                                                       <td>  {{ $requerimiento->concepto }} </td>  
+                                                      @endif
                                                       <td> {{ $requerimiento->clave_proyecto }} </td>
                                                       <td> {{ $requerimiento->nombre_cuenta }} </td>
                                                       <td> {{ $requerimiento->descripcion }} </td>
@@ -125,8 +134,19 @@
                                                           @endif
                                                       </td>
                                                       <td> {{ $requerimiento->modificacion }}</td>
+                                                     
 
                                                       @if ($requerimiento->tipo_requerimiento == 1 )
+                                                        @if($rol == 2)
+                                                            <td>
+                                                                <a href="{{ route('adquisicion.ver', $requerimiento->id) }}"
+                                                                    class="btn-tablas" title="Ver">
+                                                                    <button class="btn-tablas" title="Ver">
+                                                                        <img src="{{ 'img/btn_ver.jpeg' }}" alt="Image/png">
+                                                                    </button>
+                                                                </a>
+                                                            </td> 
+                                                        @else
                                                             @if(in_array($requerimiento->tipo_estado, [2]))
                                                                 <td>
                                                                     <a href="{{ route('adquisicion.revisar', ['id' => $requerimiento->id, 'id_requisicion_detalle' => 0]) }}"
@@ -152,8 +172,19 @@
                                                                     </a>
                                                                 </td>
                                                             @endif
+                                                        @endif
                                                     @elseif($requerimiento->tipo_requerimiento == 2)
-                                                    <td>
+                                                        @if($rol == 2)
+                                                        <td>
+                                                            <a href="{{ route('solicitud.ver', $valor->id) }}"
+                                                                    class="btn-tablas" title="Ver">
+                                                                    <button class="btn-tablas" title="Ver">
+                                                                <img src="{{ 'img/btn_ver.jpeg' }}" alt="Image/png">
+                                                                    </button>
+                                                                </a>
+                                                        </td>
+                                                        @else
+                                                         <td>
                                                         <a  href="{{ route('solicitud.revisar', $requerimiento->id) }}"
                                                             title="Revisar">
                                                             @if ($requerimiento->id_estatus == 4)
@@ -166,7 +197,8 @@
                                                             </button>
                                                             @endif
                                                         </a>
-                                                    </td>
+                                                        </td>
+                                                        @endif
                                                     @endif
                                                   </tr>
                                               @endforeach

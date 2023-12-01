@@ -300,6 +300,7 @@
                     <button type="button" class="btn-warning sm:w-auto w-5/6" x-on:click="window.location.href = '{{ route('cvu.seguimiento') }}'">Regresar</button>
                 @endif
           </div>
+                        </div>
           </form>
         </div>
       </div>
