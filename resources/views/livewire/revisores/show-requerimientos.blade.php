@@ -36,14 +36,14 @@
                                           wire:model="categoria">
                                           <option value="0">Todo</option>
                                           @foreach ($tipoRequisicion as $tipo)
-                                              <option value="{{ $tipo->id }}">{{ $tipo->descripcion }}</option>
+                                              <option value="{{ $tipo->id }}" data-id-especial="{{ $tipo->id }}">{{ $tipo->descripcion }}</option>
                                           @endforeach
-                                          <option value="3">Pendientes de revisar</option>
-                                          <option value="4">En DGIEA</option>
-                                          <option value="5">En SIIA</option>
+                                          <option value="3" data-id-especial="3">Pendientes de revisar</option>
+                                          <option value="4" data-id-especial="4">En DGIEA</option>
+                                          <option value="5" data-id-especial="5">En SIIA</option>
 
                                       </select>
-                                      <input type="text" wire:model="search" onfocus="this.value=null"
+                                      <input type="text" wire:model.live="search" 
                                           class="inputs-formulario-solicitudes md:mt-0 mt-2 p-2.5 sm:w-96 w-full"
                                           placeholder="Buscar por clave, tipo...">
 
@@ -51,9 +51,9 @@
 
                                   <div class="flex-1 md:mt-0 mt-2">
                                       <p class="text-verde font-semibold">Filtrar por fecha</p>
-                                      <input type="date" name="f_inicial" id="f_inicial" wire:model="f_inicial"
+                                      <input type="date" name="f_inicial" id="f_inicial" wire:model.live="f_inicial"
                                           class="bg-blanco text-textos_generales rounded-md border-transparent h-10 sm:w-auto w-full">
-                                      <input type="date" name="f_final" id="f_final" wire:model="f_final"
+                                      <input type="date" name="f_final" id="f_final" wire:model.live="f_final"
                                           class="bg-blanco text-textos_generales rounded-md border-transparent h-10 md:mt-0 mt-2 sm:w-auto w-full">
                                   </div>
                               </div>
@@ -69,13 +69,11 @@
                                                   <th class="w-[13%] cursor-pointer"
                                                   wire:click="sort('clave_siia')">
                                                   Clave SIIA
-                                              </th>
-                                              @if($rol != 2)                                             
+                                              </th>                                        
                                                   <th class="w-[13%] cursor-pointer"
                                                   wire:click="sort('id_requerimiento')">
                                                   Concepto
                                               </th>
-                                              @endif
                                                   <th class="w-[13%] cursor-pointer"
                                                   wire:click="sort('id_requerimiento')">
                                                   Clave proyecto
@@ -103,10 +101,10 @@
                                                   <tr class="border-b-gray-200 border-transparent">
                                                       <td> {{ $requerimiento->id_requerimiento }} </td>
                                                       <td> {{ $requerimiento->clave_siia }} </td>
-                                                      @if($rol != 2)
                                                       <td>  {{ $requerimiento->concepto }} </td>  
-                                                      @endif
-                                                      <td> {{ $requerimiento->clave_proyecto }} </td>
+                                                      <td> 
+                                                            {{ $requerimiento->clave_digcyn == null ? $requerimiento->clave_uaem : $requerimiento->clave_digcyn }}
+                                                        </td>
                                                       <td> {{ $requerimiento->nombre_cuenta }} </td>
                                                       <td> {{ $requerimiento->descripcion }} </td>
                                                       <td class="sm:text-center">
@@ -137,9 +135,9 @@
                                                      
 
                                                       @if ($requerimiento->tipo_requerimiento == 1 )
-                                                        @if($rol == 2)
+                                                        @if($rol == 2 || $rol==1)
                                                             <td>
-                                                                <a href="{{ route('adquisicion.ver', $requerimiento->id) }}"
+                                                                <a href="{{ route('adquisicion-admin.ver', $requerimiento->id) }}"
                                                                     class="btn-tablas" title="Ver">
                                                                     <button class="btn-tablas" title="Ver">
                                                                         <img src="{{ 'img/btn_ver.jpeg' }}" alt="Image/png">
@@ -149,7 +147,7 @@
                                                         @else
                                                             @if(in_array($requerimiento->tipo_estado, [2]))
                                                                 <td>
-                                                                    <a href="{{ route('adquisicion.revisar', ['id' => $requerimiento->id, 'id_requisicion_detalle' => 0]) }}"
+                                                                    <a href="{{ route('adquisicion.revisar', ['id' => $requerimiento->id]) }}"
                                                                         title="Editar">
                                                                         @if ($requerimiento->id_estatus == 4)
                                                                         <button class="btn-primary sm:w-auto w-5/6" title="Revisar">
@@ -174,9 +172,9 @@
                                                             @endif
                                                         @endif
                                                     @elseif($requerimiento->tipo_requerimiento == 2)
-                                                        @if($rol == 2)
+                                                        @if($rol == 2 || $rol==1)
                                                         <td>
-                                                            <a href="{{ route('solicitud.ver', $valor->id) }}"
+                                                            <a href="{{ route('solicitud-admin.ver', $requerimiento->id) }}"
                                                                     class="btn-tablas" title="Ver">
                                                                     <button class="btn-tablas" title="Ver">
                                                                 <img src="{{ 'img/btn_ver.jpeg' }}" alt="Image/png">
