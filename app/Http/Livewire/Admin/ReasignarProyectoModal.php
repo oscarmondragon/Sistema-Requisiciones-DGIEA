@@ -68,7 +68,7 @@ class ReasignarProyectoModal extends ModalComponent
 
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->back()->with('error', 'error en el deposito' . $e->getMessage());
+            return redirect()->back()->with('error', 'Error al reasignar el proyecto.' . $e->getMessage());
         }
     }
 

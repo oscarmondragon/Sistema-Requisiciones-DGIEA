@@ -58,7 +58,6 @@
                                     </div>
                                     <div x-show="ifRechazo === '5' || ifRechazo === '12' || ifRechazo === '14'"
                                         class="flex flex-col mb-6">
-
                                         <label for="observaciones_estatus" class="my-2">
                                             Observaciones
                                             <samp class="text-rojo">*</samp>

@@ -46,8 +46,10 @@ Route::get('/dashboard', function () {
 Route::get('/requerimientos-dgiea', ShowRequerimientos::class)->middleware(['auth', 'verified'])->name('requerimientos.index');
 Route::get('/adquisiciones/{id}/revisar/{id_requisicion_detalle?}', RevisorAdquisicion::class)->middleware(['auth', 'verified'])->name('adquisicion.revisar');
 Route::get('/solicitudes/{id}/revisar', RevisorSolicitud::class)->middleware(['auth', 'verified'])->name('solicitud.revisar');
+Route::get('/adquisiciones/{id}/ver_admin/{id_requisicion_detalle?}', RevisorAdquisicion::class)->middleware(['auth', 'verified'])->name('adquisicion-admin.ver');
+Route::get('/solicitudes/{id}/ver_admin', RevisorSolicitud::class)->middleware(['auth', 'verified'])->name('solicitud-admin.ver');
 
-Route::get('/seguimiento-siia', ProyectosAsignadosRevisor::class)->middleware(['auth', 'verified'])->name('requerimientos-siia.index');
+Route::get('/asignados-revisor', ProyectosAsignadosRevisor::class)->middleware(['auth', 'verified'])->middleware('can:revisor')->name('asignados-revisor.index');
 
 
 Route::get('/asignacion-proyectos', AsignacionProyectos::class)
