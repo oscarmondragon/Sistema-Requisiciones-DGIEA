@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Policies\AdminPolicy;
+use App\Policies\RevisorPolicy;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 
@@ -29,5 +30,8 @@ class AuthServiceProvider extends ServiceProvider
         //
         $this->registerPolicies();
         Gate::define('admin', [AdminPolicy::class, 'admin']);
+
+        $this->registerPolicies();
+        Gate::define('revisor', [RevisorPolicy::class, 'revisor']);
     }
 }

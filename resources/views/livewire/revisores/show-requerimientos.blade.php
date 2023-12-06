@@ -27,6 +27,20 @@
                               })
                           </script>
                       @endif
+                      @if (session('error'))
+                      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                      <script>
+                          Swal.fire({
+                              position: 'top-center',
+                              icon: 'success',
+                              text: '{{ session('success') }}',
+                              confirmButtonText: 'Aceptar',
+                              confirmButtonColor: '#62836C',
+                              showConfirmButton: true,
+                              //timer: 2500
+                          })
+                      </script>
+                  @endif
                       <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                           <div class="p-6">
                               <!-- <input type="text" wire:model="search" placeholder="Buscar por clave, tipo..." class="inputs-formulario-solicitudes"> -->

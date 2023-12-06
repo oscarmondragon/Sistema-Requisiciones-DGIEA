@@ -23,6 +23,8 @@ class AsignacionProyecto extends Model
         'convocatoria',
         'tipo_proyecto',
         'id_revisor',
+        'fecha_inicio',
+        'fecha_final',
         'id_usuario_sesion',
     ];
 
