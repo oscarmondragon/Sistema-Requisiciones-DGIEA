@@ -50,13 +50,12 @@ class RevisorAdquisicion extends Component
 
     public $observacionesVobo;
     public $tipoEstatus;
-
-    public $verDetalles = 0;
+    public $clave;
 
     protected $rules = [
         'estatus' => 'required_if:estatus,0|not_in:0',
-        'observaciones_estatus' => 'required_if:estatus,5',
-        'claveSiia' => 'required_if:estatus,7',
+        'observaciones_estatus' => 'required_if:estatus,5|required_if:estatus,9',
+        //'claveSiia' => 'required_if:tipoEstatus,3|required_if:tipoEstatus,5',
     ];
     protected $messages = [
         'estatus.required_if' => 'Debe seleccionar un estado.',
@@ -76,7 +75,7 @@ class RevisorAdquisicion extends Component
         $this->id_adquisicion = $id;
         $this->id_adquisicion_detalle = $id_requisicion_detalle;
 
-        $this->tipoEstatus = EstatusRequisiciones::where('id', $this->estatus)->first();
+        //$this->tipoEstatus = EstatusRequisiciones::select('tipo')->where('id', $this->estatus)->first();
 
         if ($this->id_adquisicion_detalle != null) {
             $this->estatus_generales = EstatusRequisiciones::whereIn('tipo', [3, 5])->get();
@@ -101,6 +100,16 @@ class RevisorAdquisicion extends Component
             $this->bienesDB = AdquisicionDetalle::where('id_adquisicion', $id)->where('id', $this->id_adquisicion_detalle)->get();
         } else {
             $this->bienesDB = AdquisicionDetalle::where('id_adquisicion', $id)->get();
+        }
+
+        //$this->clave = SolicitudDetalle::select('clave_siia')->where('id_solicitud', $this->id_solicitud)->first();
+        $this->clave = AdquisicionDetalle::select('clave_siia')->where('id_adquisicion', $this->id_adquisicion)->first();
+        $this->clave = $this->clave->clave_siia;
+
+        if ($this->clave != null) {
+            $this->claveSiia = $this->clave;
+        } else {
+            $this->clave = null;
         }
 
         $this->bienes = collect($this->bienesDB);
@@ -163,16 +172,23 @@ class RevisorAdquisicion extends Component
         
         try {
             DB::beginTransaction();
-            if ($this->id_adquisicion_detalle == null) {            
-                if (in_array($this->tipoEstatus->tipo, [3, 5])) { // Selecciono un estatus por partida    
+            if ($this->id_adquisicion_detalle == null) {
+                if (in_array($this->tipoEstatus, [3, 5])) { // Selecciono un estatus por partida    
                     // $bienesDB = AdquisicionDetalle::where('id_adquisicion', $this->id_adquisicion)->get();
                     $bienesDB = $this->adquisicion->detalless()->get();
                     //dd($this->adquisicion->detalless()->get());
                     foreach ($bienesDB as $bien) {
                         if ($bien) {
                             $bien->estatus_dgiea = $this->estatus;
-                            $bien->estatus_rt = $this->estatus;                           
-                            $bien->clave_siia = $this->claveSiia;
+                            $bien->estatus_rt = $this->estatus;
+                            
+                            if (($this->tipoEstatus == 3 || $this->tipoEstatus == 5) && $this->clave == null) {
+                                if ($bien) {
+                                    $bien->clave_siia = $this->claveSiia;
+                
+                                    $bien->save();
+                                }
+                            }
                             
                             $bien->save();
                         }
@@ -208,7 +224,7 @@ class RevisorAdquisicion extends Component
                 }
             } else {
                 // Actualizamos en detalles, entro a una partida
-                DB::beginTransaction();
+                //dd("detalles");
                 $bienesDB = AdquisicionDetalle::where('id', $this->id_adquisicion_detalle)->first();
                 if ($bienesDB) {
                     $bienesDB->estatus_dgiea = $this->estatus;
@@ -220,7 +236,8 @@ class RevisorAdquisicion extends Component
             }
 
             DB::commit();
-            return redirect('/dashboard')->with('success', 'Su solicitud con clave');
+            return redirect('/requerimientos-dgiea')->with('success', 'Estatus actualizado correctamente ' . $this->clave . '123');
+            //return redirect('/requerimientos-dgiea')->with('success', 'Estatus de la adquisición ' . $adquisicion->clave_adquisicion . ' actualizada correctamente.');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->with('error', 'error al intentar confirmar visto bueno. Intente más tarde.' . $e->getMessage());
@@ -230,6 +247,8 @@ class RevisorAdquisicion extends Component
     public function actualizarTipoEstatus($tipo){
         $this->tipoEstatus = $tipo;
         $this->observaciones_estatus = null;
-        $this->claveSiia = null;
+        if ($this->clave == null) {
+            $this->claveSiia = null;
+        }
     }
 }
