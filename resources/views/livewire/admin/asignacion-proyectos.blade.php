@@ -89,7 +89,7 @@
                                         </div>
 
                                         <div class="flex-col">
-                                            <button type="button" class="bg-gray-400 sm:w-auto w-full sm:mt-0 mt-4"
+                                            <button type="button" class="bg-blue-600 sm:w-auto w-full sm:mt-0 mt-4"
                                                 wire:click="limpiarFiltros">
                                                 Limpiar filtros
                                             </button>
@@ -278,7 +278,7 @@
                                     </div>
 
                                     <div class="flex-col sm:ml-20">
-                                        <button type="button" class="bg-gray-400 sm:w-auto w-full sm:mt-0 mt-4"
+                                        <button type="button" class="bg-blue-600 sm:w-auto w-full sm:mt-0 mt-4"
                                             wire:click="limpiarFiltrosProyAsignados">
                                             Limpiar filtros
                                         </button>

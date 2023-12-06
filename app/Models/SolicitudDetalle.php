@@ -23,6 +23,7 @@ class SolicitudDetalle extends Model
         'concepto',
         'justificacion',
         'importe',
+        'clave_siia',
         'periodo_inicio',
         'periodo_fin'
     ];

@@ -5,33 +5,43 @@
                 <div class="p-6">
                     <div class="">
                         <div>
-                            <h1 class="mt-6">Revisión para adquisición con clave: {{ $adquisicion->clave_adquisicion }}
+                            <h1 class="mt-6">Revisión para adquisición con clave:
+                                <span class="text-dorado">
+                                    {{ $adquisicion->clave_adquisicion }}
+                                </span>
                             </h1>
+                            <h2 class="text-dorado">{{$clave == null ? '' : 'Clave SIIA: ' . $clave}}</h2>
+                            <h2 class="text-dorado"></h2>
                             <form x-on:submit.prevent="saveConfirmation">
                                 @csrf
                                 <div>
                                     <div x-data="{ open: false }">
-                                        <button type="button" class="bg-blue-300" @click="open = ! open">
-                                            Ver detalles &#8595;
+                                        <button type="button" class="bg-blue-600 my-4" @click="open = ! open">
+                                            Ver detalles
                                         </button>
-
-                                        <input id="miBoton" type="button" value="Ver detalles &#8595" id="btn">                                
                                         <div x-show="open">
                                             @include('components.adquisicion-ver-form')
-                                            <hr class="h-1 bg-verde">
+                                            <hr class="h-1 bg-verde my-8">
                                         </div>
                                     </div>
-                                    <div class="my-5" x-data x-init="ifRechazo = '{{ $estatus }}', tipoEstatus = '{{$tipoEstatus}}'">
+                                    <div class="my-5"
+                                        x-data = "{ ifRechazo: @entangle('estatus').defer,
+                                     tipoEstatus: @entangle('tipoEstatus').defer,
+                                     claveS: @entangle('clave') }">
+
                                         <h2>Actualizar estado</h2>
                                         <div class="my-6">
                                             <label for="estatus">
                                                 Estado<samp class="text-rojo">*</samp>:
                                             </label>
                                             <select class="sm:w-auto w-full" id="estatus" name="estatus"
-                                                wire:model="estatus"  @change="$wire.actualizarTipoEstatus($event.target.selectedOptions[0].getAttribute('data-tipo-estatus'))">
-                                                <option value="0" data-tipo-estatus="0">Selecciona el estado</option>
+                                                wire:model="estatus"
+                                                @change="$wire.actualizarTipoEstatus($event.target.selectedOptions[0].getAttribute('data-tipo-estatus'))">
+                                                <option value="0" data-tipo-estatus="0">Selecciona el estado
+                                                </option>
                                                 @foreach ($estatus_generales as $estatus_general)
-                                                    <option value="{{ $estatus_general->id }}" data-tipo-estatus="{{ $estatus_general->tipo }}">
+                                                    <option value="{{ $estatus_general->id }}"
+                                                        data-tipo-estatus="{{ $estatus_general->tipo }}">
                                                         {{ $estatus_general->descripcion }}
                                                     </option>
                                                 @endforeach
@@ -40,7 +50,7 @@
                                                 <span class="text-rojo sm:inline-block block">{{ $message }}</span>
                                             @enderror
                                         </div>
-                                        <div x-show="ifRechazo === '5'" class="flex flex-col">
+                                        <div x-show="ifRechazo === '5' || ifRechazo === '9'" class="flex flex-col">
                                             <label for="observaciones_estatus" class="my-2">Observaciones<samp
                                                     class="text-rojo">*</samp>:</label>
                                             <textarea id="observaciones_estatus" name="observaciones_estatus" wire:model='observaciones_estatus'
@@ -51,7 +61,7 @@
                                             <span class=" text-rojo sm:inline-block block">{{ $message }}</span>
                                         @enderror
 
-                                        <div x-show="tipoEstatus == 3 || tipoEstatus == 5" class="flex flex-col">
+                                        <div x-show="(tipoEstatus == 3 || tipoEstatus == 5) && claveS == null" class="mt-6">
                                             <label for="claveSiia" class="my-2">Clave SIIA:<samp
                                                     class="text-rojo">*</samp>:</label>
                                             <input type="text" name="claveSiia" id="claveSiia" wire:model='claveSiia'
@@ -67,7 +77,6 @@
                                             x-on:click="window.location.href = '{{ route('requerimientos.index') }}'">
                                             Regresar
                                         </button>
-
                                     </div>
                                 </div>
                             </form>
