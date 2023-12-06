@@ -27,14 +27,11 @@
                                 </div>
 
                                 <div class="sm:text-right text-center mt-5">
-                                @if (str_contains($referer, 'vobo'))
-                                    <button type="submit" @click="confirmationVoBo()" class="btn-primary sm:w-auto w-5/6">Confirmar VoBo</button>
-                                    <button type="button" class="btn-danger sm:w-auto w-5/6" @click="rechazarVoBo()">Rechazar VoBo</button>
-                                    <button type="button" class="btn-warning sm:w-auto w-5/6"
-                                       x-on:click="window.location.href = '{{ route('cvu.vobo') }}'">Cancelar</button>
-                                       @else
-                    <button type="button" class="btn-warning sm:w-auto w-5/6" x-on:click="window.location.href = '{{ route('cvu.seguimiento') }}'">Regresar</button>
-                    @endif
+
+                                       <button type="button" class="btn-warning sm:w-auto w-5/6"
+                                            x-on:click="window.location.href = '{{ route('requerimientos.index') }}'">
+                                            Regresar
+                                        </button>                                     
 
                                 </div>
                             </form>

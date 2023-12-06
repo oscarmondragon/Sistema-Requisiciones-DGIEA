@@ -22,11 +22,13 @@
                         {{ __('Requerimientos en DGIEA') }}
                     </x-nav-link>
                 </div>
+                @can('revisor', Auth::user())
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('requerimientos-siia.index')" :active="request()->routeIs('requerimientos-siia.index')">
+                    <x-nav-link :href="route('asignados-revisor.index')" :active="request()->routeIs('requerimientos-siia.index')">
                         {{ __('Proyectos Asignados') }}
                     </x-nav-link>
                 </div>
+                @endcan
                 <div class="hidden sm:flex sm:items-center sm:ml-6">
                     @can('admin', Auth::user())
                         <x-dropdown align="right" width="48">
