@@ -37,6 +37,7 @@ class AdquisicionDetalle extends Model
         'estatus_dgiea',
         'estatus_rt',
         'observaciones',
+        'clave_siia',
         'id_usuario_sesion'
     ];
 
