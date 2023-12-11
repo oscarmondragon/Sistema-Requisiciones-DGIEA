@@ -15,7 +15,7 @@
                                 <div class="mt-4 sm:ml-10">
                                 @if (str_contains($referer, 'vobo'))
                                     <input type="checkbox" id="vobo" name="vobo" wire:model='vobo'
-                                        class="mr-1">
+                                        class="mr-2">
                                     <label for="vobo">VoBo al requerimiento solicitado. Se envía para VoBo del
                                         Admistrativo/Investigador.</label>
                                     @error('vobo')

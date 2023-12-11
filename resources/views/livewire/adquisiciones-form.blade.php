@@ -358,7 +358,7 @@
               <div class="sm:text-right text-center my-10 -mb-5">
               
                @empty($id_adquisicion)
-                <button type="button" @click="saveConfirmation()" class="btn-success sm:w-auto w-5/6">Guardar</button>
+                <button type="button" @click="saveConfirmation()" class="btn-success sm:w-auto w-5/6">Guardar avance</button>
                 @endempty
                 <button type="submit" @click="saveConfirmationVoBo()" class="btn-primary sm:w-auto w-5/6">Enviar para VoBo</button>
                 @if (str_contains($referer, 'vobo') || str_contains($referer, 'crear'))

@@ -19,13 +19,13 @@
 
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     <x-nav-link :href="route('requerimientos.index')" :active="request()->routeIs('requerimientos.index')">
-                        {{ __('Requerimientos en DGIEA') }}
+                        {{ __('Requerimientos DGIEA - SIIA') }}
                     </x-nav-link>
                 </div>
                 @can('revisor', Auth::user())
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('asignados-revisor.index')" :active="request()->routeIs('requerimientos-siia.index')">
-                        {{ __('Proyectos Asignados') }}
+                    <x-nav-link :href="route('asignados-revisor.index')" :active="request()->routeIs('asignados-revisor.index')">
+                        {{ __('Mis proyectos Asignados') }}
                     </x-nav-link>
                 </div>
                 @endcan

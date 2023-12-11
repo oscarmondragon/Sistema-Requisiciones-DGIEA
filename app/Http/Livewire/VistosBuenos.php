@@ -64,6 +64,7 @@ class VistosBuenos extends Component
                 'adquisiciones.id as id',
                 'adquisiciones.clave_adquisicion as id_requerimiento',
                 'estatus_requisiciones.descripcion as estado',
+                'estatus_requisiciones.color as estatus_color',
                 'adquisiciones.updated_at as modificacion',
                 'cuentas_contables.nombre_cuenta',
                 'tipo_requisiciones.descripcion',
@@ -80,6 +81,7 @@ class VistosBuenos extends Component
                 'solicitudes.id as id',
                 'solicitudes.clave_solicitud as id_requerimiento',
                 'estatus_requisiciones.descripcion as estado',
+                'estatus_requisiciones.color as estatus_color',
                 'solicitudes.updated_at as modificacion',
                 'cuentas_contables.nombre_cuenta',
                 'tipo_requisiciones.descripcion',
@@ -145,6 +147,7 @@ class VistosBuenos extends Component
                 'adquisiciones.vobo_admin as vobo_admin',
                 'adquisiciones.vobo_rt as vobo_rt',
                 'estatus_requisiciones.descripcion as estado',
+                'estatus_requisiciones.color as estatus_color',
                 'adquisiciones.updated_at as modificacion',
                 'cuentas_contables.nombre_cuenta',
                 'tipo_requisiciones.descripcion',
@@ -163,6 +166,7 @@ class VistosBuenos extends Component
                 'solicitudes.vobo_admin as vobo_admin',
                 'solicitudes.vobo_rt as vobo_rt',
                 'estatus_requisiciones.descripcion as estado',
+                'estatus_requisiciones.color as estatus_color',
                 'solicitudes.updated_at as modificacion',
                 'cuentas_contables.nombre_cuenta',
                 'tipo_requisiciones.descripcion',
@@ -249,7 +253,6 @@ class VistosBuenos extends Component
     {
         $this->sortColumn = $column;
         $this->sortDirection = $this->sortDirection == 'asc' ? 'desc' : 'asc';
-        //dd($this->sortColumn);
     }
 
     public function mount()
