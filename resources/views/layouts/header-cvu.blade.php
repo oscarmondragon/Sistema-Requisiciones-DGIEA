@@ -29,18 +29,16 @@
                  - {{Session::get('name_proyecto')}}
             </span>
         </p>
-        <div class="mt-1 text-end">
-        <p class="font-bold">Fecha limite para adquisicion de bienes y servicios: 
-            <span class="text-rojo ">
-                2023/06/30
-            </span>
-        </p>
-        <p class="font-bold">Fecha limite para solicitudes de recurso: 
+    </div>
+      
+    <div class="-mb-4">
+        <p class="mt-1">
             <span class="text-rojo">
-                2023/10/28
+                {{Session::get('mensaje')}}<br>
+                {{Session::get('mensajeSolciitudes')}}<br>
+                {{Session::get('mensajeAdquisiciones')}}
             </span>
         </p>
-        </div>
     </div>
 
 

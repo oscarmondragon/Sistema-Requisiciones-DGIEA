@@ -198,4 +198,15 @@ class RevisorSolicitud extends Component
             $this->sClaveSiia = null;
         }
     }
+    public function descargarArchivo($rutaDocumento, $nombreDocumento)
+    {
+        $rutaArchivo = storage_path('app/' . $rutaDocumento);
+
+        if (Storage::exists($rutaDocumento)) {
+            return response()->download(storage_path('app/' . $rutaDocumento), $nombreDocumento);
+        } else {
+            abort(404);
+        }
+    }
+
 }

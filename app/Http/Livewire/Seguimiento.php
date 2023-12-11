@@ -58,7 +58,7 @@ class Seguimiento extends Component
                 'adquisiciones.estatus_general as id_estatus',
                 'adquisiciones.observaciones as observaciones',
                 'adquisiciones.id_emisor as emisor'
-            )->whereIn('estatus_requisiciones.tipo', [2,3,5])->where('clave_proyecto', '=', session('id_proyecto'));
+            )->whereIn('estatus_requisiciones.tipo', [2])->where('clave_proyecto', '=', session('id_proyecto'));
         
         $adquisicionD = AdquisicionDetalle::join('adquisiciones', 'adquisicion_detalles.id_adquisicion', '=', 'adquisiciones.id')
             ->join("tipo_requisiciones", "adquisiciones.tipo_requisicion", "=", "tipo_requisiciones.id")
