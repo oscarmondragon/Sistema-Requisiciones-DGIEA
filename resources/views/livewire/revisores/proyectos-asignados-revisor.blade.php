@@ -136,7 +136,7 @@
                                                       @if (($fechaHoy->diffInMonths($proyecto->fecha_final, false)) < 1)
                                                       <td class="text-center"> <span class="bg-red-500 h-5 w-5 rounded-full block"> </td>
                                                       @elseif(($fechaHoy->diffInMonths($proyecto->fecha_final, false)) < 2)
-                                                      <td class="text-center"> <span class="bg-yellow-500 h-5 w-5 rounded-full block"> </td>
+                                                      <td class="text-center"> <span class="bg-yellow-400 h-5 w-5 rounded-full block"> </td>
                                                       @else
                                                       <td class="text-center"> <span class="bg-green-500 h-5 w-5 rounded-full block"> </td>
                                                     @endif
