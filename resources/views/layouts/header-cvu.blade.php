@@ -30,6 +30,16 @@
             </span>
         </p>
     </div>
+      
+    <div class="-mb-4">
+        <p class="mt-1">
+            <span class="text-rojo">
+                {{Session::get('mensaje')}}<br>
+                {{Session::get('mensajeSolciitudes')}}<br>
+                {{Session::get('mensajeAdquisiciones')}}
+            </span>
+        </p>
+    </div>
 
 
 </x-slot>
