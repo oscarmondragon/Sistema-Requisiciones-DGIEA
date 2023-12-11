@@ -68,7 +68,7 @@
                                   </div>
 
                                   <div class="flex-col sm:ml-20">
-                                      <button type="button" class="bg-gray-400 sm:w-auto w-full sm:mt-0 mt-4"
+                                      <button type="button" class="bg-blue-600 sm:w-auto w-full sm:mt-0 mt-4"
                                           wire:click="limpiarFiltros">
                                           Limpiar filtros
                                       </button>
@@ -84,36 +84,40 @@
                                       <table class="table-auto text-left text-sm w-3/4 sm:w-full mx-auto">
                                           <thead>
                                               <tr class="bg-blanco">
-                                                  <th class="w-[13%] cursor-pointer"
-                                                      wire:click="sortProyAsignados('clave_uaem')">
+                                                  <th class="w-[10%] cursor-pointer"
+                                                      wire:click="sort('clave_uaem')">
                                                       Clave del proyecto
                                                       <span class="pl-1 text-verde font-bold">&#8645;</span>
                                                   </th>
-                                                  <th class="w-[32%] cursor-pointer"
-                                                      wire:click="sortProyAsignados('nombre_proyecto')">
+                                                  <th class="w-[25%] cursor-pointer"
+                                                      wire:click="sort('nombre_proyecto')">
                                                       Nombre
                                                       <span class="pl-1 text-verde font-bold">&#8645;</span>
                                                   </th>
                                                   <th class="w-[15%] cursor-pointer"
-                                                      wire:click="sortProyAsignados('espacio_academico')">
+                                                      wire:click="sort('espacio_academico')">
                                                       Espacio académico
                                                       <span class="pl-1 text-verde font-bold">&#8645;</span>
                                                   </th>
-                                                  <th class="w-[15%] cursor-pointer"
-                                                      wire:click="sortProyAsignados('tipo_proyecto')">
-                                                      Tipo proyecto
+                                                  <th class="w-[17%] cursor-pointer"
+                                                      wire:click="sort('fecha_final')">
+                                                      Vigencia proyecto
                                                       <span class="pl-1 text-verde font-bold">&#8645;</span>
                                                   </th>
                                                   <th class="w-[15%] cursor-pointer"
-                                                      wire:click="sortProyAsignados('tipo_proyecto')">
-                                                      Fecha inicio
-                                                      <span class="pl-1 text-verde font-bold">&#8645;</span>
-                                                  </th>
-                                                  <th class="w-[15%] cursor-pointer"
-                                                      wire:click="sortProyAsignados('tipo_proyecto')">
-                                                      Fecha fin
-                                                      <span class="pl-1 text-verde font-bold">&#8645;</span>
-                                                  </th>
+                                                  wire:click="sort('fecha_limite_adquisiciones')">
+                                                  Limite adquisiciones
+                                                  <span class="pl-1 text-verde font-bold">&#8645;</span>
+                                              </th>
+                                              <th class="w-[15%] cursor-pointer"
+                                                  wire:click="sort('fecha_limite_solicitudes')">
+                                                  Limite solicitudes
+                                                  <span class="pl-1 text-verde font-bold">&#8645;</span>
+                                              </th>
+                                              <th class="w-[7%] cursor-pointer"
+                                                  wire:click="sort('fecha_final')">
+                                                  <span class="pl-1 text-verde font-bold">&#8645;</span>
+                                              </th>
                                                   <th class="w-[10%]">Acciones</th>
                                               </tr>
                                           </thead>
@@ -126,13 +130,27 @@
                                                       </td>
                                                       <td> {{ $proyecto->nombre_proyecto }}</td>
                                                       <td> {{ $proyecto->espacio_academico }}</td>
-                                                      <td> {{ $proyecto->tipo_proyecto }}</td>
-                                                      <td> {{ $proyecto->fecha_inicio }}</td>
-                                                      <td> {{ $proyecto->fecha_final }}</td>
-
+                                                      <td> <span class="text-verde">{{ $proyecto->fecha_inicio }} </span> <span class="font-bold">&#129046;</span>  <span class="text-verde">{{ $proyecto->fecha_final }} </span></td>
+                                                      <td> {{ $proyecto->fecha_limite_adquisiciones }}</td>
+                                                      <td> {{ $proyecto->fecha_limite_solicitudes }}</td>
+                                                      @if (($fechaHoy->diffInMonths($proyecto->fecha_final, false)) < 1)
+                                                      <td class="text-center"> <span class="bg-red-500 h-5 w-5 rounded-full block"> </td>
+                                                      @elseif(($fechaHoy->diffInMonths($proyecto->fecha_final, false)) < 2)
+                                                      <td class="text-center"> <span class="bg-yellow-500 h-5 w-5 rounded-full block"> </td>
+                                                      @else
+                                                      <td class="text-center"> <span class="bg-green-500 h-5 w-5 rounded-full block"> </td>
+                                                    @endif
                                                       <th class="w-[148px]">
                                                           <button type="button"
-                                                              x-on:click="$wire.emit('openModal', 'revisores.editar-fechas-proyecto-modal', { 'id_proyecto': {{ $proyecto->id_proyecto }}, 'clave_uaem': '{{ $proyecto->clave_uaem }}', 'clave_digcyn': '{{ $proyecto->clave_digcyn }}'})"
+                                                              x-on:click="$wire.emit('openModal', 'revisores.editar-fechas-proyecto-modal', { 
+                                                              'id_proyecto': '{{ $proyecto->id_proyecto }}', 
+                                                              'clave_uaem': '{{ $proyecto->clave_uaem }}', 
+                                                              'fecha_inicio': '{{ $proyecto->fecha_inicio }}', 
+                                                              'fecha_final': '{{ $proyecto->fecha_final }}',
+                                                              'fecha_limite_adquisiciones': '{{ $proyecto->fecha_limite_adquisiciones }}',
+                                                              'fecha_limite_solicitudes': '{{ $proyecto->fecha_limite_solicitudes }}',
+                                                            })"
+                                                              
                                                               class="btn-success">
                                                               Editar
                                                           </button>
