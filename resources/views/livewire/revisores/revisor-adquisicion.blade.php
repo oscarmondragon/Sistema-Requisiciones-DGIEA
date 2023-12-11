@@ -10,8 +10,13 @@
                                     {{ $adquisicion->clave_adquisicion }}
                                 </span>
                             </h1>
-                            <h2 class="text-dorado">{{$clave == null ? '' : 'Clave SIIA: ' . $clave}}</h2>
-                            <h2 class="text-dorado"></h2>
+                            <h2 class="text-dorado"> {{ $clave == null ? '' : 'Clave SIIA: ' . $clave }} </h2>
+                            
+                            @if ($queryObservaciones != null)
+                            <label class="block mt-5">Observaciones o motivo de rechazo:</label>
+                            <textarea cols="30" rows="2" wire:model='queryObservaciones'
+                            class="sm:w-3/4 w-full" disabled></textarea>
+                            @endif
                             <form x-on:submit.prevent="saveConfirmation">
                                 @csrf
                                 <div>
@@ -21,35 +26,39 @@
                                         </button>
                                         <div x-show="open">
                                             @include('components.adquisicion-ver-form')
-                                            <hr class="h-1 bg-verde my-8">
+                                            @can('revisor', Auth::user())
+                                                <hr class="h-1 bg-verde my-8">
+                                            @endcan
                                         </div>
                                     </div>
                                     <div class="my-5"
                                         x-data = "{ ifRechazo: @entangle('estatus').defer,
                                      tipoEstatus: @entangle('tipoEstatus').defer,
-                                     claveS: @entangle('clave') }">
+                                     claveR: @entangle('clave') }">
 
-                                        <h2>Actualizar estado</h2>
-                                        <div class="my-6">
-                                            <label for="estatus">
-                                                Estado<samp class="text-rojo">*</samp>:
-                                            </label>
-                                            <select class="sm:w-auto w-full" id="estatus" name="estatus"
-                                                wire:model="estatus"
-                                                @change="$wire.actualizarTipoEstatus($event.target.selectedOptions[0].getAttribute('data-tipo-estatus'))">
-                                                <option value="0" data-tipo-estatus="0">Selecciona el estado
-                                                </option>
-                                                @foreach ($estatus_generales as $estatus_general)
-                                                    <option value="{{ $estatus_general->id }}"
-                                                        data-tipo-estatus="{{ $estatus_general->tipo }}">
-                                                        {{ $estatus_general->descripcion }}
+                                        @can('revisor', Auth::user())
+                                            <h2 >Actualizar estado</h2>
+                                            <div class="my-6">
+                                                <label for="estatus">
+                                                    Estado<samp class="text-rojo">*</samp>:
+                                                </label>
+                                                <select class="sm:w-auto w-full" id="estatus" name="estatus"
+                                                    wire:model="estatus"
+                                                    @change="$wire.actualizarTipoEstatus($event.target.selectedOptions[0].getAttribute('data-tipo-estatus'))">
+                                                    <option value="0" data-tipo-estatus="0">Selecciona el estado
                                                     </option>
-                                                @endforeach
-                                            </select>
-                                            @error('estatus')
-                                                <span class="text-rojo sm:inline-block block">{{ $message }}</span>
-                                            @enderror
-                                        </div>
+                                                    @foreach ($estatus_generales as $estatus_general)
+                                                        <option value="{{ $estatus_general->id }}"
+                                                            data-tipo-estatus="{{ $estatus_general->tipo }}">
+                                                            {{ $estatus_general->descripcion }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                                @error('estatus')
+                                                    <span class="text-rojo sm:inline-block block">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        @endcan
                                         <div x-show="ifRechazo === '5' || ifRechazo === '9'" class="flex flex-col">
                                             <label for="observaciones_estatus" class="my-2">Observaciones<samp
                                                     class="text-rojo">*</samp>:</label>
@@ -61,7 +70,8 @@
                                             <span class=" text-rojo sm:inline-block block">{{ $message }}</span>
                                         @enderror
 
-                                        <div x-show="(tipoEstatus == 3 || tipoEstatus == 5) && claveS == null" class="mt-6">
+                                        <div x-show="(tipoEstatus == 3 || tipoEstatus == 5) && claveR == null"
+                                            class="mt-6">
                                             <label for="claveSiia" class="my-2">Clave SIIA:<samp
                                                     class="text-rojo">*</samp>:</label>
                                             <input type="text" name="claveSiia" id="claveSiia" wire:model='claveSiia'
@@ -72,7 +82,9 @@
                                         </div>
                                     </div>
                                     <div class="sm:text-right text-center my-10 -mb-2">
-                                        <button type="submit" class="btn-success sm:w-auto w-5/6">Guardar</button>
+                                        @can('revisor', Auth::user())
+                                            <button type="submit" class="btn-success sm:w-auto w-5/6">Guardar</button>
+                                        @endcan
                                         <button type="button" class="btn-warning sm:w-auto w-5/6"
                                             x-on:click="window.location.href = '{{ route('requerimientos.index') }}'">
                                             Regresar

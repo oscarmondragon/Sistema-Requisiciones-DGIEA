@@ -67,6 +67,7 @@ class RevisorSolicitud extends Component
     public $solicitud_detalles;
     public $clave;
     public $sClaveSiia;
+    public $queryObservaciones;
 
 
     protected $rules = [
@@ -91,6 +92,9 @@ class RevisorSolicitud extends Component
         $this->referer = $_SERVER['HTTP_REFERER'];
         $this->solicitud = Solicitud::find($id);
 
+        $this->estatusSolicitud = $this->solicitud->estatus_dgiea;
+        //dd($this->estatusSolicitud);
+
         $this->estatus_solicitudes = EstatusRequisiciones::whereIn('tipo', [2, 4, 5])->get();
 
         $this->cuentasContables = CuentaContable::where('estatus', 1)->whereIn('tipo_requisicion', [2, 3])->get();
@@ -106,6 +110,9 @@ class RevisorSolicitud extends Component
         } else {
             $this->clave = null;
         }
+
+        $this->queryObservaciones = Solicitud::select('id','observaciones')->where('id', $this->id_solicitud)->first();
+        $this->queryObservaciones = $this->queryObservaciones->observaciones;
 
         $this->id_rubro = $this->solicitud->id_rubro;
         $this->id_rubro_especial = $this->solicitud->cuentas->cuentaEspecial->id ?? 0;
@@ -147,7 +154,6 @@ class RevisorSolicitud extends Component
 
     public function save()
     {
-        //dd($this->tipoEstatus);
         $this->validate();
 
         try {

@@ -8,6 +8,7 @@ use App\Models\AsignacionProyecto;
 use App\Models\SolicitudDetalle;
 use Livewire\Component;
 use App\Models\Adquisicion;
+use App\Models\EstatusRequisiciones;
 use App\Models\Solicitud;
 use App\Models\TipoRequisicion;
 use Livewire\WithPagination;
@@ -29,6 +30,7 @@ class ShowRequerimientos extends Component
     public $f_inicial_vobo = 0;
     public $f_final_vobo = 0;
     public $user;
+    public $queryEstatus;
 
 
     public $sortColumn = 'id';
@@ -83,6 +85,7 @@ class ShowRequerimientos extends Component
                 'adquisiciones.clave_proyecto as clave_proyecto',
                 'estatus_requisiciones.descripcion as estado',
                 'estatus_requisiciones.tipo as tipo_estado',
+                'estatus_requisiciones.color as color_estado',
                 'adquisiciones.updated_at as modificacion',
                 'cuentas_contables.nombre_cuenta',
                 'tipo_requisiciones.descripcion',
@@ -109,6 +112,7 @@ class ShowRequerimientos extends Component
                 'adquisiciones.clave_proyecto as clave_proyecto',
                 'estatus_requisiciones.descripcion as estado',
                 'estatus_requisiciones.tipo as tipo_estado',
+                'estatus_requisiciones.color as color_estado',
                 'adquisicion_detalles.updated_at as modificacion',
                 'cuentas_contables.nombre_cuenta',
                 'tipo_requisiciones.descripcion',
@@ -135,6 +139,7 @@ class ShowRequerimientos extends Component
                 'solicitudes.clave_proyecto as clave_proyecto',
                 'estatus_requisiciones.descripcion as estado',
                 'estatus_requisiciones.tipo as tipo_estado',
+                'estatus_requisiciones.color as color_estado',
                 'solicitudes.updated_at as modificacion',
                 'cuentas_contables.nombre_cuenta',
                 'tipo_requisiciones.descripcion',
@@ -161,6 +166,7 @@ class ShowRequerimientos extends Component
                 'adquisiciones.clave_proyecto as clave_proyecto',
                 'estatus_requisiciones.descripcion as estado',
                 'estatus_requisiciones.tipo as tipo_estado',
+                'estatus_requisiciones.color as color_estado',
                 'adquisiciones.updated_at as modificacion',
                 'cuentas_contables.nombre_cuenta',
                 'tipo_requisiciones.descripcion',
@@ -187,6 +193,7 @@ class ShowRequerimientos extends Component
                 'adquisiciones.clave_proyecto as clave_proyecto',
                 'estatus_requisiciones.descripcion as estado',
                 'estatus_requisiciones.tipo as tipo_estado',
+                'estatus_requisiciones.color as color_estado',
                 'adquisicion_detalles.updated_at as modificacion',
                 'cuentas_contables.nombre_cuenta',
                 'tipo_requisiciones.descripcion',
@@ -213,6 +220,7 @@ class ShowRequerimientos extends Component
                 'solicitudes.clave_proyecto as clave_proyecto',
                 'estatus_requisiciones.descripcion as estado',
                 'estatus_requisiciones.tipo as tipo_estado',
+                'estatus_requisiciones.color as color_estado',
                 'solicitudes.updated_at as modificacion',
                 'cuentas_contables.nombre_cuenta',
                 'tipo_requisiciones.descripcion',
@@ -242,6 +250,7 @@ class ShowRequerimientos extends Component
                 'adquisiciones.clave_proyecto as clave_proyecto',
                 'estatus_requisiciones.descripcion as estado',
                 'estatus_requisiciones.tipo as tipo_estado',
+                'estatus_requisiciones.color as color_estado',
                 'adquisiciones.updated_at as modificacion',
                 'cuentas_contables.nombre_cuenta',
                 'tipo_requisiciones.descripcion',
@@ -267,6 +276,7 @@ class ShowRequerimientos extends Component
                 'adquisiciones.clave_proyecto as clave_proyecto',
                 'estatus_requisiciones.descripcion as estado',
                 'estatus_requisiciones.tipo as tipo_estado',
+                'estatus_requisiciones.color as color_estado',
                 'adquisicion_detalles.updated_at as modificacion',
                 'cuentas_contables.nombre_cuenta',
                 'tipo_requisiciones.descripcion',
@@ -293,6 +303,7 @@ class ShowRequerimientos extends Component
                 'solicitudes.clave_proyecto as clave_proyecto',
                 'estatus_requisiciones.descripcion as estado',
                 'estatus_requisiciones.tipo as tipo_estado',
+                'estatus_requisiciones.color as color_estado',
                 'solicitudes.updated_at as modificacion',
                 'cuentas_contables.nombre_cuenta',
                 'tipo_requisiciones.descripcion',
@@ -317,6 +328,7 @@ class ShowRequerimientos extends Component
                 $query-> where('adquisiciones.clave_adquisicion', 'like', '%' .$this->search. '%')
                 ->orWhere('cuentas_contables.nombre_cuenta', 'like', '%' .$this->search. '%')
                 ->orWhere('adquisicion_detalles.descripcion', 'like', '%' .$this->search. '%')
+                ->orWhere('adquisicion_detalles.clave_siia', 'like', '%' . $this->search . '%')
                 ->orWhere('tipo_requisiciones.descripcion', 'like', '%' .$this->search. '%')
                 ->orWhere('estatus_requisiciones.descripcion', 'like', '%' .$this->search. '%');
             });
@@ -324,6 +336,7 @@ class ShowRequerimientos extends Component
                 $query-> where('solicitudes.clave_solicitud', 'like', '%' .$this->search. '%')
                 ->orWhere('cuentas_contables.nombre_cuenta', 'like', '%' .$this->search. '%')
                 ->orWhere('solicitud_detalles.concepto', 'like', '%' .$this->search. '%')
+                ->orWhere('solicitud_detalles.clave_siia', 'like', '%' . $this->search . '%')
                 ->orWhere('tipo_requisiciones.descripcion', 'like', '%' .$this->search. '%')
                 ->orWhere('estatus_requisiciones.descripcion', 'like', '%' .$this->search. '%');
             });
@@ -373,5 +386,12 @@ class ShowRequerimientos extends Component
                 , 'rol'=>$user->rol,
             ]
         );
+    }
+
+    public function limpiarFiltros(){
+        $this->categoria = 0;
+        $this->search = null;
+        $this->f_inicial = null;
+        $this->f_final = null;
     }
 }

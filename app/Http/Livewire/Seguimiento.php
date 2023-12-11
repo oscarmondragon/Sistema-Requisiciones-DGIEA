@@ -27,6 +27,9 @@ class Seguimiento extends Component
     public $f_final = 0;
     public $f_finalSIIA = 0;
 
+    public $sortColumn = 'id';
+    public $sortDirection = 'asc';
+
     public function updatingSearch()
     {
         $this->resetPage();
@@ -47,6 +50,7 @@ class Seguimiento extends Component
                 DB::raw('null as concepto'),
                 DB::raw('null as claveSIIA'),
                 'estatus_requisiciones.descripcion as estado',
+                'estatus_requisiciones.color as color_estado',
                 'adquisiciones.updated_at as modificacion',
                 'cuentas_contables.nombre_cuenta',
                 'tipo_requisiciones.descripcion as req',
@@ -66,6 +70,7 @@ class Seguimiento extends Component
                 'adquisicion_detalles.descripcion as concepto',
                 'adquisicion_detalles.clave_siia as claveSIIA',
                 'estatus_requisiciones.descripcion as estado',
+                'estatus_requisiciones.color as color_estado',
                 'adquisicion_detalles.updated_at as modificacion',
                 'cuentas_contables.nombre_cuenta',
                 'tipo_requisiciones.descripcion as req',
@@ -86,6 +91,7 @@ class Seguimiento extends Component
                 'solicitud_detalles.concepto as concepto',
                 'solicitud_detalles.clave_siia as claveSIIA',
                 'estatus_requisiciones.descripcion as estado',
+                'estatus_requisiciones.color as color_estado',
                 'solicitudes.updated_at as modificacion',
                 'cuentas_contables.nombre_cuenta',
                 'tipo_requisiciones.descripcion as req',
@@ -145,7 +151,7 @@ class Seguimiento extends Component
 
         return view(
             'livewire.seguimiento',
-            ['requerimientos' => $requerimientos->paginate(5, pageName: 'pendientes')  ]
+            ['requerimientos' => $requerimientos->orderBy($this->sortColumn, $this->sortDirection)->paginate(5, pageName: 'pendientes')  ]
         );
     }
 
@@ -157,5 +163,18 @@ class Seguimiento extends Component
     public function filterByCategory($categoria)
     {
         $this->categoria = $categoria;
+    }
+
+    public function sort($column)
+    {
+        $this->sortColumn = $column;
+        $this->sortDirection = $this->sortDirection == 'asc' ? 'desc' : 'asc';
+    }
+
+    public function limpiarFiltros() {
+        $this->categoria = 0;
+        $this->search = null;
+        $this->f_inicial = null;
+        $this->f_final = null;
     }
 }

@@ -21,7 +21,7 @@ use Carbon\Carbon;
                                         <select class="w-auto" id="id_rubro" name="id_rubro" wire:model="id_rubro" disabled>                                      
                                     
                                     @else
-                                        <select disabledclass="sm:w-auto w-full" id="id_rubro" name="id_rubro" wire:model="id_rubro"
+                                        <select class="sm:w-auto w-full" id="id_rubro" name="id_rubro" wire:model="id_rubro"
                                         @change="$wire.resetearRecursos($event.target.selectedOptions[0].getAttribute('data-id-especial'))">
 
                                     @endif
@@ -180,6 +180,7 @@ use Carbon\Carbon;
                                 wire:model='aviso_privacidad' class="mr-1">
                             <label for="aviso_privacidad">Acepto aviso de privacidad simplificada de la
                                 UAEMEX<samp class="text-rojo">*</samp>.</label>
+                                <a href="http://sistema-requisiciones-dgiea.test/storage/doc-UAEM/aviso.pdf" target="_blank" class="text-verde font-bold pl-2 hover:underline">Ver aviso de privacidad</a>
                             @error('aviso_privacidad')
                                 <span class=" text-rojo sm:inline-block block">{{ $message }}</span>
                             @enderror
@@ -196,7 +197,7 @@ use Carbon\Carbon;
                         <div class="sm:text-right text-center mt-5">             
                             @empty($solicitud)
                                 <button type="button" @click="saveConfirmation()"
-                                    class="btn-success sm:w-auto w-5/6">Guardar</button>
+                                    class="btn-success sm:w-auto w-5/6">Guardar avance</button>
                             @endempty
                             <button type="submit" @click="saveConfirmationVoBo()"
                                 class="btn-primary sm:w-auto w-5/6">Enviar para VoBo</button>
