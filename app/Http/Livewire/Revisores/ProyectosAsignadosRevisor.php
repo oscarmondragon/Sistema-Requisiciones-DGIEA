@@ -8,13 +8,14 @@ use App\Models\Proyecto;
 use App\Models\AsignacionProyecto;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class ProyectosAsignadosRevisor extends Component
 {
 
     use WithPagination;
 
-
+    public $fechaHoy;
     public $search = "";
     public $idConvocatoria;
     public $idTipoProyecto;
@@ -29,13 +30,13 @@ class ProyectosAsignadosRevisor extends Component
 
     public $claveUaem;
 
-    public $sortColumn = 'NomCenCos';
-    public $sortColumnProyAsig = 'espacio_academico';
+    public $sortColumn = 'id_espacio_academico';
     public $sortDirection = 'asc';
 
 
     public function mount()
     {
+        $this->fechaHoy = Carbon::now();
         $user = auth()->user();
         //OBTENEMOS LOS PROYECTOS DE LA VISTA
 
@@ -99,12 +100,14 @@ class ProyectosAsignadosRevisor extends Component
                 'id_espacio_academico',
                 'espacio_academico',
                 'convocatoria',
-                'tipo_proyecto',
                 'id_revisor',
                 'fecha_inicio',
-                'fecha_final'
+                'fecha_final',
+                'fecha_limite_adquisiciones',
+                'fecha_limite_solicitudes'
+
             ])->where('tipo_proyecto', '<>', 'UAEM')->where('id_revisor', auth()->user()->id);
-        } else if (auth()->user()->rol === 2) { //revior interno
+        } else if (auth()->user()->rol === 4) { //revior interno
 
             $proyectosAsignados = AsignacionProyecto::select([
                 'id_proyecto',
@@ -114,10 +117,11 @@ class ProyectosAsignadosRevisor extends Component
                 'id_espacio_academico',
                 'espacio_academico',
                 'convocatoria',
-                'tipo_proyecto',
                 'id_revisor',
                 'fecha_inicio',
-                'fecha_final'
+                'fecha_final',
+                'fecha_limite_adquisiciones',
+                'fecha_limite_solicitudes'
             ])
                 ->where('tipo_proyecto', 'UAEM')->where('id_revisor', auth()->user()->id);
         }
@@ -148,13 +152,13 @@ class ProyectosAsignadosRevisor extends Component
 
 
         return view('livewire.revisores.proyectos-asignados-revisor', [
-            'proyectosAsignados' => $proyectosAsignados->orderBy($this->sortColumnProyAsig, $this->sortDirection)->paginate(5, pageName: 'asignados')
+            'proyectosAsignados' => $proyectosAsignados->orderBy($this->sortColumn, $this->sortDirection)->paginate(5, pageName: 'asignados')
         ]);
     }
 
     public function sort($column)
     {
-        $this->sortColumnProyAsig = $column;
+        $this->sortColumn = $column;
         $this->sortDirection = $this->sortDirection == 'asc' ? 'desc' : 'asc';
     }
 
@@ -212,5 +216,6 @@ class ProyectosAsignadosRevisor extends Component
         $this->search = "";
         $this->idRevisorAsignados = 0;
     }
+
 
 }

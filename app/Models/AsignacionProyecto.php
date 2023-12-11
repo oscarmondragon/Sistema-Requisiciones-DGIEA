@@ -5,8 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class AsignacionProyecto extends Model
-{
+class AsignacionProyecto extends Model {
     use HasFactory;
     protected $connection = 'mysql';
     protected $table = "asignacion_proyectos";
@@ -25,11 +24,13 @@ class AsignacionProyecto extends Model
         'id_revisor',
         'fecha_inicio',
         'fecha_final',
+        'fecha_limite_adquisiciones',
+        'fecha_limite_solicitudes',
+
         'id_usuario_sesion',
     ];
 
-    public function nameUser()
-    {
+    public function nameUser() {
         return $this->belongsTo(User::class, 'id_revisor');
     }
 }
