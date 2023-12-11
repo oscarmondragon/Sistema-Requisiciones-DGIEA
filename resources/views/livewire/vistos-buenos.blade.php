@@ -25,7 +25,7 @@
                         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                             <div class="p-6">
                                 <!-- <input type="text" wire:model="search" placeholder="Buscar por clave, tipo..." class="inputs-formulario-solicitudes"> -->
-                                <div class="flex flex-wrap items-end gap-x-2">
+                                <div class="flex flex-wrap items-end gap-x-2 -mt-7">
                                     <div class="sm:w-2/3  w-full">
                                         <select class="sm:w-auto  w-full" id="categoria" name="categoria"
                                             wire:model="categoria">
@@ -52,7 +52,7 @@
                                     </div>
                                 </div>
                                 <div class="text-end mt-3">
-                                    <button class="bg-gray-400" wire:click="limpiarFiltros">Limpiar filtros</button>
+                                    <button class="bg-blue-600" wire:click="limpiarFiltros">Limpiar filtros</button>
                                 </div>
 
                                 @if ($adquisiciones->first())
@@ -60,24 +60,30 @@
                                         <table class="table-auto text-left text-sm w-3/4 sm:w-full mx-auto mt-4">
                                             <thead>
                                                 <tr class="bg-blanco">
-                                                    <th class="w-[13%] cursor-pointer"
+                                                    <th class="w-[15%] cursor-pointer"
                                                         wire:click="sort('id_requerimiento')">
                                                         Clave requerimiento
+                                                        <span class="pl-1 text-verde font-bold">&#8645;</span>
                                                     </th>
-                                                    <th class="w-[30%] cursor-pointer"
+                                                    <th class="w-[28%] cursor-pointer"
                                                         wire:click="sort('nombre_cuenta')">
                                                         Rubro
+                                                        <span class="pl-1 text-verde font-bold">&#8645;</span>
                                                     </th>
                                                     <th class="w-[17%] cursor-pointer" wire:click="sort('descripcion')">
                                                         Tipo requerimiento
+                                                        <span class="pl-1 text-verde font-bold">&#8645;</span>
                                                     </th>
                                                     <th class="w-[13%] sm:text-center cursor-pointer"
                                                         wire:click="sort('estado')">
                                                         Estatus
+                                                        <span class="pl-1 text-verde font-bold">&#8645;</span>
                                                     </th>
                                                     <th class="w-[15%] cursor-pointer"
                                                         wire:click="sort('modificacion')">
-                                                        Ultima modificación</th>
+                                                        Ultima modificación
+                                                        <span class="pl-1 text-verde font-bold">&#8645;</span>
+                                                    </th>
                                                     <th class="w-[12%]">Acciones</th>
                                                 </tr>
                                             </thead>
@@ -89,14 +95,14 @@
                                                         <td> {{ $valor->nombre_cuenta }} </td>
                                                         <td> {{ $valor->descripcion }} </td>
                                                         <td class="sm:text-center">
-                                                            @if ($valor->id_estatus == 1)
+                                                            @if ($valor->estatus_color == 'AMARILLO')
                                                                 <span
-                                                                    class="bg-yellow-100 text-yellow-700 rounded-full p-1 px-2 font-bold text-center block mx-1">
+                                                                    class="bg-yellow-200 text-yellow-700 rounded-full p-1 px-2 text-xs font-bold text-center block mx-1 border border-yellow-300">
                                                                     {{ $valor->estado }}
                                                                 </span>
                                                             @else
                                                                 <span
-                                                                    class="bg-red-100 text-red-500 rounded-full p-1 font-bold text-center block mx-1">
+                                                                    class="bg-red-200 text-red-700 rounded-full p-1 px-2 text-xs font-bold text-center block mx-1 border border-red-300">
                                                                     {{ $valor->estado }}
                                                                 </span>
                                                             @endif
@@ -159,7 +165,7 @@
                         </div>
                         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                             <div class="p-6 ">
-                                <div class="flex flex-wrap items-end gap-2">
+                                <div class="flex flex-wrap items-end gap-2 -mt-7">
                                     <div class="sm:w-2/3 w-full">
                                         <select class="sm:w-auto w-full" id="categoriaVobo" name="categoriaVobo"
                                             wire:model="categoriaVobo"
@@ -189,7 +195,7 @@
                                     </div>
                                 </div>
                                 <div class="text-end mt-3">
-                                    <button class="bg-gray-400" wire:click="limpiarFiltrosVobo">Limpiar filtros</button>
+                                    <button class="bg-blue-600" wire:click="limpiarFiltrosVobo">Limpiar filtros</button>
                                 </div>
 
                                 @if ($adquisicionesVistosBuenos->first())
@@ -197,31 +203,38 @@
                                         <table class="table-auto text-left text-sm w-3/4 sm:w-full mx-auto mt-6">
                                             <thead>
                                                 <tr class="bg-blanco">
-                                                    <th class="w-[13%] cursor-pointer"
+                                                    <th class="w-[15%] cursor-pointer"
                                                         wire:click="sort('id_requerimiento')">
                                                         Clave requerimiento
+                                                        <span class="pl-1 text-verde font-bold">&#8645;</span>
                                                     </th>
                                                     <th class="w-[17%] cursor-pointer"
                                                         wire:click="sort('nombre_cuenta')">
                                                         Rubro
+                                                        <span class="pl-1 text-verde font-bold">&#8645;</span>
                                                     </th>
-                                                    <th class="w-[15%] cursor-pointer"
+                                                    <th class="w-[14%] cursor-pointer"
                                                         wire:click="sort('descripcion')">
                                                         Tipo requerimiento
+                                                        <span class="pl-1 text-verde font-bold">&#8645;</span>
                                                     </th>
                                                     <th class="w-[9%] cursor-pointer" wire:click="sort('vobo_rt')">
                                                         VoBo RT
+                                                        <span class="pl-1 text-verde font-bold">&#8645;</span>
                                                     </th>
                                                     <th class="w-[9%] cursor-pointer" wire:click="sort('vobo_admin')">
-                                                        VoBo Administrativo
+                                                        VoBo <span class="pl-1 text-verde font-bold">&#8645;</span> Administrativo
                                                     </th>
-                                                    <th class="w-[15%] text-center cursor-pointer"
+                                                    <th class="w-[14%] text-center cursor-pointer"
                                                         wire:click="sort('estado')">
                                                         Estatus
+                                                        <span class="pl-1 text-verde font-bold">&#8645;</span>
                                                     </th>
                                                     <th class="w-[15%] cursor-pointer"
                                                         wire:click="sort('modificacion')">
-                                                        Ultima modificación</th>
+                                                        Ultima modificación
+                                                        <span class="pl-1 text-verde font-bold">&#8645;</span>
+                                                    </th>
                                                     <th class="w-[7%]">
                                                         Acciones
                                                     </th>
@@ -249,7 +262,7 @@
                                                         </td>
                                                         <td>
                                                             <span
-                                                                class="block mx-4 bg-orange-100 text-orange-500 rounded-full p-1 px-2 text-center font-bold">
+                                                                class="bg-gray-200 text-gray-700 rounded-full p-1 px-2 font-bold text-center block mx-1 border border-gray-300">
                                                                 {{ $valorvobo->estado }}
                                                             </span>
                                                         </td>

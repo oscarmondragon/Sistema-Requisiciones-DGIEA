@@ -32,6 +32,10 @@
         @apply italic list-disc list-outside ml-10;
     }
 
+    td {
+        @apply h-auto pt-1;
+    }
+
     select {
         @apply bg-blanco text-textos_generales rounded-md border-verde;
     }

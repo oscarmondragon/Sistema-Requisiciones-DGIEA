@@ -14,7 +14,7 @@
                   @include('components.adquisicion-ver-form')
                   @if (str_contains($referer, 'vobo'))
                   <div class="mt-10">
-                    <input type="checkbox" id="vobo" wire:model='vobo' name="vobo" class="rounded-full sm:ml-10">
+                    <input type="checkbox" id="vobo" wire:model='vobo' name="vobo" class="rounded-full sm:ml-10 mr-2">
                     <label for="vobo">Dar mi visto bueno a este requerimiento.</label>
                     @error('vobo') <span class=" text-rojo error">{{ $message }}</span> @enderror
                 </div>
