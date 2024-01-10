@@ -19,10 +19,10 @@ class EditarFechasProyectoModal extends ModalComponent
     public $clave_uaem;
 
     protected $rules = [
-        'fecha_inicio' => 'date|required|after_or_equal:01/01/2023|before:01/01/2100',
-        'fecha_final' => 'date|required|after_or_equal:fecha_inicio|before:01/01/2100',
-        'fecha_limite_adquisiciones' => 'date|required|after_or_equal:01/01/2023|before:01/01/2100',
-        'fecha_limite_solicitudes' => 'date|required|after_or_equal:01/01/2023|before:01/01/2100'
+        'fecha_inicio' => 'nullable|date|after_or_equal:01/01/2023|before:01/01/2100',
+        'fecha_final' => 'nullable|date|after_or_equal:fecha_inicio|before:01/01/2100',
+        'fecha_limite_adquisiciones' => 'nullable|date|after_or_equal:01/01/2023|before:01/01/2100',
+        'fecha_limite_solicitudes' => 'nullable|date|after_or_equal:01/01/2023|before:01/01/2100'
 
     ];
     protected $messages = [
@@ -55,12 +55,27 @@ class EditarFechasProyectoModal extends ModalComponent
 
     public function save()
     {
+        // dd($this->fecha_inicio);
         $this->validate();
         $proyecto = AsignacionProyecto::where('id_proyecto', $this->id_proyecto)->first();
 
         if ($proyecto) {
             try {
                 DB::beginTransaction();
+                //comparamos si las fechas vienen vacias para asignarles valor null y poder guardar en db
+                if ($this->fecha_inicio == '') {
+                    $this->fecha_inicio = null;
+                }
+                if ($this->fecha_final == '') {
+                    $this->fecha_final = null;
+                }
+                if ($this->fecha_limite_adquisiciones == '') {
+                    $this->fecha_limite_adquisiciones = null;
+                }
+                if ($this->fecha_limite_solicitudes == '') {
+                    $this->fecha_limite_solicitudes = null;
+                }
+                //guardamos las fechas en db
                 $proyecto->fecha_inicio = $this->fecha_inicio;
                 $proyecto->fecha_final = $this->fecha_final;
                 $proyecto->fecha_limite_adquisiciones = $this->fecha_limite_adquisiciones;

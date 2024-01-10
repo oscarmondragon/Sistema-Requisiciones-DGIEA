@@ -130,7 +130,7 @@
                                                       </td>
                                                       <td> {{ $proyecto->nombre_proyecto }}</td>
                                                       <td> {{ $proyecto->espacio_academico }}</td>
-                                                      <td> <span class="text-verde">{{ $proyecto->fecha_inicio }} </span> <span class="font-bold">&#129046;</span>  <span class="text-verde">{{ $proyecto->fecha_final }} </span></td>
+                                                      <td> <span class="text-verde">{{ $proyecto->fecha_inicio }} </span> @if($proyecto->fecha_inicio || $proyecto->fecha_final)<span class="font-bold">&#129046;</span>@endif  <span class="text-verde">{{ $proyecto->fecha_final }} </span></td>
                                                       <td> {{ $proyecto->fecha_limite_adquisiciones }}</td>
                                                       <td> {{ $proyecto->fecha_limite_solicitudes }}</td>
                                                       @if (($fechaHoy->diffInMonths($proyecto->fecha_final, false)) < 1)
