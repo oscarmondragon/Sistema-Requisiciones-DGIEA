@@ -23,11 +23,37 @@
             <div class="con">
                 <a href="/">
                     <!-- <x-application-logo class=" fill-current text-gray-500" /> -->
-                    <img src="{{ ('img/logo_login.png') }}" alt="Image/png" class="w-32 h-32 fill-current mx-auto mt-16">
+                    <img src="{{ 'img/logo_login.png' }}" alt="Image/png"
+                        class="w-32 h-32 fill-current mx-auto mt-16">
                 </a>
+                <h1 class="text-blanco text-center text-2xl my-2">Sistema de Requerimientos y Solicitudes (SIRESOL)</h1>
             </div>
-            {{ $slot }}
+            <div class="mt-28">
+                {{ $slot }}
+            </div>
         </div>
+        <footer>
+            <div class="grid grid-cols-4 gap-x-10 mt-14">
+                <div>
+                    <img src="{{ 'img/img_footer_uno.png' }}" alt="Administración Universitaria"
+                    title="Administración Universitaria 2021 - 2025">
+                </div>
+                <div>
+                    <a href="https://siea.uaemex.mx/" target="_blank">
+                        <img src="{{ 'img/img_footer_dos.png' }}" alt="SIEA"
+                        title="Secretaría de Investigación y Estudios Avanzados">
+                    </a>
+                </div>
+                <div>
+                    <img src=" {{ 'img/img_footer_tres.png' }} " alt="DGIEA"
+                    title="Direción de Gestión de la Investigación y Estudios Avanzados">
+                </div>
+                <div>
+                    <img src=" {{ 'img/img_footer_cuatro.png' }} " alt="OCA"
+                    title="Oficina de Conocimiento Abierto">
+                </div>
+            </div>
+        </footer>
     </div>
 </body>
 
