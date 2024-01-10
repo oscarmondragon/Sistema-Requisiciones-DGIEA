@@ -17,4 +17,12 @@ class AdquisicionController extends Controller
 
     }
 
+
+
+    public function prueba()
+    {
+
+        return view('adquisiciones.prueba');
+
+    }
 }

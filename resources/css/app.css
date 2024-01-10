@@ -1,3 +1,166 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    /* encabezados */
+    h1 {
+        @apply text-verde text-xl font-bold;
+    }
+
+    h2 {
+        @apply font-semibold text-xl text-verde leading-tight;
+    }
+
+    h3 {
+        @apply text-dorado font-bold;
+    }
+
+    label {
+        @apply text-textos_generales;
+    }
+
+    a {
+        @apply text-red-700;
+    }
+
+    p {
+        @apply text-textos_generales;
+    }
+
+    li {
+        @apply italic list-disc list-outside ml-10;
+    }
+
+    td {
+        @apply h-auto pt-1;
+    }
+
+    select {
+        @apply bg-blanco text-textos_generales rounded-md border-verde;
+    }
+
+    input[type="file"] {
+        @apply my-3 file:py-2 file:mr-0 file:px-4 file:rounded-md file:border-none file:text-sm file:font-semibold file:bg-dorado 
+    file:text-white text-transparent text-[0px]  hover:file:bg-[#7c744c] focus:outline-none focus:ring-0 appearance-none;
+    }
+
+    textarea {
+        @apply bg-blanco text-textos_generales rounded-md border-verde
+        focus:border-verde focus:outline-none focus:ring-1 focus:ring-verde;
+        /* resize-none */
+    }
+
+    input[type="radio"],
+    input[type="checkbox"] {
+        @apply text-verde outline-none rounded-full;
+    }
+
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+        @apply appearance-none m-0;
+    }
+
+    input[type="number"] {
+        -moz-appearance: textfield;
+    }
+
+    /* componentes generales FOCUS */
+    select:focus,
+    input[type="radio"]:focus,
+    input[type="checkbox"]:focus,
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    input[type="date"]:focus {
+        @apply focus:border-verde focus:outline-none focus:ring-1 ring-verde;
+    }
+}
+
+@layer components {
+    /* botones */
+    button {
+        @apply transition ease-out delay-150 text-white font-bold py-2 px-4 mx-1 rounded-md  
+        hover:-translate-y-1 hover:scale-110 duration-300;
+        /* animate-pulse */
+    }
+
+    .btn-success {
+        @apply bg-verde hover:bg-[#4e6856] hover:rounded-lg focus:ring-2 focus:outline-none focus:ring-[#3c5042] mt-2;
+    }
+
+    .btn-warning {
+        @apply bg-btn_cancelar hover:bg-[#be9748] focus:ring-2 focus:outline-none focus:ring-[#947538] mt-2;
+    }
+
+    .btn-danger{
+        @apply bg-rojo hover:bg-[#fc4845] focus:ring-2 focus:outline-none focus:ring-[#ff4441] mt-2;
+    }
+
+    .btn-primary {
+        @apply bg-btn_vobo hover:bg-[#2c4449] focus:ring-2 focus:outline-none focus:ring-[#203135] mt-2;
+    }
+
+    .btn-eliminar-lista {
+        @apply text-rojo italic;
+    }
+
+    .btn-ver {
+        @apply text-verde -mr-6;
+    }
+
+    .btn-tablas {
+        @apply py-0 px-0 rounded-full hover:bg-blanco;
+    }
+}
+
+@layer utilities {
+    /* degradado pantalla de login */
+    .fondo_degradado {
+        @apply bg-gradient-to-tl from-verde to-dorado;
+    }
+
+    /* degradado para formulario */
+    .fondo_deg_formulario {
+        @apply bg-gradient-to-r from-verde to-dorado h-9;
+    }
+
+    .inputs-formulario {
+        @apply bg-blanco text-textos_generales rounded-md border-verde w-full;
+    }
+
+    /* inputs de login */
+    .input_login {
+        @apply bg-trasnparente_botones placeholder:text-white text-white;
+    }
+
+    /* iconos de login */
+    .ic_login {
+        @apply absolute mr-10 ml-2 mt-1 w-8 h-8;
+    }
+
+    .inputs-formulario-solicitudes {
+        @apply bg-blanco text-textos_generales rounded-md border-verde h-10;
+    }
+}
+
+/* sweetalert2 */
+
+.textarea {
+    @apply bg-blanco text-textos_generales rounded-md border-verde resize-none
+    focus:border-verde focus:outline-none focus:ring-1 focus:ring-verde;
+    height: auto !important;
+    /* resize-none */
+}
+
+/* .swal2-styled.swal2-confirm.swalBtnColor {
+    color: #FFC900
+  } */
+.swal2-html-container,
+.swal2-title {
+    color: #4d4d4d !important;
+}
+
+.swal2-styled {
+    transition: none !important;
+    box-shadow: none !important;
+  }

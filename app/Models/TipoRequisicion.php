@@ -9,5 +9,6 @@ class TipoRequisicion extends Model
 {
     use HasFactory;
 
+    protected $connection = 'mysql';
     protected $table = "tipo_requisiciones"; //nombre de la tabla
 }

@@ -16,7 +16,10 @@ return new class extends Migration {
             $table->id();
             $table->string('clave_adquisicion', 16);
             $table->unsignedBigInteger('tipo_requisicion');
-            $table->unsignedBigInteger('id_proyecto');
+            $table->int('clave_proyecto', 20);
+            $table->int('clave_espacio_academico', 20);
+            $table->int('clave_rt', 20);
+            $table->string('tipo_financiamiento', 50);
             $table->unsignedBigInteger('id_rubro');
             $table->boolean('afecta_investigacion');
             $table->string('justificacion_academica', 255)->nullable();
@@ -28,6 +31,10 @@ return new class extends Migration {
             $table->unsignedBigInteger('id_revisor');
             $table->unsignedBigInteger('estatus_general');
             $table->string('observaciones', 255)->nullable();
+            $table->float('subtotal', 10.2);
+            $table->float('iva', 10.2);
+            $table->float('total', 10.2);
+            $table->timestamp('deleted_at');
             $table->timestamps();
 
 
