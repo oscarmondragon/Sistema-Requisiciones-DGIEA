@@ -5,7 +5,7 @@
     <form method="POST" action="{{ route('login') }}">
         @csrf
         <div>
-            <img src="img/fondo.png" alt="image/png" class="static w-52 -mt-52 -ml-6">
+            <img src="img/fondo.png" alt="image/png" class="static w-72 -mt-[390px] -ml-6">
         </div>
 
         <div class="mx-auto w-3/4 block mt-12">
