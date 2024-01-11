@@ -51,7 +51,7 @@
       </div>
 
       <div class="mb-4">
-        <label class="block mb-2" for="importe">
+        <label class="block mb-2 font-bold" for="importe">
           Selecciona los usuarios y escribe cuantos de ellos serán beneficiados
         </label>
         <label class="block mb-2" for="importe">

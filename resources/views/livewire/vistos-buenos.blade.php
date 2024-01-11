@@ -5,7 +5,7 @@
                 <div>
                     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                         <div>
-                            <img src="img/ic_req_pendientes.png" alt="Image/png" class="inline-block">
+                            <img src="img/iconos/ic_req_pendientes.png" alt="Image/png" class="inline-block">
                             <h3 class="inline-block text-xl pl-2">Requerimientos pendientes de enviar</h3>
                         </div>
                         @if (session('success'))
@@ -110,18 +110,17 @@
                                                         <td> {{ $valor->modificacion }}</td>
                                                         @if ($valor->tipo_requerimiento == 1)
                                                             <td>
-                                                                <a href="{{ route('adquisiciones.editar', $valor->id) }}"
-                                                                    title="Editar">
+                                                                <a href="{{ route('adquisiciones.editar', $valor->id) }}">
                                                                     <button class="btn-tablas" title="Editar">
-                                                                        <img src="{{ asset('img/btn_editar.png') }}"
-                                                                            alt="Editar">
+                                                                        <img src="{{ asset('img/botones/btn_editar.png') }}"
+                                                                            alt="Botón Editar">
                                                                     </button>
                                                                 </a>
                                                                 <button type="button"
-                                                                    @click="deleteConfirmation('{{ $valor->id }}')"
+                                                                    @click="deleteConfirmation('{{ $valor->id }}', '{{$valor->id_requerimiento}}')"
                                                                     class="btn-tablas" title="Eliminar">
-                                                                    <img src="{{ 'img/btn_eliminar.png' }}"
-                                                                        alt="Image/png">
+                                                                    <img src="{{ 'img/botones/btn_eliminar.png' }}"
+                                                                        alt="Botón Eliminar">
                                                                 </button>
                                                             </td>
                                                         @else
@@ -129,14 +128,14 @@
                                                                 <a href="{{ route('solicitudes.editar', $valor->id) }}"
                                                                     title="Editar">
                                                                     <button class="btn-tablas" title="Editar">
-                                                                        <img src="{{ 'img/btn_editar.png' }}"
-                                                                            alt="Image/png">
+                                                                        <img src="{{ 'img/botones/btn_editar.png' }}"
+                                                                            alt="Botón Editar">
                                                                     </button>
                                                                 </a>
                                                                 <button type="button"
-                                                                    @click="deleteSolicitud('{{ $valor->id }}')"
+                                                                    @click="deleteSolicitud('{{ $valor->id }}', '{{$valor->id_requerimiento}}')"
                                                                     class="btn-tablas" title="Eliminar">
-                                                                    <img src="{{ 'img/btn_eliminar.png' }}"
+                                                                    <img src="{{ 'img/botones/btn_eliminar.png' }}"
                                                                         alt="Image/png">
                                                                 </button>
                                                             </td>
@@ -160,7 +159,7 @@
                     </div>
                     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                         <div>
-                            <img src="img/ic_req_vobo.png" alt="Image/png" class="inline-block">
+                            <img src="img/iconos/ic_req_vobo.png" alt="Image/png" class="inline-block">
                             <h3 class="inline-block text-xl pl-2 mt-8">Requerimientos pendientes de visto bueno</h3>
                         </div>
                         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -288,8 +287,8 @@
                                                                         title="Dar visto bueno">
                                                                         <button class="btn-tablas"
                                                                             title="Visto bueno">
-                                                                            <img src="{{ '/img/btn_vobo.png' }}"
-                                                                                alt="Image/png"
+                                                                            <img src="{{ '/img/botones/btn_vobo.png' }}"
+                                                                                alt="VoBo"
                                                                                 title="Dar visto bueno">
                                                                         </button>
                                                                     </a>
@@ -317,7 +316,7 @@
         @push('scripts')
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
             <script>
-                function deleteConfirmation(adquisicionId) {
+                function deleteConfirmation(adquisicionId, clave_adquisicion) {
                     // Now you can access the event object (e) directly
                     Swal.fire({
                         title: '¿Estás seguro de eliminarlo?',
@@ -338,15 +337,15 @@
                                 icon: 'success',
                                 confirmButtonText: 'Aceptar',
                                 confirmButtonColor: '#62836C',
-                                title: 'Se eliminó correctamente el requerimiento',
+                                text: 'Se eliminó correctamente el requerimiento con clave ' + clave_adquisicion + '.',
                                 showConfirmButton: false,
-                                timer: 1500
+                                timer: 2000
                             })
                         }
                     });
                 }
 
-                function deleteSolicitud(solicitudId) {
+                function deleteSolicitud(solicitudId, claveSolicitud) {
                     // Now you can access the event object (e) directly
                     Swal.fire({
                         title: '¿Estás seguro de eliminarlo?',
@@ -367,9 +366,9 @@
                                 icon: 'success',
                                 confirmButtonText: 'Aceptar',
                                 confirmButtonColor: '#62836C',
-                                title: 'Se eliminó correctamente el requerimiento',
+                                text: 'Se eliminó correctamente el requerimiento con clave ' + claveSolicitud + '.',
                                 showConfirmButton: false,
-                                timer: 1500
+                                timer: 2000
                             })
                         }
                     });

@@ -7,7 +7,8 @@
           <select id="tipo" wire:model="tipo" class="mt-2">
             <option value="0">Selecciona un opción</option>
             @foreach ($tiposRequisicion as $tipoRequisicion)
-              @if(Session::has('iniciar_captura') || Session::get('iniciar_captura')==0)
+            {{-- @if(Session::has('iniciar_captura') || Session::get('iniciar_captura')==0) --}}
+              @if(Session::get('iniciar_captura')==0)
                 <option value="{{ $tipoRequisicion->id }}" disabled>{{ $tipoRequisicion->descripcion }}</option>
               @else 
                 @if(Session::get('tiempo_restante_solicitudes') == "") 

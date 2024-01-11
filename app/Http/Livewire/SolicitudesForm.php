@@ -51,6 +51,7 @@ class SolicitudesForm extends Component
     public $justificacionS = "";
     public $finicial;
     public $ffinal;
+    public $observacionesVobo = "";
 
     public $id_emisor;
     public $id_revisor;
@@ -93,6 +94,8 @@ class SolicitudesForm extends Component
             $this->finicial = $this->solicitud->solicitudDetalle->periodo_inicio;
             $this->ffinal = $this->solicitud->solicitudDetalle->periodo_fin;
             $this->tipo_comprobacion = $this->solicitud->tipo_comprobacion;
+            $this->observacionesVobo = $this->solicitud->observaciones_vobo;
+            //dd($this->observacionesVobo);
 
 
             $documentos = Documento::where('id_requisicion', $id)->where('tipo_requisicion', 2)->get();
@@ -118,7 +121,8 @@ class SolicitudesForm extends Component
         'aviso_privacidad' => 'accepted',
         'vobo' => 'accepted',
         'concepto' => 'required',
-        'justificacionS' => 'required',
+        //regex:/^[a-zA-Z-Z0-9.,$:;#%()\s]+$/u|
+        'justificacionS' => 'required|max:255|max:255',
         'finicial' => 'nullable|date|required_if:id_rubro_especial,2|after_or_equal:14 days',
         'ffinal' => 'nullable|date|required_if:id_rubro_especial,2|after_or_equal:finicial',
     ];
@@ -141,6 +145,7 @@ class SolicitudesForm extends Component
         'concepto.required' => 'El concepto no puede estar vacío.',
         'importe.required' => 'El importe no puede estar vacío.',
         'justificacionS.required' => 'La justificación no puede estar vacía.',
+        'justificacionS.max' => 'La justificación es demasiado larga.',    
         'finicial.required_if' => 'La fecha inicial no puede estar vacía.',
         'finicial.after_or_equal' => 'La fecha inicial debe ser una fecha posterior o igual a 15 días.',
         'ffinal.required_if' => 'La fecha final no puede estar vacía.',
@@ -255,7 +260,7 @@ class SolicitudesForm extends Component
                     }
                 }
                 DB::commit();
-                return redirect('/cvu-crear')->with('success', 'Su solicitud ha sido guardada correctamente con el número ' . $clave_solicitud . ', recuerde completarla y mandarla a visto bueno.');
+                return redirect('/cvu-crear')->with('success', 'Su requerimiento ha sido guardada correctamente con la clave ' . $clave_solicitud . ', recuerde completarla y mandarla a visto bueno.');
             } catch (\Exception $e) {
                 DB::rollback();
                 dd("Error en el catch" . $e);
@@ -346,7 +351,7 @@ class SolicitudesForm extends Component
                         }
                     }
                     DB::commit();
-                    return redirect('/cvu-crear')->with('success', 'Su solicitud con clave ' . $clave_solicitud . ' ha sido  registrada y se ha enviado para visto bueno.');
+                    return redirect('/cvu-crear')->with('success', 'Su requerimiento con clave ' . $clave_solicitud . ' ha sido  registrada y se ha enviado para visto bueno.');
                 } catch (\Exception $e) {
                     DB::rollback();
                     dd("Error en el catch" . $e);
@@ -418,7 +423,7 @@ class SolicitudesForm extends Component
                     }
                     $i = 1;
                     DB::commit();
-                    return redirect('/cvu-crear')->with('success', 'Su solicitud con clave ' . $clave_solicitud . ' ha sido  registrada y se ha enviado para visto bueno.');
+                    return redirect('/cvu-crear')->with('success', 'Su requerimiento con clave ' . $clave_solicitud . ' ha sido  registrada y se ha enviado para visto bueno.');
                 } catch (\Exception $e) {
                     DB::rollback();
                     dd("Error en el catch" . $e);

@@ -119,36 +119,32 @@
                                                         <th>
                                                             @if ($valor->tipo_requerimiento == 1)
                                                                 @if ($valor->id_estatus == 5 and Session::get('id_user') == $valor->emisor)
-                                                                    <a href="{{ route('adquisiciones.seguimiento.editar', $valor->id) }}"
-                                                                        class="btn-tablas" title="Editar">
+                                                                    <a href="{{ route('adquisiciones.seguimiento.editar', $valor->id) }}">
                                                                         <button class="btn-tablas" title="Editar">
-                                                                            <img src="{{ asset('img/btn_editar.png') }}"
+                                                                            <img src="{{ asset('img/botones/btn_editar.png') }}"
                                                                                 alt="Editar">
                                                                         </button>
                                                                     </a>
                                                                 @else
-                                                                    <a href="{{ route('adquisicion.ver', $valor->id) }}"
-                                                                        class="btn-tablas" title="Ver">
+                                                                    <a href="{{ route('adquisicion.ver', $valor->id) }}">
                                                                         <button class="btn-tablas" title="Ver">
-                                                                            <img src="{{ 'img/btn_ver.jpeg' }}"
+                                                                            <img src="{{ 'img/botones/btn_ver.jpeg' }}"
                                                                                 alt="Image/png">
                                                                         </button>
                                                                     </a>
                                                                 @endif
                                                             @else
                                                                 @if ($valor->id_estatus == 5 and Session::get('id_user') == $valor->emisor)
-                                                                    <a href="{{ route('solicitudes.seguimiento.editar', $valor->id) }}"
-                                                                        class="btn-tablas" title="Editar">
+                                                                    <a href="{{ route('solicitudes.seguimiento.editar', $valor->id) }}">
                                                                         <button class="btn-tablas" title="Editar">
-                                                                            <img src="{{ asset('img/btn_editar.png') }}"
+                                                                            <img src="{{ asset('img/botones/btn_editar.png') }}"
                                                                                 alt="Editar">
                                                                         </button>
                                                                     </a>
                                                                 @else
-                                                                    <a href="{{ route('solicitud.ver', $valor->id) }}"
-                                                                        class="btn-tablas" title="Ver">
+                                                                    <a href="{{ route('solicitud.ver', $valor->id) }}">
                                                                         <button class="btn-tablas" title="Ver">
-                                                                            <img src="{{ 'img/btn_ver.jpeg' }}"
+                                                                            <img src="{{ 'img/botones/btn_ver.jpeg' }}"
                                                                                 alt="Image/png">
                                                                         </button>
                                                                     </a>

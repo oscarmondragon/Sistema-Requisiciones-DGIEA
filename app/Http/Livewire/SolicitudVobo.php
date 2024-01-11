@@ -142,7 +142,7 @@ class SolicitudVobo extends Component
 
             }
             DB::commit();
-            return redirect('/cvu-vobo')->with('success', 'Su solicitud con clave ' . $clave_solicitud . ' ha sido  enviada para revision a la DGIEA.');
+            return redirect('/cvu-vobo')->with('success', 'Su solicitud con clave ' . $clave_solicitud . ' ha sido  enviada para revisión a la DGIEA.');
 
         } catch (\Exception $e) {
             DB::rollBack();

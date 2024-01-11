@@ -31,11 +31,11 @@ class AdquisicionDescriptionModal extends ModalComponent
 
     //REGLAS DE VALIDACION
     protected $rules = [
-        'descripcion' => 'required',
+        'descripcion' => 'required|max:255',
         'cantidad' => 'required|gte:1',
         'precio_unitario' => 'required|gte:1',
         'importe' => 'required',
-        'justificacion_software' => 'required_if:id_rubro_especial,1',
+        'justificacion_software' => 'required_if:id_rubro_especial,1|max:255',
         'alumnos' => 'required_if:id_rubro_especial,1|gte:0',
         'profesores_invest' => 'required_if:id_rubro_especial,1|gte:0',
         'administrativos' => 'required_if:id_rubro_especial,1|gte:0'
@@ -45,12 +45,14 @@ class AdquisicionDescriptionModal extends ModalComponent
     //MENSAJES DE LA VALIDACION
     protected $messages = [
         'descripcion.required' => 'La descripción no puede estar vacía.',
+        'descripcion.max' => 'La descripción es demasiado larga.',
         'cantidad.required' => 'La cantidad no puede estar vacía.',
         'cantidad.gte' => 'La cantidad no puede ser menor a 1.',
         'precio_unitario.required' => 'El precio unitario no puede estar vacío.',
         'precio_unitario.gte' => 'El precio unitario no puede ser menor a 1.',
         'importe.required' => 'El importe no puede estar vacío.',
         'justificacion_software.required_if' => 'La justificación no puede estar vacía.',
+        'justificacion_software.max' => 'La justificación es demasiado larga.',
         'alumnos.required_if' => 'El número de alumnos no puede estar vacío.',
         'alumnos.gte' => 'El número de alumnos no puede ser negativo.',
         'profesores_invest.required' => 'El número de profesores no puede estar vacío.',

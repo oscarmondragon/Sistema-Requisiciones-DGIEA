@@ -140,8 +140,8 @@
                                                       @else
                                                       <td class="text-center"> <span class="bg-green-500 h-5 w-5 rounded-full block"> </td>
                                                     @endif
-                                                      <th class="w-[148px]">
-                                                          <button type="button"
+                                                      <th class="w-[148px] text-center">
+                                                          <button class="btn-tablas" type="button"
                                                               x-on:click="$wire.emit('openModal', 'revisores.editar-fechas-proyecto-modal', { 
                                                               'id_proyecto': '{{ $proyecto->id_proyecto }}', 
                                                               'clave_uaem': '{{ $proyecto->clave_uaem }}', 
@@ -150,9 +150,8 @@
                                                               'fecha_limite_adquisiciones': '{{ $proyecto->fecha_limite_adquisiciones }}',
                                                               'fecha_limite_solicitudes': '{{ $proyecto->fecha_limite_solicitudes }}',
                                                             })"
-                                                              
-                                                              class="btn-success">
-                                                              Editar
+                                                              title="Editar">
+                                                              <img src="{{'img/botones/btn_editar.png'}}" alt="Editar">
                                                           </button>
                                                       </th>
                                                   </tr>

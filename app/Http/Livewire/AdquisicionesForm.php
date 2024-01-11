@@ -57,6 +57,7 @@ class AdquisicionesForm extends Component
     public $ruta_archivo = '';
     public $tamanyoDocumentos;
     public $tipoDocumento;
+    public $observacionesVobo = "";
 
     //variables para validar documentos antes de agregarlos al arreglo
     public $cartaExclusividadTemp;
@@ -67,7 +68,8 @@ class AdquisicionesForm extends Component
     protected $rules = [
         'id_rubro' => 'required|not_in:0',
         'bienes' => 'required|array|min:1',
-        'justificacion_academica' => 'required_if:afecta_investigacion,1',
+        // regex:/^[a-zA-Z-Z0-9.,$:;#%()\s]+$/u
+        'justificacion_academica' => 'required_if:afecta_investigacion,1|max:255',
         'docsCartaExclusividad' => 'required_if:exclusividad,1|array',
         'docsCotizacionesFirmadas' => 'required|array|min:1',
         'docsCotizacionesFirmadas.*' => 'required',
@@ -81,6 +83,7 @@ class AdquisicionesForm extends Component
         'bienes.array' => 'Debe agregar por lo menos un bien o servicio.',
         'bienes.min' => 'Debe agregar por lo menos un bien o servicio.',
         'justificacion_academica.required_if' => 'La justificación académica no puede estar vacía.',
+        'justificacion_academica.max' => 'La justificación académica es demasiado larga.',
         'docsCartaExclusividad.required_if' => 'Debe adjuntar la carta de exclusividad.',
         'docsCartaExclusividad.array' => 'Debe adjuntar la carta de exclusividad.',
         //'docsCartaExclusividad.min' => 'Debe adjuntar por lo menos una carta de exclusividad.',
@@ -127,6 +130,7 @@ class AdquisicionesForm extends Component
             $this->subtotal = $this->adquisicion->subtotal;
             $this->iva = $this->adquisicion->iva;
             $this->total = $this->adquisicion->total;
+            $this->observacionesVobo = $this->adquisicion->observaciones_vobo;
 
             $this->bienesDB = AdquisicionDetalle::where('id_adquisicion', $id)->get();
             $this->bienes = collect($this->bienesDB)->map(function ($item, $key) {
@@ -332,7 +336,7 @@ class AdquisicionesForm extends Component
                 }
 
                 DB::commit();
-                return redirect('/cvu-crear')->with('success', 'Su solicitud ha sido guardada correctamente con el número de clave '.  $clave_adquisicion . '. Recuerde completarla y mandarla a visto bueno.');
+                return redirect('/cvu-crear')->with('success', 'Su requerimiento ha sido guardada correctamente con el número de clave '.  $clave_adquisicion . '. Recuerde completarla y mandarla a visto bueno.');
 
             } catch (\Exception $e) {
                 DB::rollback();
@@ -519,7 +523,7 @@ class AdquisicionesForm extends Component
                         }
 
                         DB::commit();
-                        return redirect('/cvu-crear')->with('success', 'Su solicitud con clave ' . $adquisicion->clave_adquisicion . ' ha sido  actualizada y se ha enviado para visto bueno.');
+                        return redirect('/cvu-crear')->with('success', 'Su requerimiento con clave ' . $adquisicion->clave_adquisicion . ' ha sido  actualizada y se ha enviado para visto bueno.');
 
                     }
                 } catch (\Exception $e) {
@@ -666,7 +670,7 @@ class AdquisicionesForm extends Component
                     }
 
                     DB::commit();
-                    return redirect('/cvu-crear')->with('success', 'Su solicitud con clave ' . $clave_adquisicion . ' ha sido  registrada y se ha enviado para visto bueno.');
+                    return redirect('/cvu-crear')->with('success', 'Su requerimiento con clave ' . $clave_adquisicion . ' ha sido  registrada y se ha enviado para visto bueno.');
                 } catch (\Exception $e) {
                     //dd("Error en el catch".$e); 
                     DB::rollback();
