@@ -9,21 +9,6 @@
         </p>
     </header>
 
-    @if (session('success'))
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <script>
-            Swal.fire({
-                position: 'top-center',
-                icon: 'success',
-                text: '{{ session('success') }}',
-                //confirmButtonText: 'Aceptar',
-                confirmButtonColor: '#62836C',
-                //showConfirmButton: true,
-                timer: 2500
-            })
-        </script>
-    @endif
-
     <form id="send-verification" method="post" action="{{ route('verification.send') }}">
         @csrf
     </form>

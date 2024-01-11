@@ -6,6 +6,13 @@
                 <div>
                     <div class="mb-6">
                         <h1>Formulario adquisición de bienes y servicios</h1>
+                        @if ($observacionesVobo)
+                            <div class="my-4">
+                                <p class="bg-red-100 text-red-500 font-bold py-1 px-2  border-l-2 border-red-500">
+                                    {{ $observacionesVobo }}
+                                </p>
+                            </div>
+                        @endif
                         <form x-on:submit.prevent="saveConfirmationVoBo">
                             @csrf
                             <div>
@@ -102,13 +109,13 @@
                           alumnos: elemento.alumnos, profesores_invest: elemento.profesores_invest, administrativos: elemento.administrativos, id_rubro: id_rubro,
                           id_rubro_especial: {{ $id_rubro_especial ?: 'null' }} })'
                                                             class="btn-tablas">
-                                                            <img src="{{ '/img/btn_editar.png' }}" alt="Image/png"
+                                                            <img src="{{ '/img/botones/btn_editar.png' }}" alt="Image/png"
                                                                 title="Editar">
                                                         </button>
                                                         <button type="button"
                                                             @click.stop="elementos.splice(index, 1); $wire.deleteBien(elemento)"
                                                             class="btn-tablas">
-                                                            <img src="{{ '/img/btn_eliminar.png' }}" alt="Image/png"
+                                                            <img src="{{ '/img/botones/btn_eliminar.png' }}" alt="Image/png"
                                                                 title="Eliminar">
                                                         </button>
                                                     </th>
@@ -170,8 +177,8 @@
                                         <label class="inline-flex items-center ml-6">
                                             <input type="radio" x-model="afectaSelectedOption"
                                                 wire:model='afecta_investigacion'
-                                                wire:click="resetJustificacionAcademica" name="noAfecta" value="0"
-                                                checked>
+                                                wire:click="resetJustificacionAcademica" name="noAfecta"
+                                                value="0" checked>
                                             <span class="ml-2">No</span>
                                         </label>
                                     </div>
@@ -316,157 +323,174 @@
                                     @endforeach
                                 </ul>
                             </div>
-                            
-                           
-        <div>
-          <label x-show="exclusividadSelectedOption === '1'" for="anexoDocumentos" 
-          class="text-rojo mt-5 block">
-            <span class="text-verde font-bold">Nota: </span>Adjunte aquí el soporte de exclusividad.
-          </label>
-          <label for="anexoOtroTemp">Anexo técnico u otros documentos:</label>
-          <input type="file" id="anexoOtroTemp" wire:model='anexoOtroTemp' accept=".pdf">
-          @empty($docsAnexoOtrosDocumentos)
-          <label for="anexoOtroTemp" class="text-dorado">Sin archivos seleccionados.</label>
-          @endempty
-          <br>
-          <div wire:loading wire:target="docsAnexoOtrosDocumentos">Cargando archivo...</div>
-          @error('anexoOtroTemp') <span class=" text-rojo sm:inline-block block">{{ $message }}</span> @enderror
-          @error('docsAnexoOtrosDocumentos') <span class=" text-rojo sm:inline-block block">{{ $message }}</span> @enderror
-          <ul>
-            @foreach($docsAnexoOtrosDocumentos as $index => $anexoDoc)
-            <li>
-              @if(isset($anexoDoc['datos']['ruta_documento']))
-            <a href="#" class="text-dorado"  wire:click="descargarArchivo('{{ $anexoDoc['datos']['ruta_documento'] }}', '{{ $anexoDoc['datos']['nombre_documento']}}')">  {{ $anexoDoc['datos']['nombre_documento']}} <button type="button" class="btn-ver">Ver</button></a>
-           @else
-           {{ $anexoDoc['datos']['nombre_documento']}}
-           @endif
-              <button type="button" class="btn-eliminar-lista" @click="eliminarDocumento('anexoDocumentos', '{{$index}}')">
-                Eliminar
-              </button>
-            </li>
-            @endforeach
-          </ul>
-        </div>
-      </div>
-      <p class="text-verde mt-5"> <span class="font-bold">Nota:</span> Las cotizaciones deben describir exactamente el mismo material, suministro, servicio general,
-        bien mueble o intangible.
-      </p>
-      <div class="mt-10">
-        <input type="checkbox" id="vobo" wire:model='vobo' name="vobo" class="rounded-full sm:ml-10">
-        <label for="vobo">VoBo al requerimiento solicitado. Se envía para VoBo del Admistrativo/Investigador<samp class="text-rojo">*</samp></label>
-        @error('vobo') <span class=" text-rojo error sm:inline-block block">{{ $message }}</span> @enderror
-              <div class="sm:text-right text-center my-10 -mb-5">
-              
-               @empty($id_adquisicion)
-                <button type="button" @click="saveConfirmation()" class="btn-success sm:w-auto w-5/6">Guardar avance</button>
-                @endempty
-                <button type="submit" @click="saveConfirmationVoBo()" class="btn-primary sm:w-auto w-5/6">Enviar para VoBo</button>
-                @if (str_contains($referer, 'vobo') || str_contains($referer, 'crear'))
-                    <button type="button" @click="cancelarAdquisicion()" class="btn-warning sm:w-auto w-5/6">Cancelar</button>
-                @else
-                    <button type="button" class="btn-warning sm:w-auto w-5/6" x-on:click="window.location.href = '{{ route('cvu.seguimiento') }}'">Regresar</button>
-                @endif
-          </div>
+
+
+                            <div>
+                                <label x-show="exclusividadSelectedOption === '1'" for="anexoDocumentos"
+                                    class="text-verde mt-5 block">
+                                    <span class="font-bold">Nota: </span>Adjunte aquí el soporte de exclusividad.
+                                </label>
+                                <label for="anexoOtroTemp">Anexo técnico u otros documentos:</label>
+                                <input type="file" id="anexoOtroTemp" wire:model='anexoOtroTemp' accept=".pdf">
+                                @empty($docsAnexoOtrosDocumentos)
+                                    <label for="anexoOtroTemp" class="text-dorado">Sin archivos seleccionados.</label>
+                                @endempty
+                                <br>
+                                <div wire:loading wire:target="docsAnexoOtrosDocumentos">Cargando archivo...</div>
+                                @error('anexoOtroTemp')
+                                    <span class=" text-rojo sm:inline-block block">{{ $message }}</span>
+                                @enderror
+                                @error('docsAnexoOtrosDocumentos')
+                                    <span class=" text-rojo sm:inline-block block">{{ $message }}</span>
+                                @enderror
+                                <ul>
+                                    @foreach ($docsAnexoOtrosDocumentos as $index => $anexoDoc)
+                                        <li>
+                                            @if (isset($anexoDoc['datos']['ruta_documento']))
+                                                <a href="#" class="text-dorado"
+                                                    wire:click="descargarArchivo('{{ $anexoDoc['datos']['ruta_documento'] }}', '{{ $anexoDoc['datos']['nombre_documento'] }}')">
+                                                    {{ $anexoDoc['datos']['nombre_documento'] }} <button
+                                                        type="button" class="btn-ver">Ver</button></a>
+                                            @else
+                                                {{ $anexoDoc['datos']['nombre_documento'] }}
+                                            @endif
+                                            <button type="button" class="btn-eliminar-lista"
+                                                @click="eliminarDocumento('anexoDocumentos', '{{ $index }}')">
+                                                Eliminar
+                                            </button>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                    </div>
+                    <p class="text-verde mt-5"> <span class="font-bold">Nota:</span> Las cotizaciones deben describir
+                        exactamente el mismo material, suministro, servicio general,
+                        bien mueble o intangible.
+                    </p>
+                    <div class="mt-10">
+                        <input type="checkbox" id="vobo" wire:model='vobo' name="vobo"
+                            class="rounded-full sm:ml-10">
+                        <label for="vobo">VoBo al requerimiento solicitado. Se envía para VoBo del
+                            Admistrativo/Investigador<samp class="text-rojo">*</samp></label>
+                        @error('vobo')
+                            <span class=" text-rojo error sm:inline-block block">{{ $message }}</span>
+                        @enderror
+                        <div class="sm:text-right text-center my-10 -mb-5">
+
+                            @empty($id_adquisicion)
+                                <button type="button" @click="saveConfirmation()"
+                                    class="btn-success sm:w-auto w-5/6">Guardar avance</button>
+                            @endempty
+                            <button type="submit" @click="saveConfirmationVoBo()"
+                                class="btn-primary sm:w-auto w-5/6">Enviar para VoBo</button>
+                            @if (str_contains($referer, 'vobo') || str_contains($referer, 'crear'))
+                                <button type="button" @click="cancelarAdquisicion()"
+                                    class="btn-warning sm:w-auto w-5/6">Cancelar</button>
+                            @else
+                                <button type="button" class="btn-warning sm:w-auto w-5/6"
+                                    x-on:click="window.location.href = '{{ route('cvu.seguimiento') }}'">Regresar</button>
+                            @endif
                         </div>
-          </form>
+                    </div>
+                    </form>
+                </div>
+            </div>
+
+            @push('scripts')
+                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                <script>
+                    function saveConfirmation() {
+                        Swal.fire({
+                            customClass: {
+                                title: 'swal2-title'
+                            },
+                            title: '¿Solo deseas guardar el avance?',
+                            text: 'Recuerda que solo sera visible para ti. Deberás completarlo y enviarlo a VoBo posteriormente.',
+                            icon: 'warning',
+                            iconColor: '#9D9361',
+                            showCancelButton: true,
+                            confirmButtonColor: '#62836C',
+                            cancelButtonColor: '#E86562',
+                            confirmButtonText: 'Si, guardar',
+                            cancelButtonText: 'Cerrar',
+
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.livewire.emit('save');
+                            }
+                        });
+                    }
+
+                    function saveConfirmationVoBo() {
+                        Swal.fire({
+                            customClass: {
+                                title: 'swal2-title'
+                            },
+                            title: '¿Deseas enviar tu adquisición a VoBo?',
+                            text: 'Una vez enviada ya no será posible modificarlo.',
+                            icon: 'warning',
+                            iconColor: '#9D9361',
+                            showCancelButton: true,
+                            confirmButtonColor: '#62836C',
+                            cancelButtonColor: '#E86562',
+                            confirmButtonText: 'Si, enviar',
+                            cancelButtonText: 'Cerrar',
+
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.livewire.emit('saveVobo');
+                            }
+                        });
+                    }
+
+                    function cancelarAdquisicion() {
+                        Swal.fire({
+                            customClass: {
+                                title: 'swal2-title'
+                            },
+                            title: '¿Estás seguro que deseas cancelar?',
+                            text: 'Se perderán todos los datos capturados.',
+                            icon: 'warning',
+                            iconColor: '#9D9361',
+                            showCancelButton: true,
+                            confirmButtonColor: '#E86562',
+                            cancelButtonColor: '#62836C',
+                            confirmButtonText: 'Si, cancelar',
+                            cancelButtonText: 'Cerrar',
+
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                //alert(window.location + "\n" + "{{ route('cvu.create-adquisiciones') }}");
+                                if (window.location == "{{ route('cvu.create-adquisiciones') }}") {
+                                    window.location.href = '{{ route('cvu.create') }}'
+                                } else {
+                                    window.location.href = '{{ route('cvu.vobo') }}'
+                                }
+                            }
+                        });
+                    }
+
+                    function eliminarDocumento(tipoArchivo, index) {
+                        Swal.fire({
+                            customClass: {
+                                title: 'swal2-title'
+                            },
+                            title: '¿Estás seguro que deseas eliminar el documento?',
+                            text: 'Una vez eliminado no sera posible recuperarlo.',
+                            icon: 'warning',
+                            iconColor: '#9D9361',
+                            showCancelButton: true,
+                            confirmButtonColor: '#E86562',
+                            cancelButtonColor: '#62836C',
+                            confirmButtonText: 'Si, eliminar',
+                            cancelButtonText: 'Cerrar',
+
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.livewire.emit('eliminarArchivo', tipoArchivo, index);
+                            }
+                        });
+                    }
+                </script>
+            @endpush
         </div>
-    </div>
-
-    @push('scripts')
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <script>
-            function saveConfirmation() {
-                Swal.fire({
-                    customClass: {
-                        title: 'swal2-title'
-                    },
-                    title: '¿Solo deseas guardar el avance?',
-                    text: 'Recuerda que solo sera visible para ti. Deberás completarlo y enviarlo a VoBo posteriormente.',
-                    icon: 'warning',
-                    iconColor: '#9D9361',
-                    showCancelButton: true,
-                    confirmButtonColor: '#62836C',
-                    cancelButtonColor: '#E86562',
-                    confirmButtonText: 'Si, guardar',
-                    cancelButtonText: 'Cerrar',
-
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.livewire.emit('save');
-                    }
-                });
-            }
-
-            function saveConfirmationVoBo() {
-                Swal.fire({
-                    customClass: {
-                        title: 'swal2-title'
-                    },
-                    title: '¿Deseas enviar tu adquisición a VoBo?',
-                    text: 'Una vez enviada ya no será posible modificarlo.',
-                    icon: 'warning',
-                    iconColor: '#9D9361',
-                    showCancelButton: true,
-                    confirmButtonColor: '#62836C',
-                    cancelButtonColor: '#E86562',
-                    confirmButtonText: 'Si, enviar',
-                    cancelButtonText: 'Cerrar',
-
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.livewire.emit('saveVobo');
-                    }
-                });
-            }
-
-            function cancelarAdquisicion() {
-                Swal.fire({
-                    customClass: {
-                        title: 'swal2-title'
-                    },
-                    title: '¿Estás seguro que deseas cancelar?',
-                    text: 'Se perderán todos los datos capturados.',
-                    icon: 'warning',
-                    iconColor: '#9D9361',
-                    showCancelButton: true,
-                    confirmButtonColor: '#E86562',
-                    cancelButtonColor: '#62836C',
-                    confirmButtonText: 'Si, cancelar',
-                    cancelButtonText: 'Cerrar',
-
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        //alert(window.location + "\n" + "{{ route('cvu.create-adquisiciones') }}");
-                        if (window.location == "{{ route('cvu.create-adquisiciones') }}") {
-                            window.location.href = '{{ route('cvu.create') }}'
-                        } else {
-                            window.location.href = '{{ route('cvu.vobo') }}'
-                        }
-                    }
-                });
-            }
-
-            function eliminarDocumento(tipoArchivo, index) {
-                Swal.fire({
-                    customClass: {
-                        title: 'swal2-title'
-                    },
-                    title: '¿Estás seguro que deseas eliminar el documento?',
-                    text: 'Una vez eliminado no sera posible recuperarlo.',
-                    icon: 'warning',
-                    iconColor: '#9D9361',
-                    showCancelButton: true,
-                    confirmButtonColor: '#E86562',
-                    cancelButtonColor: '#62836C',
-                    confirmButtonText: 'Si, eliminar',
-                    cancelButtonText: 'Cerrar',
-
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.livewire.emit('eliminarArchivo', tipoArchivo, index);
-                    }
-                });
-            }
-        </script>
-    @endpush
-</div>

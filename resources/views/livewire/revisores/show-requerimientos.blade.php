@@ -162,14 +162,12 @@
                                                         </td>
                                                         <td> {{ $requerimiento->modificacion }}</td>
 
-
                                                         @if ($requerimiento->tipo_requerimiento == 1)
                                                             @if ($rol == 2 || $rol == 1)
                                                                 <td>
-                                                                    <a href="{{ route('adquisicion-admin.ver', $requerimiento->id) }}"
-                                                                         title="Ver">
+                                                                    <a href="{{ route('adquisicion-admin.ver', $requerimiento->id) }}">
                                                                         <button class="btn-tablas" title="Ver">
-                                                                            <img src="{{ 'img/btn_ver.jpeg' }}"
+                                                                            <img src="{{ 'img/botones/btn_ver.jpeg' }}"
                                                                                 alt="Image/png">
                                                                         </button>
                                                                     </a>
@@ -177,28 +175,26 @@
                                                             @else
                                                                 @if (in_array($requerimiento->tipo_estado, [2]))
                                                                     <td>
-                                                                        <a href="{{ route('adquisicion.revisar', ['id' => $requerimiento->id]) }}"
-                                                                            title="Editar">
+                                                                        <a href="{{ route('adquisicion.revisar', ['id' => $requerimiento->id]) }}">
                                                                             @if ($requerimiento->id_estatus == 4)
-                                                                                <button class="btn-primary"
+                                                                                <button class="btn-tablas"
                                                                                     title="Revisar">
-                                                                                    Revisar
+                                                                                    <img src="{{'img/botones/btn_revisar.png'}}" alt="Botón Revisar">
                                                                                 </button>
                                                                             @else
-                                                                                <button class="btn-primary"
-                                                                                    title="Revisar">
-                                                                                    Actualizar
+                                                                                <button class="btn-tablas"
+                                                                                    title="Actualizar">
+                                                                                    <img src="{{'img/botones/btn_actualizar.png'}}" alt="Botón Actualizar">
                                                                                 </button>
                                                                             @endif
                                                                         </a>
                                                                     </td>
                                                                 @else
                                                                     <td>
-                                                                        <a href="{{ route('adquisicion.revisar', [$requerimiento->id, $requerimiento->id_requisicion_detalle]) }}"
-                                                                            title="Revisar">
-                                                                            <button class="btn-primary"
-                                                                                title="Actualizar adqui">
-                                                                                Actualizar
+                                                                        <a href="{{ route('adquisicion.revisar', [$requerimiento->id, $requerimiento->id_requisicion_detalle]) }}">
+                                                                            <button class="btn-tablas"
+                                                                                title="Actualizar">
+                                                                                <img src="{{'img/botones/btn_actualizar.png'}}" alt="Botón Actualizar">
                                                                             </button>
                                                                         </a>
                                                                     </td>
@@ -207,27 +203,24 @@
                                                         @elseif($requerimiento->tipo_requerimiento == 2)
                                                             @if ($rol == 2 || $rol == 1)
                                                                 <td>
-                                                                    <a href="{{ route('solicitud-admin.ver', $requerimiento->id) }}"
-                                                                        class="btn-tablas" title="Ver">
+                                                                    <a href="{{ route('solicitud-admin.ver', $requerimiento->id) }}">
                                                                         <button class="btn-tablas" title="Ver">
-                                                                            <img src="{{ 'img/btn_ver.jpeg' }}"
-                                                                                alt="Image/png">
+                                                                            <img src="{{ 'img/botones/btn_ver.jpeg' }}" alt="Botón Ver">
                                                                         </button>
                                                                     </a>
                                                                 </td>
                                                             @else
                                                                 <td>
-                                                                    <a href="{{ route('solicitud.revisar', $requerimiento->id) }}"
-                                                                        title="Revisar">
+                                                                    <a href="{{ route('solicitud.revisar', $requerimiento->id) }}">
                                                                         @if ($requerimiento->id_estatus == 4)
-                                                                            <button class="btn-primary"
+                                                                            <button class="btn-tablas"
                                                                                 title="Revisar">
-                                                                                Revisar
+                                                                                <img src="{{'img/botones/btn_revisar.png'}}" alt="Botón Revisar">
                                                                             </button>
                                                                         @else
-                                                                            <button class="btn-primary"
+                                                                            <button class="btn-tablas"
                                                                                 title="Actualizar">
-                                                                                Actualizar
+                                                                                <img src="{{'img/botones/btn_actualizar.png'}}" alt="Botón Actualizar">
                                                                             </button>
                                                                         @endif
                                                                     </a>

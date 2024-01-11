@@ -8,22 +8,6 @@
             {{ __('Asegúrese de que su cuenta utilice una contraseña larga y aleatoria para mantenerse segura.') }}
         </p>
     </header>
-
-    @if (session('success'))
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <script>
-            Swal.fire({
-                position: 'top-center',
-                icon: 'success',
-                text: '{{ session('success') }}',
-                confirmButtonText: 'Aceptar',
-                confirmButtonColor: '#62836C',
-                //showConfirmButton: true,
-                timer: 2500
-            })
-        </script>
-    @endif
-
     <form method="post" action="{{ route('password.update') }}" class="mt-6 space-y-6">
         @csrf
         @method('put')

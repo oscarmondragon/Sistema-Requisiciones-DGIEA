@@ -132,7 +132,7 @@ class AdquisicionVobo extends Component
 
             }
             DB::commit();
-            return redirect('/cvu-vobo')->with('success', 'Su solicitud con clave ' . $clave_adquisicion . ' ha sido  enviada para revision a la DGIEA.');
+            return redirect('/cvu-vobo')->with('success', 'Su adquisición con clave ' . $clave_adquisicion . ' ha sido  enviada para revisión a la DGIEA.');
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -155,7 +155,7 @@ class AdquisicionVobo extends Component
 
             }
             DB::commit();
-            return redirect('/cvu-vobo')->with('success', 'Su solicitud con clave ' . $clave_adquisicion . ' ha sido  rechazada.');
+            return redirect('/cvu-vobo')->with('success', 'Su adquisición con clave ' . $clave_adquisicion . ' ha sido  rechazada.');
 
         } catch (\Exception $e) {
             DB::rollBack();
