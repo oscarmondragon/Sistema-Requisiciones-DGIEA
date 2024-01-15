@@ -10,13 +10,58 @@ use Carbon\Carbon;
                 <div>
                     <div>
                         <h1>Formulario solicitudes</h1>
-                        @if ($observacionesVobo)
+                        @if (isset($solicitud->observaciones_vobo) || isset($solicitud->observaciones))
                             <div class="my-4">
-                                <p class="bg-red-100 text-red-500 font-bold py-1 px-2  border-l-2 border-red-500">
-                                    {{ $observacionesVobo }}
+                                <p class="bg-red-100 text-red-500 font-bold py-1 px-2 rounded-sm border border-red-500">
+                                    <svg class="inline-block w-5 h-5 me-3" aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                        <path
+                                            d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                                    </svg>
+                                    @if ($solicitud->observaciones_vobo)
+                                        Observaciones de rechazo:
+                                    <span class="block pl-12 font-normal"><span class="font-bold">Por visto bueno:</span> {{ $solicitud->observaciones_vobo }}</span>
+                                    @endif
+                                    @if ($solicitud->observaciones)
+                                    <span class="block pl-12 font-normal"><span class="font-bold">Por DGIEA: </span> {{ $solicitud->observaciones }}</span>
+                                    @endif
                                 </p>
                             </div>
                         @endif
+
+
+
+
+                        {{-- @if (isset($adquisicion->observaciones_vobo) || isset($adquisicion->observaciones))
+                            <div class="my-4">
+                                <p class="bg-red-100 text-red-500 font-bold py-1 px-2 rounded-sm border border-red-500">
+                                    <svg class="inline-block w-5 h-5 me-3" aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                        <path
+                                            d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                                    </svg>
+                                    @if ($adquisicion->observaciones_vobo)
+                                        Observaciones de rechazo:
+                                    <span class="block pl-12 font-normal"><span class="font-bold">Por visto bueno:</span> {{ $adquisicion->observaciones_vobo }}</span>
+                                    @endif
+                                    @if ($adquisicion->observaciones)
+                                    <span class="block pl-12 font-normal"><span class="font-bold">Por DGIEA: </span> {{ $adquisicion->observaciones }}</span>
+                                    @endif
+                                </p>
+                            </div>
+                        @endif --}}
+
+
+
+
+
+
+
+
+
+
+
+
                         <form x-on:submit.prevent="saveConfirmationVoBo">
                             @csrf
                             <div>
@@ -191,7 +236,8 @@ use Carbon\Carbon;
                                 wire:model='aviso_privacidad' class="mr-1">
                             <label for="aviso_privacidad">Acepto aviso de privacidad simplificada de la
                                 UAEMEX<samp class="text-rojo">*</samp>.</label>
-                            <a href="http://sistema-requisiciones-dgiea.test/storage/doc-UAEM/Aviso de Privacidad SIEA-CVU.pdf"
+                            {{-- <a href="{{asset('storage/aviso.pdf')}}" --}}
+                            <a href="{{Storage::url('/doc-UAEM/Aviso-de-Privacidad-SIEA-CVU.pdf')}}"
                                 target="_blank" class="text-verde font-bold pl-2 hover:underline">Ver aviso de
                                 privacidad</a>
                             @error('aviso_privacidad')

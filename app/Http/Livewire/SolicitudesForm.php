@@ -122,7 +122,7 @@ class SolicitudesForm extends Component
         'vobo' => 'accepted',
         'concepto' => 'required',
         //regex:/^[a-zA-Z-Z0-9.,$:;#%()\s]+$/u|
-        'justificacionS' => 'required|max:255|max:255',
+        'justificacionS' => 'required|max:255|max:800',
         'finicial' => 'nullable|date|required_if:id_rubro_especial,2|after_or_equal:14 days',
         'ffinal' => 'nullable|date|required_if:id_rubro_especial,2|after_or_equal:finicial',
     ];
@@ -260,7 +260,7 @@ class SolicitudesForm extends Component
                     }
                 }
                 DB::commit();
-                return redirect('/cvu-crear')->with('success', 'Su requerimiento ha sido guardada correctamente con la clave ' . $clave_solicitud . ', recuerde completarla y mandarla a visto bueno.');
+                return redirect('/cvu-crear')->with('success', 'Su solicitud ha sido guardada correctamente con la clave ' . $clave_solicitud . ', recuerde completarla y mandarla a visto bueno.');
             } catch (\Exception $e) {
                 DB::rollback();
                 dd("Error en el catch" . $e);
@@ -351,7 +351,7 @@ class SolicitudesForm extends Component
                         }
                     }
                     DB::commit();
-                    return redirect('/cvu-crear')->with('success', 'Su requerimiento con clave ' . $clave_solicitud . ' ha sido  registrada y se ha enviado para visto bueno.');
+                    return redirect('/cvu-crear')->with('success', 'Su solicitud con clave ' . $clave_solicitud . ' ha sido  registrada y se ha enviado para visto bueno.');
                 } catch (\Exception $e) {
                     DB::rollback();
                     dd("Error en el catch" . $e);
@@ -423,7 +423,7 @@ class SolicitudesForm extends Component
                     }
                     $i = 1;
                     DB::commit();
-                    return redirect('/cvu-crear')->with('success', 'Su requerimiento con clave ' . $clave_solicitud . ' ha sido  registrada y se ha enviado para visto bueno.');
+                    return redirect('/cvu-crear')->with('success', 'Su solicitud con clave ' . $clave_solicitud . ' ha sido  registrada y se ha enviado para visto bueno.');
                 } catch (\Exception $e) {
                     DB::rollback();
                     dd("Error en el catch" . $e);

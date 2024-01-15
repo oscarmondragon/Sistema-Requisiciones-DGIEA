@@ -88,6 +88,9 @@
                             if (!motivoRechazo) {
                                 return "El motivo de rechazo no puede estar vacío.";
                             } else {
+                            if(motivoRechazo.length > 800){
+                              return "El motivo de rechazo es demasiado largo.";
+                            }
                                 return undefined;
                             }
                         }

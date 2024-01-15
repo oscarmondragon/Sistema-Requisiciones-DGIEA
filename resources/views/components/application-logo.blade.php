@@ -1,1 +1,1 @@
-<img src="{{ asset('img/logo_uaem.png') }}" class="fill-current mx-auto">
+<img src="{{ asset('img/logos/logo_uaem.png') }}" class="fill-current mx-auto">

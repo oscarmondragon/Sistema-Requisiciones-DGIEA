@@ -31,11 +31,11 @@ class AdquisicionDescriptionModal extends ModalComponent
 
     //REGLAS DE VALIDACION
     protected $rules = [
-        'descripcion' => 'required|max:255',
+        'descripcion' => 'required|max:3000',
         'cantidad' => 'required|gte:1',
         'precio_unitario' => 'required|gte:1',
         'importe' => 'required',
-        'justificacion_software' => 'required_if:id_rubro_especial,1|max:255',
+        'justificacion_software' => 'required_if:id_rubro_especial,1|max:800',
         'alumnos' => 'required_if:id_rubro_especial,1|gte:0',
         'profesores_invest' => 'required_if:id_rubro_especial,1|gte:0',
         'administrativos' => 'required_if:id_rubro_especial,1|gte:0'
