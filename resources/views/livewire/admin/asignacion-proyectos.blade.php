@@ -339,11 +339,11 @@
                                                                 {{ $proyecto->nameUser->apeMaterno }}
                                                             </td>
                                                         @endif
-                                                        <th class="w-[148px]">
+                                                        <th class="w-[148px] sm:text-center">
                                                             <button type="button"
                                                                 x-on:click="$wire.emit('openModal', 'admin.reasignar-proyecto-modal', { 'id_proyecto': {{ $proyecto->id_proyecto }}, 'id_revisor': {{ $proyecto->id_revisor }}, 'clave_uaem': '{{ $proyecto->clave_uaem }}', 'clave_digcyn': '{{ $proyecto->clave_digcyn }}'})"
-                                                                class="btn-success">
-                                                                Reasignar
+                                                                class="btn-tablas" title="Reasignar proyecto">
+                                                                <img src="{{'img/botones/btn_reasignar.png'}}" alt="Botón Reasignar">
                                                             </button>
                                                         </th>
                                                     </tr>

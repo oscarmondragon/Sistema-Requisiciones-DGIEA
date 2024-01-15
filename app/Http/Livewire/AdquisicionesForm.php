@@ -57,7 +57,6 @@ class AdquisicionesForm extends Component
     public $ruta_archivo = '';
     public $tamanyoDocumentos;
     public $tipoDocumento;
-    public $observacionesVobo = "";
 
     //variables para validar documentos antes de agregarlos al arreglo
     public $cartaExclusividadTemp;
@@ -69,7 +68,7 @@ class AdquisicionesForm extends Component
         'id_rubro' => 'required|not_in:0',
         'bienes' => 'required|array|min:1',
         // regex:/^[a-zA-Z-Z0-9.,$:;#%()\s]+$/u
-        'justificacion_academica' => 'required_if:afecta_investigacion,1|max:255',
+        'justificacion_academica' => 'required_if:afecta_investigacion,1|max:800',
         'docsCartaExclusividad' => 'required_if:exclusividad,1|array',
         'docsCotizacionesFirmadas' => 'required|array|min:1',
         'docsCotizacionesFirmadas.*' => 'required',
@@ -130,7 +129,6 @@ class AdquisicionesForm extends Component
             $this->subtotal = $this->adquisicion->subtotal;
             $this->iva = $this->adquisicion->iva;
             $this->total = $this->adquisicion->total;
-            $this->observacionesVobo = $this->adquisicion->observaciones_vobo;
 
             $this->bienesDB = AdquisicionDetalle::where('id_adquisicion', $id)->get();
             $this->bienes = collect($this->bienesDB)->map(function ($item, $key) {
@@ -336,7 +334,7 @@ class AdquisicionesForm extends Component
                 }
 
                 DB::commit();
-                return redirect('/cvu-crear')->with('success', 'Su requerimiento ha sido guardada correctamente con el número de clave '.  $clave_adquisicion . '. Recuerde completarla y mandarla a visto bueno.');
+                return redirect('/cvu-crear')->with('success', 'Su requerimiento ha sido guardada correctamente con la clave '.  $clave_adquisicion . '. Recuerde completarlo y mandarlo a visto bueno.');
 
             } catch (\Exception $e) {
                 DB::rollback();
@@ -523,7 +521,7 @@ class AdquisicionesForm extends Component
                         }
 
                         DB::commit();
-                        return redirect('/cvu-crear')->with('success', 'Su requerimiento con clave ' . $adquisicion->clave_adquisicion . ' ha sido  actualizada y se ha enviado para visto bueno.');
+                        return redirect('/cvu-crear')->with('success', 'Su requerimiento con clave ' . $adquisicion->clave_adquisicion . ' ha sido  actualizado y se ha enviado para visto bueno.');
 
                     }
                 } catch (\Exception $e) {
@@ -670,7 +668,7 @@ class AdquisicionesForm extends Component
                     }
 
                     DB::commit();
-                    return redirect('/cvu-crear')->with('success', 'Su requerimiento con clave ' . $clave_adquisicion . ' ha sido  registrada y se ha enviado para visto bueno.');
+                    return redirect('/cvu-crear')->with('success', 'Su requerimiento con clave ' . $clave_adquisicion . ' ha sido  registrado y se ha enviado para visto bueno.');
                 } catch (\Exception $e) {
                     //dd("Error en el catch".$e); 
                     DB::rollback();

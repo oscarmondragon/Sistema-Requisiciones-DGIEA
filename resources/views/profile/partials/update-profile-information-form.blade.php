@@ -71,8 +71,9 @@
         </div>
 
         <div class="flex items-center gap-4">
-            <x-primary-button
-                class="bg-verde text-white sm:w-auto w-full">{{ __('Guardar cambios') }}</x-primary-button>
+            <x-secondary-button class="mx-auto rounded-full hover:rounded-full sm:w-auto w-full">
+                {{ __('Guardar cambios') }}
+            </x-secondary-button>
 
             @if (session('status') === 'profile-updated')
                 <p x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"

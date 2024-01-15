@@ -31,7 +31,9 @@
         </div>
 
         <div class="flex items-center gap-4">
-            <x-primary-button class="bg-verde text-white sm:w-auto w-full">{{ __('Guardar contraseña') }}</x-primary-button>
+            <x-secondary-button class="mx-auto rounded-full hover:rounded-full sm:w-auto w-full">
+                {{ __('Guardar contraseña') }}
+            </x-secondary-button>
 
             @if (session('status') === 'password-updated')
                 <p

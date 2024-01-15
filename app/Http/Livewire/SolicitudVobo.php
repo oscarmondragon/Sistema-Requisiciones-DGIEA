@@ -130,6 +130,7 @@ class SolicitudVobo extends Component
             $solicitud = Solicitud::where('id', $this->solicitud->id)->first();
             if ($solicitud) {
                 $clave_solicitud = $solicitud->clave_solicitud;
+                $solicitud->observaciones_vobo = null;
                 $solicitud->estatus_rt = 4;
                 $solicitud->estatus_dgiea = 4;
 
@@ -146,7 +147,7 @@ class SolicitudVobo extends Component
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'error al intentar confirmar visto bueno. Intente más tarde.' . $e->getMessage());
+            return redirect()->back()->with('error', 'Error al intentar confirmar visto bueno. Intente más tarde.' . $e->getMessage());
         }
 
 
@@ -174,7 +175,7 @@ class SolicitudVobo extends Component
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'error al intentar rechazar visto bueno. Intente más tarde.' . $e->getMessage());
+            return redirect()->back()->with('error', 'Error al intentar rechazar visto bueno. Intente más tarde.' . $e->getMessage());
         }
 
     }

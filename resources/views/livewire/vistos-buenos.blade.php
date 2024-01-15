@@ -269,13 +269,9 @@
                                                         @if ($valorvobo->tipo_requerimiento_v == 1)
                                                             <th class="w-[148px] text-center">
                                                                 @if (Session::get('id_user') != $valorvobo->id_emisor)
-                                                                    <a href="{{ route('adquisicion.vobo', $valorvobo->id) }}"
-                                                                        title="Dar visto bueno">
-                                                                        <button class="btn-tablas"
-                                                                            title="Visto bueno">
-                                                                            <img src="{{ '/img/btn_vobo.png' }}"
-                                                                                alt="Image/png"
-                                                                                title="Dar visto bueno">
+                                                                    <a href="{{ route('adquisicion.vobo', $valorvobo->id) }}">
+                                                                        <button class="btn-tablas" title="Dar visto bueno">
+                                                                            <img src="{{ 'img/botones/btn_vobo.png' }}" alt="VoBo">
                                                                         </button>
                                                                     </a>
                                                                 @endif
@@ -283,13 +279,9 @@
                                                         @else
                                                             <th class="w-[148px] text-center">
                                                                 @if (Session::get('id_user') != $valorvobo->id_emisor)
-                                                                    <a href="{{ route('solicitud.vobo', $valorvobo->id) }}"
-                                                                        title="Dar visto bueno">
-                                                                        <button class="btn-tablas"
-                                                                            title="Visto bueno">
-                                                                            <img src="{{ '/img/botones/btn_vobo.png' }}"
-                                                                                alt="VoBo"
-                                                                                title="Dar visto bueno">
+                                                                    <a href="{{ route('solicitud.vobo', $valorvobo->id) }}">
+                                                                        <button class="btn-tablas" title="Dar visto bueno">
+                                                                            <img src="{{ 'img/botones/btn_vobo.png' }}" alt="VoBo">
                                                                         </button>
                                                                     </a>
                                                                 @endif

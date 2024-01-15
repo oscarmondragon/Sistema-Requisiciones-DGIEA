@@ -6,10 +6,21 @@
                 <div>
                     <div class="mb-6">
                         <h1>Formulario adquisición de bienes y servicios</h1>
-                        @if ($observacionesVobo)
+                        @if (isset($adquisicion->observaciones_vobo) || isset($adquisicion->observaciones))
                             <div class="my-4">
-                                <p class="bg-red-100 text-red-500 font-bold py-1 px-2  border-l-2 border-red-500">
-                                    {{ $observacionesVobo }}
+                                <p class="bg-red-100 text-red-500 font-bold py-1 px-2 rounded-sm border border-red-500">
+                                    <svg class="inline-block w-5 h-5 me-3" aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                        <path
+                                            d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                                    </svg>
+                                    @if ($adquisicion->observaciones_vobo)
+                                        Observaciones de rechazo:
+                                    <span class="block pl-12 font-normal"><span class="font-bold">Por visto bueno:</span> {{ $adquisicion->observaciones_vobo }}</span>
+                                    @endif
+                                    @if ($adquisicion->observaciones)
+                                    <span class="block pl-12 font-normal"><span class="font-bold">Por DGIEA: </span> {{ $adquisicion->observaciones }}</span>
+                                    @endif
                                 </p>
                             </div>
                         @endif
@@ -69,7 +80,6 @@
                                         <thead>
                                             <tr class="bg-blanco">
                                                 <th class="w-[26px]">#</th>
-                                                <th class="w-[26px]">id</th>
                                                 <th class="w-[200px]">Descripción</th>
                                                 <th class="w-[80px]">Cantidad</th>
                                                 <th class="w-[80px]">Precio Unitario</th>
@@ -86,8 +96,7 @@
                                             <template x-for="(elemento, index) in elementos" :key="index">
                                                 <tr class="border border-b-gray-200 border-transparent">
                                                     <th class="w-[26px]" x-text="index + 1"></th>
-                                                    <th class="w-[26px]" x-text="elemento._id"></th>
-                                                    <th class="w-[200px]" x-text="elemento.descripcion"></th>
+                                                    <th class="w-[200px]" x-text="elemento.descripcion.length > 85 ? elemento.descripcion.substring(0,85) + '...' : elemento.descripcion"></th>
                                                     <th class="w-[80px]" x-text="elemento.cantidad"></th>
                                                     <th class="w-[80px]" x-text="elemento.precio_unitario"></th>
                                                     <th class="w-[80px]" x-text="elemento.iva"></th>
@@ -109,14 +118,14 @@
                           alumnos: elemento.alumnos, profesores_invest: elemento.profesores_invest, administrativos: elemento.administrativos, id_rubro: id_rubro,
                           id_rubro_especial: {{ $id_rubro_especial ?: 'null' }} })'
                                                             class="btn-tablas">
-                                                            <img src="{{ '/img/botones/btn_editar.png' }}" alt="Image/png"
-                                                                title="Editar">
+                                                            <img src="{{ '/img/botones/btn_editar.png' }}"
+                                                                alt="Image/png" title="Editar">
                                                         </button>
                                                         <button type="button"
                                                             @click.stop="elementos.splice(index, 1); $wire.deleteBien(elemento)"
                                                             class="btn-tablas">
-                                                            <img src="{{ '/img/botones/btn_eliminar.png' }}" alt="Image/png"
-                                                                title="Eliminar">
+                                                            <img src="{{ '/img/botones/btn_eliminar.png' }}"
+                                                                alt="Image/png" title="Eliminar">
                                                         </button>
                                                     </th>
                                                 </tr>
