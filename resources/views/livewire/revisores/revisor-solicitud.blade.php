@@ -11,20 +11,7 @@
                         <div>
                             <h1 class="mt-3">Revisión para solicitud con clave: <span
                                     class="text-dorado">{{ $solicitud->clave_solicitud }}</span></h1>
-                            <h2 class="text-dorado">{{ $clave == null ? '' : 'Clave SIIA: ' . $clave }}</h2>
-                            @if ($queryObservaciones)
-                                <div class="my-4">
-                                    <p class="bg-red-100 text-red-500 font-bold py-1 px-2 rounded-sm border border-red-500">
-                                        <svg class="inline-block w-5 h-5 me-3" aria-hidden="true"
-                                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                            <path
-                                                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
-                                        </svg>
-                                        Observaciones o motivo de rechazo:
-                                        <span class="block pl-12 font-normal">{{ $queryObservaciones }}</span>
-                                    </p>
-                                </div>
-                            @endif
+                            <h2 class="text-dorado">{{ $clave == null ? '' : 'Clave SIIA: ' . $clave }}</h2>                            
                             <form x-on:submit.prevent="saveConfirmation">
                                 @csrf
                                 <div x-data="{ open: false }">

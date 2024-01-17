@@ -77,7 +77,7 @@
                                                         <td> {{ $valor->id_requerimiento }}</td>
                                                         <td> {{ $valor->claveSIIA }}</td>
                                                         <td> {{ $valor->nombre_cuenta }}</td>
-                                                        <td> {{ $valor->concepto }}</td>
+                                                        <td> {{ strlen($valor->concepto) > 85 ? substr($valor->concepto, 0, 85) . '...' : $valor->concepto}} </td>
                                                         <td> {{ $valor->req }}</td>
                                                         <td class="sm:text-center">
                                                             @if ($valor->color_estado == 'VERDE')
@@ -115,7 +115,7 @@
 
 
                                                         <td> {{ $valor->modificacion }}</td>
-                                                        <td> {{ $valor->observaciones }}</td>
+                                                        <td> {{ strlen($valor->observaciones) > 85 ? substr($valor->observaciones, 0, 85) . '...' : $valor->observaciones}} </td>
                                                         <th>
                                                             @if ($valor->tipo_requerimiento == 1)
                                                                 @if ($valor->id_estatus == 5 and Session::get('id_user') == $valor->emisor)

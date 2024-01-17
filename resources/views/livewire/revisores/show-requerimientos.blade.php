@@ -116,7 +116,7 @@
                                                     <tr class="border-b-gray-200 border-transparent">
                                                         <td> {{ $requerimiento->id_requerimiento }} </td>
                                                         <td> {{ $requerimiento->clave_siia }} </td>
-                                                        <td> {{ $requerimiento->concepto }} </td>
+                                                        <td> {{ strlen($requerimiento->concepto) > 80 ?  substr($requerimiento->concepto, 0, 80) . '...' : $requerimiento->concepto}} </td>
                                                         <td>
                                                             {{ $requerimiento->clave_digcyn == null ? $requerimiento->clave_uaem : $requerimiento->clave_digcyn }}
                                                         </td>
