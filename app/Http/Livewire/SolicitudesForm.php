@@ -113,16 +113,16 @@ class SolicitudesForm extends Component
 
     protected $rules = [
         'id_rubro' => 'required|not_in:0',
-        'monto_total' => 'required|lte:35000|gte:1',
+        'monto_total' => 'required|lte:35000|gte:1|regex:/^[\d]{0,10}(\.[\d]{1,2})?$/',
         'nombre_expedido' => 'required',
         'docsbitacoraPdf' => 'required_if:id_rubro_especial,3',
         'tipo_comprobacion' => 'required_if:id_rubro_especial,3',
         //'comprobacion' => 'required_unless:tipo_comprobacion,"vale"|accepted_if:tipo_comprobacion,"ficha"',
         'aviso_privacidad' => 'accepted',
         'vobo' => 'accepted',
-        'concepto' => 'required',
+        'concepto' => 'required|max:800',
         //regex:/^[a-zA-Z-Z0-9.,$:;#%()\s]+$/u|
-        'justificacionS' => 'required|max:255|max:800',
+        'justificacionS' => 'required|max:800',
         'finicial' => 'nullable|date|required_if:id_rubro_especial,2|after_or_equal:14 days',
         'ffinal' => 'nullable|date|required_if:id_rubro_especial,2|after_or_equal:finicial',
     ];
@@ -130,8 +130,9 @@ class SolicitudesForm extends Component
         'id_rubro.required' => 'Debe seleccionar un rubro.',
         'id_rubro.not_in' => 'Debe seleccionar un rubro.',
         'monto_total.required' => 'El monto no puede estar vacío.',
-        'monto_total.lte' => 'El monto no puede ser mayor a $35000.',
+        'monto_total.lte' => 'El monto no puede ser mayor a $35,000.',
         'monto_total.gte' => 'El monto no puede ser menor o igual a 0.',
+        'monto_total.regex' => 'El monto no es valido.',
         'nombre_expedido.required' => 'El nombre de quien expide no puede estar vacío',
         'docsbitacoraPdf.required_if' => 'Debe adjuntar la bitacora.',
         'bitacoraPdfTemp' => 'Solo puedes adjuntar archivos con extensión pdf ',
@@ -143,6 +144,7 @@ class SolicitudesForm extends Component
         'aviso_privacidad.accepted' => 'Debe de aceptar el aviso de privacidad.',
         'vobo.accepted' => 'Debe dar el visto bueno.',
         'concepto.required' => 'El concepto no puede estar vacío.',
+        'concepto.max' => 'El concepto es demasiado largo.',
         'importe.required' => 'El importe no puede estar vacío.',
         'justificacionS.required' => 'La justificación no puede estar vacía.',
         'justificacionS.max' => 'La justificación es demasiado larga.',    

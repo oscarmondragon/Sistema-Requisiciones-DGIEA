@@ -6,8 +6,8 @@
             <path
                 d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
         </svg>
+        Observaciones de rechazo:
         @if ($adquisicion->observaciones_vobo)
-            Observaciones de rechazo:
         <span class="block pl-12 font-normal"><span class="font-bold">Por visto bueno:</span> {{ $adquisicion->observaciones_vobo }}</span>
         @endif
         @if ($adquisicion->observaciones)
@@ -54,7 +54,8 @@
             <template x-for="(elemento, index) in elementos" :key="index">
             <tr class="border border-b-gray-200 border-transparent">
                 <th class="w-[26px]" x-text="index + 1"> </th>
-                <th class="w-[200px]" x-text="elemento.descripcion"> </th>
+                {{-- :title="elemento.descripcion" --}}
+                <th class="w-[200px]" x-text="elemento.descripcion.length > 85 ? elemento.descripcion.substring(0,85) + '...' : elemento.descripcion"> </th>
                 <th class="w-[80px]" x-text="elemento.cantidad"> </th>
                 <th class="w-[80px]" x-text="elemento.precio_unitario"> </th>
                 <th class="w-[80px]" x-text="elemento.iva"> </th>

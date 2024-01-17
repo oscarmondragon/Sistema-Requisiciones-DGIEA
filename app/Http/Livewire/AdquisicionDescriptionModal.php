@@ -32,13 +32,13 @@ class AdquisicionDescriptionModal extends ModalComponent
     //REGLAS DE VALIDACION
     protected $rules = [
         'descripcion' => 'required|max:3000',
-        'cantidad' => 'required|gte:1',
-        'precio_unitario' => 'required|gte:1',
+        'cantidad' => 'required|gte:1|regex:/^[\d]{0,10}?$/',
+        'precio_unitario' => 'required|gte:1|regex:/^[\d]{0,10}(\.[\d]{1,2})?$/',
         'importe' => 'required',
         'justificacion_software' => 'required_if:id_rubro_especial,1|max:800',
-        'alumnos' => 'required_if:id_rubro_especial,1|gte:0',
-        'profesores_invest' => 'required_if:id_rubro_especial,1|gte:0',
-        'administrativos' => 'required_if:id_rubro_especial,1|gte:0'
+        'alumnos' => 'required_if:id_rubro_especial,1|gte:0|regex:/^[\d]{0,7}?$/',
+        'profesores_invest' => 'required_if:id_rubro_especial,1|gte:0|regex:/^[\d]{0,7}?$/',
+        'administrativos' => 'required_if:id_rubro_especial,1|gte:0|regex:/^[\d]{0,7}?$/'
 
     ];
 
@@ -48,18 +48,23 @@ class AdquisicionDescriptionModal extends ModalComponent
         'descripcion.max' => 'La descripción es demasiado larga.',
         'cantidad.required' => 'La cantidad no puede estar vacía.',
         'cantidad.gte' => 'La cantidad no puede ser menor a 1.',
+        'cantidad.regex' => 'La cantidad no es valida.',
         'precio_unitario.required' => 'El precio unitario no puede estar vacío.',
         'precio_unitario.gte' => 'El precio unitario no puede ser menor a 1.',
+        'precio_unitario.regex' => 'El precio unitario no es valido.',
         'importe.required' => 'El importe no puede estar vacío.',
         'justificacion_software.required_if' => 'La justificación no puede estar vacía.',
         'justificacion_software.max' => 'La justificación es demasiado larga.',
         'alumnos.required_if' => 'El número de alumnos no puede estar vacío.',
         'alumnos.gte' => 'El número de alumnos no puede ser negativo.',
+        'alumnos.regex' => 'El número de alumnos no es valido.',
         'profesores_invest.required' => 'El número de profesores no puede estar vacío.',
         'profesores_invest.required_if' => 'El número de profesores no puede estar vacío.',
         'profesores_invest.gte' => 'El número de profesores no puede ser negativo.',
+        'profesores_invest.regex' => 'El número de profesores no es valido.',
         'administrativos.required_if' => 'El número de los administrativos no puede estar vacío.',
         'administrativos.gte' => 'El número de administrativos no puede ser negativo.',
+        'administrativos.regex' => 'El número de administrativos no es valido.',
 
     ];
     public function render()
