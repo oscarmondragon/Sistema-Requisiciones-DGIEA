@@ -334,7 +334,7 @@ class AdquisicionesForm extends Component
                 }
 
                 DB::commit();
-                return redirect('/cvu-crear')->with('success', 'Su requerimiento ha sido guardada correctamente con la clave '.  $clave_adquisicion . '. Recuerde completarlo y mandarlo a visto bueno.');
+                return redirect('/cvu-crear')->with('success', 'Su requerimiento ha sido guardada correctamente con la clave ' . $clave_adquisicion . '. Recuerde completarlo y mandarlo a visto bueno.');
 
             } catch (\Exception $e) {
                 DB::rollback();
@@ -786,6 +786,7 @@ class AdquisicionesForm extends Component
 
     public function deleteBien($bien)
     {
+
         //EL BIEN SE ESTA ELIMINANDO CON ALPINEJS desde el front
         //actualizamos valores de subtotal, iva y total (restamos el anterior valor)
         $this->subtotal -= $bien['cantidad'] * $bien['precio_unitario'];
@@ -793,6 +794,22 @@ class AdquisicionesForm extends Component
         $this->iva -= $bien['iva'];
         //$this->iva = round($this->iva, $precision = 2, $mode = PHP_ROUND_HALF_UP);
         $this->total -= $bien['importe'];
+
+        //Comprobamos si el bien ya esta en bd para eliminarlo y actualizar datos   
+        if (isset($bien['id'])) {
+            $bienBd = AdquisicionDetalle::findOrFail($bien['id']);
+            if ($bienBd) { // si lo encuentra lo eliminamos
+                //Buscamos la adquisicion para actualizar iva, importe y total
+                $adquisicionBuscada = Adquisicion::findOrFail($bien['id_adquisicion']);
+                if ($adquisicionBuscada) {
+                    $adquisicionBuscada->update(['subtotal' => $this->subtotal, 'iva' => $this->iva, 'total' => $this->total]);
+
+                }
+                //Por ultimo eliminamos el bien
+                $bienBd->delete();
+            }
+        }
+
 
         //$this->total = round($this->total, $precision = 2, $mode = PHP_ROUND_HALF_UP);
 
