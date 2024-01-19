@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
-
+use Illuminate\Http\Request;
 
 class AdquisicionesForm extends Component
 {
@@ -69,9 +69,8 @@ class AdquisicionesForm extends Component
         'bienes' => 'required|array|min:1',
         // regex:/^[a-zA-Z-Z0-9.,$:;#%()\s]+$/u
         'justificacion_academica' => 'required_if:afecta_investigacion,1|max:800',
-        'docsCartaExclusividad' => 'required_if:exclusividad,1|array',
+        'docsCartaExclusividad' => 'required_if:exclusividad,1|array|min:1',
         'docsCotizacionesFirmadas' => 'required|array|min:1',
-        'docsCotizacionesFirmadas.*' => 'required',
         'docsCotizacionesPdf' => 'required|array|min:1',
         'vobo' => 'accepted'
     ];
@@ -85,7 +84,7 @@ class AdquisicionesForm extends Component
         'justificacion_academica.max' => 'La justificación académica es demasiado larga.',
         'docsCartaExclusividad.required_if' => 'Debe adjuntar la carta de exclusividad.',
         'docsCartaExclusividad.array' => 'Debe adjuntar la carta de exclusividad.',
-        //'docsCartaExclusividad.min' => 'Debe adjuntar por lo menos una carta de exclusividad.',
+        'docsCartaExclusividad.min' => 'Debe adjuntar por lo menos una carta de exclusividad.',
         'docsCotizacionesFirmadas.required' => 'Debe adjuntar por lo menos una cotización PDF firmada.',
         'docsCotizacionesFirmadas.array' => 'Debe adjuntar por lo menos una cotización PDF firmada.',
         'docsCotizacionesFirmadas.min' => 'Debe adjuntar por lo menos una cotización PDF firmada.',
@@ -93,14 +92,7 @@ class AdquisicionesForm extends Component
         'docsCotizacionesPdf.array' => 'Debe adjuntar por lo menos una cotización PDF firmada.',
         'docsCotizacionesPdf.min' => 'Debe adjuntar por lo menos una cotización PDF firmada.',
         'vobo.accepted' => 'Debe dar el visto bueno.',
-        'cartaExclusividadTemp.max' => 'El documento no debe pesar más de 2MB.',
-        'cartaExclusividadTemp.mimes' => 'Debe adjuntar documentos con extensión .pdf unicamente',
-        'cotizacionFirmadaTemp.max' => 'El documento no debe pesar más de 2MB.',
-        'cotizacionFirmadaTemp.mimes' => 'Debe adjuntar documentos con extensión .pdf unicamente',
-        'cotizacionPdfTemp.max' => 'El documento no debe pesar más de 2MB.',
-        'cotizacionPdfTemp.mimes' => 'Debe adjuntar documentos con extensión .pdf unicamente',
-        'anexoOtroTemp.max' => 'El documento no debe pesar más de 2MB.',
-        'anexoOtroTemp.mimes' => 'Debe adjuntar documentos con extensión .pdf unicamente',
+
 
     ];
     public $listeners = [
@@ -110,9 +102,11 @@ class AdquisicionesForm extends Component
         'eliminarArchivo'
     ];
 
-    public function mount($id = 0)
+    public function mount(Request $request, $id = 0)
     {
-        $this->referer = $_SERVER['HTTP_REFERER'];
+
+        // dd($request->path());
+        $this->referer = $request->path();
         $this->tamanyoDocumentos = env('TAMANYO_MAX_DOCS', 2048);
         $this->tipoDocumento = env('DOCUMENTOS_PERMITIDOS', 'pdf');
         $this->cuentasContables = CuentaContable::where('estatus', 1)->whereIn('tipo_requisicion', [1, 3])->get();
@@ -976,6 +970,9 @@ class AdquisicionesForm extends Component
     {
         $validatedData = $this->validate([
             'cartaExclusividadTemp' => 'mimes:' . $this->tipoDocumento . '|max:' . $this->tamanyoDocumentos . '',
+        ], [
+            'cartaExclusividadTemp.mimes' => 'Debe adjuntar documentos únicamente con extensión: ' . $this->tipoDocumento,
+            'cartaExclusividadTemp.max' => 'El tamaño del documento no puede ser mayor a ' . $this->tamanyoDocumentos,
         ]);
 
         // Validar si la validación fue exitosa antes de agregar los archivos al arreglo
@@ -1005,6 +1002,9 @@ class AdquisicionesForm extends Component
         //dd($this->tipoDocumento);
         $validatedData = $this->validate([
             'cotizacionFirmadaTemp' => 'mimes:' . $this->tipoDocumento . '|max:' . $this->tamanyoDocumentos . '',
+        ], [
+            'cotizacionFirmadaTemp.mimes' => 'Debe adjuntar documentos únicamente con extensión: ' . $this->tipoDocumento,
+            'cotizacionFirmadaTemp.max' => 'El tamaño del documento no puede ser mayor a ' . $this->tamanyoDocumentos,
         ]);
 
         // Validar si la validación fue exitosa antes de agregar los archivos al arreglo
@@ -1033,6 +1033,9 @@ class AdquisicionesForm extends Component
     {
         $validatedData = $this->validate([
             'cotizacionPdfTemp' => 'mimes:' . $this->tipoDocumento . '|max:' . $this->tamanyoDocumentos . '',
+        ], [
+            'cotizacionPdfTemp.mimes' => 'Debe adjuntar documentos únicamente con extensión: ' . $this->tipoDocumento,
+            'cotizacionPdfTemp.max' => 'El tamaño del documento no puede ser mayor a ' . $this->tamanyoDocumentos,
         ]);
 
         // Validar si la validación fue exitosa antes de agregar los archivos al arreglo
@@ -1061,6 +1064,9 @@ class AdquisicionesForm extends Component
     {
         $validatedData = $this->validate([
             'anexoOtroTemp' => 'mimes:' . $this->tipoDocumento . '|max:' . $this->tamanyoDocumentos . '',
+        ], [
+            'anexoOtroTemp.mimes' => 'Debe adjuntar documentos únicamente con extensión: ' . $this->tipoDocumento,
+            'anexoOtroTemp.max' => 'El tamaño del documento no puede ser mayor a ' . $this->tamanyoDocumentos,
         ]);
 
         // Validar si la validación fue exitosa antes de agregar los archivos al arreglo

@@ -226,7 +226,7 @@ use Carbon\Carbon;
                             @endempty
                             <button type="submit" @click="saveConfirmationVoBo()"
                                 class="btn-primary sm:w-auto w-5/6">Enviar para VoBo</button>
-                            @if (str_contains($referer, 'vobo') || str_contains($referer, 'crear'))
+                            @if (str_contains($referer, 'editar') || str_contains($referer, 'crear'))
                                 <button type="button" @click="cancelarSolicitud()"
                                     class="btn-warning sm:w-auto w-5/6">Cancelar</button>
                             @else
@@ -305,10 +305,22 @@ use Carbon\Carbon;
 
         }).then((result) => {
             if (result.isConfirmed) {
-                if (window.location == "{{ route('cvu.create-solicitudes') }}") {
-                    window.location.href = '{{ route('cvu.create') }}'
-                } else {
-                    window.location.href = '{{ route('cvu.vobo') }}'
+
+
+                var currentUrl = window.location.href;
+
+                var reglaSeguimiento = /solicitudesS\/\d+\/editar/;
+                var reglaVobo = /solicitudes\/\d+\/editar/;
+
+                if (window.location == "{{ route('cvu.create-solicitudes') }}"){
+                    window.location.href = '{{ route('cvu.create') }}';
+
+                } else if (currentUrl.match(reglaSeguimiento)) {
+                    window.location.href = '{{ route('cvu.seguimiento') }}';
+                } else if(currentUrl.match(reglaVobo)){
+                    window.location.href = '{{ route('cvu.vobo') }}';
+                }else {
+                    window.location.href = '{{ route('cvu.vobo') }}';
                 }
             }
 

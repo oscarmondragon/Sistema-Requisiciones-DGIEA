@@ -18,6 +18,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 
 use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Http\Request;
 
 
 class SolicitudesForm extends Component
@@ -74,9 +75,9 @@ class SolicitudesForm extends Component
         return view('livewire.solicitudes-form')->layout('layouts.cvu');
     }
 
-    public function mount($id = 0)
+    public function mount(Request $request, $id = 0)
     {
-        $this->referer = $_SERVER['HTTP_REFERER'];
+        $this->referer = $request->path();
         $this->cuentasContables = CuentaContable::where('estatus', 1)->whereIn('tipo_requisicion', [2, 3])->get();
         $this->nombre_expedido = Session::get('name_rt');
         $this->tamanyoDocumentos = env('TAMANYO_MAX_DOCS', 2048);
@@ -135,8 +136,6 @@ class SolicitudesForm extends Component
         'monto_total.regex' => 'El monto no es valido.',
         'nombre_expedido.required' => 'El nombre de quien expide no puede estar vacío',
         'docsbitacoraPdf.required_if' => 'Debe adjuntar la bitacora.',
-        'bitacoraPdfTemp' => 'Solo puedes adjuntar archivos con extensión pdf ',
-        'bitacoraPdfTemp.max' => 'El archivo no debe pesar mas de 2MB',
         //'comprobacion.required_unless' => 'Debe de aceptar la condición.',
         //'comprobacion.accepted_if' => 'Debe de aceptar la condición seleccionela.',
         'comprobacion.accepted' => 'Debe de aceptar la condición seleccionela.',
@@ -147,7 +146,7 @@ class SolicitudesForm extends Component
         'concepto.max' => 'El concepto es demasiado largo.',
         'importe.required' => 'El importe no puede estar vacío.',
         'justificacionS.required' => 'La justificación no puede estar vacía.',
-        'justificacionS.max' => 'La justificación es demasiado larga.',    
+        'justificacionS.max' => 'La justificación es demasiado larga.',
         'finicial.required_if' => 'La fecha inicial no puede estar vacía.',
         'finicial.after_or_equal' => 'La fecha inicial debe ser una fecha posterior o igual a 15 días.',
         'ffinal.required_if' => 'La fecha final no puede estar vacía.',
@@ -494,9 +493,15 @@ class SolicitudesForm extends Component
 
     public function updatedbitacoraPdfTemp()
     {
-        $validatedData = $this->validate([
-            'bitacoraPdfTemp' => 'mimes:' . $this->tipoDocumento . '|max:' . $this->tamanyoDocumentos . '',
-        ]);
+        $validatedData = $this->validate(
+            [
+                'bitacoraPdfTemp' => 'mimes:' . $this->tipoDocumento . '|max:' . $this->tamanyoDocumentos . '',
+            ],
+            [
+                'bitacoraPdfTemp.mimes' => 'Debe adjuntar documentos únicamente con extensión: ' . $this->tipoDocumento,
+                'bitacoraPdfTemp.max' => 'El tamaño del documento no puede ser mayor a ' . $this->tamanyoDocumentos,
+            ]
+        );
 
         // Validar si la validación fue exitosa antes de agregar los archivos al arreglo
         if (isset($validatedData['bitacoraPdfTemp'])) {

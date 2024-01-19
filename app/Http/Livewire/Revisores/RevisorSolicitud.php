@@ -12,6 +12,7 @@ use App\Models\EstatusRequisiciones;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
 
 class RevisorSolicitud extends Component
 {
@@ -89,9 +90,9 @@ class RevisorSolicitud extends Component
         'save',
     ];
 
-    public function mount($id = 0)
+    public function mount(Request $request, $id = 0)
     {
-        $this->referer = $_SERVER['HTTP_REFERER'];
+        $this->referer = $request->path();
         $this->solicitud = Solicitud::find($id);
 
         $this->estatusSolicitud = $this->solicitud->estatus_dgiea;
@@ -113,7 +114,7 @@ class RevisorSolicitud extends Component
             $this->clave = null;
         }
 
-        $this->queryObservaciones = Solicitud::select('id','observaciones')->where('id', $this->id_solicitud)->first();
+        $this->queryObservaciones = Solicitud::select('id', 'observaciones')->where('id', $this->id_solicitud)->first();
         $this->queryObservaciones = $this->queryObservaciones->observaciones;
 
         $this->id_rubro = $this->solicitud->id_rubro;

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
 
 
 
@@ -50,9 +51,9 @@ class AdquisicionVobo extends Component
         'vobo.accepted' => 'Debe dar el visto bueno.'
     ];
 
-    public function mount($id = 0)
+    public function mount(Request $request, $id = 0)
     {
-        $this->referer = $_SERVER['HTTP_REFERER'];
+        $this->referer = $request->path();
         // dd($referer);
         $this->adquisicion = Adquisicion::find($id);
 
