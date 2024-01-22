@@ -392,7 +392,7 @@
                             @endempty
                             <button type="submit" @click="saveConfirmationVoBo()"
                                 class="btn-primary sm:w-auto w-5/6">Enviar para VoBo</button>
-                            @if (str_contains($referer, 'vobo') || str_contains($referer, 'crear'))
+                            @if (str_contains($referer, 'editar') || str_contains($referer, 'crear'))
                                 <button type="button" @click="cancelarAdquisicion()"
                                     class="btn-warning sm:w-auto w-5/6">Cancelar</button>
                             @else
@@ -470,11 +470,23 @@
                         }).then((result) => {
                             if (result.isConfirmed) {
                                 //alert(window.location + "\n" + "{{ route('cvu.create-adquisiciones') }}");
-                                if (window.location == "{{ route('cvu.create-adquisiciones') }}") {
-                                    window.location.href = '{{ route('cvu.create') }}'
-                                } else {
-                                    window.location.href = '{{ route('cvu.vobo') }}'
+
+                                var currentUrl = window.location.href;
+
+                                var reglaSeguimiento = /adquisicionesS\/\d+\/editar/;
+                                var reglaVobo = /adquisiciones\/\d+\/editar/;
+
+                                if (window.location == "{{ route('cvu.create-adquisiciones') }}"){
+                                    window.location.href = '{{ route('cvu.create') }}';
+
+                                } else if (currentUrl.match(reglaSeguimiento)) {
+                                    window.location.href = '{{ route('cvu.seguimiento') }}';
+                                } else if(currentUrl.match(reglaVobo)){
+                                    window.location.href = '{{ route('cvu.vobo') }}';
+                                }else {
+                                    window.location.href = '{{ route('cvu.vobo') }}';
                                 }
+
                             }
                         });
                     }

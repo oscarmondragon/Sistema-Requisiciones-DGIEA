@@ -12,6 +12,7 @@ use App\Models\Documento;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
 
 class SolicitudVobo extends Component
 {
@@ -70,9 +71,9 @@ class SolicitudVobo extends Component
         'vobo.accepted' => 'Debe dar el visto bueno.'
     ];
 
-    public function mount($id = 0)
+    public function mount(Request $request, $id = 0)
     {
-        $this->referer = $_SERVER['HTTP_REFERER'];
+        $this->referer = $request->path();
         $this->solicitud = Solicitud::find($id);
 
         $this->cuentasContables = CuentaContable::where('estatus', 1)->whereIn('tipo_requisicion', [2, 3])->get();

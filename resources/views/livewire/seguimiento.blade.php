@@ -77,7 +77,13 @@
                                                         <td> {{ $valor->id_requerimiento }}</td>
                                                         <td> {{ $valor->claveSIIA }}</td>
                                                         <td> {{ $valor->nombre_cuenta }}</td>
-                                                        <td> {{ strlen($valor->concepto) > 85 ? substr($valor->concepto, 0, 85) . '...' : $valor->concepto}} </td>
+                                                        <td>
+                                                                @if(strlen($valor->concepto) > 0)
+                                                                    {{ strlen($valor->concepto) > 85 ? substr($valor->concepto, 0, 85) . '...' : $valor->concepto}}
+                                                                @else
+                                                                    {{ $valor->nombre_cuenta }}
+                                                                @endif
+                                                        </td>
                                                         <td> {{ $valor->req }}</td>
                                                         <td class="sm:text-center">
                                                             @if ($valor->color_estado == 'VERDE')

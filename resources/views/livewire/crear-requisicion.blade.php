@@ -8,12 +8,12 @@
             <option value="0">Selecciona un opción</option>
             @foreach ($tiposRequisicion as $tipoRequisicion)
               @if(Session::get('iniciar_captura')==0)
-                <option value="{{ $tipoRequisicion->id }}" disabled>{{ $tipoRequisicion->descripcion }}</option>
+                <option @class('text-gray-400') value="{{ $tipoRequisicion->id }}" disabled>{{ $tipoRequisicion->descripcion }}</option>
               @else 
                 @if(Session::get('tiempo_restante_solicitudes') == "") 
                   <option value="{{ $tipoRequisicion->id }}">{{ $tipoRequisicion->descripcion }}</option>
                 @elseif((Session::get('tiempo_restante_solicitudes') < 0 and $tipoRequisicion ->id ==2) || (Session::get('tiempo_restante_adquisiciones') < 0 and $tipoRequisicion ->id==1))
-                    <option value="{{ $tipoRequisicion->id }}" disabled>{{ $tipoRequisicion->descripcion }}</option>
+                    <option @class('text-gray-400') value="{{ $tipoRequisicion->id }}" disabled>{{ $tipoRequisicion->descripcion }}</option>
                 @else
                     <option value="{{ $tipoRequisicion->id }}">{{ $tipoRequisicion->descripcion }}</option>
                 @endif

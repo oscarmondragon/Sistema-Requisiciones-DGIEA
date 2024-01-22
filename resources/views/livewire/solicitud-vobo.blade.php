@@ -50,7 +50,7 @@
                     customClass: {
                         title: 'swal2-title'
                     },
-                    title: '¿Estás seguro de enviar tu solicitud?',
+                    title: '¿Confirmar VoBo?',
                     icon: 'warning',
                     iconColor: '#9D9361',
                     showCancelButton: true,
