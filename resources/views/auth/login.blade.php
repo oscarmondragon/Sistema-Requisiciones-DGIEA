@@ -27,7 +27,7 @@
                 <span>
                     <img src="{{ asset('img/iconos/ic_lock.png') }}" alt="Icono" class="ic_login">
                 </span>
-                <x-text-input id="password" class="input_login pl-11" type="password" name="password" placeholder="Contraseña" required autocomplete="current-password" />
+                <x-text-input id="password" class="input_login pl-11" type="password" name="password" placeholder="Contraseña" required autocomplete="off" />
                 @error('email') <span class="text-red-600 block text-center mt-4">{{ $message }}</span> @enderror
                 <!-- <x-input-error :messages="$errors->get('password')" class="mt-2" /> -->
             </div>
