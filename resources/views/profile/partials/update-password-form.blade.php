@@ -14,19 +14,19 @@
 
         <div>
             <x-input-label for="current_password" :value="__('Contraseña actual:')" />
-            <x-text-input id="current_password" name="current_password" type="password" class="mt-1 block w-full bg-blanco text-textos_generales" autocomplete="current-password" placeholder="Contraseña actual"/>
+            <x-text-input id="current_password" name="current_password" type="password" class="mt-1 block w-full bg-blanco text-textos_generales" autocomplete="off" placeholder="Contraseña actual"/>
             <x-input-error :messages="$errors->updatePassword->get('current_password')" class="mt-2" />
         </div>
 
         <div>
             <x-input-label for="password" :value="__('Nueva contraseña:')" />
-            <x-text-input id="password" name="password" type="password" class="mt-1 block w-full bg-blanco text-textos_generales" autocomplete="new-password" placeholder="Nueva contraseña"/>
+            <x-text-input id="password" name="password" type="password" class="mt-1 block w-full bg-blanco text-textos_generales" autocomplete="off" placeholder="Nueva contraseña"/>
             <x-input-error :messages="$errors->updatePassword->get('password')" class="mt-2" />
         </div>
 
         <div>
             <x-input-label for="password_confirmation" :value="__('Confirmar contraseña:')" />
-            <x-text-input id="password_confirmation" name="password_confirmation" type="password" class="mt-1 block w-full bg-blanco text-textos_generales" autocomplete="new-password" placeholder="Confirmar contraseña"/>
+            <x-text-input id="password_confirmation" name="password_confirmation" type="password" class="mt-1 block w-full bg-blanco text-textos_generales" autocomplete="off" placeholder="Confirmar contraseña"/>
             <x-input-error :messages="$errors->updatePassword->get('password_confirmation')" class="mt-2" />
         </div>
 
