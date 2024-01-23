@@ -114,7 +114,7 @@
                                                     <th class="w-[148px]">
                                                         <button type="button"
                                                             @click='$wire.emit("openModal", "adquisicion-description-modal",
-                        { _id: elemento._id, descripcion: elemento.descripcion, cantidad: elemento.cantidad, precio_unitario: elemento.precio_unitario, iva: elemento.iva, checkIva: elemento.checkIva, importe: elemento.importe, justificacion_software: elemento.justificacion_software,
+                        { _id: elemento._id, descripcion: elemento.descripcion, cantidad: elemento.cantidad, precio_unitario: elemento.precio_unitario, iva: elemento.iva, checkIva: elemento.checkIva == 1 ? elemento.checkIva : 0, importe: elemento.importe, justificacion_software: elemento.justificacion_software,
                           alumnos: elemento.alumnos, profesores_invest: elemento.profesores_invest, administrativos: elemento.administrativos, id_rubro: id_rubro,
                           id_rubro_especial: {{ $id_rubro_especial ?: 'null' }} })'
                                                             class="btn-tablas">
@@ -212,12 +212,12 @@
                                 <div class="mt-2">
                                     <label class="inline-flex items-center">
                                         <input type="radio" x-model="exclusividadSelectedOption"
-                                            wire:model='exclusividad' name="siExclusivo" value="1">
+                                            wire:model='exclusividad'   name="siExclusivo" value="1">
                                         <span class="ml-2">Si</span>
                                     </label>
                                     <label class="inline-flex items-center ml-6">
                                         <input type="radio" x-model="exclusividadSelectedOption"
-                                            wire:model='exclusividad' wire:click="resetdocsCartaExclusividad"
+                                            wire:model='exclusividad' wire:click="resetdocsCartaExclusividad(@isset($adquisicion->id)@endisset)"
                                             name="noExclusivo" value="0" checked>
                                         <span class="ml-2">No</span>
                                     </label>

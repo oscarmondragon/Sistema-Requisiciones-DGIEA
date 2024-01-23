@@ -47,7 +47,7 @@ class AdquisicionesForm extends Component
     public $estatus_general;
     public $observaciones;
     public $subtotal = 0;
-    public $iva = 0;
+    public $iva;
     public $total = 0;
     public $bienes;
     public $docsCartaExclusividad = [];
@@ -69,7 +69,7 @@ class AdquisicionesForm extends Component
         'bienes' => 'required|array|min:1',
         // regex:/^[a-zA-Z-Z0-9.,$:;#%()\s]+$/u
         'justificacion_academica' => 'required_if:afecta_investigacion,1|max:800',
-        'docsCartaExclusividad' => 'required_if:exclusividad,1|array|min:1',
+        'docsCartaExclusividad' => 'required_if:exclusividad,1|array',
         'docsCotizacionesFirmadas' => 'required|array|min:1',
         'docsCotizacionesPdf' => 'required|array|min:1',
         'vobo' => 'accepted'
@@ -84,7 +84,6 @@ class AdquisicionesForm extends Component
         'justificacion_academica.max' => 'La justificación académica es demasiado larga.',
         'docsCartaExclusividad.required_if' => 'Debe adjuntar la carta de exclusividad.',
         'docsCartaExclusividad.array' => 'Debe adjuntar la carta de exclusividad.',
-        'docsCartaExclusividad.min' => 'Debe adjuntar por lo menos una carta de exclusividad.',
         'docsCotizacionesFirmadas.required' => 'Debe adjuntar por lo menos una cotización PDF firmada.',
         'docsCotizacionesFirmadas.array' => 'Debe adjuntar por lo menos una cotización PDF firmada.',
         'docsCotizacionesFirmadas.min' => 'Debe adjuntar por lo menos una cotización PDF firmada.',
@@ -961,11 +960,20 @@ class AdquisicionesForm extends Component
         $this->justificacion_academica = '';
     }
 
-    public function resetdocsCartaExclusividad()
+    public function resetdocsCartaExclusividad($id = 0)
     {
         $this->docsCartaExclusividad = [];
         $this->docsAnexoOtrosDocumentos = [];
+        if ($id != 0) {
+            $docs = Documento::select()->where('id_requisicion', $id)->where('tipo_requisicion', 1);
+            if (isset($docs)) {
+                $docs->delete();
+            }
+        }
+
     }
+
+
     public function updatedcartaExclusividadTemp()
     {
         $validatedData = $this->validate([
