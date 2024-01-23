@@ -75,8 +75,9 @@ class AdquisicionDescriptionModal extends ModalComponent
     public function mount()
     {
         $this->porcentajeIva = env('IVA', 16);
-
-
+        if ($this->iva > 0) {
+            $this->checkIva = 1;
+        }
     }
 
     public function calcularIvaImporte()

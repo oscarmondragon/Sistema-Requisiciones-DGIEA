@@ -4,6 +4,8 @@
   </x-slot>
   <x-slot name="content">
     <div>
+      Iva:{{$iva}}
+      check: {{{$checkIva}}}
       <div class="mb-4">
         <input type="hidden" wire:model="_id">
         <label class="block mb-2" for="descripcion">
