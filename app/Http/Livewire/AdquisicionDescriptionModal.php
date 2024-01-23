@@ -33,7 +33,7 @@ class AdquisicionDescriptionModal extends ModalComponent
     protected $rules = [
         'descripcion' => 'required|max:3000',
         'cantidad' => 'required|gte:1|regex:/^[\d]{0,10}?$/',
-        'precio_unitario' => 'required|gte:1|regex:/^[\d]{0,10}(\.[\d]{1,2})?$/',
+        'precio_unitario' => 'required|gt:0|regex:/^[\d]{0,10}(\.[\d]{1,2})?$/',
         'importe' => 'required',
         'justificacion_software' => 'required_if:id_rubro_especial,1|max:800',
         'alumnos' => 'required_if:id_rubro_especial,1|gte:0|regex:/^[\d]{0,7}?$/',
@@ -50,7 +50,7 @@ class AdquisicionDescriptionModal extends ModalComponent
         'cantidad.gte' => 'La cantidad no puede ser menor a 1.',
         'cantidad.regex' => 'La cantidad no es valida.',
         'precio_unitario.required' => 'El precio unitario no puede estar vacío.',
-        'precio_unitario.gte' => 'El precio unitario no puede ser menor a 1.',
+        'precio_unitario.gt' => 'El precio unitario no puede ser menor o igual a 0.',
         'precio_unitario.regex' => 'El precio unitario no es valido.',
         'importe.required' => 'El importe no puede estar vacío.',
         'justificacion_software.required_if' => 'La justificación no puede estar vacía.',

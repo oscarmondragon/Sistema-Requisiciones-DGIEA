@@ -69,7 +69,7 @@ class AdquisicionesForm extends Component
         'bienes' => 'required|array|min:1',
         // regex:/^[a-zA-Z-Z0-9.,$:;#%()\s]+$/u
         'justificacion_academica' => 'required_if:afecta_investigacion,1|max:800',
-        'docsCartaExclusividad' => 'required_if:exclusividad,1|array|min:1',
+        'docsCartaExclusividad' => 'required_if:exclusividad,1|array',
         'docsCotizacionesFirmadas' => 'required|array|min:1',
         'docsCotizacionesPdf' => 'required|array|min:1',
         'vobo' => 'accepted'
@@ -328,7 +328,7 @@ class AdquisicionesForm extends Component
                 }
 
                 DB::commit();
-                return redirect('/cvu-crear')->with('success', 'Su requerimiento ha sido guardada correctamente con la clave ' . $clave_adquisicion . '. Recuerde completarlo y mandarlo a visto bueno.');
+                return redirect('/cvu-crear')->with('success', 'Su requerimiento ha sido guardado correctamente con la clave ' . $clave_adquisicion . '. Recuerde completarlo y mandarlo a visto bueno.');
 
             } catch (\Exception $e) {
                 DB::rollback();

@@ -384,7 +384,7 @@
                         @error('vobo')
                             <span class=" text-rojo error sm:inline-block block">{{ $message }}</span>
                         @enderror
-                        <div class="sm:text-right text-center my-10 -mb-5">
+                        <div class="sm:text-right text-center my-10 -mb-2">
 
                             @empty($id_adquisicion)
                                 <button type="button" @click="saveConfirmation()"
@@ -436,7 +436,7 @@
                                 title: 'swal2-title'
                             },
                             title: '¿Deseas enviar tu adquisición a VoBo?',
-                            text: 'Una vez enviada ya no será posible modificarlo.',
+                            text: 'Una vez enviada ya no será posible modificarla.',
                             icon: 'warning',
                             iconColor: '#9D9361',
                             showCancelButton: true,

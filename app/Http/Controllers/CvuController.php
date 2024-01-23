@@ -139,7 +139,7 @@ class CvuController extends Controller
                 if($hoyf < $asigna_proyecto->first()->fecha_limite_solicitudes ){
                 //dd('ya');
                     $tiempo_restante_solicitudes = $tiempo_restante_solicitudes+2;
-                    $mensajeSolicitudes="Te quedan ".$tiempo_restante_solicitudes." dias para registrar solicitudes de recursos. Límite ".$asigna_proyecto->first()->fecha_limite_solicitudes."\n";
+                    $mensajeSolicitudes="Te quedan ".$tiempo_restante_solicitudes." días para registrar solicitudes de recursos. Límite ".$asigna_proyecto->first()->fecha_limite_solicitudes."\n";
                 }else if($hoyf == $asigna_proyecto->first()->fecha_limite_solicitudes ){
                     $tiempo_restante_solicitudes = $tiempo_restante_solicitudes;
                     $mensajeSolicitudes="Te queda 1 día para registrar solicitudes de recursos. Límite ".$asigna_proyecto->first()->fecha_limite_solicitudes."\n";
@@ -149,7 +149,7 @@ class CvuController extends Controller
                 }  
                 if($hoyf < $asigna_proyecto->first()->fecha_limite_adquisiciones){
                     $tiempo_restante_adquisiciones =$tiempo_restante_adquisiciones+2;
-                    $mensajeAdquisiones='Te quedan '.$tiempo_restante_adquisiciones.' dias para registrar adquisiciones de bienes y servicios. Límite '.$asigna_proyecto->first()->fecha_limite_adquisiciones."\n";
+                    $mensajeAdquisiones='Te quedan '.$tiempo_restante_adquisiciones.' días para registrar adquisiciones de bienes y servicios. Límite '.$asigna_proyecto->first()->fecha_limite_adquisiciones."\n";
                 
                 }else  if($hoyf == $asigna_proyecto->first()->fecha_limite_adquisiciones){
                     $mensajeAdquisiones="Te queda 1 día para registrar adquisiciones de bienes y servicios. Límite ".$asigna_proyecto->first()->fecha_limite_adquisiciones."\n";      

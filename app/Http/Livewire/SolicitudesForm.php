@@ -123,7 +123,7 @@ class SolicitudesForm extends Component
         'vobo' => 'accepted',
         'concepto' => 'required|max:800',
         //regex:/^[a-zA-Z-Z0-9.,$:;#%()\s]+$/u|
-        'justificacionS' => 'required|max:800',
+        'justificacionS' => 'required|max:1500',
         'finicial' => 'nullable|date|required_if:id_rubro_especial,2|after_or_equal:14 days',
         'ffinal' => 'nullable|date|required_if:id_rubro_especial,2|after_or_equal:finicial',
     ];
