@@ -194,7 +194,7 @@
                                         @enderror
                                     </div>
                                     <div class="mt-8 sm:text-end text-center">
-                                        <button type="submit" @click="saveConfirmation()"
+                                        <button type="submit" 
                                             class="btn-success sm:w-auto w-5/6">Guardar</button>
                                     </div>
                                 </div>
