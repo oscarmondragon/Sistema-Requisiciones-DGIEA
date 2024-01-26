@@ -83,6 +83,11 @@ class AdquisicionDescriptionModal extends ModalComponent
     public function calcularIvaImporte()
     {
 
+        $this->validate([
+            'precio_unitario' => 'required|gt:0|regex:/^[\d]{0,10}(\.[\d]{1,2})?$/',
+            'cantidad' => 'required|gte:1|regex:/^[\d]{0,10}?$/'
+        ]);
+
         //Validamos que sean valores numericos para evitar errores
         if (!is_numeric($this->cantidad)) {
             $this->cantidad = null;
