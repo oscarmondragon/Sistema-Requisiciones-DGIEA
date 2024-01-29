@@ -39,6 +39,7 @@ class AdquisicionDetalleHistorial extends Model
         'estatus_rt',
         'observaciones',
         'clave_siia',
+        'factura_siia',
         'id_usuario_sesion',
         'accion'
     ];

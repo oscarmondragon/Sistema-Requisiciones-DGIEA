@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class AdquisicionDetalle extends Model
 {
@@ -40,12 +42,14 @@ class AdquisicionDetalle extends Model
         'estatus_rt',
         'observaciones',
         'clave_siia',
+        'factura_siia',
         'id_usuario_sesion'
     ];
 
     protected static function boot()
     {
         parent::boot();
+
 
         static::created(function ($elemento) {
             // Realizar la inserción en la otra tabla
@@ -57,11 +61,17 @@ class AdquisicionDetalle extends Model
                 'precio_unitario' => $elemento->precio_unitario,
                 'iva' => $elemento->iva,
                 'importe' => $elemento->importe,
+                'importe_cotizacion' => $elemento->importe_cotizacion,                
                 'justificacion_software' => $elemento->justificacion_software,
                 'alumnos' => $elemento->alumnos,
                 'profesores_invest' => $elemento->profesores_invest,
                 'administrativos' => $elemento->administrativos,
-                'id_usuario_sesion' => $elemento->id_usuario_sesion,
+                'estatus_dgiea' =>$elemento->estatus_dgiea,
+                'estatus_rt'=>$elemento->estatus_rt,
+                'observaciones'=>$elemento->observaciones,
+                'clave_siia'=>$elemento->clave_siia,
+                'factura_siia'=>$elemento->factura_siia,
+                'id_usuario_sesion' => Session::has('id_user')? Session::get('id_user'): Auth::user()->id,
                 'accion' => 'CREATE'
             ]);
         });
@@ -77,11 +87,17 @@ class AdquisicionDetalle extends Model
                 'precio_unitario' => $elemento->precio_unitario,
                 'iva' => $elemento->iva,
                 'importe' => $elemento->importe,
+                'importe_cotizacion' => $elemento->importe_cotizacion,                
                 'justificacion_software' => $elemento->justificacion_software,
                 'alumnos' => $elemento->alumnos,
                 'profesores_invest' => $elemento->profesores_invest,
                 'administrativos' => $elemento->administrativos,
-                'id_usuario_sesion' => $elemento->id_usuario_sesion,
+                'estatus_dgiea' =>$elemento->estatus_dgiea,
+                'estatus_rt'=>$elemento->estatus_rt,
+                'observaciones'=>$elemento->observaciones,
+                'clave_siia'=>$elemento->clave_siia,
+                'factura_siia'=>$elemento->factura_siia,
+                'id_usuario_sesion' => Session::has('id_user')? Session::get('id_user'): Auth::user()->id,
                 'accion' => 'UPDATE'
             ]);
 
@@ -97,12 +113,18 @@ class AdquisicionDetalle extends Model
                 'precio_unitario' => $elemento->precio_unitario,
                 'iva' => $elemento->iva,
                 'importe' => $elemento->importe,
+                'importe_cotizacion' => $elemento->importe_cotizacion,                
                 'justificacion_software' => $elemento->justificacion_software,
                 'alumnos' => $elemento->alumnos,
                 'profesores_invest' => $elemento->profesores_invest,
                 'administrativos' => $elemento->administrativos,
-                'id_usuario_sesion' => $elemento->id_usuario_sesion,
-                'accion' => 'CREATE'
+                'estatus_dgiea' =>$elemento->estatus_dgiea,
+                'estatus_rt'=>$elemento->estatus_rt,
+                'observaciones'=>$elemento->observaciones,
+                'clave_siia'=>$elemento->clave_siia,
+                'factura_siia'=>$elemento->factura_siia,
+                'id_usuario_sesion' => Session::has('id_user')? Session::get('id_user'): Auth::user()->id,
+                'accion' => 'DELETE'
             ]);
         });
 

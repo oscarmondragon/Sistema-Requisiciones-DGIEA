@@ -11,6 +11,8 @@ use App\Models\CuentaContable;
 use Illuminate\Support\Facades\Session;
 use App\Models\Solicitud;
 use App\Models\SolicitudDetalle;
+use App\Models\SolicitudDetalleHistorial;
+use App\Models\SolicitudHistorial;
 use App\Models\Documento;
 
 use Illuminate\Support\Facades\DB;
@@ -93,7 +95,6 @@ class SolicitudesForm extends Component
             $this->finicial = $this->solicitud->solicitudDetalle->periodo_inicio;
             $this->ffinal = $this->solicitud->solicitudDetalle->periodo_fin;
             $this->tipo_comprobacion = $this->solicitud->tipo_comprobacion;
-
 
             $documentos = Documento::where('id_requisicion', $id)->where('tipo_requisicion', 2)->get();
             foreach ($documentos as $documento) {
@@ -218,7 +219,6 @@ class SolicitudesForm extends Component
                 $id_solicitud = $solicitud->id;
                 $fecha_actual = date('ymd');
                 $clave_solicitud = 'S' . $clave_proyecto . $fecha_actual . $id_solicitud;
-
                 // Actualiza la clave de solicitud en el registro de la solicitud
                 $solicitud->update(['clave_solicitud' => $clave_solicitud]);
 
@@ -258,7 +258,7 @@ class SolicitudesForm extends Component
                 return redirect('/cvu-crear')->with('success', 'Su solicitud ha sido guardada correctamente con el número ' . $clave_solicitud . ', recuerde completarla y mandarla a visto bueno.');
             } catch (\Exception $e) {
                 DB::rollback();
-                dd("Error en el catch" . $e);
+                dd("Error en el catch" . $e."Error en el proceso de guardado:".$e->getMessage());
                 return redirect()->back()->with('error', 'Error en el proceso de guardado ' . $e->getMessage());
             }
         } else {
@@ -298,28 +298,29 @@ class SolicitudesForm extends Component
                     $id_solicitud = $solicitud->id;
                     $clave_solicitud = $solicitud->clave_solicitud;
                     if ($solicitud) {
-                        $solicitud->id_rubro = $this->id_rubro;
-                        $solicitud->monto_total = $this->monto_total;
-                        $solicitud->nombre_expedido = $this->nombre_expedido;
-                        $solicitud->tipo_comprobacion = $this->tipo_comprobacion;
-                        $solicitud->vobo_admin = $this->vobo_admin;
-                        $solicitud->vobo_rt = $this->vobo_rt;
-                        $solicitud->estatus_rt = 2;
-                        $solicitud->obligo_comprobar = $this->comprobacion;
-                        $solicitud->aviso_privacidad = $this->aviso_privacidad;
+                        $solicitud->update([
+                            'id_rubro' => $this->id_rubro,
+                            'monto_total' => $this->monto_total,
+                            'nombre_expedido' => $this->nombre_expedido,
+                            'tipo_comprobacion' => $this->tipo_comprobacion,
+                            'vobo_admin' => $this->vobo_admin,
+                            'vobo_rt' => $this->vobo_rt,
+                            'estatus_rt' => 2,
+                            'obligo_comprobar' => $this->comprobacion,
+                            'aviso_privacidad' => $this->aviso_privacidad
+                        ]);
 
-                        $solicitud->save();
 
                         $solicitudDetalle = SolicitudDetalle::where('id_solicitud', $this->id_solicitud)->first();
                         if ($solicitudDetalle) {
+                            $solicitudDetalle->update([
+                            'concepto' => $this->concepto,
+                            'justificacion' => $this->justificacionS,
+                            'importe' => $this->monto_total,
+                            'periodo_inicio' => $this->finicial,
+                            'periodo_fin' => $this->ffinal,
+                            ]);
 
-                            $solicitudDetalle->concepto = $this->concepto;
-                            $solicitudDetalle->justificacion = $this->justificacionS;
-                            $solicitudDetalle->importe = $this->monto_total;
-                            $solicitudDetalle->periodo_inicio = $this->finicial;
-                            $solicitudDetalle->periodo_fin = $this->ffinal;
-
-                            $solicitudDetalle->save();
                         }
                         $i = 1;
                         if (empty($this->docsbitacoraPdf) == false) {

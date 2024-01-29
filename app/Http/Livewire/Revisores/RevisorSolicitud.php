@@ -155,28 +155,28 @@ class RevisorSolicitud extends Component
     public function save()
     {
         $this->validate();
-
+        
         try {
             DB::beginTransaction();
 
-            if ($this->solicitud) {
-                $this->solicitud->estatus_dgiea = $this->estatusSolicitud;
-                $this->solicitud->estatus_rt = $this->estatusSolicitud;
-
+            if ($this->solicitud) {            
                 if ($this->estatusSolicitud == 5 || $this->estatusSolicitud == 12 || $this->estatusSolicitud == 14) {
-                    $this->solicitud->observaciones = $this->observaciones_estatus;
+                    $observaciones = $this->observaciones_estatus;
                 } else {
-                    $this->solicitud->observaciones = null;
+                    $observaciones = null;
                 }
-
-                $this->solicitud->save();
+                $this->solicitud->update([
+                    'estatus_dgiea' => $this->estatusSolicitud,
+                    'estatus_rt' => $this->estatusSolicitud,
+                    'observaciones' => $observaciones 
+                ]);
             }
-
+            //dd("pase el primer if");
             if (($this->tipoEstatus == 4 || $this->tipoEstatus == 5) && $this->clave == null) {
                 if ($this->solicitud_detalles) {
-                    $this->solicitud_detalles->clave_siia = $this->sClaveSiia;
-
-                    $this->solicitud_detalles->save();
+                    $this->solicitud_detalles->update([
+                        'clave_siia' => $this->sClaveSiia
+                    ]);                
                 }
             }
 

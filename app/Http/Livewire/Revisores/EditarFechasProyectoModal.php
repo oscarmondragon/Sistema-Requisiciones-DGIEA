@@ -76,11 +76,13 @@ class EditarFechasProyectoModal extends ModalComponent
                     $this->fecha_limite_solicitudes = null;
                 }
                 //guardamos las fechas en db
-                $proyecto->fecha_inicio = $this->fecha_inicio;
-                $proyecto->fecha_final = $this->fecha_final;
-                $proyecto->fecha_limite_adquisiciones = $this->fecha_limite_adquisiciones;
-                $proyecto->fecha_limite_solicitudes = $this->fecha_limite_solicitudes;
-                $proyecto->save();
+                $proyecto->update([
+                    'fecha_inicio' => $this->fecha_inicio,
+                    'fecha_final' => $this->fecha_final,
+                    'fecha_limite_adquisiciones' => $this->fecha_limite_adquisiciones,
+                    'fecha_limite_solicitudes' => $this->fecha_limite_solicitudes
+                ]);
+                
                 DB::commit();
                 return redirect('/asignados-revisor')->with(['success' => '¡Edición de fechas del  proyecto exitosa!.']);
 

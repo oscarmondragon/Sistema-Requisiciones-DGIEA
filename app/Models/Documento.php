@@ -25,11 +25,11 @@ class Documento extends Model
 
     protected $fillable = [
         'id_requisicion',
-        'ruta_documento',
-        'tipo_documento',
         'tipo_requisicion',
-        'nombre_documento',
+        'ruta_documento',
         'extension_documento',
+        'nombre_documento',
+        'tipo_documento'
     ];
 
     protected static function boot()
@@ -41,11 +41,11 @@ class Documento extends Model
             $documentoHistorial = DocumentoHistorial::create([
                 'id_requisicion' => $documento->id_requisicion,
                 'ruta_documento' => $documento->ruta_documento,
-                'tipo_documento' => '5',
-                'tipo_requisicion' => '1',
+                'tipo_documento' => $documento->tipo_documento,
+                'tipo_requisicion' => $documento->tipo_requisicion,
                 'nombre_documento' => $documento->nombre_documento,
                 'extension_documento' => $documento->extension_documento,
-                'id_usuario_sesion' => Session::get('id_user'),
+                'id_usuario_sesion' => Session::has('id_user')? Session::get('id_user'): Auth::user()->id,
                 'accion' => 'CREATE'
             ]);
         });
@@ -55,11 +55,11 @@ class Documento extends Model
             $documentoHistorial = DocumentoHistorial::create([
                 'id_requisicion' => $documento->id_requisicion,
                 'ruta_documento' => $documento->ruta_documento,
-                'tipo_documento' => '5',
-                'tipo_requisicion' => '1',
+                'tipo_documento' => $documento->tipo_documento,
+                'tipo_requisicion' => $documento->tipo_requisicion,
                 'nombre_documento' => $documento->nombre_documento,
                 'extension_documento' => $documento->extension_documento,
-                'id_usuario_sesion' => Session::get('id_user'),
+                'id_usuario_sesion' => Session::has('id_user')? Session::get('id_user'): Auth::user()->id,
                 'accion' => 'DELETE'
             ]);
         });

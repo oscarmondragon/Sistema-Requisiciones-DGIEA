@@ -387,6 +387,9 @@ class AdquisicionesForm extends Component
                             'iva' => $this->iva,
                             'total' => $this->total
                         ]);
+                      /*  dd("hola");
+                        $_SESSION['pagina_actual'] = $_SERVER['REQUEST_URI'];
+                        dd("pagina actual:". $_SESSION['pagina_actual']);*/
 
                         //Guarda o actualizamos los bienes o servicios en adquisicion_detalles
                         //primero agregamos el id_adquisicion a cada bien

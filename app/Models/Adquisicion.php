@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
 
 class Adquisicion extends Model
 {
@@ -40,7 +42,7 @@ class Adquisicion extends Model
     public function documentos()
     {
         return $this->hasMany(Documento::class, 'id_requisicion')->where('tipo_requisicion', 1);
-        ;
+        
     }
 
     protected $fillable = [
@@ -90,10 +92,12 @@ class Adquisicion extends Model
                 'vobo_rt' => $adquisicion->vobo_rt,
                 'id_emisor' => $adquisicion->id_emisor,
                 'estatus_general' => $adquisicion->estatus_general,
+                'observaciones'=> $adquisicion->observaciones,
+                'observaciones_vobo' => $adquisicion->observaciones_vobo,
                 'subtotal' => $adquisicion->subtotal,
                 'iva' => $adquisicion->iva,
                 'total' => $adquisicion->total,
-                'id_usuario_sesion' => $adquisicion->id_emisor,
+                'id_usuario_sesion' =>Session::has('id_user')? Session::get('id_user'): Auth::user()->id,
                 'accion' => 'CREATE'
             ]);
         });
@@ -122,10 +126,12 @@ class Adquisicion extends Model
                     'vobo_rt' => $adquisicion->vobo_rt,
                     'id_emisor' => $adquisicion->id_emisor,
                     'estatus_general' => $adquisicion->estatus_general,
+                    'observaciones'=> $adquisicion->observaciones,
+                    'observaciones_vobo' => $adquisicion->observaciones_vobo,
                     'subtotal' => $adquisicion->subtotal,
                     'iva' => $adquisicion->iva,
                     'total' => $adquisicion->total,
-                    'id_usuario_sesion' => $adquisicion->id_emisor,
+                    'id_usuario_sesion' => Session::has('id_user')? Session::get('id_user'): Auth::user()->id,
                     'accion' => 'UPDATE'
                 ]);
             }
@@ -151,10 +157,12 @@ class Adquisicion extends Model
                 'vobo_rt' => $adquisicion->vobo_rt,
                 'id_emisor' => $adquisicion->id_emisor,
                 'estatus_general' => $adquisicion->estatus_general,
+                'observaciones'=> $adquisicion->observaciones,
+                'observaciones_vobo' => $adquisicion->observaciones_vobo,
                 'subtotal' => $adquisicion->subtotal,
                 'iva' => $adquisicion->iva,
                 'total' => $adquisicion->total,
-                'id_usuario_sesion' => $adquisicion->id_emisor,
+                'id_usuario_sesion' => Session::has('id_user')? Session::get('id_user'): Auth::user()->id,
                 'accion' => 'DELETE'
             ]);
         });

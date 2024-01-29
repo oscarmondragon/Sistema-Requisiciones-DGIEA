@@ -356,18 +356,18 @@
         <label for="vobo">VoBo al requerimiento solicitado. Se envía para VoBo del Admistrativo/Investigador<samp class="text-rojo">*</samp></label>
         @error('vobo') <span class=" text-rojo error sm:inline-block block">{{ $message }}</span> @enderror
               <div class="sm:text-right text-center my-10 -mb-5">
-              
                @empty($id_adquisicion)
                 <button type="button" @click="saveConfirmation()" class="btn-success sm:w-auto w-5/6">Guardar avance</button>
                 @endempty
                 <button type="submit" @click="saveConfirmationVoBo()" class="btn-primary sm:w-auto w-5/6">Enviar para VoBo</button>
-                @if (str_contains($referer, 'vobo') || str_contains($referer, 'crear'))
+                @if (str_contains($_SERVER['HTTP_REFERER'], 'vobo') || str_contains($_SERVER['HTTP_REFERER'], 'crear'))
+                            
                     <button type="button" @click="cancelarAdquisicion()" class="btn-warning sm:w-auto w-5/6">Cancelar</button>
                 @else
                     <button type="button" class="btn-warning sm:w-auto w-5/6" x-on:click="window.location.href = '{{ route('cvu.seguimiento') }}'">Regresar</button>
                 @endif
-          </div>
-                        </div>
+              </div>
+       </div>
           </form>
         </div>
     </div>
