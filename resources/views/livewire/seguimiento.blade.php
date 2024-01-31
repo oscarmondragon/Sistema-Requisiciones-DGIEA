@@ -77,7 +77,13 @@
                                                         <td> {{ $valor->id_requerimiento }}</td>
                                                         <td> {{ $valor->claveSIIA }}</td>
                                                         <td> {{ $valor->nombre_cuenta }}</td>
-                                                        <td> {{ $valor->concepto }}</td>
+                                                        <td>
+                                                                @if(strlen($valor->concepto) > 0)
+                                                                    {{ strlen($valor->concepto) > 85 ? substr($valor->concepto, 0, 85) . '...' : $valor->concepto}}
+                                                                @else
+                                                                    {{ $valor->nombre_cuenta }}
+                                                                @endif
+                                                        </td>
                                                         <td> {{ $valor->req }}</td>
                                                         <td class="sm:text-center">
                                                             @if ($valor->color_estado == 'VERDE')
@@ -115,40 +121,36 @@
 
 
                                                         <td> {{ $valor->modificacion }}</td>
-                                                        <td> {{ $valor->observaciones }}</td>
+                                                        <td> {{ strlen($valor->observaciones) > 85 ? substr($valor->observaciones, 0, 85) . '...' : $valor->observaciones}} </td>
                                                         <th>
                                                             @if ($valor->tipo_requerimiento == 1)
                                                                 @if ($valor->id_estatus == 5 and Session::get('id_user') == $valor->emisor)
-                                                                    <a href="{{ route('adquisiciones.seguimiento.editar', $valor->id) }}"
-                                                                        class="btn-tablas" title="Editar">
+                                                                    <a href="{{ route('adquisiciones.seguimiento.editar', $valor->id) }}">
                                                                         <button class="btn-tablas" title="Editar">
-                                                                            <img src="{{ asset('img/btn_editar.png') }}"
+                                                                            <img src="{{ asset('img/botones/btn_editar.png') }}"
                                                                                 alt="Editar">
                                                                         </button>
                                                                     </a>
                                                                 @else
-                                                                    <a href="{{ route('adquisicion.ver', $valor->id) }}"
-                                                                        class="btn-tablas" title="Ver">
+                                                                    <a href="{{ route('adquisicion.ver', $valor->id) }}">
                                                                         <button class="btn-tablas" title="Ver">
-                                                                            <img src="{{ 'img/btn_ver.jpeg' }}"
+                                                                            <img src="{{ 'img/botones/btn_ver.jpeg' }}"
                                                                                 alt="Image/png">
                                                                         </button>
                                                                     </a>
                                                                 @endif
                                                             @else
                                                                 @if ($valor->id_estatus == 5 and Session::get('id_user') == $valor->emisor)
-                                                                    <a href="{{ route('solicitudes.seguimiento.editar', $valor->id) }}"
-                                                                        class="btn-tablas" title="Editar">
+                                                                    <a href="{{ route('solicitudes.seguimiento.editar', $valor->id) }}">
                                                                         <button class="btn-tablas" title="Editar">
-                                                                            <img src="{{ asset('img/btn_editar.png') }}"
+                                                                            <img src="{{ asset('img/botones/btn_editar.png') }}"
                                                                                 alt="Editar">
                                                                         </button>
                                                                     </a>
                                                                 @else
-                                                                    <a href="{{ route('solicitud.ver', $valor->id) }}"
-                                                                        class="btn-tablas" title="Ver">
+                                                                    <a href="{{ route('solicitud.ver', $valor->id) }}">
                                                                         <button class="btn-tablas" title="Ver">
-                                                                            <img src="{{ 'img/btn_ver.jpeg' }}"
+                                                                            <img src="{{ 'img/botones/btn_ver.jpeg' }}"
                                                                                 alt="Image/png">
                                                                         </button>
                                                                     </a>

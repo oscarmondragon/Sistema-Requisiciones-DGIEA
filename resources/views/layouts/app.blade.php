@@ -22,7 +22,7 @@
 
     <!-- Fondo cabecera -->
     <div class="fondo_deg_formulario">
-        <img src="{{ asset('img/fondo_cabecera.png') }}" alt="Image/png" class="static h-9">
+        <img src="{{ asset('img/fondos/fondo_cabecera.png') }}" alt="Image/png" class="static h-9">
     </div>
 
     <div class="min-h-screen bg-gray-100">

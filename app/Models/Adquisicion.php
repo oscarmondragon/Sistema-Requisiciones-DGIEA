@@ -42,7 +42,6 @@ class Adquisicion extends Model
     public function documentos()
     {
         return $this->hasMany(Documento::class, 'id_requisicion')->where('tipo_requisicion', 1);
-        
     }
 
     protected $fillable = [

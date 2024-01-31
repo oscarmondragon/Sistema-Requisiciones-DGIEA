@@ -71,7 +71,7 @@ class CvuController extends Controller
         $proyecto = Proyecto::where('CveEntPry', $clave_proyecto)->first();
       
         $asigna_proyecto = AsignacionProyecto::where('id_proyecto',$clave_proyecto);
-  //dd('vacio_'.$asigna_proyecto->count().'_'.$asigna_proyecto->first()->fecha_inicio);
+  
         //Matamos la sesion anterior por si existe
         session()->forget([
             'id_user',
@@ -87,6 +87,12 @@ class CvuController extends Controller
             'tipo_financiamiento',
             'clave_uaem',
             'clave_dygcyn',
+            'tiempo_restante_solicitudes',
+            'tiempo_restante_adquisiciones',
+            'iniciar_captura',
+            'mensaje',
+            'mensajeSolciitudes',
+            'mensajeAdquisiciones'
         ]);
         //revisamos quien se logueo si administrativo o responsable 1:rt 0:administrativo
         if ($id_user == $proyecto->CveEntEmp_Responsable) {
@@ -114,72 +120,59 @@ class CvuController extends Controller
         Session::put('clave_dygcyn', $proyecto->Clave_DIGCYN);
         
         if($asigna_proyecto->count()==0 || $asigna_proyecto->first()->fecha_inicio == null || $asigna_proyecto->first()->fecha_limite_solicitudes ==null){
-            $tiempo_restante_solicitudes="";
-            $tiempo_restante_adquisiciones="";
-            $fecha_inicio="";
-            $fecha_final="";
-            $iniciar_captura=1;
-            $mensaje="";
-            $mensajeSolicitudes="";
-            $mensajeAdquisiones="";    
-                              
+            $iniciar_captura=0;
+            $mensaje="Aún no puedes crear requisiciones";
+            Session::put('mensaje',$mensaje);                               
         }else{
-            $fecha_inicio=$asigna_proyecto->first()->fecha_inicio;
-            $fecha_final=$asigna_proyecto->first()->fecha_final;
-
             $hoy = now();
             $hoyf = now()->format('Y-m-d');
 
-            $puede_iniciar= $hoy->diffInDays($asigna_proyecto->first()->fecha_inicio,false);
             $tiempo_restante_solicitudes= $hoy->diffInDays($asigna_proyecto->first()->fecha_limite_solicitudes,false);
             $tiempo_restante_adquisiciones = $hoy->diffInDays($asigna_proyecto->first()->fecha_limite_adquisiciones,false);
 
-            // dd('puede_iniciar:'.$puede_iniciar.':tiempo_restante:'.$tiempo_restante_solicitudes.':'.$iguales.":");
             $mensaje =$mensajeSolicitudes=$mensajeAdquisiones="";
             $iniciar_captura=0;
 
             if($hoyf >= $asigna_proyecto->first()->fecha_inicio){
+                //dd(':comenzara  capturar:'.$tiempo_restante_solicitudes.":".$tiempo_restante_adquisiciones);
                 $iniciar_captura=1;
                 if($hoyf < $asigna_proyecto->first()->fecha_limite_solicitudes ){
                 //dd('ya');
                     $tiempo_restante_solicitudes = $tiempo_restante_solicitudes+2;
-                    $mensajeSolicitudes="Te quedan ".$tiempo_restante_solicitudes." dias para registrar solicitudes de recursos. Tienes hasta el ".$asigna_proyecto->first()->fecha_limite_solicitudes."\n";
+                    $mensajeSolicitudes="Te quedan ".$tiempo_restante_solicitudes." días para registrar solicitudes de recursos. Límite ".$asigna_proyecto->first()->fecha_limite_solicitudes."\n";
                 }else if($hoyf == $asigna_proyecto->first()->fecha_limite_solicitudes ){
                     $tiempo_restante_solicitudes = $tiempo_restante_solicitudes;
-                    $mensajeSolicitudes="Te quedan ".$tiempo_restante_solicitudes." dias para registrar solicitudes de recursos. Tienes hasta el ".$asigna_proyecto->first()->fecha_limite_solicitudes."\n";
+                    $mensajeSolicitudes="Te queda 1 día para registrar solicitudes de recursos. Límite ".$asigna_proyecto->first()->fecha_limite_solicitudes."\n";
                 
                 }else{
-                    $mensajeSolicitudes="Se acabo tu tiempo el día ".$asigna_proyecto->first()->fecha_limite_solicitudes.' para registrar solicitudes de recursos';
+                    $mensajeSolicitudes="Se acabó tu tiempo para registrar solicitudes de recursos el día ".$asigna_proyecto->first()->fecha_limite_solicitudes;
                 }  
                 if($hoyf < $asigna_proyecto->first()->fecha_limite_adquisiciones){
                     $tiempo_restante_adquisiciones =$tiempo_restante_adquisiciones+2;
-                    $mensajeAdquisiones='Te quedan '.$tiempo_restante_adquisiciones.' dias para registrar adquisiciones de bienes y servicios. Tienes hasta el '.$asigna_proyecto->first()->fecha_limite_adquisiciones."\n";
+                    $mensajeAdquisiones='Te quedan '.$tiempo_restante_adquisiciones.' días para registrar adquisiciones de bienes y servicios. Límite '.$asigna_proyecto->first()->fecha_limite_adquisiciones."\n";
                 
                 }else  if($hoyf == $asigna_proyecto->first()->fecha_limite_adquisiciones){
-                    $mensajeAdquisiones="Te quedan ".$tiempo_restante_adquisiciones." dias para registrar adquisiciones de bienes y servicios. Tienes hasta el ".$asigna_proyecto->first()->fecha_limite_adquisiciones."\n";      
+                    $mensajeAdquisiones="Te queda 1 día para registrar adquisiciones de bienes y servicios. Límite ".$asigna_proyecto->first()->fecha_limite_adquisiciones."\n";      
                 }   else{       
-                    $mensajeAdquisiones ='Se acabo tu tiempo el día '.$asigna_proyecto->first()->fecha_limite_adquisiciones." para registrar adquisiciones de bienes y servicios";
+                    $mensajeAdquisiones ='Se acabó tu tiempo para registrar adquisiciones de bienes y servicios el día '.$asigna_proyecto->first()->fecha_limite_adquisiciones;
                 }    
             }else{
-                $mensaje="Aun no puedes crear requisiciones para este proyecto\n".$puede_iniciar;
+                //dd('2. Aun no puedes crear requisiciones para este proyecto');
+                $mensaje="Aun no puedes crear requisiciones para este proyecto";
                 $iniciar_captura=0;
             }
-        }
-        Session::put('tiempo_restante_solicitudes', $tiempo_restante_solicitudes);
-        Session::put('tiempo_restante_adquisiciones', $tiempo_restante_adquisiciones);
-        Session::put('fechaInicial', $fecha_inicio);
-        Session::put('fechaFinal', $fecha_final);
-       // dd("estoy aqui_".$iniciar_captura.":ts:".$tiempo_restante_solicitudes.";TA:".$tiempo_restante_adquisiciones);
-        Session::put('iniciar_captura', $iniciar_captura);
-        Session::put('mensaje', $mensaje);
+            Session::put('tiempo_restante_solicitudes', $tiempo_restante_solicitudes);
+            Session::put('tiempo_restante_adquisiciones', $tiempo_restante_adquisiciones);
+            Session::put('mensaje', $mensaje);
         Session::put('mensajeSolciitudes', $mensajeSolicitudes);
         Session::put('mensajeAdquisiciones', $mensajeAdquisiones);
-
-
+        }
+        
+        Session::put('iniciar_captura', $iniciar_captura);
+        
 
         //redireccionamos de acuerdo a la accion seleccionada
         if ($accion == 1) {
-
             return Redirect::route('cvu.create');
         } else if ($accion == 2) {
             return Redirect::route('cvu.vobo');
@@ -187,7 +180,6 @@ class CvuController extends Controller
             return Redirect::route('cvu.seguimiento');
         } else {
             return "La acción solicitada no es valida";
-
         }
     }
 
@@ -213,7 +205,7 @@ class CvuController extends Controller
         // $request->session()->invalidate();
 
         //$request->session()->regenerateToken();
-        session()->forget([
+        $request->session()->forget([
             'id_user',
             'name_user',
             'id_proyecto',
@@ -224,7 +216,13 @@ class CvuController extends Controller
             'name_rt',
             'id_administrativo',
             'name_administrativo',
-            'tipo_financiamiento'
+            'tipo_financiamiento',
+            'tiempo_restante_solicitudes',
+            'tiempo_restante_adquisiciones',
+            'iniciar_captura',
+            'mensaje',
+            'mensajeSolciitudes',
+            'mensajeAdquisiciones'
         ]);
 
         request()->flush();

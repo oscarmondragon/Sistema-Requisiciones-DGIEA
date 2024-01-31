@@ -10,6 +10,24 @@ use Carbon\Carbon;
                 <div>
                     <div>
                         <h1>Formulario solicitudes</h1>
+                        @if (isset($solicitud->observaciones_vobo) || isset($solicitud->observaciones))
+                            <div class="my-4">
+                                <p class="bg-red-100 text-red-500 font-bold py-1 px-2 rounded-sm border border-red-500">
+                                    <svg class="inline-block w-5 h-5 me-3" aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                        <path
+                                            d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                                    </svg>
+                                    Observaciones de rechazo:
+                                    @if ($solicitud->observaciones_vobo)
+                                    <span class="block pl-12 font-normal"><span class="font-bold">Por visto bueno:</span> {{ $solicitud->observaciones_vobo }}</span>
+                                    @endif
+                                    @if ($solicitud->observaciones)
+                                    <span class="block pl-12 font-normal"><span class="font-bold">Por DGIEA: </span> {{ $solicitud->observaciones }}</span>
+                                    @endif
+                                </p>
+                            </div>
+                        @endif
                         <form x-on:submit.prevent="saveConfirmationVoBo">
                             @csrf
                             <div>
@@ -17,21 +35,21 @@ use Carbon\Carbon;
                                     <label for="id_rubro">
                                         Rubro<samp class="text-rojo">*</samp>:
                                     </label>
-                                    @if (str_contains($referer, 'vobo')|| str_contains($referer, 'seguimiento'))
-                                        <select class="w-auto" id="id_rubro" name="id_rubro" wire:model="id_rubro" disabled>                                      
-                                    
-                                    @else
-                                        <select class="sm:w-auto w-full" id="id_rubro" name="id_rubro" wire:model="id_rubro"
-                                        @change="$wire.resetearRecursos($event.target.selectedOptions[0].getAttribute('data-id-especial'))">
-
+                                    @if (str_contains($referer, 'vobo') || str_contains($referer, 'seguimiento'))
+                                        <select class="w-auto" id="id_rubro" name="id_rubro" wire:model="id_rubro"
+                                            disabled>
+                                        @else
+                                            <select class="sm:w-auto w-full" id="id_rubro" name="id_rubro"
+                                                wire:model="id_rubro"
+                                                @change="$wire.resetearRecursos($event.target.selectedOptions[0].getAttribute('data-id-especial'))">
                                     @endif
-                                    
-                                        <option value="0">Selecciona una opción</option>
-                                        @foreach ($cuentasContables as $cuentaContable)
-                                            <option value="{{ $cuentaContable->id }}"
-                                                data-id-especial="{{ $cuentaContable->id_especial }}">
-                                                {{ $cuentaContable->nombre_cuenta }}</option>
-                                        @endforeach
+
+                                    <option value="0">Selecciona una opción</option>
+                                    @foreach ($cuentasContables as $cuentaContable)
+                                        <option value="{{ $cuentaContable->id }}"
+                                            data-id-especial="{{ $cuentaContable->id_especial }}">
+                                            {{ $cuentaContable->nombre_cuenta }}</option>
+                                    @endforeach
                                     </select>
                                     @error('id_rubro')
                                         <span class="text-rojo sm:inline-block block">{{ $message }}</span>
@@ -49,8 +67,8 @@ use Carbon\Carbon;
                                 <div class="mt-8">
                                     <label for="nombre_expedido">Expedido a nombre de: </label>
                                     <input type="text" readonly id="nombre_expedido" wire:model="nombre_expedido"
-                                        class="inputs-formulario-solicitudes sm:w-96 w-full cursor-not-allowed" title="No se puede editar."
-                                        placeholder="Nombre">
+                                        class="inputs-formulario-solicitudes sm:w-96 w-full cursor-not-allowed"
+                                        title="No se puede editar." placeholder="Nombre">
                                     @error('nombre_expedido')
                                         <span class="text-rojo sm:inline-block block">{{ $message }}</span>
                                     @enderror
@@ -76,11 +94,13 @@ use Carbon\Carbon;
                                 @if ($id_rubro_especial == '2')
                                     <div class="mt-8">
                                         <label>Periodo</label>
-                                        <p class="sm:ml-10 text-verde"><span class="font-bold">Nota: </span>Recuerda que tus requerimientos tiene un periodo de solicitud de 15 días previos.</p>
+                                        <p class="sm:ml-10 text-verde"><span class="font-bold">Nota: </span>Recuerda que
+                                            tus requerimientos tiene un periodo de solicitud de 15 días previos.</p>
                                         <div
                                             class="mt-2 sm:ml-10 sm:grid sm:grid-cols-2 gap-4 flex-col sm:w-3/4 w-full">
                                             <div class="flex-col">
-                                                <label class="block mb-1" for="finicial">Fecha inicial<samp class="text-rojo">*</samp>:</label>
+                                                <label class="block mb-1" for="finicial">Fecha inicial<samp
+                                                        class="text-rojo">*</samp>:</label>
                                                 <input wire:model="finicial" class="inputs-formulario" id="finicial"
                                                     type="date"
                                                     min="{{ Carbon::now()->addDay(15)->format('Y-m-d') }}">
@@ -104,7 +124,8 @@ use Carbon\Carbon;
 
                                 @if ($id_rubro_especial == '3')
                                     <div class="my-5">
-                                        <label for="tipo_comprobacion">Tipo de solicitud<samp class="text-rojo">*</samp>:</label>
+                                        <label for="tipo_comprobacion">Tipo de solicitud<samp
+                                                class="text-rojo">*</samp>:</label>
                                         <div class="sm:ml-10 mt-2">
                                             <label class=" items-center">
                                                 <input type="radio" x-model="tipoComprobacionOption"
@@ -126,7 +147,8 @@ use Carbon\Carbon;
                                 @endif
                                 @if ($id_rubro_especial == '3')
                                     <div class="mt-2">
-                                        <label for="bitacoraPdfTemp">Bitacora firmada PDF<samp class="text-rojo">*</samp>:</label>
+                                        <label for="bitacoraPdfTemp">Bitacora firmada PDF<samp
+                                                class="text-rojo">*</samp>:</label>
                                         <input type="file" id="bitacoraPdfTemp" wire:model='bitacoraPdfTemp'
                                             accept=".pdf">
                                     @empty($docsCartaExclusividad)
@@ -180,7 +202,10 @@ use Carbon\Carbon;
                                 wire:model='aviso_privacidad' class="mr-1">
                             <label for="aviso_privacidad">Acepto aviso de privacidad simplificada de la
                                 UAEMEX<samp class="text-rojo">*</samp>.</label>
-                                <a href="http://sistema-requisiciones-dgiea.test/storage/doc-UAEM/aviso.pdf" target="_blank" class="text-verde font-bold pl-2 hover:underline">Ver aviso de privacidad</a>
+                            {{-- <a href="{{asset('storage/aviso.pdf')}}" --}}
+                            <a href="{{Storage::url('/doc-UAEM/Aviso-de-Privacidad-SIEA-CVU.pdf')}}"
+                                target="_blank" class="text-verde font-bold pl-2 hover:underline">Ver aviso de
+                                privacidad</a>
                             @error('aviso_privacidad')
                                 <span class=" text-rojo sm:inline-block block">{{ $message }}</span>
                             @enderror
@@ -194,19 +219,19 @@ use Carbon\Carbon;
                                 <span class=" text-rojo sm:inline-block block">{{ $message }}</span>
                             @enderror
                         </div>
-                        <div class="sm:text-right text-center mt-5">             
+                        <div class="sm:text-right text-center mt-5">
                             @empty($solicitud)
                                 <button type="button" @click="saveConfirmation()"
                                     class="btn-success sm:w-auto w-5/6">Guardar avance</button>
                             @endempty
                             <button type="submit" @click="saveConfirmationVoBo()"
                                 class="btn-primary sm:w-auto w-5/6">Enviar para VoBo</button>
-                            @if (str_contains($referer, 'vobo')|| str_contains($referer, 'crear'))
-                                 <button type="button" @click="cancelarSolicitud()"
-                                class="btn-warning sm:w-auto w-5/6">Cancelar</button>
+                            @if (str_contains($referer, 'editar') || str_contains($referer, 'crear'))
+                                <button type="button" @click="cancelarSolicitud()"
+                                    class="btn-warning sm:w-auto w-5/6">Cancelar</button>
                             @else
-                                <button type="button" class="btn-warning sm:w-auto w-5/6" 
-                                x-on:click="window.location.href = '{{ route('cvu.seguimiento') }}'">Regresar</button>
+                                <button type="button" class="btn-warning sm:w-auto w-5/6"
+                                    x-on:click="window.location.href = '{{ route('cvu.seguimiento') }}'">Regresar</button>
                             @endif
                         </div>
                 </div>
@@ -280,10 +305,22 @@ use Carbon\Carbon;
 
         }).then((result) => {
             if (result.isConfirmed) {
-                if (window.location == "{{ route('cvu.create-solicitudes') }}") {
-                    window.location.href = '{{ route('cvu.create') }}'
-                } else {
-                    window.location.href = '{{ route('cvu.vobo') }}'
+
+
+                var currentUrl = window.location.href;
+
+                var reglaSeguimiento = /solicitudesS\/\d+\/editar/;
+                var reglaVobo = /solicitudes\/\d+\/editar/;
+
+                if (window.location == "{{ route('cvu.create-solicitudes') }}"){
+                    window.location.href = '{{ route('cvu.create') }}';
+
+                } else if (currentUrl.match(reglaSeguimiento)) {
+                    window.location.href = '{{ route('cvu.seguimiento') }}';
+                } else if(currentUrl.match(reglaVobo)){
+                    window.location.href = '{{ route('cvu.vobo') }}';
+                }else {
+                    window.location.href = '{{ route('cvu.vobo') }}';
                 }
             }
 

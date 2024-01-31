@@ -57,14 +57,16 @@ class RevisorAdquisicion extends Component
 
     protected $rules = [
         'estatus' => 'required_if:estatus,0|not_in:0',
-        'observaciones_estatus' => 'required_if:estatus,5|required_if:estatus,9',
-        'claveSiia' => 'required_if:tipoEstatus,3|required_if:tipoEstatus,5',
+        'observaciones_estatus' => 'required_if:estatus,5|required_if:estatus,9|max:800',
+        'claveSiia' => 'required_if:tipoEstatus,3|required_if:tipoEstatus,5|max:16',
     ];
     protected $messages = [
         'estatus.required_if' => 'Debe seleccionar un estado.',
         'estatus.not_in' => 'Debe seleccionar un estado.',
         'observaciones_estatus.required_if' => 'Debe escribir las observaciones o motivos de rechazo.',
+        'observaciones_estatus.max' => 'La observación es demasiado larga.',
         'claveSiia.required_if' => 'Debe de escribir la clave del SIIA.',
+        'claveSiia.max' => 'La clave SIIA es demasiado larga.',
     ];
 
     public $listeners = [
@@ -80,9 +82,9 @@ class RevisorAdquisicion extends Component
 
         //$this->tipoEstatus = EstatusRequisiciones::select('tipo')->where('id', $this->estatus)->first();
 
-        if ($this->id_adquisicion_detalle != null) {
+        if ($this->id_adquisicion_detalle != null) { //solo tomamos los estatus que son del SIIA para adquisiciones
             $this->estatus_generales = EstatusRequisiciones::whereIn('tipo', [3, 5])->get();
-        } else {
+        } else { //Tomamos estatus de tipo DGIEA Y SIAA para adquisiciones
             $this->estatus_generales = EstatusRequisiciones::whereIn('tipo', [2, 3, 5])->get();
         }
 
@@ -94,29 +96,36 @@ class RevisorAdquisicion extends Component
         $this->afecta_investigacion = $this->adquisicion->afecta_investigacion;
         $this->exclusividad = $this->adquisicion->exclusividad;
         $this->docsCartaExclusividad = $this->adquisicion->docsCartaExclusividad;
-        $this->subtotal = $this->adquisicion->subtotal;
-        $this->iva = $this->adquisicion->iva;
-        $this->total = $this->adquisicion->total;
         $this->vobo = 0;
         $this->claveAdquisicion = $this->adquisicion->clave_adquisicion;
         $this->estatus = $this->adquisicion->estatus_general;
         //dd($this->estatus);
 
-        if ($this->id_adquisicion_detalle != 0) {
-            $this->bienesDB = AdquisicionDetalle::where('id_adquisicion', $id)->where('id', $this->id_adquisicion_detalle)->first();
-            $this->clave = AdquisicionDetalle::select('clave_siia')->where('id', $this->id_adquisicion_detalle)->first();
-            $this->clave = $this->clave->clave_siia;
+        if ($this->id_adquisicion_detalle != null) { //cuando entra a la adquisicion por detalle
 
-            $this->queryObservaciones = AdquisicionDetalle::select('observaciones')->where('id', $this->id_adquisicion_detalle)->first();
-            $this->queryObservaciones = $this->queryObservaciones->observaciones;
-            $this->estatus = $this->bienesDB->estatus_rt;
-        } else {
+            $this->bienesDB = AdquisicionDetalle::where('id_adquisicion', $id)->where('id', $this->id_adquisicion_detalle)->get();
+            $this->clave = $this->bienesDB[0]['clave_siia'];
+            $this->queryObservaciones = $this->bienesDB[0]['observaciones'];
+            $this->estatus = $this->bienesDB[0]['estatus_rt'];
+            //Totales individuales
+            $this->subtotal = $this->bienesDB[0]['cantidad'] * $this->bienesDB[0]['precio_unitario'];
+            $this->iva = $this->bienesDB[0]['iva'];
+            $this->total = $this->bienesDB[0]['importe'];
+
+        } else { //Cuando entra a la adquisicion en general
             $this->bienesDB = AdquisicionDetalle::where('id_adquisicion', $id)->get();
             $this->clave = null;
-
             $this->queryObservaciones = Adquisicion::select('observaciones')->where('id', $id)->first();
             $this->queryObservaciones = $this->queryObservaciones->observaciones;
+
+            $this->subtotal = $this->adquisicion->subtotal;
+            $this->iva = $this->adquisicion->iva;
+            $this->total = $this->adquisicion->total;
         }
+
+        $this->tipoEstatus = EstatusRequisiciones::where('id', $this->estatus)->first();
+        $this->tipoEstatus = $this->tipoEstatus->tipo;
+        //dd($this->tipoEstatus);
 
         //$this->clave = SolicitudDetalle::select('clave_siia')->where('id_solicitud', $this->id_solicitud)->first();
 
@@ -194,21 +203,17 @@ class RevisorAdquisicion extends Component
                     $bienesDB = $this->adquisicion->detalless()->get();
                     foreach ($bienesDB as $bien) {
                         if ($bien) {
-                            $clave_siia ='';
                             if ($this->estatus == 5 || $this->estatus == 9) {
                                 $observaciones = $this->observaciones_estatus;
                             }else{
                                 $observaciones = null;
                             }
-                            if (($this->tipoEstatus == 3 || $this->tipoEstatus == 5) && $this->clave == null) {
-                                $clave_siia = $this->claveSiia;
-                            }
-
+                          
                             $bien->update([
                                 'estatus_dgiea' => $this->estatus,
                                 'estatus_rt' => $this->estatus,
                                 'observaciones' => $observaciones,
-                                'clave_siia' => $clave_siia
+                                'clave_siia' =>  $this->claveSiia
                                 ]);
                         }
 
@@ -244,10 +249,10 @@ class RevisorAdquisicion extends Component
                     }
                 }
             } else {
-                dd("else");
                 // Actualizamos en detalles, entro a una partida
                 $bienesDB = AdquisicionDetalle::where('id', $this->id_adquisicion_detalle)->first();
                 if ($bienesDB) {
+                  
                     if ($this->estatus == 5 || $this->estatus == 9) {
                         $observaciones = $this->observaciones_estatus;
                     } else {
@@ -257,7 +262,8 @@ class RevisorAdquisicion extends Component
                     $bienesDB->update([
                         'estatus_dgiea' => $this->estatus,                        
                         'estatus_rt' => $this->estatus,
-                        'observaciones' => $observaciones
+                        'observaciones' => $observaciones,
+                        'clave_siia' => $this->claveSiia
                         ]);
                 }
             }

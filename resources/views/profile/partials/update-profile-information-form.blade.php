@@ -9,21 +9,6 @@
         </p>
     </header>
 
-    @if (session('success'))
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <script>
-            Swal.fire({
-                position: 'top-center',
-                icon: 'success',
-                text: '{{ session('success') }}',
-                //confirmButtonText: 'Aceptar',
-                confirmButtonColor: '#62836C',
-                //showConfirmButton: true,
-                timer: 2500
-            })
-        </script>
-    @endif
-
     <form id="send-verification" method="post" action="{{ route('verification.send') }}">
         @csrf
     </form>
@@ -86,8 +71,9 @@
         </div>
 
         <div class="flex items-center gap-4">
-            <x-primary-button
-                class="bg-verde text-white sm:w-auto w-full">{{ __('Guardar cambios') }}</x-primary-button>
+            <x-secondary-button class="mx-auto rounded-full hover:rounded-full sm:w-auto w-full">
+                {{ __('Guardar cambios') }}
+            </x-secondary-button>
 
             @if (session('status') === 'profile-updated')
                 <p x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"

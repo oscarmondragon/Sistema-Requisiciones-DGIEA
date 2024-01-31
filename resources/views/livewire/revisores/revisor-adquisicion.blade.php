@@ -10,13 +10,7 @@
                                     {{ $adquisicion->clave_adquisicion }}
                                 </span>
                             </h1>
-                            <h2 class="text-dorado"> {{ $clave == null ? '' : 'Clave SIIA: ' . $clave }} </h2>
-                            
-                            @if ($queryObservaciones != null)
-                            <label class="block mt-5">Observaciones o motivo de rechazo:</label>
-                            <textarea cols="30" rows="2" wire:model='queryObservaciones'
-                            class="sm:w-3/4 w-full" disabled></textarea>
-                            @endif
+                            <h2 class="text-dorado"> {{ $clave == null ? '' : 'Clave SIIA: ' . $clave }} </h2>                
                             <form x-on:submit.prevent="saveConfirmation">
                                 @csrf
                                 <div>
@@ -37,7 +31,7 @@
                                      claveR: @entangle('clave') }">
 
                                         @can('revisor', Auth::user())
-                                            <h2 >Actualizar estado</h2>
+                                            <h2>Actualizar estado</h2>
                                             <div class="my-6">
                                                 <label for="estatus">
                                                     Estado<samp class="text-rojo">*</samp>:
@@ -74,7 +68,7 @@
                                             class="mt-6">
                                             <label for="claveSiia" class="my-2">Clave SIIA:<samp
                                                     class="text-rojo">*</samp>:</label>
-                                            <input type="text" name="claveSiia" id="claveSiia" wire:model='claveSiia'
+                                            <input type="number" name="claveSiia" id="claveSiia" wire:model='claveSiia'
                                                 placeholder="Clave SIIA" class="inputs-formulario-solicitudes w-1/4">
                                             @error('claveSiia')
                                                 <span class=" text-rojo sm:inline-block block">{{ $message }}</span>

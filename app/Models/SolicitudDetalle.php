@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
+
 class SolicitudDetalle extends Model
 {
     use HasFactory;
@@ -15,7 +16,7 @@ class SolicitudDetalle extends Model
 
     protected $connection = 'mysql';
     protected $table = "solicitud_detalles";
-    
+
     public function estatusSolicitud()
     {
         return $this->belongsTo(EstatusRequisiciones::class, 'estatus_rt');
