@@ -12,9 +12,10 @@
                     {{ $solicitud->observaciones_vobo }}</span>
             @endif
             @if ($solicitud->observaciones)
-                <span class="block pl-12 font-normal"><span class="font-bold">Por DGIEA: </span>
+                <span class="block pl-12 font-normal"><span class="font-bold">Por DGIEA-SIIA: </span>
                     {{ $solicitud->observaciones }}</span>
             @endif
+            
         </p>
     </div>
 @endif

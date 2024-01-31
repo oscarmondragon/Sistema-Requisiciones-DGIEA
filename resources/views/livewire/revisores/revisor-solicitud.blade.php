@@ -30,18 +30,6 @@
                                         @endcan
                                     </div>
                                 </div>
-                                {{-- <div class="mt-4 sm:ml-10">
-                                    @if (str_contains($referer, 'vobo'))
-                                        <input type="checkbox" id="vobo" name="vobo" wire:model='vobo'
-                                            class="mr-1">
-                                        <label for="vobo">VoBo al requerimiento solicitado. Se envía para VoBo del
-                                            Admistrativo/Investigador.</label>
-                                        @error('vobo')
-                                            <span class=" text-rojo sm:inline-block block">{{ $message }}</span>
-                                        @enderror
-                                    @endif
-                                </div> --}}
-                                {{-- <div class="my-5" x-data x-init="rechazo = '{{ $estatusSolicitud }}', tipoEstatus = '{{ $tipoEstatus }}'"> --}}
                                 <div
                                     x-data = "{ ifRechazo: @entangle('estatusSolicitud').defer, tipoEstatus: @entangle('tipoEstatus').defer,
                                     claveSiia: @entangle('clave').defer, checkClave: false }">
