@@ -332,8 +332,6 @@
                                     @endforeach
                                 </ul>
                             </div>
-
-
                             <div>
                                 <label x-show="exclusividadSelectedOption === '1'" for="anexoDocumentos"
                                     class="text-verde mt-5 block">
@@ -404,7 +402,6 @@
                     </form>
                 </div>
             </div>
-
             @push('scripts')
                 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
                 <script>

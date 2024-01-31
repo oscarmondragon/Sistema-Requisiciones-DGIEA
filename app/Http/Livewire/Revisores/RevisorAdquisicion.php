@@ -9,6 +9,7 @@ use App\Models\AdquisicionDetalle;
 use App\Models\Documento;
 use App\Models\CuentaContable;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -190,76 +191,80 @@ class RevisorAdquisicion extends Component
 
     public function save()
     {
-        $this->validate();
+        $this->validate();        
+        
 
         try {
             DB::beginTransaction();
             if ($this->id_adquisicion_detalle == null) {
+                
                 if (in_array($this->tipoEstatus, [3, 5])) { // Selecciono un estatus por partida    
                     // $bienesDB = AdquisicionDetalle::where('id_adquisicion', $this->id_adquisicion)->get();
                     $bienesDB = $this->adquisicion->detalless()->get();
-
                     foreach ($bienesDB as $bien) {
                         if ($bien) {
-                            $bien->estatus_dgiea = $this->estatus;
-                            $bien->estatus_rt = $this->estatus;
-
                             if ($this->estatus == 5 || $this->estatus == 9) {
-                                $bien->observaciones = $this->observaciones_estatus;
-                            } else {
-                                $bien->observaciones = null;
+                                $observaciones = $this->observaciones_estatus;
+                            }else{
+                                $observaciones = null;
                             }
-                                $bien->clave_siia = $this->claveSiia;
-                            
-
-                            $bien->save();
+                          
+                            $bien->update([
+                                'estatus_dgiea' => $this->estatus,
+                                'estatus_rt' => $this->estatus,
+                                'observaciones' => $observaciones,
+                                'clave_siia' =>  $this->claveSiia
+                                ]);
                         }
 
                         $adquisicion = Adquisicion::where('id', $this->adquisicion->id)->first();
                         if ($adquisicion) {
-                            $adquisicion->estatus_general = $this->estatus;
-
                             if ($this->estatus == 5 || $this->estatus == 9) {
-                                $adquisicion->observaciones = $this->observaciones_estatus;
+                                $observaciones = $this->observaciones_estatus;
                             } else {
-                                $adquisicion->observaciones = null;
+                                $observaciones = null;
                             }
 
-                            $adquisicion->save();
+                            $adquisicion->update([
+                                'estatus_general' => $this->estatus,
+                                'observaciones' => $observaciones
+                                ]);
                         }
                     }
                 } else {
                     /*  Selecciono un estatus para una adquisicion en general
                         Actualizamos en adquisiciones */
+                        
                     $adquisicion = Adquisicion::where('id', $this->id_adquisicion)->first();
                     if ($adquisicion) {
-                        $adquisicion->estatus_general = $this->estatus;
-
                         if ($this->estatus == 5 || $this->estatus == 9) {
-                            $adquisicion->observaciones = $this->observaciones_estatus;
+                            $observaciones = $this->observaciones_estatus;
                         } else {
-                            $adquisicion->observaciones = null;
+                            $observaciones = null;
                         }
-
-                        $adquisicion->save();
+                        $adquisicion->update([
+                            'estatus_general' => $this->estatus,
+                            'observaciones' => $observaciones
+                            ]);
                     }
                 }
             } else {
                 // Actualizamos en detalles, entro a una partida
                 $bienesDB = AdquisicionDetalle::where('id', $this->id_adquisicion_detalle)->first();
                 if ($bienesDB) {
-                    $bienesDB->estatus_dgiea = $this->estatus;
-                    $bienesDB->estatus_rt = $this->estatus;
-                    $bienesDB->clave_siia = $this->claveSiia;
-
-
+                  
                     if ($this->estatus == 5 || $this->estatus == 9) {
-                        $bienesDB->observaciones = $this->observaciones_estatus;
+                        $observaciones = $this->observaciones_estatus;
                     } else {
-                        $bienesDB->observaciones = null;
+                        $observaciones = null;
                     }
 
-                    $bienesDB->save();
+                    $bienesDB->update([
+                        'estatus_dgiea' => $this->estatus,                        
+                        'estatus_rt' => $this->estatus,
+                        'observaciones' => $observaciones,
+                        'clave_siia' => $this->claveSiia
+                        ]);
                 }
             }
 

@@ -129,19 +129,23 @@ class SolicitudVobo extends Component
         try {
             DB::beginTransaction();
             $solicitud = Solicitud::where('id', $this->solicitud->id)->first();
-            if ($solicitud) {
-                $clave_solicitud = $solicitud->clave_solicitud;
-                $solicitud->observaciones_vobo = null;
-                $solicitud->estatus_rt = 4;
-                $solicitud->estatus_dgiea = 4;
+            if ($solicitud) {            
 
                 if ($who_vobo) { //Si el deposito es por parte del Responsable técnico
-                    $solicitud->vobo_rt = $fecha_vobo;
+                    $vobo_rt = $fecha_vobo;
+                    $vobo_admin = $solicitud->vobo_admin;
                 } else { //Si el depósito es por parte del administrativo
-                    $solicitud->vobo_admin = $fecha_vobo;
+                    $vobo_rt = $solicitud->vobo_rt;
+                    $vobo_admin = $fecha_vobo;
                 }
-                $solicitud->save();
-
+                $solicitud->update([
+                    'vobo_rt'=> $vobo_rt,
+                    'vobo_admin'=> $vobo_admin,
+                    'clave_solicitud' => $solicitud->clave_solicitud,
+                    'estatus_rt' => 4,
+                    'estatus_dgiea' => 4,
+                    'observaciones_vobo' => null
+                ]);
             }
             DB::commit();
             return redirect('/cvu-vobo')->with('success', 'Su solicitud con clave ' . $clave_solicitud . ' ha sido  enviada para revisión a la DGIEA.');
@@ -163,12 +167,12 @@ class SolicitudVobo extends Component
             DB::beginTransaction();
             $solicitud = Solicitud::where('id', $this->solicitud->id)->first();
             if ($solicitud) {
-                $clave_solicitud = $solicitud->clave_solicitud;
-                $solicitud->estatus_rt = 3;
-                $solicitud->estatus_dgiea = 3;
-                $solicitud->observaciones_vobo = $this->observacionesVobo;
-
-                $solicitud->save();
+                $solicitud->update([
+                    'clave_solicitud' => $solicitud->clave_solicitud,
+                    'estatus_rt' => 3,
+                    'estatus_dgiea' => 3,
+                    'observaciones_vobo' =>  $this->observacionesVobo
+                ]);
 
             }
             DB::commit();

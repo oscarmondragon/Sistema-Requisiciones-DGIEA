@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
 
 class Adquisicion extends Model
 {
@@ -40,7 +42,6 @@ class Adquisicion extends Model
     public function documentos()
     {
         return $this->hasMany(Documento::class, 'id_requisicion')->where('tipo_requisicion', 1);
-
     }
 
     protected $fillable = [
@@ -66,4 +67,111 @@ class Adquisicion extends Model
         'iva',
         'total'
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($adquisicion) {
+            // Realizar la inserción en la otra tabla
+            $adquisicionHistorial = AdquisicionHistorial::create([
+                'id_adquisicion' => $adquisicion->id,
+                'clave_adquisicion' => $adquisicion->clave_adquisicion,
+                'tipo_requisicion' => $adquisicion->tipo_requisicion,
+                'clave_proyecto' => $adquisicion->clave_proyecto,
+                'clave_espacio_academico' => $adquisicion->clave_espacio_academico,
+                'clave_rt' => $adquisicion->clave_rt,
+                'tipo_financiamiento' => $adquisicion->tipo_financiamiento,
+                'id_rubro' => (int) $adquisicion->id_rubro,
+                'afecta_investigacion' => $adquisicion->afecta_investigacion,
+                'justificacion_academica' => $adquisicion->justificacion_academica,
+                'exclusividad' => $adquisicion->exclusividad,
+                'id_carta_exclusividad' => $adquisicion->id_carta_exclusividad,
+                'vobo_admin' => $adquisicion->vobo_admin,
+                'vobo_rt' => $adquisicion->vobo_rt,
+                'id_emisor' => $adquisicion->id_emisor,
+                'estatus_general' => $adquisicion->estatus_general,
+                'observaciones'=> $adquisicion->observaciones,
+                'observaciones_vobo' => $adquisicion->observaciones_vobo,
+                'subtotal' => $adquisicion->subtotal,
+                'iva' => $adquisicion->iva,
+                'total' => $adquisicion->total,
+                'id_usuario_sesion' =>Session::has('id_user')? Session::get('id_user'): Auth::user()->id,
+                'accion' => 'CREATE'
+            ]);
+        });
+
+        static::updated(function ($adquisicion) {
+            // Verificar si la clave_adquisicion ha sido actualizada
+            // Actualizar la otra tabla
+            if ($adquisicion->isDirty('clave_adquisicion')) { //verifica si la clave_adquisicion ha sido modificada
+                AdquisicionHistorial::where('id_adquisicion', $adquisicion->id)
+                    ->update(['clave_adquisicion' => $adquisicion->clave_adquisicion]);
+            } else {
+                $adquisicionHistorial = AdquisicionHistorial::create([
+                    'id_adquisicion' => $adquisicion->id,
+                    'clave_adquisicion' => $adquisicion->clave_adquisicion,
+                    'tipo_requisicion' => $adquisicion->tipo_requisicion,
+                    'clave_proyecto' => $adquisicion->clave_proyecto,
+                    'clave_espacio_academico' => $adquisicion->clave_espacio_academico,
+                    'clave_rt' => $adquisicion->clave_rt,
+                    'tipo_financiamiento' => $adquisicion->tipo_financiamiento,
+                    'id_rubro' => (int) $adquisicion->id_rubro,
+                    'afecta_investigacion' => $adquisicion->afecta_investigacion,
+                    'justificacion_academica' => $adquisicion->justificacion_academica,
+                    'exclusividad' => $adquisicion->exclusividad,
+                    'id_carta_exclusividad' => $adquisicion->id_carta_exclusividad,
+                    'vobo_admin' => $adquisicion->vobo_admin,
+                    'vobo_rt' => $adquisicion->vobo_rt,
+                    'id_emisor' => $adquisicion->id_emisor,
+                    'estatus_general' => $adquisicion->estatus_general,
+                    'observaciones'=> $adquisicion->observaciones,
+                    'observaciones_vobo' => $adquisicion->observaciones_vobo,
+                    'subtotal' => $adquisicion->subtotal,
+                    'iva' => $adquisicion->iva,
+                    'total' => $adquisicion->total,
+                    'id_usuario_sesion' => Session::has('id_user')? Session::get('id_user'): Auth::user()->id,
+                    'accion' => 'UPDATE'
+                ]);
+            }
+
+        });
+
+        static::deleted(function ($adquisicion) {
+            // Realizar la inserción en la otra tabla
+            $adquisicionHistorial = AdquisicionHistorial::create([
+                'id_adquisicion' => $adquisicion->id,
+                'clave_adquisicion' => $adquisicion->clave_adquisicion,
+                'tipo_requisicion' => $adquisicion->tipo_requisicion,
+                'clave_proyecto' => $adquisicion->clave_proyecto,
+                'clave_espacio_academico' => $adquisicion->clave_espacio_academico,
+                'clave_rt' => $adquisicion->clave_rt,
+                'tipo_financiamiento' => $adquisicion->tipo_financiamiento,
+                'id_rubro' => (int) $adquisicion->id_rubro,
+                'afecta_investigacion' => $adquisicion->afecta_investigacion,
+                'justificacion_academica' => $adquisicion->justificacion_academica,
+                'exclusividad' => $adquisicion->exclusividad,
+                'id_carta_exclusividad' => $adquisicion->id_carta_exclusividad,
+                'vobo_admin' => $adquisicion->vobo_admin,
+                'vobo_rt' => $adquisicion->vobo_rt,
+                'id_emisor' => $adquisicion->id_emisor,
+                'estatus_general' => $adquisicion->estatus_general,
+                'observaciones'=> $adquisicion->observaciones,
+                'observaciones_vobo' => $adquisicion->observaciones_vobo,
+                'subtotal' => $adquisicion->subtotal,
+                'iva' => $adquisicion->iva,
+                'total' => $adquisicion->total,
+                'id_usuario_sesion' => Session::has('id_user')? Session::get('id_user'): Auth::user()->id,
+                'accion' => 'DELETE'
+            ]);
+        });
+
+        static::deleting(function ($adquisicion) {
+
+            //Eliminamos en cascada
+            $adquisicion->detalless()->delete();
+            $adquisicion->documentos()->delete();
+
+        });
+    }
 }
