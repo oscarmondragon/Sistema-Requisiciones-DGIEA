@@ -73,7 +73,7 @@ class RevisorSolicitud extends Component
 
     protected $rules = [
         'estatusSolicitud' => 'required_if:estatusSolicitud,0|not_in:0',
-        'sClaveSiia' => 'required_if:tipoEstatus,4|required_if:tipoEstatus,5|max:15',
+        'sClaveSiia' => 'required_if:tipoEstatus,4|required_if:tipoEstatus,5|max:16|min:0',
         'observaciones_estatus' => 'required_if:estatusSolicitud,5|required_if:estatusSolicitud,12|required_if:estatusSolicitud,14|max:800'
     ];
 
@@ -96,6 +96,8 @@ class RevisorSolicitud extends Component
         $this->solicitud = Solicitud::find($id);
 
         $this->estatusSolicitud = $this->solicitud->estatus_dgiea;
+        $this->tipoEstatus = EstatusRequisiciones::where('id', $this->estatusSolicitud)->first();
+        $this->tipoEstatus = $this->tipoEstatus->tipo;
         //dd($this->estatusSolicitud);
 
         $this->estatus_solicitudes = EstatusRequisiciones::whereIn('tipo', [2, 4, 5])->get();
@@ -105,8 +107,7 @@ class RevisorSolicitud extends Component
         $this->id_solicitud = $this->solicitud->id;
 
         $this->solicitud_detalles = SolicitudDetalle::where('id_solicitud', $this->id_solicitud)->first();
-        $this->clave = SolicitudDetalle::select('clave_siia')->where('id_solicitud', $this->id_solicitud)->first();
-        $this->clave = $this->clave->clave_siia;
+        $this->clave = $this->solicitud_detalles->clave_siia;
 
         if ($this->clave != null) {
             $this->sClaveSiia = $this->clave;
@@ -157,6 +158,8 @@ class RevisorSolicitud extends Component
 
     public function save()
     {
+
+        //dd($this->sClaveSiia);
         $this->validate();
 
         try {
@@ -175,13 +178,13 @@ class RevisorSolicitud extends Component
                 $this->solicitud->save();
             }
 
-            if (($this->tipoEstatus == 4 || $this->tipoEstatus == 5) && $this->clave == null) {
                 if ($this->solicitud_detalles) {
                     $this->solicitud_detalles->clave_siia = $this->sClaveSiia;
 
                     $this->solicitud_detalles->save();
                 }
-            }
+                $this->clave = $this->sClaveSiia;
+            
 
 
             DB::commit();

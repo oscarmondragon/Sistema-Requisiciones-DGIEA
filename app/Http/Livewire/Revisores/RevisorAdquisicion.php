@@ -57,7 +57,7 @@ class RevisorAdquisicion extends Component
     protected $rules = [
         'estatus' => 'required_if:estatus,0|not_in:0',
         'observaciones_estatus' => 'required_if:estatus,5|required_if:estatus,9|max:800',
-        'claveSiia' => 'required_if:tipoEstatus,3|required_if:tipoEstatus,5|max:15',
+        'claveSiia' => 'required_if:tipoEstatus,3|required_if:tipoEstatus,5|max:16',
     ];
     protected $messages = [
         'estatus.required_if' => 'Debe seleccionar un estado.',
@@ -65,7 +65,7 @@ class RevisorAdquisicion extends Component
         'observaciones_estatus.required_if' => 'Debe escribir las observaciones o motivos de rechazo.',
         'observaciones_estatus.max' => 'La observación es demasiado larga.',
         'claveSiia.required_if' => 'Debe de escribir la clave del SIIA.',
-        'claveSiia.max' => 'La clave del SIIA demasiado larga.',
+        'claveSiia.max' => 'La clave SIIA es demasiado larga.',
     ];
 
     public $listeners = [
@@ -118,6 +118,10 @@ class RevisorAdquisicion extends Component
             $this->queryObservaciones = Adquisicion::select('observaciones')->where('id', $id)->first();
             $this->queryObservaciones = $this->queryObservaciones->observaciones;
         }
+
+        $this->tipoEstatus = EstatusRequisiciones::where('id', $this->estatus)->first();
+        $this->tipoEstatus = $this->tipoEstatus->tipo;
+        //dd($this->tipoEstatus);
 
         //$this->clave = SolicitudDetalle::select('clave_siia')->where('id_solicitud', $this->id_solicitud)->first();
 
@@ -202,10 +206,8 @@ class RevisorAdquisicion extends Component
                             } else {
                                 $bien->observaciones = null;
                             }
-
-                            if (($this->tipoEstatus == 3 || $this->tipoEstatus == 5) && $this->clave == null) {
                                 $bien->clave_siia = $this->claveSiia;
-                            }
+                            
 
                             $bien->save();
                         }
@@ -244,10 +246,9 @@ class RevisorAdquisicion extends Component
                 $bienesDB = AdquisicionDetalle::where('id', $this->id_adquisicion_detalle)->first();
                 if ($bienesDB) {
                     $bienesDB->estatus_dgiea = $this->estatus;
-                    $bienesDB->estatus_rt = $this->estatus;                    
-                    // if (($this->tipoEstatus == 3 || $this->tipoEstatus == 5) && $this->clave == null) {
-                    //     $bienesDB->clave_siia = $this->claveSiia;
-                    // }
+                    $bienesDB->estatus_rt = $this->estatus;
+                    $bienesDB->clave_siia = $this->claveSiia;
+                    //dd($bienesDB->clave_siia);
 
                     if ($this->estatus == 5 || $this->estatus == 9) {
                         $bienesDB->observaciones = $this->observaciones_estatus;
