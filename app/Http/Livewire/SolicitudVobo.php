@@ -12,6 +12,7 @@ use App\Models\Documento;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
 
 class SolicitudVobo extends Component
 {
@@ -70,9 +71,9 @@ class SolicitudVobo extends Component
         'vobo.accepted' => 'Debe dar el visto bueno.'
     ];
 
-    public function mount($id = 0)
+    public function mount(Request $request, $id = 0)
     {
-        $this->referer = $_SERVER['HTTP_REFERER'];
+        $this->referer = $request->path();
         $this->solicitud = Solicitud::find($id);
 
         $this->cuentasContables = CuentaContable::where('estatus', 1)->whereIn('tipo_requisicion', [2, 3])->get();
@@ -130,6 +131,7 @@ class SolicitudVobo extends Component
             $solicitud = Solicitud::where('id', $this->solicitud->id)->first();
             if ($solicitud) {
                 $clave_solicitud = $solicitud->clave_solicitud;
+                $solicitud->observaciones_vobo = null;
                 $solicitud->estatus_rt = 4;
                 $solicitud->estatus_dgiea = 4;
 
@@ -142,11 +144,11 @@ class SolicitudVobo extends Component
 
             }
             DB::commit();
-            return redirect('/cvu-vobo')->with('success', 'Su solicitud con clave ' . $clave_solicitud . ' ha sido  enviada para revision a la DGIEA.');
+            return redirect('/cvu-vobo')->with('success', 'Su solicitud con clave ' . $clave_solicitud . ' ha sido  enviada para revisión a la DGIEA.');
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'error al intentar confirmar visto bueno. Intente más tarde.' . $e->getMessage());
+            return redirect()->back()->with('error', 'Error al intentar confirmar visto bueno. Intente más tarde.' . $e->getMessage());
         }
 
 
@@ -174,7 +176,7 @@ class SolicitudVobo extends Component
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'error al intentar rechazar visto bueno. Intente más tarde.' . $e->getMessage());
+            return redirect()->back()->with('error', 'Error al intentar rechazar visto bueno. Intente más tarde.' . $e->getMessage());
         }
 
     }

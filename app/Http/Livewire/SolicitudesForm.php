@@ -18,6 +18,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 
 use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Http\Request;
 
 
 class SolicitudesForm extends Component
@@ -51,6 +52,7 @@ class SolicitudesForm extends Component
     public $justificacionS = "";
     public $finicial;
     public $ffinal;
+    public $observacionesVobo = "";
 
     public $id_emisor;
     public $id_revisor;
@@ -67,19 +69,21 @@ class SolicitudesForm extends Component
 
     public $tamanyoDocumentos;
     public $tipoDocumento;
+    public $limiteMonto;
 
     public function render()
     {
         return view('livewire.solicitudes-form')->layout('layouts.cvu');
     }
 
-    public function mount($id = 0)
+    public function mount(Request $request, $id = 0)
     {
-        $this->referer = $_SERVER['HTTP_REFERER'];
+        $this->referer = $request->path();
         $this->cuentasContables = CuentaContable::where('estatus', 1)->whereIn('tipo_requisicion', [2, 3])->get();
         $this->nombre_expedido = Session::get('name_rt');
         $this->tamanyoDocumentos = env('TAMANYO_MAX_DOCS', 2048);
         $this->tipoDocumento = env('DOCUMENTOS_PERMITIDOS', 'pdf');
+        $this->limiteMonto = env('LIMITE_MONTO_SOLICITUDES', 35000);
 
         if ($id != 0) { //entra aqui si es una requisicion existente. Ejemplo para editar
             $this->solicitud = Solicitud::find($id);
@@ -93,6 +97,8 @@ class SolicitudesForm extends Component
             $this->finicial = $this->solicitud->solicitudDetalle->periodo_inicio;
             $this->ffinal = $this->solicitud->solicitudDetalle->periodo_fin;
             $this->tipo_comprobacion = $this->solicitud->tipo_comprobacion;
+            $this->observacionesVobo = $this->solicitud->observaciones_vobo;
+            //dd($this->observacionesVobo);
 
 
             $documentos = Documento::where('id_requisicion', $id)->where('tipo_requisicion', 2)->get();
@@ -110,15 +116,16 @@ class SolicitudesForm extends Component
 
     protected $rules = [
         'id_rubro' => 'required|not_in:0',
-        'monto_total' => 'required|lte:35000|gte:1',
+        'monto_total' => 'required|lte:limiteMonto|gte:1|regex:/^[\d]{0,10}(\.[\d]{1,2})?$/',
         'nombre_expedido' => 'required',
         'docsbitacoraPdf' => 'required_if:id_rubro_especial,3',
         'tipo_comprobacion' => 'required_if:id_rubro_especial,3',
         //'comprobacion' => 'required_unless:tipo_comprobacion,"vale"|accepted_if:tipo_comprobacion,"ficha"',
         'aviso_privacidad' => 'accepted',
         'vobo' => 'accepted',
-        'concepto' => 'required',
-        'justificacionS' => 'required',
+        'concepto' => 'required|max:800',
+        //regex:/^[a-zA-Z-Z0-9.,$:;#%()\s]+$/u|
+        'justificacionS' => 'required|max:1500',
         'finicial' => 'nullable|date|required_if:id_rubro_especial,2|after_or_equal:14 days',
         'ffinal' => 'nullable|date|required_if:id_rubro_especial,2|after_or_equal:finicial',
     ];
@@ -126,12 +133,11 @@ class SolicitudesForm extends Component
         'id_rubro.required' => 'Debe seleccionar un rubro.',
         'id_rubro.not_in' => 'Debe seleccionar un rubro.',
         'monto_total.required' => 'El monto no puede estar vacío.',
-        'monto_total.lte' => 'El monto no puede ser mayor a $35000.',
+        'monto_total.lte' => 'El monto no puede ser mayor a $35,000.',
         'monto_total.gte' => 'El monto no puede ser menor o igual a 0.',
+        'monto_total.regex' => 'El monto no es valido.',
         'nombre_expedido.required' => 'El nombre de quien expide no puede estar vacío',
         'docsbitacoraPdf.required_if' => 'Debe adjuntar la bitacora.',
-        'bitacoraPdfTemp' => 'Solo puedes adjuntar archivos con extensión pdf ',
-        'bitacoraPdfTemp.max' => 'El archivo no debe pesar mas de 2MB',
         //'comprobacion.required_unless' => 'Debe de aceptar la condición.',
         //'comprobacion.accepted_if' => 'Debe de aceptar la condición seleccionela.',
         'comprobacion.accepted' => 'Debe de aceptar la condición seleccionela.',
@@ -139,8 +145,10 @@ class SolicitudesForm extends Component
         'aviso_privacidad.accepted' => 'Debe de aceptar el aviso de privacidad.',
         'vobo.accepted' => 'Debe dar el visto bueno.',
         'concepto.required' => 'El concepto no puede estar vacío.',
+        'concepto.max' => 'El concepto es demasiado largo.',
         'importe.required' => 'El importe no puede estar vacío.',
         'justificacionS.required' => 'La justificación no puede estar vacía.',
+        'justificacionS.max' => 'La justificación es demasiado larga.',
         'finicial.required_if' => 'La fecha inicial no puede estar vacía.',
         'finicial.after_or_equal' => 'La fecha inicial debe ser una fecha posterior o igual a 15 días.',
         'ffinal.required_if' => 'La fecha final no puede estar vacía.',
@@ -163,7 +171,7 @@ class SolicitudesForm extends Component
         //dd($this->finicial);
         $this->validate([
             'id_rubro' => 'required|not_in:0',
-            'monto_total' => 'required|lte:35000',
+            'monto_total' => 'required|lte:limiteMonto',
         ]);
 
         if ($this->finicial != "") {
@@ -255,7 +263,7 @@ class SolicitudesForm extends Component
                     }
                 }
                 DB::commit();
-                return redirect('/cvu-crear')->with('success', 'Su solicitud ha sido guardada correctamente con el número ' . $clave_solicitud . ', recuerde completarla y mandarla a visto bueno.');
+                return redirect('/cvu-crear')->with('success', 'Su solicitud ha sido guardada correctamente con la clave ' . $clave_solicitud . ', recuerde completarla y mandarla a visto bueno.');
             } catch (\Exception $e) {
                 DB::rollback();
                 dd("Error en el catch" . $e);
@@ -487,9 +495,15 @@ class SolicitudesForm extends Component
 
     public function updatedbitacoraPdfTemp()
     {
-        $validatedData = $this->validate([
-            'bitacoraPdfTemp' => 'mimes:' . $this->tipoDocumento . '|max:' . $this->tamanyoDocumentos . '',
-        ]);
+        $validatedData = $this->validate(
+            [
+                'bitacoraPdfTemp' => 'mimes:' . $this->tipoDocumento . '|max:' . $this->tamanyoDocumentos . '',
+            ],
+            [
+                'bitacoraPdfTemp.mimes' => 'Debe adjuntar documentos únicamente con extensión: ' . $this->tipoDocumento,
+                'bitacoraPdfTemp.max' => 'El tamaño del documento no puede ser mayor a ' . $this->tamanyoDocumentos,
+            ]
+        );
 
         // Validar si la validación fue exitosa antes de agregar los archivos al arreglo
         if (isset($validatedData['bitacoraPdfTemp'])) {

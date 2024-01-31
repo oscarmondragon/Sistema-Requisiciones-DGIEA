@@ -98,8 +98,8 @@ class VistosBuenos extends Component
                     ->orWhereHas('requerimiento', function ($query) {
                         $query->where('descripcion', 'like', '%' . $this->search . '%');
                     })->orWhereHas('cuentas', function ($query) {
-                    $query->where('nombre_cuenta', 'like', '%' . $this->search . '%');
-                });
+                        $query->where('nombre_cuenta', 'like', '%' . $this->search . '%');
+                    });
             });
 
             $solicitudes->where(function ($query) {
@@ -107,8 +107,8 @@ class VistosBuenos extends Component
                     ->orWhereHas('requerimientoSolicitud', function ($query) {
                         $query->where('descripcion', 'like', '%' . $this->search . '%');
                     })->orWhereHas('rubroSolicitud', function ($query) {
-                    $query->where('nombre_cuenta', 'like', '%' . $this->search . '%');
-                });
+                        $query->where('nombre_cuenta', 'like', '%' . $this->search . '%');
+                    });
             });
         }
         if ($this->f_inicial != 0 and ($this->f_final == 0 or $this->f_final == '')) {
@@ -180,8 +180,8 @@ class VistosBuenos extends Component
                     ->orWhereHas('requerimiento', function ($query) {
                         $query->where('descripcion', 'like', '%' . $this->searchVobo . '%');
                     })->orWhereHas('cuentas', function ($query) {
-                    $query->where('nombre_cuenta', 'like', '%' . $this->searchVobo . '%');
-                });
+                        $query->where('nombre_cuenta', 'like', '%' . $this->searchVobo . '%');
+                    });
             });
 
             $solicitudesVistosBuenos->where(function ($query) {
@@ -190,8 +190,8 @@ class VistosBuenos extends Component
                     ->orWhereHas('requerimientoSolicitud', function ($query) {
                         $query->where('descripcion', 'like', '%' . $this->searchVobo . '%');
                     })->orWhereHas('rubroSolicitud', function ($query) {
-                    $query->where('nombre_cuenta', 'like', '%' . $this->searchVobo . '%');
-                });
+                        $query->where('nombre_cuenta', 'like', '%' . $this->searchVobo . '%');
+                    });
             });
         }
 
@@ -263,11 +263,15 @@ class VistosBuenos extends Component
     public function deleteAdquisicion($id)
     {
         $adquisicion = Adquisicion::findOrFail($id);
+        //Eliminamos en cascada
+        $adquisicion->detalless()->delete();
+        $adquisicion->documentos()->delete();
         $adquisicion->delete();
     }
     public function deleteSolicitud($id)
     {
         $adquisicion = Solicitud::findOrFail($id);
+        $adquisicion->documentos()->delete();
         $adquisicion->delete();
     }
     public function filterByCategory($categoria)

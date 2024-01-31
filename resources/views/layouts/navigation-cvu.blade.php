@@ -58,7 +58,7 @@
                                         onclick="event.preventDefault();
                                                         this.closest('form').submit();">
                                         <div class="inline-block">
-                                            <img src="{{ asset('img/ic_salir.png') }}" alt="Icono" title="Salir">
+                                            <img src="{{ asset('img/botones/btn_salir.png') }}" alt="Botón Salir" title="Salir">
                                         </div>
                                     </x-dropdown-link>
                                 </button>

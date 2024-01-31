@@ -5,7 +5,7 @@
     <form method="POST" action="{{ route('login') }}">
         @csrf
         <div>
-            <img src="img/fondo.png" alt="image/png" class="static w-52 -mt-52 -ml-6">
+            <img src="img/fondos/fondo.png" alt="image" class="static w-72 -mt-[390px] -ml-6">
         </div>
 
         <div class="mx-auto w-3/4 block mt-12">
@@ -14,7 +14,7 @@
                 <!-- <x-input-label for="email" class="text-white" :value="__('Correo electrónico')" /> -->
                 <!-- <i class="fa-solid fa-envelope fa-2xl absolute mr-10 ml-4 mt-1 text-3xl text-white/70"></i> -->
                 <span>
-                    <img src="{{ asset('img/ic_email.png') }}" alt="Icono" class="ic_login">
+                    <img src="{{ asset('img/iconos/ic_email.png') }}" alt="Icono" class="ic_login">
                 </span>
                 <x-text-input id="email" class="input_login pl-11" type="email" name="email" :value="old('email')" placeholder="Correo electrónico" required autofocus autocomplete="username" />
                 <!-- <x-input-error :messages="$errors->get('email')" class="mt-2" /> -->
@@ -25,9 +25,9 @@
                 <!-- <x-input-label for="password" :value="__('Contraseña')" /> -->
                 <!-- <i class="fa-solid fa-lock fa-2xl absolute mr-10 ml-4 mt-1 text-3xl text-white/70"></i> -->
                 <span>
-                    <img src="{{ asset('img/ic_lock.png') }}" alt="Icono" class="ic_login">
+                    <img src="{{ asset('img/iconos/ic_lock.png') }}" alt="Icono" class="ic_login">
                 </span>
-                <x-text-input id="password" class="input_login pl-11" type="password" name="password" placeholder="Contraseña" required autocomplete="current-password" />
+                <x-text-input id="password" class="input_login pl-11" type="password" name="password" placeholder="Contraseña" required autocomplete="off" />
                 @error('email') <span class="text-red-600 block text-center mt-4">{{ $message }}</span> @enderror
                 <!-- <x-input-error :messages="$errors->get('password')" class="mt-2" /> -->
             </div>

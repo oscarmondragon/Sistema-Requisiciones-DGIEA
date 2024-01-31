@@ -50,7 +50,7 @@
                     customClass: {
                         title: 'swal2-title'
                     },
-                    title: '¿Estás seguro de enviar tu solicitud?',
+                    title: '¿Confirmar VoBo?',
                     icon: 'warning',
                     iconColor: '#9D9361',
                     showCancelButton: true,
@@ -68,8 +68,8 @@
 
             function rechazarVoBo() {
                 Swal.fire({
-                        title: '¿Estás seguro que deseas rechazar el requerimiento?',
-                        text: 'El requerimiento estará disponible nuevamente para edición en el perfil del emisor.',
+                        title: '¿Estás seguro que deseas rechazar la solicitud?',
+                        text: 'La solicitud estará disponible nuevamente para edición en el perfil del emisor.',
                         icon: 'warning',
                         iconColor: '#9D9361',
                         input: "textarea",
@@ -91,6 +91,9 @@
                             if (!motivoRechazo) {
                                 return "El motivo de rechazo no puede estar vacío.";
                             } else {
+                                if(motivoRechazo.length > 800){
+                                    return "El motivo de rechazo es demasiado largo.";
+                                }
                                 return undefined;
                             }
                         }

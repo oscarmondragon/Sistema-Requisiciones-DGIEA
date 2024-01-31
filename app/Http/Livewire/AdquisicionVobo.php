@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
 
 
 
@@ -50,9 +51,9 @@ class AdquisicionVobo extends Component
         'vobo.accepted' => 'Debe dar el visto bueno.'
     ];
 
-    public function mount($id = 0)
+    public function mount(Request $request, $id = 0)
     {
-        $this->referer = $_SERVER['HTTP_REFERER'];
+        $this->referer = $request->path();
         // dd($referer);
         $this->adquisicion = Adquisicion::find($id);
 
@@ -123,6 +124,7 @@ class AdquisicionVobo extends Component
             if ($adquisicion) {
                 $clave_adquisicion = $adquisicion->clave_adquisicion;
                 $adquisicion->estatus_general = 4;
+                $adquisicion->observaciones_vobo = null;
                 if ($who_vobo) { //Si el deposito es por parte del Responsable técnico
                     $adquisicion->vobo_rt = $fecha_vobo;
                 } else { //Si el depósito es por parte del administrativo
@@ -132,7 +134,7 @@ class AdquisicionVobo extends Component
 
             }
             DB::commit();
-            return redirect('/cvu-vobo')->with('success', 'Su solicitud con clave ' . $clave_adquisicion . ' ha sido  enviada para revision a la DGIEA.');
+            return redirect('/cvu-vobo')->with('success', 'Su requerimiento con clave ' . $clave_adquisicion . ' ha sido  enviado para revisión a la DGIEA.');
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -155,7 +157,7 @@ class AdquisicionVobo extends Component
 
             }
             DB::commit();
-            return redirect('/cvu-vobo')->with('success', 'Su solicitud con clave ' . $clave_adquisicion . ' ha sido  rechazada.');
+            return redirect('/cvu-vobo')->with('success', 'Su requerimiento con clave ' . $clave_adquisicion . ' ha sido  rechazado.');
 
         } catch (\Exception $e) {
             DB::rollBack();

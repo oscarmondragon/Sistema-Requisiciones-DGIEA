@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
-
+use Illuminate\Http\Request;
 
 class AdquisicionesForm extends Component
 {
@@ -47,7 +47,7 @@ class AdquisicionesForm extends Component
     public $estatus_general;
     public $observaciones;
     public $subtotal = 0;
-    public $iva = 0;
+    public $iva;
     public $total = 0;
     public $bienes;
     public $docsCartaExclusividad = [];
@@ -67,10 +67,10 @@ class AdquisicionesForm extends Component
     protected $rules = [
         'id_rubro' => 'required|not_in:0',
         'bienes' => 'required|array|min:1',
-        'justificacion_academica' => 'required_if:afecta_investigacion,1',
+        // regex:/^[a-zA-Z-Z0-9.,$:;#%()\s]+$/u
+        'justificacion_academica' => 'required_if:afecta_investigacion,1|max:800',
         'docsCartaExclusividad' => 'required_if:exclusividad,1|array',
         'docsCotizacionesFirmadas' => 'required|array|min:1',
-        'docsCotizacionesFirmadas.*' => 'required',
         'docsCotizacionesPdf' => 'required|array|min:1',
         'vobo' => 'accepted'
     ];
@@ -81,9 +81,9 @@ class AdquisicionesForm extends Component
         'bienes.array' => 'Debe agregar por lo menos un bien o servicio.',
         'bienes.min' => 'Debe agregar por lo menos un bien o servicio.',
         'justificacion_academica.required_if' => 'La justificación académica no puede estar vacía.',
+        'justificacion_academica.max' => 'La justificación académica es demasiado larga.',
         'docsCartaExclusividad.required_if' => 'Debe adjuntar la carta de exclusividad.',
         'docsCartaExclusividad.array' => 'Debe adjuntar la carta de exclusividad.',
-        //'docsCartaExclusividad.min' => 'Debe adjuntar por lo menos una carta de exclusividad.',
         'docsCotizacionesFirmadas.required' => 'Debe adjuntar por lo menos una cotización PDF firmada.',
         'docsCotizacionesFirmadas.array' => 'Debe adjuntar por lo menos una cotización PDF firmada.',
         'docsCotizacionesFirmadas.min' => 'Debe adjuntar por lo menos una cotización PDF firmada.',
@@ -91,14 +91,7 @@ class AdquisicionesForm extends Component
         'docsCotizacionesPdf.array' => 'Debe adjuntar por lo menos una cotización PDF firmada.',
         'docsCotizacionesPdf.min' => 'Debe adjuntar por lo menos una cotización PDF firmada.',
         'vobo.accepted' => 'Debe dar el visto bueno.',
-        'cartaExclusividadTemp.max' => 'El documento no debe pesar más de 2MB.',
-        'cartaExclusividadTemp.mimes' => 'Debe adjuntar documentos con extensión .pdf unicamente',
-        'cotizacionFirmadaTemp.max' => 'El documento no debe pesar más de 2MB.',
-        'cotizacionFirmadaTemp.mimes' => 'Debe adjuntar documentos con extensión .pdf unicamente',
-        'cotizacionPdfTemp.max' => 'El documento no debe pesar más de 2MB.',
-        'cotizacionPdfTemp.mimes' => 'Debe adjuntar documentos con extensión .pdf unicamente',
-        'anexoOtroTemp.max' => 'El documento no debe pesar más de 2MB.',
-        'anexoOtroTemp.mimes' => 'Debe adjuntar documentos con extensión .pdf unicamente',
+
 
     ];
     public $listeners = [
@@ -108,9 +101,11 @@ class AdquisicionesForm extends Component
         'eliminarArchivo'
     ];
 
-    public function mount($id = 0)
+    public function mount(Request $request, $id = 0)
     {
-        $this->referer = $_SERVER['HTTP_REFERER'];
+
+        // dd($request->path());
+        $this->referer = $request->path();
         $this->tamanyoDocumentos = env('TAMANYO_MAX_DOCS', 2048);
         $this->tipoDocumento = env('DOCUMENTOS_PERMITIDOS', 'pdf');
         $this->cuentasContables = CuentaContable::where('estatus', 1)->whereIn('tipo_requisicion', [1, 3])->get();
@@ -332,7 +327,7 @@ class AdquisicionesForm extends Component
                 }
 
                 DB::commit();
-                return redirect('/cvu-crear')->with('success', 'Su solicitud ha sido guardada correctamente con el número de clave '.  $clave_adquisicion . '. Recuerde completarla y mandarla a visto bueno.');
+                return redirect('/cvu-crear')->with('success', 'Su requerimiento ha sido guardado correctamente con la clave ' . $clave_adquisicion . '. Recuerde completarlo y mandarlo a visto bueno.');
 
             } catch (\Exception $e) {
                 DB::rollback();
@@ -519,7 +514,7 @@ class AdquisicionesForm extends Component
                         }
 
                         DB::commit();
-                        return redirect('/cvu-crear')->with('success', 'Su solicitud con clave ' . $adquisicion->clave_adquisicion . ' ha sido  actualizada y se ha enviado para visto bueno.');
+                        return redirect('/cvu-crear')->with('success', 'Su requerimiento con clave ' . $adquisicion->clave_adquisicion . ' ha sido  actualizado y se ha enviado para visto bueno.');
 
                     }
                 } catch (\Exception $e) {
@@ -666,7 +661,7 @@ class AdquisicionesForm extends Component
                     }
 
                     DB::commit();
-                    return redirect('/cvu-crear')->with('success', 'Su solicitud con clave ' . $clave_adquisicion . ' ha sido  registrada y se ha enviado para visto bueno.');
+                    return redirect('/cvu-crear')->with('success', 'Su requerimiento con clave ' . $clave_adquisicion . ' ha sido  registrado y se ha enviado para visto bueno.');
                 } catch (\Exception $e) {
                     //dd("Error en el catch".$e); 
                     DB::rollback();
@@ -784,6 +779,7 @@ class AdquisicionesForm extends Component
 
     public function deleteBien($bien)
     {
+
         //EL BIEN SE ESTA ELIMINANDO CON ALPINEJS desde el front
         //actualizamos valores de subtotal, iva y total (restamos el anterior valor)
         $this->subtotal -= $bien['cantidad'] * $bien['precio_unitario'];
@@ -791,6 +787,22 @@ class AdquisicionesForm extends Component
         $this->iva -= $bien['iva'];
         //$this->iva = round($this->iva, $precision = 2, $mode = PHP_ROUND_HALF_UP);
         $this->total -= $bien['importe'];
+
+        //Comprobamos si el bien ya esta en bd para eliminarlo y actualizar datos   
+        if (isset($bien['id'])) {
+            $bienBd = AdquisicionDetalle::findOrFail($bien['id']);
+            if ($bienBd) { // si lo encuentra lo eliminamos
+                //Buscamos la adquisicion para actualizar iva, importe y total
+                $adquisicionBuscada = Adquisicion::findOrFail($bien['id_adquisicion']);
+                if ($adquisicionBuscada) {
+                    $adquisicionBuscada->update(['subtotal' => $this->subtotal, 'iva' => $this->iva, 'total' => $this->total]);
+
+                }
+                //Por ultimo eliminamos el bien
+                $bienBd->delete();
+            }
+        }
+
 
         //$this->total = round($this->total, $precision = 2, $mode = PHP_ROUND_HALF_UP);
 
@@ -948,15 +960,27 @@ class AdquisicionesForm extends Component
         $this->justificacion_academica = '';
     }
 
-    public function resetdocsCartaExclusividad()
+    public function resetdocsCartaExclusividad($id = 0)
     {
         $this->docsCartaExclusividad = [];
         $this->docsAnexoOtrosDocumentos = [];
+        if ($id != 0) {
+            $docs = Documento::select()->where('id_requisicion', $id)->where('tipo_requisicion', 1);
+            if (isset($docs)) {
+                $docs->delete();
+            }
+        }
+
     }
+
+
     public function updatedcartaExclusividadTemp()
     {
         $validatedData = $this->validate([
             'cartaExclusividadTemp' => 'mimes:' . $this->tipoDocumento . '|max:' . $this->tamanyoDocumentos . '',
+        ], [
+            'cartaExclusividadTemp.mimes' => 'Debe adjuntar documentos únicamente con extensión: ' . $this->tipoDocumento,
+            'cartaExclusividadTemp.max' => 'El tamaño del documento no puede ser mayor a ' . $this->tamanyoDocumentos,
         ]);
 
         // Validar si la validación fue exitosa antes de agregar los archivos al arreglo
@@ -986,6 +1010,9 @@ class AdquisicionesForm extends Component
         //dd($this->tipoDocumento);
         $validatedData = $this->validate([
             'cotizacionFirmadaTemp' => 'mimes:' . $this->tipoDocumento . '|max:' . $this->tamanyoDocumentos . '',
+        ], [
+            'cotizacionFirmadaTemp.mimes' => 'Debe adjuntar documentos únicamente con extensión: ' . $this->tipoDocumento,
+            'cotizacionFirmadaTemp.max' => 'El tamaño del documento no puede ser mayor a ' . $this->tamanyoDocumentos,
         ]);
 
         // Validar si la validación fue exitosa antes de agregar los archivos al arreglo
@@ -1014,6 +1041,9 @@ class AdquisicionesForm extends Component
     {
         $validatedData = $this->validate([
             'cotizacionPdfTemp' => 'mimes:' . $this->tipoDocumento . '|max:' . $this->tamanyoDocumentos . '',
+        ], [
+            'cotizacionPdfTemp.mimes' => 'Debe adjuntar documentos únicamente con extensión: ' . $this->tipoDocumento,
+            'cotizacionPdfTemp.max' => 'El tamaño del documento no puede ser mayor a ' . $this->tamanyoDocumentos,
         ]);
 
         // Validar si la validación fue exitosa antes de agregar los archivos al arreglo
@@ -1042,6 +1072,9 @@ class AdquisicionesForm extends Component
     {
         $validatedData = $this->validate([
             'anexoOtroTemp' => 'mimes:' . $this->tipoDocumento . '|max:' . $this->tamanyoDocumentos . '',
+        ], [
+            'anexoOtroTemp.mimes' => 'Debe adjuntar documentos únicamente con extensión: ' . $this->tipoDocumento,
+            'anexoOtroTemp.max' => 'El tamaño del documento no puede ser mayor a ' . $this->tamanyoDocumentos,
         ]);
 
         // Validar si la validación fue exitosa antes de agregar los archivos al arreglo

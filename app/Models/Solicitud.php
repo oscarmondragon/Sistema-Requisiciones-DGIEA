@@ -40,7 +40,13 @@ class Solicitud extends Model
     }
     public function detalless()
     {
-        return $this->hasMany(AdquisicionDetalle::class, 'id_adquisicion');
+        return $this->hasMany(SolicitudDetalle::class, 'id_solicitud');
+    }
+
+    public function documentos()
+    {
+        return $this->hasMany(Documento::class, 'id_requisicion')->where('tipo_requisicion', 2);
+
     }
 
     protected $fillable = [
