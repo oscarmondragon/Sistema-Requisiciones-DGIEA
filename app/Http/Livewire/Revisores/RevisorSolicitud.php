@@ -105,17 +105,16 @@ class RevisorSolicitud extends Component
         $this->id_solicitud = $this->solicitud->id;
 
         $this->solicitud_detalles = SolicitudDetalle::where('id_solicitud', $this->id_solicitud)->first();
-        $this->clave = SolicitudDetalle::select('clave_siia')->where('id_solicitud', $this->id_solicitud)->first();
-        $this->clave = $this->clave->clave_siia;
+        $this->clave = $this->solicitud_detalles->clave_siia;
 
+        //para caja de texto
         if ($this->clave != null) {
             $this->sClaveSiia = $this->clave;
         } else {
             $this->clave = null;
         }
 
-        $this->queryObservaciones = Solicitud::select('id', 'observaciones')->where('id', $this->id_solicitud)->first();
-        $this->queryObservaciones = $this->queryObservaciones->observaciones;
+        $this->queryObservaciones = $this->solicitud_detalles->observaciones;
 
         $this->id_rubro = $this->solicitud->id_rubro;
         $this->id_rubro_especial = $this->solicitud->cuentas->cuentaEspecial->id ?? 0;

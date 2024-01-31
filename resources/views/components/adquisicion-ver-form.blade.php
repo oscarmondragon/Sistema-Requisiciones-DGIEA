@@ -1,4 +1,4 @@
-@if ($adquisicion->observaciones_vobo || $adquisicion->observaciones)
+@if ($adquisicion->observaciones_vobo || $adquisicion->observaciones || isset($queryObservaciones))
 <div class="my-4">
     <p class="bg-red-100 text-red-500 font-bold py-1 px-2 rounded-sm border border-red-500">
         <svg class="inline-block w-5 h-5 me-3" aria-hidden="true"
@@ -12,6 +12,9 @@
         @endif
         @if ($adquisicion->observaciones)
         <span class="block pl-12 font-normal"><span class="font-bold">Por DGIEA: </span> {{ $adquisicion->observaciones }}</span>
+        @endif
+        @if (isset($queryObservaciones))
+        <span class="block pl-12 font-normal"><span class="font-bold">Por SIIA: </span> {{ $queryObservaciones }}</span>
         @endif
     </p>
 </div>
@@ -33,9 +36,8 @@
         Descripción del bien o servicio:
         </label>
     </div>
-
     <div class="overflow-x-auto" wire:poll x-data="{ elementos: @entangle('bienes').defer, id_rubro: '{{ $id_rubro }}' }">
-        <table class="table-auto text-left text-sm w-3/4 sm:w-full mx-auto" x-show="elementos.length > 0">
+        <table class="table-auto text-left text-sm w-3/4 sm:w-full mx-auto" >
         <thead>
             <tr class="bg-blanco">
             <th class="w-[26px]">#</th>
@@ -108,7 +110,7 @@
             </tr>
         </tbody>
         </table>
-    </div>
+
     <div class="my-5" x-data x-init="afectaSelectedOption = '{{ $afecta_investigacion }}'">
         <label for="afecta" class="text-dorado font-bold">
         ¿El cambio de alguna de las características del bien descritas en la cotización,
