@@ -22,8 +22,8 @@
                                     text: '{{ session('success') }}',
                                     confirmButtonText: 'Aceptar',
                                     confirmButtonColor: '#62836C',
-                                    showConfirmButton: true,
-                                    //timer: 2500
+                                    showConfirmButton: false,
+                                    timer: 2500
                                 })
                             </script>
                         @endif

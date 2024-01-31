@@ -69,6 +69,7 @@ class SolicitudesForm extends Component
 
     public $tamanyoDocumentos;
     public $tipoDocumento;
+    public $limiteMonto;
 
     public function render()
     {
@@ -82,6 +83,7 @@ class SolicitudesForm extends Component
         $this->nombre_expedido = Session::get('name_rt');
         $this->tamanyoDocumentos = env('TAMANYO_MAX_DOCS', 2048);
         $this->tipoDocumento = env('DOCUMENTOS_PERMITIDOS', 'pdf');
+        $this->limiteMonto = env('LIMITE_MONTO_SOLICITUDES', 35000);
 
         if ($id != 0) { //entra aqui si es una requisicion existente. Ejemplo para editar
             $this->solicitud = Solicitud::find($id);
@@ -114,7 +116,7 @@ class SolicitudesForm extends Component
 
     protected $rules = [
         'id_rubro' => 'required|not_in:0',
-        'monto_total' => 'required|lte:35000|gte:1|regex:/^[\d]{0,10}(\.[\d]{1,2})?$/',
+        'monto_total' => 'required|lte:limiteMonto|gte:1|regex:/^[\d]{0,10}(\.[\d]{1,2})?$/',
         'nombre_expedido' => 'required',
         'docsbitacoraPdf' => 'required_if:id_rubro_especial,3',
         'tipo_comprobacion' => 'required_if:id_rubro_especial,3',
@@ -169,7 +171,7 @@ class SolicitudesForm extends Component
         //dd($this->finicial);
         $this->validate([
             'id_rubro' => 'required|not_in:0',
-            'monto_total' => 'required|lte:35000',
+            'monto_total' => 'required|lte:limiteMonto',
         ]);
 
         if ($this->finicial != "") {

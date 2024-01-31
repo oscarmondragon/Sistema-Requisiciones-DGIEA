@@ -9,12 +9,18 @@
                 <div class="p-6 text-gray-900">
                     <div>
                         <div>
-                            <h1 class="mt-3">Revisión para solicitud con clave: <span
-                                    class="text-dorado">{{ $solicitud->clave_solicitud }}</span></h1>
-                            <h2 class="text-dorado">{{ $clave == null ? '' : 'Clave SIIA: ' . $clave }}</h2>                            
+                            <h1 class="mt-4">Revisión para solicitud con clave: <span
+                                    class="text-dorado">{{ $solicitud->clave_solicitud }}</span>
+                            </h1>
+                            {{-- <h2 class="text-dorado">{{ $clave == null ? '' : 'Clave SIIA: ' . $clave }}</h2> --}}
+                            @isset($clave)
+                                <h1>
+                                    Clave SIIA: <span class="text-dorado"> {{ $clave }} </span>
+                                </h1>
+                            @endisset
                             <form x-on:submit.prevent="saveConfirmation">
                                 @csrf
-                                <div x-data="{ open: false }">
+                                <div class="mt-2" x-data="{ open: false }">
                                     <button type="button" @click="open = ! open" class="bg-blue-600 my-4">Ver
                                         detalles</button>
                                     <div x-show="open">
@@ -26,7 +32,7 @@
                                 </div>
                                 <div
                                     x-data = "{ ifRechazo: @entangle('estatusSolicitud').defer, tipoEstatus: @entangle('tipoEstatus').defer,
-                                    claveSiia: @entangle('clave') }">
+                                    claveSiia: @entangle('clave').defer, checkClave: false }">
                                     @can('revisor', Auth::user())
                                         <h2>Actualizar estado</h2>
                                         <div class="my-6">
@@ -63,14 +69,25 @@
                                         @enderror
                                     </div>
 
-                                    <div x-show="(tipoEstatus === '4' || tipoEstatus === '5') && claveSiia == null">
+                                    <div x-show="(tipoEstatus === '4' || tipoEstatus === '5') || claveSiia != null">
                                         <label for="sClaveSiia">Clave SIIA<samp class="text-rojo">*</samp>:</label>
                                         <input type="text" name="sClaveSiia" id="sClaveSiia" wire:model='sClaveSiia'
-                                            placeholder="Clave SIIA"
+                                            placeholder="Clave SIIA" maxlength="16"
+                                            :disabled="claveSiia != null && checkClave == false"
                                             class="inputs-formulario-solicitudes sm:w-1/4 w-full">
+                                        @if ($clave != null)
+                                            <div class="inline-block ml-5">
+                                                <input type="checkbox" name="editarClave" id="editarClave"
+                                                    x-model="checkClave" value="true" @click="editarClaveSiia()">
+                                                <label for="editarClave">Editar clave SIIA</label>
+                                            </div>
+                                        @endif
+
                                         @error('sClaveSiia')
-                                            <span class=" text-rojo sm:inline-block block">{{ $message }}</span>
+                                            <span class="my-2 text-rojo block">{{ $message }}</span>
                                         @enderror
+
+                                        <h1 x-text="checkClave"></h1>
                                     </div>
                                 </div>
 
@@ -112,6 +129,38 @@
                         window.livewire.emit('save');
                     }
                 });
+            }
+
+            function editarClaveSiia() {
+                //alert(editarClave);
+                if (document.getElementById('editarClave').checked != false) {
+                    Swal.fire({
+                        customClass: {
+                            title: 'swal2-title'
+                        },
+                        title: '¿Estas seguro que deseas editar la clave SIIA?',
+                        text: '123ASD.',
+                        icon: 'warning',
+                        iconColor: '#9D9361',
+                        showCancelButton: true,
+                        confirmButtonColor: '#62836C',
+                        cancelButtonColor: '#E86562',
+                        confirmButtonText: 'Si, editar',
+                        cancelButtonText: 'Cerrar',
+
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            document.getElementById("sClaveSiia").disabled = false;
+                        } else {
+                            //var input = document.getElementById('editarClave');
+                            document.getElementById("sClaveSiia").disabled = true;
+                            document.getElementById('editarClave').checked = false;
+                            document.getElementById('editarClave').value = false;
+                        }
+                    });
+                } else {
+                    document.getElementById("sClaveSiia").disabled = true;
+                }
             }
         </script>
     @endpush

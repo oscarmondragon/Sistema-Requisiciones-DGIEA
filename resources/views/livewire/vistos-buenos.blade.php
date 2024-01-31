@@ -331,7 +331,7 @@
                                 confirmButtonColor: '#62836C',
                                 text: 'Se eliminó correctamente el requerimiento con clave ' + clave_adquisicion + '.',
                                 showConfirmButton: false,
-                                timer: 2000
+                                timer: 2500
                             })
                         }
                     });
