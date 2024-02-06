@@ -266,7 +266,7 @@ class SolicitudesForm extends Component
                 return redirect('/cvu-crear')->with('success', 'Su solicitud ha sido guardada correctamente con la clave ' . $clave_solicitud . ', recuerde completarla y mandarla a visto bueno.');
             } catch (\Exception $e) {
                 DB::rollback();
-                dd("Error en el catch" . $e."Error en el proceso de guardado:".$e->getMessage());
+                dd("Error en el catch" . $e . "Error en el proceso de guardado:" . $e->getMessage());
                 return redirect()->back()->with('error', 'Error en el proceso de guardado ' . $e->getMessage());
             }
         } else {
@@ -322,13 +322,12 @@ class SolicitudesForm extends Component
                         $solicitudDetalle = SolicitudDetalle::where('id_solicitud', $this->id_solicitud)->first();
                         if ($solicitudDetalle) {
                             $solicitudDetalle->update([
-                            'concepto' => $this->concepto,
-                            'justificacion' => $this->justificacionS,
-                            'importe' => $this->monto_total,
-                            'periodo_inicio' => $this->finicial,
-                            'periodo_fin' => $this->ffinal,
+                                'concepto' => $this->concepto,
+                                'justificacion' => $this->justificacionS,
+                                'importe' => $this->monto_total,
+                                'periodo_inicio' => $this->finicial,
+                                'periodo_fin' => $this->ffinal,
                             ]);
-
                         }
                         $i = 1;
                         if (empty($this->docsbitacoraPdf) == false) {
@@ -454,7 +453,15 @@ class SolicitudesForm extends Component
         $this->justificacionS = "";
         $this->finicial = null;
         $this->ffinal = null;
-        $this->tipo_comprobacion = null;
+        //$this->tipo_comprobacion = null;
+
+        $tipoFinanciamiento = Session::get('tipo_financiamiento');
+        if ($tipoFinanciamiento == 'UAEM' && $this->id_rubro_especial == 3) {
+            $this->tipo_comprobacion = 'vale';
+        } else {
+            $this->tipo_comprobacion = null;
+        }
+
         $this->comprobacion = 0;
         $this->aviso_privacidad = 0;
         $this->vobo = 0;

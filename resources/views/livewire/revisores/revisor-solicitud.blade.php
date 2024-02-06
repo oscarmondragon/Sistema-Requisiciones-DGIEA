@@ -69,26 +69,27 @@
                                         @enderror
                                     </div>
 
-                                    <div x-show="(tipoEstatus === '4' || tipoEstatus === '5') || claveSiia != null">
+                                    @can('revisor', Auth::user())
+                                    <div class="mt-5" x-show="(tipoEstatus === '4' || tipoEstatus === '5') || claveSiia != null">
                                         <label for="sClaveSiia">Clave SIIA<samp class="text-rojo">*</samp>:</label>
                                         <input type="text" name="sClaveSiia" id="sClaveSiia" wire:model='sClaveSiia'
                                             placeholder="Clave SIIA" maxlength="16"
                                             :disabled="claveSiia != null && checkClave == false"
-                                            class="inputs-formulario-solicitudes sm:w-1/4 w-full">
+                                            class="inputs-formulario-solicitudes sm:w-1/4 w-full
+                                            disabled:bg-[#e0dddd] disabled:text-[#777171] disabled:border-[#888181] disabled:cursor-not-allowed">
                                         @if ($clave != null)
-                                            <div class="inline-block ml-5">
+                                            <div class="sm:inline-block sm:ml-5 text-end">
                                                 <input type="checkbox" name="editarClave" id="editarClave"
-                                                    x-model="checkClave" value="true" @click="editarClaveSiia()">
+                                                    x-model="checkClave" value="true">
                                                 <label for="editarClave">Editar clave SIIA</label>
                                             </div>
                                         @endif
 
                                         @error('sClaveSiia')
-                                            <span class="my-2 text-rojo block">{{ $message }}</span>
+                                            <span class="mt-2 text-rojo block">{{ $message }}</span>
                                         @enderror
-
-                                        <h1 x-text="checkClave"></h1>
                                     </div>
+                                    @endcan
                                 </div>
 
                                 <div class="sm:text-right text-center my-10 -mb-2">
@@ -129,38 +130,6 @@
                         window.livewire.emit('save');
                     }
                 });
-            }
-
-            function editarClaveSiia() {
-                //alert(editarClave);
-                if (document.getElementById('editarClave').checked != false) {
-                    Swal.fire({
-                        customClass: {
-                            title: 'swal2-title'
-                        },
-                        title: '¿Estas seguro que deseas editar la clave SIIA?',
-                        text: '123ASD.',
-                        icon: 'warning',
-                        iconColor: '#9D9361',
-                        showCancelButton: true,
-                        confirmButtonColor: '#62836C',
-                        cancelButtonColor: '#E86562',
-                        confirmButtonText: 'Si, editar',
-                        cancelButtonText: 'Cerrar',
-
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            document.getElementById("sClaveSiia").disabled = false;
-                        } else {
-                            //var input = document.getElementById('editarClave');
-                            document.getElementById("sClaveSiia").disabled = true;
-                            document.getElementById('editarClave').checked = false;
-                            document.getElementById('editarClave').value = false;
-                        }
-                    });
-                } else {
-                    document.getElementById("sClaveSiia").disabled = true;
-                }
             }
         </script>
     @endpush

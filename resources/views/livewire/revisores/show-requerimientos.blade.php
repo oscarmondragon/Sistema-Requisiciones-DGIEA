@@ -23,7 +23,7 @@
                                     confirmButtonText: 'Aceptar',
                                     confirmButtonColor: '#62836C',
                                     showConfirmButton: false,
-                                    timer: 2500
+                                    timer: 1500
                                 })
                             </script>
                         @endif
