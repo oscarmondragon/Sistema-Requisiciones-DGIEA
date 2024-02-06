@@ -57,7 +57,7 @@
             <tr class="border border-b-gray-200 border-transparent">
                 <th class="w-[26px]" x-text="index + 1"> </th>
                 {{-- :title="elemento.descripcion" --}}
-                <th class="w-[200px]"  x-text="elemento.descripcion.length > 85 ? elemento.descripcion.substring(0,85) + '...' : elemento.descripcion"> </th>
+                <th class="w-[200px]" :title="elemento.descripcion" x-text="elemento.descripcion.length > 85 ? elemento.descripcion.substring(0,85) + '...' : elemento.descripcion"> </th>
                 <th class="w-[80px]" x-text="elemento.cantidad"> </th>
                 <th class="w-[80px]" x-text="elemento.precio_unitario"> </th>
                 <th class="w-[80px]" x-text="elemento.iva"> </th>

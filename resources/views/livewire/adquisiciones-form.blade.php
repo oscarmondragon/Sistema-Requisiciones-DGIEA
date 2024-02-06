@@ -16,10 +16,12 @@
                                     </svg>
                                     Observaciones de rechazo:
                                     @if ($adquisicion->observaciones_vobo)
-                                    <span class="block pl-12 font-normal"><span class="font-bold">Por visto bueno:</span> {{ $adquisicion->observaciones_vobo }}</span>
+                                        <span class="block pl-12 font-normal"><span class="font-bold">Por visto
+                                                bueno:</span> {{ $adquisicion->observaciones_vobo }}</span>
                                     @endif
                                     @if ($adquisicion->observaciones)
-                                    <span class="block pl-12 font-normal"><span class="font-bold">Por DGIEA: </span> {{ $adquisicion->observaciones }}</span>
+                                        <span class="block pl-12 font-normal"><span class="font-bold">Por DGIEA: </span>
+                                            {{ $adquisicion->observaciones }}</span>
                                     @endif
                                 </p>
                             </div>
@@ -32,11 +34,11 @@
                                         Rubro<samp class="text-rojo">*</samp>:
                                     </label>
                                     @if (str_contains($referer, 'vobo') || str_contains($referer, 'seguimiento'))
-                                        <select class="w-auto" id="id_rubro" name="id_rubro" wire:model="id_rubro"
+                                        <select class="w-auto bg-red-500" id="id_rubro" name="id_rubro" wire:model="id_rubro"
                                             disabled>
                                         @else
                                             <select class="sm:w-auto w-full" required id="id_rubro" name="id_rubro"
-                                                wire:model="id_rubro"
+                                                wire:model="id_rubro" :disabled="{{$id_adquisicion != 0}}"
                                                 @change="$wire.resetearBienes($event.target.selectedOptions[0].getAttribute('data-id-especial'))">
                                     @endif
 
@@ -96,7 +98,9 @@
                                             <template x-for="(elemento, index) in elementos" :key="index">
                                                 <tr class="border border-b-gray-200 border-transparent">
                                                     <th class="w-[26px]" x-text="index + 1"></th>
-                                                    <th class="w-[200px]" x-text="elemento.descripcion.length > 85 ? elemento.descripcion.substring(0,85) + '...' : elemento.descripcion"></th>
+                                                    <th class="w-[200px]"
+                                                        x-text="elemento.descripcion.length > 85 ? elemento.descripcion.substring(0,85) + '...' : elemento.descripcion">
+                                                    </th>
                                                     <th class="w-[80px]" x-text="elemento.cantidad"></th>
                                                     <th class="w-[80px]" x-text="elemento.precio_unitario"></th>
                                                     <th class="w-[80px]" x-text="elemento.iva"></th>
@@ -212,12 +216,13 @@
                                 <div class="mt-2">
                                     <label class="inline-flex items-center">
                                         <input type="radio" x-model="exclusividadSelectedOption"
-                                            wire:model='exclusividad'   name="siExclusivo" value="1">
+                                            wire:model='exclusividad' name="siExclusivo" value="1">
                                         <span class="ml-2">Si</span>
                                     </label>
                                     <label class="inline-flex items-center ml-6">
                                         <input type="radio" x-model="exclusividadSelectedOption"
-                                            wire:model='exclusividad' wire:click="resetdocsCartaExclusividad(@isset($adquisicion->id)@endisset)"
+                                            wire:model='exclusividad'
+                                            wire:click="resetdocsCartaExclusividad(@isset($adquisicion->id) @endisset)"
                                             name="noExclusivo" value="0" checked>
                                         <span class="ml-2">No</span>
                                     </label>
@@ -473,14 +478,14 @@
                                 var reglaSeguimiento = /adquisicionesS\/\d+\/editar/;
                                 var reglaVobo = /adquisiciones\/\d+\/editar/;
 
-                                if (window.location == "{{ route('cvu.create-adquisiciones') }}"){
+                                if (window.location == "{{ route('cvu.create-adquisiciones') }}") {
                                     window.location.href = '{{ route('cvu.create') }}';
 
                                 } else if (currentUrl.match(reglaSeguimiento)) {
                                     window.location.href = '{{ route('cvu.seguimiento') }}';
-                                } else if(currentUrl.match(reglaVobo)){
+                                } else if (currentUrl.match(reglaVobo)) {
                                     window.location.href = '{{ route('cvu.vobo') }}';
-                                }else {
+                                } else {
                                     window.location.href = '{{ route('cvu.vobo') }}';
                                 }
 

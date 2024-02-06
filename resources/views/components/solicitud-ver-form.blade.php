@@ -48,7 +48,8 @@
     <div class="mt-8">
         <label for="nombre_expedido">Expedido a nombre de: </label>
         <input type="text" readonly id="nombre_expedido" wire:model="nombre_expedido"
-            class="inputs-formulario-solicitudes sm:w-96 w-full cursor-not-allowed" placeholder="Nombre"
+            class="disabled:bg-[#e0dddd] disabled:text-[#777171] disabled:border-[#888181] disabled:cursor-not-allowed
+            disabled:rounded-md sm:w-96 w-full cursor-not-allowed" placeholder="Nombre"
             title="Este campo no se puede modificar." disabled>
     </div>
 

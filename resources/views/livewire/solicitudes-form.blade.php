@@ -20,10 +20,12 @@ use Carbon\Carbon;
                                     </svg>
                                     Observaciones de rechazo:
                                     @if ($solicitud->observaciones_vobo)
-                                    <span class="block pl-12 font-normal"><span class="font-bold">Por visto bueno:</span> {{ $solicitud->observaciones_vobo }}</span>
+                                        <span class="block pl-12 font-normal"><span class="font-bold">Por visto
+                                                bueno:</span> {{ $solicitud->observaciones_vobo }}</span>
                                     @endif
                                     @if ($solicitud->observaciones)
-                                    <span class="block pl-12 font-normal"><span class="font-bold">Por DGIEA: </span> {{ $solicitud->observaciones }}</span>
+                                        <span class="block pl-12 font-normal"><span class="font-bold">Por DGIEA: </span>
+                                            {{ $solicitud->observaciones }}</span>
                                     @endif
                                 </p>
                             </div>
@@ -36,11 +38,11 @@ use Carbon\Carbon;
                                         Rubro<samp class="text-rojo">*</samp>:
                                     </label>
                                     @if (str_contains($referer, 'vobo') || str_contains($referer, 'seguimiento'))
-                                        <select class="w-auto" id="id_rubro" name="id_rubro" wire:model="id_rubro"
-                                            disabled>
+                                        <select class="w-auto" id="id_rubro" name="id_rubro"
+                                            wire:model="id_rubro" disabled>
                                         @else
                                             <select class="sm:w-auto w-full" id="id_rubro" name="id_rubro"
-                                                wire:model="id_rubro"
+                                                wire:model="id_rubro" :disabled="{{ $id_solicitud != 0 }}"
                                                 @change="$wire.resetearRecursos($event.target.selectedOptions[0].getAttribute('data-id-especial'))">
                                     @endif
 
@@ -67,8 +69,10 @@ use Carbon\Carbon;
                                 <div class="mt-8">
                                     <label for="nombre_expedido">Expedido a nombre de: </label>
                                     <input type="text" readonly id="nombre_expedido" wire:model="nombre_expedido"
-                                        class="inputs-formulario-solicitudes sm:w-96 w-full cursor-not-allowed"
-                                        title="No se puede editar." placeholder="Nombre">
+                                        class="sm:w-96 w-full
+                                        disabled:bg-[#e0dddd] disabled:text-[#777171] disabled:border-[#888181] disabled:cursor-not-allowed
+                                        disabled:rounded-md h-10"
+                                        title="No se puede editar." placeholder="Nombre" disabled>
                                     @error('nombre_expedido')
                                         <span class="text-rojo sm:inline-block block">{{ $message }}</span>
                                     @enderror
@@ -133,12 +137,14 @@ use Carbon\Carbon;
                                                     value="vale">
                                                 <span class="ml-2">Vales</span>
                                             </label>
-                                            <label class=" items-center ml-6">
-                                                <input type="radio" x-model="tipoComprobacionOption"
-                                                    wire:model='tipo_comprobacion' name="tipo_comprobacion"
-                                                    value="ficha">
-                                                <span class="ml-2">Ficha de gasto</span>
-                                            </label>
+                                            @if (Session::get('tipo_financiamiento') == 'Externo')
+                                                <label class=" items-center ml-6">
+                                                    <input type="radio" x-model="tipoComprobacionOption"
+                                                        wire:model='tipo_comprobacion' name="tipo_comprobacion"
+                                                        value="ficha">
+                                                    <span class="ml-2">Ficha de gasto</span>
+                                                </label>
+                                            @endif
                                         </div>
                                         @error('tipo_comprobacion')
                                             <span class=" text-rojo sm:inline-block block">{{ $message }}</span>
@@ -203,7 +209,7 @@ use Carbon\Carbon;
                             <label for="aviso_privacidad">Acepto aviso de privacidad simplificada de la
                                 UAEMEX<samp class="text-rojo">*</samp>.</label>
                             {{-- <a href="{{asset('storage/aviso.pdf')}}" --}}
-                            <a href="{{Storage::url('/doc-UAEM/Aviso-de-Privacidad-SIEA-CVU.pdf')}}"
+                            <a href="{{ Storage::url('/doc-UAEM/Aviso-de-Privacidad-SIEA-CVU.pdf') }}"
                                 target="_blank" class="text-verde font-bold pl-2 hover:underline">Ver aviso de
                                 privacidad</a>
                             @error('aviso_privacidad')
@@ -312,14 +318,14 @@ use Carbon\Carbon;
                 var reglaSeguimiento = /solicitudesS\/\d+\/editar/;
                 var reglaVobo = /solicitudes\/\d+\/editar/;
 
-                if (window.location == "{{ route('cvu.create-solicitudes') }}"){
+                if (window.location == "{{ route('cvu.create-solicitudes') }}") {
                     window.location.href = '{{ route('cvu.create') }}';
 
                 } else if (currentUrl.match(reglaSeguimiento)) {
                     window.location.href = '{{ route('cvu.seguimiento') }}';
-                } else if(currentUrl.match(reglaVobo)){
+                } else if (currentUrl.match(reglaVobo)) {
                     window.location.href = '{{ route('cvu.vobo') }}';
-                }else {
+                } else {
                     window.location.href = '{{ route('cvu.vobo') }}';
                 }
             }
