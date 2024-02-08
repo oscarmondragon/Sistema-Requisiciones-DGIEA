@@ -99,3 +99,4 @@ Route::get('/cvu-seguimiento', [CvuController::class, 'seguimiento'])->middlewar
 Route::get('/cvu', [CvuController::class, 'crearSesion'])->name('cvu.verificado');
 Route::get('/documentos', DocumentosDescargables::class)->middleware('CvuAuth')->name('documentos.descargables'); //ruta documentos descargables
 
+

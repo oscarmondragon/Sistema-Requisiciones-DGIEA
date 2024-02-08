@@ -35,6 +35,12 @@
                     </x-nav-link>
                 </div>
 
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <x-nav-link :href="route('documentos.descargables')" :active="request()->routeIs(['documentos.descargables'])">
+                        {{ __('Descargables') }}
+                    </x-nav-link>
+                </div>
+
             </div>
 
             <!-- Settings Dropdown -->
@@ -143,6 +149,9 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('cvu.seguimiento')" :active="request()->routeIs('cvu.seguimiento')">
                 {{ __('Seguimiento') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('documentos.descargables')" :active="request()->routeIs('documentos.descargables')">
+                {{ __('Descargables') }}
             </x-responsive-nav-link>
             <div>
                 <form method="POST" action="{{ route('logout.cvu') }}">

@@ -4,7 +4,6 @@
             <div class="p-6 text-gray-900">
                 <div >
                     <h3>Seleccione el tipo de requerimiento</h3>
-                    <div class="sm:grid grid-cols-2 items-end">
                         <div>
                             <select id="tipo" wire:model="tipo" class="sm:w-auto w-full mt-2">
                                 <option value="0">Selecciona un opción</option>
@@ -32,19 +31,6 @@
                                 @endforeach
                             </select>
                         </div>
-
-
-                        <div class="sm:text-end text-center sm:mt-0 mt-4">
-                            <a href="{{route('documentos.descargables')}}">
-                              <button class="bg-blue-600 hover:bg-blue-800 text-white sm:w-auto w-5/6">
-                                Documentos descargables
-                                <img src="{{'img/iconos/ic_descargar_documentos.png'}}" alt="Descargar" class="inline-block pl-2 pb-1">
-                            </button>
-                            </a>
-                        </div>
-                    </div>
-
-
                 </div>
 
 
