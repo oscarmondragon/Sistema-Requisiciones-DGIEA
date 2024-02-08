@@ -23,7 +23,7 @@ use App\Http\Controllers\AdquisicionController;
 use App\Http\Controllers\SolicitudController;
 use App\Http\Controllers\SeguimientoSiiaController;
 use App\Http\Controllers\CvuController;
-
+use App\Http\Livewire\Revisores\ShowDashboard;
 use App\Http\Middleware\CheckRole;
 
 require __DIR__ . '/auth.php';
@@ -41,9 +41,8 @@ Route::get('/prueba', [AdquisicionController::class, 'prueba']);
 
 
 //RUTAS MENU REVISORES Y ADMINISTRADORES
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', ShowDashboard::class)->middleware(['auth', 'verified'])->name('dashboard');
+
 
 Route::get('/requerimientos-dgiea', ShowRequerimientos::class)->middleware(['auth', 'verified'])->name('requerimientos.index');
 Route::get('/adquisiciones/{id}/revisar/{id_requisicion_detalle?}', RevisorAdquisicion::class)->middleware(['auth', 'verified'])->name('adquisicion.revisar');

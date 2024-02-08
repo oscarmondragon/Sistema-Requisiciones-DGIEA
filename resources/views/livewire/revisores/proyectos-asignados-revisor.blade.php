@@ -1,6 +1,6 @@
 <div x-data>
   <x-slot name="header">
-      <h2 class="font-semibold text-xl leading-tight">
+      <h2 class="font-semibold text-xl leading-tight ml-4">
           {{ __('Tus proyectos asignados') }}
       </h2>
   </x-slot>
