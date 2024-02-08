@@ -208,9 +208,7 @@ use Carbon\Carbon;
                                 wire:model='aviso_privacidad' class="mr-1">
                             <label for="aviso_privacidad">Acepto aviso de privacidad simplificada de la
                                 UAEMEX<samp class="text-rojo">*</samp>.</label>
-                            {{-- <a href="{{asset('storage/aviso.pdf')}}" --}}
-                            <a href="{{ Storage::url('/doc-UAEM/Aviso-de-Privacidad-SIEA-CVU.pdf') }}"
-                                target="_blank" class="text-verde font-bold pl-2 hover:underline">Ver aviso de
+                            <a wire:click="exportAviso" class="text-verde font-bold pl-2 hover:underline">Ver aviso de
                                 privacidad</a>
                             @error('aviso_privacidad')
                                 <span class=" text-rojo sm:inline-block block">{{ $message }}</span>

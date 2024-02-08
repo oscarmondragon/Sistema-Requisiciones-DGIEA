@@ -162,11 +162,11 @@ class RevisorSolicitud extends Component
 
         //dd($this->sClaveSiia);
         $this->validate();
-        
+
         try {
             DB::beginTransaction();
 
-            if ($this->solicitud) {            
+            if ($this->solicitud) {
                 if ($this->estatusSolicitud == 5 || $this->estatusSolicitud == 12 || $this->estatusSolicitud == 14) {
                     $observaciones = $this->observaciones_estatus;
                 } else {
@@ -175,16 +175,16 @@ class RevisorSolicitud extends Component
                 $this->solicitud->update([
                     'estatus_dgiea' => $this->estatusSolicitud,
                     'estatus_rt' => $this->estatusSolicitud,
-                    'observaciones' => $observaciones 
+                    'observaciones' => $observaciones
                 ]);
             }
-                if ($this->solicitud_detalles) {
-                    $this->solicitud_detalles->update([
-                        'clave_siia' => $this->sClaveSiia
-                    ]);                
-                }
-                $this->clave = $this->sClaveSiia;
-            
+            if ($this->solicitud_detalles) {
+                $this->solicitud_detalles->update([
+                    'clave_siia' => $this->sClaveSiia
+                ]);
+            }
+            $this->clave = $this->sClaveSiia;
+
 
 
             DB::commit();
@@ -206,10 +206,14 @@ class RevisorSolicitud extends Component
     }
     public function descargarArchivo($rutaDocumento, $nombreDocumento)
     {
+        //Obtenemos ruta del archivo
         $rutaArchivo = storage_path('app/' . $rutaDocumento);
 
         if (Storage::exists($rutaDocumento)) {
-            return response()->download(storage_path('app/' . $rutaDocumento), $nombreDocumento);
+            // Obtener la extensión del archivo original
+            $extension = pathinfo($rutaArchivo, PATHINFO_EXTENSION);
+            // Devolver el archivo
+            return response()->download($rutaArchivo, $nombreDocumento . '.' . $extension);
         } else {
             abort(404);
         }

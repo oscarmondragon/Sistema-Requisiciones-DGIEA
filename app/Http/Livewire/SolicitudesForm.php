@@ -537,15 +537,22 @@ class SolicitudesForm extends Component
 
     public function descargarArchivo($rutaDocumento, $nombreDocumento)
     {
+        //Obtenemos ruta del archivo
         $rutaArchivo = storage_path('app/' . $rutaDocumento);
 
         if (Storage::exists($rutaDocumento)) {
-            return response()->download(storage_path('app/' . $rutaDocumento), $nombreDocumento);
+            // Obtener la extensión del archivo original
+            $extension = pathinfo($rutaArchivo, PATHINFO_EXTENSION);
+            // Devolver el archivo
+            return response()->download($rutaArchivo, $nombreDocumento . '.' . $extension);
         } else {
             abort(404);
         }
     }
-
+    public function exportAviso()
+    {
+        return Storage::disk('public')->download('doc-UAEM/Aviso-de-Privacidad-SIEA-CVU.pdf');
+    }
     public function rules()
     {
         $rules = $this->rules;

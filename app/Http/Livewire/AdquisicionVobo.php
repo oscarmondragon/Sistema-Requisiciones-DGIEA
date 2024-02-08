@@ -132,8 +132,8 @@ class AdquisicionVobo extends Component
                 $adquisicion->update([
                     'clave_adquisicion' => $adquisicion->clave_adquisicion,
                     'estatus_general' => 4,
-                    'vobo_rt'=> $vobo_rt,
-                    'vobo_admin'=> $vobo_admin,
+                    'vobo_rt' => $vobo_rt,
+                    'vobo_admin' => $vobo_admin,
                     'observaciones_vobo' => null
                 ]);
 
@@ -158,7 +158,7 @@ class AdquisicionVobo extends Component
                 $adquisicion->update([
                     'clave_adquisicion' => $adquisicion->clave_adquisicion,
                     'estatus_general' => 3,
-                    'observaciones_vobo'=> $this->observacionesVobo
+                    'observaciones_vobo' => $this->observacionesVobo
                 ]);
             }
             DB::commit();
@@ -176,10 +176,14 @@ class AdquisicionVobo extends Component
 
     public function descargarArchivo($rutaDocumento, $nombreDocumento)
     {
+        //Obtenemos ruta del archivo
         $rutaArchivo = storage_path('app/' . $rutaDocumento);
 
         if (Storage::exists($rutaDocumento)) {
-            return response()->download(storage_path('app/' . $rutaDocumento), $nombreDocumento);
+            // Obtener la extensión del archivo original
+            $extension = pathinfo($rutaArchivo, PATHINFO_EXTENSION);
+            // Devolver el archivo
+            return response()->download($rutaArchivo, $nombreDocumento . '.' . $extension);
         } else {
             abort(404);
         }
