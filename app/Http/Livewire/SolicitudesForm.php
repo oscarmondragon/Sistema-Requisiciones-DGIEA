@@ -549,7 +549,10 @@ class SolicitudesForm extends Component
             abort(404);
         }
     }
-
+    public function exportAviso()
+    {
+        return Storage::disk('public')->download('doc-UAEM/Aviso-de-Privacidad-SIEA-CVU.pdf');
+    }
     public function rules()
     {
         $rules = $this->rules;
