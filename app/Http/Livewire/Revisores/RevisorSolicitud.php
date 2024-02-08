@@ -73,7 +73,7 @@ class RevisorSolicitud extends Component
 
     protected $rules = [
         'estatusSolicitud' => 'required_if:estatusSolicitud,0|not_in:0',
-        'sClaveSiia' => 'required_if:tipoEstatus,4|required_if:tipoEstatus,5|max:16|min:0',
+        'sClaveSiia' => 'required_if:tipoEstatus,4|required_if:tipoEstatus,5|max:16|regex:/^[A-Za-z0-9]*$/u',
         'observaciones_estatus' => 'required_if:estatusSolicitud,5|required_if:estatusSolicitud,12|required_if:estatusSolicitud,14|max:800'
     ];
 
@@ -82,6 +82,7 @@ class RevisorSolicitud extends Component
         'estatusSolicitud.not_in' => 'Debe de seleccionar un estado.',
         'sClaveSiia.required_if' => 'La clave SIIA no puede estar vacía.',
         'sClaveSiia.max' => 'Clave SIIA demasiado larga.',
+        'sClaveSiia.regex' => 'Clave SIIA no es valida.',
         'observaciones_estatus.required_if' => 'El motivo de rechazo no puede estar vacío.',
         'observaciones_estatus.max' => 'La observación es demasiado larga.',
     ];

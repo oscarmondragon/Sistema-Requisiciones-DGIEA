@@ -58,7 +58,7 @@ class RevisorAdquisicion extends Component
     protected $rules = [
         'estatus' => 'required_if:estatus,0|not_in:0',
         'observaciones_estatus' => 'required_if:estatus,5|required_if:estatus,9|max:800',
-        'claveSiia' => 'required_if:tipoEstatus,3|required_if:tipoEstatus,5|max:16',
+        'claveSiia' => 'required_if:tipoEstatus,3|required_if:tipoEstatus,5|max:16|regex:/^[A-Za-z0-9]*$/u',
     ];
     protected $messages = [
         'estatus.required_if' => 'Debe seleccionar un estado.',
@@ -67,6 +67,7 @@ class RevisorAdquisicion extends Component
         'observaciones_estatus.max' => 'La observación es demasiado larga.',
         'claveSiia.required_if' => 'Debe de escribir la clave del SIIA.',
         'claveSiia.max' => 'La clave SIIA es demasiado larga.',
+        'claveSiia.regex' => 'La clave SIIA no es valida.',
     ];
 
     public $listeners = [
