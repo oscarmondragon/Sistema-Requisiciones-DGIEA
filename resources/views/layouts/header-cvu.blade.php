@@ -9,6 +9,9 @@
         @if ($accion == 3)
             {{ __('Seguimiento') }}
         @endif
+        @if ($accion == 4)
+            {{ __('Documentos') }}
+        @endif
     </h2>
 
     <div class="sm:grid sm:grid-cols-3 sm:justify-around flex flex-wrap">

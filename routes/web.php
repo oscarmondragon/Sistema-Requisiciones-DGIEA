@@ -11,6 +11,8 @@ use App\Http\Livewire\Revisores\ShowRequerimientosSIIA;
 use App\Http\Livewire\Revisores\RevisorAdquisicion;
 use App\Http\Livewire\Revisores\RevisorSolicitud;
 use App\Http\Livewire\Admin\AsignacionProyectos;
+use App\Http\Livewire\DocumentosDescargables;
+
 
 
 
@@ -95,3 +97,5 @@ Route::get('/cvu-vobo', [CvuController::class, 'darVobo'])->middleware('CvuAuth'
 Route::get('/error-cvu', [CvuController::class, 'error'])->name('errores');
 Route::get('/cvu-seguimiento', [CvuController::class, 'seguimiento'])->middleware('CvuAuth')->name('cvu.seguimiento');
 Route::get('/cvu', [CvuController::class, 'crearSesion'])->name('cvu.verificado');
+Route::get('/documentos', DocumentosDescargables::class)->name('documentos.descarcables'); //ruta documentos descargables
+
