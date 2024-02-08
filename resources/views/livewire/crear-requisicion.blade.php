@@ -35,7 +35,7 @@
 
 
                         <div class="sm:text-end text-center sm:mt-0 mt-4">
-                            <a href="{{route('documentos.descarcables')}}">
+                            <a href="{{route('documentos.descargables')}}">
                               <button class="bg-blue-600 hover:bg-blue-800 text-white sm:w-auto w-5/6">
                                 Documentos descargables
                                 <img src="{{'img/iconos/ic_descargar_documentos.png'}}" alt="Descargar" class="inline-block pl-2 pb-1">

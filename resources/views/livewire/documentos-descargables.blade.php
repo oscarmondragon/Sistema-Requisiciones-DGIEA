@@ -11,8 +11,8 @@
                             @foreach($docsDescargables as $doc) 
                                 <li>
                                 @if(isset($doc->ruta_documento))
-                                <a href="#" class="text-dorado" wire:click="descargarArchivo('{{ $doc->ruta_documento }}', '{{ $doc->nombre_documento}}')">  {{ $doc->nombre_documento}}
-                                <button type="button" class="btn-ver"><img src="{{'img/iconos/ic_descargar_documentos.png'}}" alt="Descargar"></button>
+                                <a href="#" class="text-dorado" wire:click="descargarArchivo('{{ $doc->ruta_documento }}', '{{ $doc->nombre_documento}}')" title="Descargar">  {{ $doc->nombre_documento}}
+                                <button type="button" class="btn-ver" title="Descargar"><img class="w-6 -mb-2" src="{{'img/iconos/ic_descargar_documentos_black.png'}}" alt="Descargar"></button>
                                 </a>
                                 @endif
                                 </li>
@@ -20,7 +20,7 @@
                                 </ul>
                         </div>
                         <a href="{{ route('cvu.create') }}">
-                        <button type="button" class="float-right btn-primary sm:w-auto w-5/6" >Regresar</button>
+                        <button type="button" class="float-right btn-primary sm:w-auto w-5/6 sm:mt-0 mt-10 mb-5" >Regresar</button>
                         </a>
                 </div>  
             </div>
