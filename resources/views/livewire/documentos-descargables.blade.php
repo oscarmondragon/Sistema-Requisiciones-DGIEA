@@ -19,9 +19,6 @@
                                 @endforeach
                                 </ul>
                         </div>
-                        <a href="{{ route('cvu.create') }}">
-                        <button type="button" class="float-right btn-primary sm:w-auto w-5/6 sm:mt-0 mt-10 mb-5" >Regresar</button>
-                        </a>
                 </div>  
             </div>
          </div>
