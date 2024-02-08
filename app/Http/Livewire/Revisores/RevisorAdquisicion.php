@@ -181,10 +181,14 @@ class RevisorAdquisicion extends Component
 
     public function descargarArchivo($rutaDocumento, $nombreDocumento)
     {
+        //Obtenemos ruta del archivo
         $rutaArchivo = storage_path('app/' . $rutaDocumento);
 
         if (Storage::exists($rutaDocumento)) {
-            return response()->download(storage_path('app/' . $rutaDocumento), $nombreDocumento);
+            // Obtener la extensión del archivo original
+            $extension = pathinfo($rutaArchivo, PATHINFO_EXTENSION);
+            // Devolver el archivo
+            return response()->download($rutaArchivo, $nombreDocumento . '.' . $extension);
         } else {
             abort(404);
         }
@@ -192,13 +196,13 @@ class RevisorAdquisicion extends Component
 
     public function save()
     {
-        $this->validate();        
-        
+        $this->validate();
+
 
         try {
             DB::beginTransaction();
             if ($this->id_adquisicion_detalle == null) {
-                
+
                 if (in_array($this->tipoEstatus, [3, 5])) { // Selecciono un estatus por partida    
                     // $bienesDB = AdquisicionDetalle::where('id_adquisicion', $this->id_adquisicion)->get();
                     $bienesDB = $this->adquisicion->detalless()->get();
@@ -206,16 +210,16 @@ class RevisorAdquisicion extends Component
                         if ($bien) {
                             if ($this->estatus == 5 || $this->estatus == 9) {
                                 $observaciones = $this->observaciones_estatus;
-                            }else{
+                            } else {
                                 $observaciones = null;
                             }
-                          
+
                             $bien->update([
                                 'estatus_dgiea' => $this->estatus,
                                 'estatus_rt' => $this->estatus,
                                 'observaciones' => $observaciones,
-                                'clave_siia' =>  $this->claveSiia
-                                ]);
+                                'clave_siia' => $this->claveSiia
+                            ]);
                         }
 
                         $adquisicion = Adquisicion::where('id', $this->adquisicion->id)->first();
@@ -229,13 +233,13 @@ class RevisorAdquisicion extends Component
                             $adquisicion->update([
                                 'estatus_general' => $this->estatus,
                                 'observaciones' => $observaciones
-                                ]);
+                            ]);
                         }
                     }
                 } else {
                     /*  Selecciono un estatus para una adquisicion en general
                         Actualizamos en adquisiciones */
-                        
+
                     $adquisicion = Adquisicion::where('id', $this->id_adquisicion)->first();
                     if ($adquisicion) {
                         if ($this->estatus == 5 || $this->estatus == 9) {
@@ -246,14 +250,14 @@ class RevisorAdquisicion extends Component
                         $adquisicion->update([
                             'estatus_general' => $this->estatus,
                             'observaciones' => $observaciones
-                            ]);
+                        ]);
                     }
                 }
             } else {
                 // Actualizamos en detalles, entro a una partida
                 $bienesDB = AdquisicionDetalle::where('id', $this->id_adquisicion_detalle)->first();
                 if ($bienesDB) {
-                  
+
                     if ($this->estatus == 5 || $this->estatus == 9) {
                         $observaciones = $this->observaciones_estatus;
                     } else {
@@ -261,11 +265,11 @@ class RevisorAdquisicion extends Component
                     }
 
                     $bienesDB->update([
-                        'estatus_dgiea' => $this->estatus,                        
+                        'estatus_dgiea' => $this->estatus,
                         'estatus_rt' => $this->estatus,
                         'observaciones' => $observaciones,
                         'clave_siia' => $this->claveSiia
-                        ]);
+                    ]);
                 }
             }
 

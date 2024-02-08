@@ -381,9 +381,9 @@ class AdquisicionesForm extends Component
                             'iva' => $this->iva,
                             'total' => $this->total
                         ]);
-                      /*  dd("hola");
-                        $_SESSION['pagina_actual'] = $_SERVER['REQUEST_URI'];
-                        dd("pagina actual:". $_SESSION['pagina_actual']);*/
+                        /*  dd("hola");
+                          $_SESSION['pagina_actual'] = $_SERVER['REQUEST_URI'];
+                          dd("pagina actual:". $_SESSION['pagina_actual']);*/
 
                         //Guarda o actualizamos los bienes o servicios en adquisicion_detalles
                         //primero agregamos el id_adquisicion a cada bien
@@ -1113,10 +1113,14 @@ class AdquisicionesForm extends Component
 
     public function descargarArchivo($rutaDocumento, $nombreDocumento)
     {
+        //Obtenemos ruta del archivo
         $rutaArchivo = storage_path('app/' . $rutaDocumento);
 
         if (Storage::exists($rutaDocumento)) {
-            return response()->download(storage_path('app/' . $rutaDocumento), $nombreDocumento);
+            // Obtener la extensión del archivo original
+            $extension = pathinfo($rutaArchivo, PATHINFO_EXTENSION);
+            // Devolver el archivo
+            return response()->download($rutaArchivo, $nombreDocumento . '.' . $extension);
         } else {
             abort(404);
         }
