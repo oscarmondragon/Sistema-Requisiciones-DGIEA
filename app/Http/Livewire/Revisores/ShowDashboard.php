@@ -380,19 +380,7 @@ class ShowDashboard extends Component
             $requerimientos = $adquisicionesDgiea->union($adquisicionDetalles)->orderBy($this->sortColumn, $this->sortDirection);
         } else if ($this->categoria == 2) {
             $requerimientos = $solicitudDetalles->orderBy($this->sortColumn, $this->sortDirection);
-        } 
-        // else if ($this->categoria == 3) {
-        //     $adquisicionesDgiea->where('estatus_general', 4);
-        //     $solicitudDetalles->where('estatus_rt', 4);
-        //     $requerimientos = $adquisicionesDgiea->union($solicitudDetalles)->orderBy($this->sortColumn, $this->sortDirection);
-        // } else if ($this->categoria == 4) {
-        //     $solicitudDetalles->where('estatus_requisiciones.tipo', [2]);
-        //     $requerimientos = $adquisicionesDgiea->union($solicitudDetalles)->orderBy($this->sortColumn, $this->sortDirection);
-        // } else if ($this->categoria == 5) {
-        //     $adquisicionDetalles;
-        //     $solicitudDetalles->whereNotIn('estatus_requisiciones.tipo', [2]);
-        //     $requerimientos = $adquisicionDetalles->union($solicitudDetalles)->orderBy($this->sortColumn, $this->sortDirection);
-        // }
+        }
 
 
         return view(
