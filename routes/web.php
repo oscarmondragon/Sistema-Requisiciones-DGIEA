@@ -15,8 +15,6 @@ use App\Http\Livewire\DocumentosDescargables;
 
 
 
-
-
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProyectoController;
 use App\Http\Controllers\AdquisicionController;
@@ -68,21 +66,21 @@ Route::middleware('auth')->group(function () {
 
 //RUTAS ADQUISICIONES
 
-Route::get('/adquisiciones/{id}/editar', AdquisicionesForm::class)->middleware('CvuAuth')->name('adquisiciones.editar');
-Route::get('/adquisiciones/{id}/vobo', AdquisicionVobo::class)->middleware('CvuAuth')->name('adquisicion.vobo');
+Route::get('/adquisiciones/{id}/editar', AdquisicionesForm::class)->middleware(['CvuAuth', 'CanAccederCvu'])->name('adquisiciones.editar');
+Route::get('/adquisiciones/{id}/vobo', AdquisicionVobo::class)->middleware(['CvuAuth', 'CanAccederCvu'])->name('adquisicion.vobo');
 
-Route::get('/adquisicionesS/{id}/editar', AdquisicionesForm::class)->middleware('CvuAuth')->name('adquisiciones.seguimiento.editar');
-Route::get('/adquisiciones/{id}/ver', AdquisicionVobo::class)->middleware('CvuAuth')->name('adquisicion.ver');
+Route::get('/adquisicionesS/{id}/editar', AdquisicionesForm::class)->middleware(['CvuAuth', 'CanAccederCvu'])->name('adquisiciones.seguimiento.editar');
+Route::get('/adquisiciones/{id}/ver', AdquisicionVobo::class)->middleware(['CvuAuth', 'CanAccederCvu'])->name('adquisicion.ver');
 
 
 
 
 //RUTAS SOLICITUDES
-Route::get('/solicitudes/{id}/editar', SolicitudesForm::class)->middleware('CvuAuth')->name('solicitudes.editar');
-Route::get('/solicitudes/{id}/vobo', SolicitudVobo::class)->middleware('CvuAuth')->name('solicitud.vobo');
+Route::get('/solicitudes/{id}/editar', SolicitudesForm::class)->middleware(['CvuAuth', 'CanAccederCvu'])->name('solicitudes.editar');
+Route::get('/solicitudes/{id}/vobo', SolicitudVobo::class)->middleware(['CvuAuth', 'CanAccederCvu'])->name('solicitud.vobo');
 
-Route::get('/solicitudesS/{id}/editar', SolicitudesForm::class)->middleware('CvuAuth')->name('solicitudes.seguimiento.editar');
-Route::get('/solicitudes/{id}/ver', SolicitudVobo::class)->middleware('CvuAuth')->name('solicitud.ver');
+Route::get('/solicitudesS/{id}/editar', SolicitudesForm::class)->middleware(['CvuAuth', 'CanAccederCvu'])->name('solicitudes.seguimiento.editar');
+Route::get('/solicitudes/{id}/ver', SolicitudVobo::class)->middleware(['CvuAuth', 'CanAccederCvu'])->name('solicitud.ver');
 
 //RUTAS DESDE CVU
 
@@ -91,12 +89,10 @@ Route::post('logout-cvu', [CvuController::class, 'destroy'])->middleware('CvuAut
 Route::get('/cvu-crear', [CvuController::class, 'create'])->middleware('CvuAuth')->name('cvu.create');
 //Route::get('/cvu-crear', [CvuController::class, 'create'])->middleware(['cors', 'CvuAuth'])->name('cvu.create');
 //Route::get('/cvu-crear', [CvuController::class, 'create'])->middleware('CvuAuth')->name('cvu.create');
-Route::get('/cvu-crear-adquisiciones', AdquisicionesForm::class)->middleware('CvuAuth')->name('cvu.create-adquisiciones');
-Route::get('/cvu-crear-solicitudes', SolicitudesForm::class)->middleware('CvuAuth')->name('cvu.create-solicitudes');
+Route::get('/cvu-crear-adquisiciones', AdquisicionesForm::class)->middleware(['CvuAuth', 'CanCreateAdquisiciones'])->name('cvu.create-adquisiciones');
+Route::get('/cvu-crear-solicitudes', SolicitudesForm::class)->middleware(['CvuAuth', 'CanCreateSolicitudes'])->name('cvu.create-solicitudes');
 Route::get('/cvu-vobo', [CvuController::class, 'darVobo'])->middleware('CvuAuth')->name('cvu.vobo');
 Route::get('/error-cvu', [CvuController::class, 'error'])->name('errores');
 Route::get('/cvu-seguimiento', [CvuController::class, 'seguimiento'])->middleware('CvuAuth')->name('cvu.seguimiento');
 Route::get('/cvu', [CvuController::class, 'crearSesion'])->name('cvu.verificado');
 Route::get('/documentos', DocumentosDescargables::class)->middleware('CvuAuth')->name('documentos.descargables'); //ruta documentos descargables
-
-

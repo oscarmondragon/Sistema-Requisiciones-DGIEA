@@ -7,7 +7,11 @@
                 <div class="p-6 text-gray-900">
                     <div class="">
                         <div>
-                            <h1 class="mt-6">Formulario solicitudes</h1>
+                            @if($solicitud->estatus_rt == 2 )
+                            <h1 class="mt-6">Visto bueno para solicitud  con clave: {{$solicitud->clave_solicitud}}</h1>
+                            @else
+                            <h1 class="mt-6">Solicitud  con clave: {{$solicitud->clave_solicitud}}</h1>
+                            @endif
                             <form x-on:submit.prevent="confirmationVoBo">
                                 @csrf
                             @include('components.solicitud-ver-form')

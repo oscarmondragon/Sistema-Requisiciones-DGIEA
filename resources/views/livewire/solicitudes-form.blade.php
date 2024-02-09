@@ -337,7 +337,6 @@ use Carbon\Carbon;
                 title: 'swal2-title'
             },
             title: '¿Estás seguro que deseas eliminar el documento?',
-            text: 'Una vez eliminado no sera posible recuperarlo.',
             icon: 'warning',
             iconColor: '#9D9361',
             showCancelButton: true,
