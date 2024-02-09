@@ -32,8 +32,8 @@ class AdquisicionDescriptionModal extends ModalComponent
     //REGLAS DE VALIDACION
     protected $rules = [
         'descripcion' => 'required|max:3000',
-        'cantidad' => 'required|gte:1|regex:/^[\d]{0,10}?$/',
         'precio_unitario' => 'required|gt:0|regex:/^[\d]{0,10}(\.[\d]{1,2})?$/',
+        'cantidad' => 'required|gte:1|regex:/^[\d]{0,10}?$/',
         'importe' => 'required',
         'justificacion_software' => 'required_if:id_rubro_especial,1|max:800',
         'alumnos' => 'required_if:id_rubro_especial,1|gte:0|regex:/^[\d]{0,7}?$/',
@@ -82,11 +82,6 @@ class AdquisicionDescriptionModal extends ModalComponent
 
     public function calcularIvaImporte()
     {
-
-        $this->validate([
-            'precio_unitario' => 'required|gt:0|regex:/^[\d]{0,10}(\.[\d]{1,2})?$/',
-            'cantidad' => 'required|gte:1|regex:/^[\d]{0,10}?$/'
-        ]);
 
         //Validamos que sean valores numericos para evitar errores
         if (!is_numeric($this->cantidad)) {

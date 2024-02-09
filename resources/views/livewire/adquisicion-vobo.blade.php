@@ -7,7 +7,11 @@
         <div class="p-6">
           <div class="">
             <div>
+              @if($adquisicion->estatus_general == 2 )
               <h1 class="mt-6">Visto bueno para adquisición  con clave: {{$adquisicion->clave_adquisicion}}</h1>
+              @else
+              <h1 class="mt-6">Adquisición  con clave: {{$adquisicion->clave_adquisicion}}</h1>
+              @endif
               <form x-on:submit.prevent="confirmationVoBo">
                 @csrf
                 <div>
