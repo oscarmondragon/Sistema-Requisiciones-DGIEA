@@ -33,21 +33,18 @@
                                     <label for="id_rubro">
                                         Rubro<samp class="text-rojo">*</samp>:
                                     </label>
-                                    @if (str_contains($referer, 'vobo') || str_contains($referer, 'seguimiento'))
-                                        <select class="w-auto bg-red-500" id="id_rubro" name="id_rubro" wire:model="id_rubro"
-                                            disabled>
-                                        @else
-                                            <select class="sm:w-auto w-full" required id="id_rubro" name="id_rubro"
-                                                wire:model="id_rubro" :disabled="{{$id_adquisicion != 0}}"
-                                                @change="$wire.resetearBienes($event.target.selectedOptions[0].getAttribute('data-id-especial'))">
-                                    @endif
+                                    <select class="sm:w-auto w-full" required id="id_rubro" name="id_rubro"
+                                        wire:model="id_rubro" @isset($id_adquisicion) disabled @endisset
+                                        @change="$wire.resetearBienes($event.target.selectedOptions[0].getAttribute('data-id-especial'))">
 
-                                    <option value="0">Selecciona una opción</option>
-                                    @foreach ($cuentasContables as $cuentaContable)
-                                        <option value="{{ $cuentaContable->id }}"
-                                            data-id-especial="{{ $cuentaContable->id_especial }}">
-                                            {{ $cuentaContable->nombre_cuenta }}</option>
-                                    @endforeach
+
+                                        <option value="0">Selecciona una opción</option>
+                                        @foreach ($cuentasContables as $cuentaContable)
+                                            <option value="{{ $cuentaContable->id }}"
+                                                data-id-especial="{{ $cuentaContable->id_especial }}">
+                                                {{ $cuentaContable->nombre_cuenta }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                     @error('id_rubro')
                                         <span class=" text-rojo sm:inline-block block">{{ $message }}</span>
@@ -417,6 +414,7 @@
                             },
                             title: '¿Solo deseas guardar el avance?',
                             text: 'Recuerda que solo sera visible para ti. Deberás completarlo y enviarlo a VoBo posteriormente.',
+                            position: 'center',
                             icon: 'warning',
                             iconColor: '#9D9361',
                             showCancelButton: true,
@@ -439,6 +437,7 @@
                             },
                             title: '¿Deseas enviar tu adquisición a VoBo?',
                             text: 'Una vez enviada ya no será posible modificarla.',
+                            position: 'center',
                             icon: 'warning',
                             iconColor: '#9D9361',
                             showCancelButton: true,
@@ -461,6 +460,7 @@
                             },
                             title: '¿Estás seguro que deseas cancelar?',
                             text: 'Se perderán todos los datos capturados.',
+                            position: 'center',
                             icon: 'warning',
                             iconColor: '#9D9361',
                             showCancelButton: true,
@@ -499,6 +499,7 @@
                                 title: 'swal2-title'
                             },
                             title: '¿Estás seguro que deseas eliminar el documento?',
+                            position: 'center',
                             icon: 'warning',
                             iconColor: '#9D9361',
                             showCancelButton: true,

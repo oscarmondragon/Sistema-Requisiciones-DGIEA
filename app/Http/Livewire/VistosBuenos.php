@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use App\Models\Adquisicion;
+use App\Models\Proyecto;
 use App\Models\Solicitud;
 use App\Models\TipoRequisicion;
 use Livewire\WithPagination;
@@ -24,10 +25,10 @@ class VistosBuenos extends Component
     public $categoria = 0;
     public $categoriaVobo = 0;
     public $tipoRequisicion;
-    public $f_inicial = 0;
-    public $f_final = 0;
-    public $f_inicial_vobo = 0;
-    public $f_final_vobo = 0;
+    public $f_inicial;
+    public $f_final;
+    public $f_inicial_vobo;
+    public $f_final_vobo;
 
 
     public $sortColumn = 'id';
@@ -112,23 +113,23 @@ class VistosBuenos extends Component
             });
         }
         if ($this->f_inicial != 0 and ($this->f_final == 0 or $this->f_final == '')) {
-            $adquisiciones->where('adquisiciones.created_at', 'like', '%' . $this->f_inicial . '%');
-            $solicitudes->where('solicitudes.created_at', 'like', '%' . $this->f_inicial . '%');
+            $adquisiciones->where('adquisiciones.updated_at', 'like', '%' . $this->f_inicial . '%');
+            $solicitudes->where('solicitudes.updated_at', 'like', '%' . $this->f_inicial . '%');
             // dd('Inicial 1-'.$this->f_inicial.' 2-'.$this->f_final);
         }
         if ($this->f_final != 0 and ($this->f_inicial == 0 or $this->f_inicial == '')) {
-            $adquisiciones->where('adquisiciones.created_at', 'like', '%' . $this->f_final . '%');
-            $solicitudes->where('solicitudes.created_at', 'like', '%' . $this->f_final . '%');
+            $adquisiciones->where('adquisiciones.updated_at', 'like', '%' . $this->f_final . '%');
+            $solicitudes->where('solicitudes.updated_at', 'like', '%' . $this->f_final . '%');
             //dd('final 1-'.$this->f_inicial.' 2-'.$this->f_final);
         }
         if (($this->f_final != 0 and $this->f_final != '') and ($this->f_inicial != 0 and $this->f_inicial != '')) {
             //   dd('las dos'.$this->f_final.''.$this->f_inicial);
             /* $adquisiciones->whereBetween('adquisiciones.created_at', [$this->f_inicial, $this->f_final]);
              $solicitudes->whereBetween('solicitudes.created_at', [$this->f_inicial, $this->f_final]);*/
-            $adquisiciones->whereDate('adquisiciones.created_at', '>=', $this->f_inicial)
-                ->whereDate('adquisiciones.created_at', '<=', $this->f_final);
-            $solicitudes->whereDate('solicitudes.created_at', '>=', $this->f_inicial)
-                ->whereDate('solicitudes.created_at', '<=', $this->f_final);
+            $adquisiciones->whereDate('adquisiciones.updated_at', '>=', $this->f_inicial)
+                ->whereDate('adquisiciones.updated_at', '<=', $this->f_final);
+            $solicitudes->whereDate('solicitudes.updated_at', '>=', $this->f_inicial)
+                ->whereDate('solicitudes.updated_at', '<=', $this->f_final);
             // dd('ambos 1-'.$this->f_inicial.' 2-'.$this->f_final);
         }
 
@@ -197,18 +198,18 @@ class VistosBuenos extends Component
 
 
         if ($this->f_inicial_vobo != 0 and ($this->f_final_vobo == 0 or $this->f_final_vobo == '')) {
-            $adquisicionesVistosBuenos->where('adquisiciones.created_at', 'like', '%' . $this->f_inicial_vobo . '%');
-            $solicitudesVistosBuenos->where('solicitudes.created_at', 'like', '%' . $this->f_inicial_vobo . '%');
+            $adquisicionesVistosBuenos->where('adquisiciones.updated_at', 'like', '%' . $this->f_inicial_vobo . '%');
+            $solicitudesVistosBuenos->where('solicitudes.updated_at', 'like', '%' . $this->f_inicial_vobo . '%');
         }
         if ($this->f_final_vobo != 0 and ($this->f_inicial_vobo == 0 or $this->f_inicial_vobo == '')) {
-            $adquisicionesVistosBuenos->where('adquisiciones.created_at', 'like', '%' . $this->f_final_vobo . '%');
-            $solicitudesVistosBuenos->where('solicitudes.created_at', 'like', '%' . $this->f_final_vobo . '%');
+            $adquisicionesVistosBuenos->where('adquisiciones.updated_at', 'like', '%' . $this->f_final_vobo . '%');
+            $solicitudesVistosBuenos->where('solicitudes.updated_at', 'like', '%' . $this->f_final_vobo . '%');
         }
         if ($this->f_final_vobo != 0 and $this->f_final_vobo != '' and $this->f_inicial_vobo != 0 and $this->f_inicial_vobo != '') {
-            $adquisicionesVistosBuenos->whereDate('adquisiciones.created_at', '>=', $this->f_inicial_vobo)
-                ->whereDate('adquisiciones.created_at', '<=', $this->f_final_vobo);
-            $solicitudesVistosBuenos->whereDate('solicitudes.created_at', '>=', $this->f_inicial_vobo)
-                ->whereDate('solicitudes.created_at', '<=', $this->f_final_vobo);
+            $adquisicionesVistosBuenos->whereDate('adquisiciones.updated_at', '>=', $this->f_inicial_vobo)
+                ->whereDate('adquisiciones.updated_at', '<=', $this->f_final_vobo);
+            $solicitudesVistosBuenos->whereDate('solicitudes.updated_at', '>=', $this->f_inicial_vobo)
+                ->whereDate('solicitudes.updated_at', '<=', $this->f_final_vobo);
         }
 
         // $adquisicionesVistosBuenos->where('estatus_general', 2);
@@ -289,15 +290,15 @@ class VistosBuenos extends Component
     {
         $this->categoria = 0;
         $this->search = '';
-        $this->f_inicial = 0;
-        $this->f_final = 0;
+        $this->f_inicial = null;
+        $this->f_final = null;
     }
 
     public function limpiarFiltrosVobo()
     {
         $this->categoriaVobo = 0;
         $this->searchVobo = '';
-        $this->f_inicial_vobo = 0;
-        $this->f_final_vobo = 0;
+        $this->f_inicial_vobo = null;
+        $this->f_final_vobo = null;
     }
 }

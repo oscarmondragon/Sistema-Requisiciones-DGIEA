@@ -117,6 +117,7 @@
                         title: 'swal2-title'
                     },
                     title: '¿Guardar cambios?',
+                    position: 'center',
                     icon: 'warning',
                     iconColor: '#9D9361',
                     showCancelButton: true,

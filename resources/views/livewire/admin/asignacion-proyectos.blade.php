@@ -371,7 +371,7 @@
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
             Swal.fire({
-                position: 'top-center',
+                position: 'center',
                 icon: 'error',
                 text: '{{ session('error') }}',
                 confirmButtonText: 'Aceptar',
@@ -385,7 +385,7 @@
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
             Swal.fire({
-                position: 'top-center',
+                position: 'center',
                 icon: 'success',
                 text: '{{ session('success-asignacion') }}',
                 confirmButtonColor: '#62836C',
@@ -398,7 +398,7 @@
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
             Swal.fire({
-                position: 'top-center',
+                position: 'center',
                 icon: 'success',
                 text: '{{ session('success') }}',
                 confirmButtonColor: '#62836C',

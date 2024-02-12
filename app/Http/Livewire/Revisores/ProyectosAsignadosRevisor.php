@@ -213,7 +213,7 @@ class ProyectosAsignadosRevisor extends Component
         $this->idConvocatoriaAsignados = 0;
         $this->idTipoProyectoAsignados = 0;
         $this->idEspacioAcademicoAsignados = 0;
-        $this->search = "";
+        $this->search = null;
         $this->idRevisorAsignados = 0;
     }
 

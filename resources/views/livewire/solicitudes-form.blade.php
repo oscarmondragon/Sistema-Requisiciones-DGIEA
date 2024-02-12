@@ -37,21 +37,17 @@ use Carbon\Carbon;
                                     <label for="id_rubro">
                                         Rubro<samp class="text-rojo">*</samp>:
                                     </label>
-                                    @if (str_contains($referer, 'vobo') || str_contains($referer, 'seguimiento'))
-                                        <select class="w-auto" id="id_rubro" name="id_rubro"
-                                            wire:model="id_rubro" disabled>
-                                        @else
-                                            <select class="sm:w-auto w-full" id="id_rubro" name="id_rubro"
-                                                wire:model="id_rubro" :disabled="{{ $id_solicitud != 0 }}"
-                                                @change="$wire.resetearRecursos($event.target.selectedOptions[0].getAttribute('data-id-especial'))">
-                                    @endif
+                                    <select class="sm:w-auto w-full" id="id_rubro" name="id_rubro"
+                                        wire:model="id_rubro" @isset($id_solicitud) disabled @endisset
+                                        @change="$wire.resetearRecursos($event.target.selectedOptions[0].getAttribute('data-id-especial'))">
 
-                                    <option value="0">Selecciona una opción</option>
-                                    @foreach ($cuentasContables as $cuentaContable)
-                                        <option value="{{ $cuentaContable->id }}"
-                                            data-id-especial="{{ $cuentaContable->id_especial }}">
-                                            {{ $cuentaContable->nombre_cuenta }}</option>
-                                    @endforeach
+                                        <option value="0">Selecciona una opción</option>
+                                        @foreach ($cuentasContables as $cuentaContable)
+                                            <option value="{{ $cuentaContable->id }}"
+                                                data-id-especial="{{ $cuentaContable->id_especial }}">
+                                                {{ $cuentaContable->nombre_cuenta }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                     @error('id_rubro')
                                         <span class="text-rojo sm:inline-block block">{{ $message }}</span>
@@ -208,7 +204,8 @@ use Carbon\Carbon;
                                 wire:model='aviso_privacidad' class="mr-1">
                             <label for="aviso_privacidad">Acepto aviso de privacidad simplificada de la
                                 UAEMEX<samp class="text-rojo">*</samp>.</label>
-                            <a wire:click="exportAviso" class="text-verde font-bold pl-2 hover:underline">Ver aviso de
+                            <a wire:click="exportAviso" class="text-verde font-bold pl-2 hover:underline">Ver
+                                aviso de
                                 privacidad</a>
                             @error('aviso_privacidad')
                                 <span class=" text-rojo sm:inline-block block">{{ $message }}</span>
@@ -255,6 +252,7 @@ use Carbon\Carbon;
             },
             title: '¿Solo deseas guardar el avance?',
             text: 'Recuerda que solo sera visible para ti. Deberás completarlo y enviarlo a VoBo posteriormente.',
+            position: 'center',
             icon: 'warning',
             iconColor: '#9D9361',
             showCancelButton: true,
@@ -277,6 +275,7 @@ use Carbon\Carbon;
             },
             title: '¿Deseas enviar tu solicitud a VoBo?',
             text: 'Una vez enviada ya no será posible modificarla.',
+            position: 'center',
             icon: 'warning',
             iconColor: '#9D9361',
             showCancelButton: true,
@@ -298,6 +297,7 @@ use Carbon\Carbon;
             },
             title: '¿Estás seguro que deseas cancelar?',
             text: 'Se perderán todos los datos capturados.',
+            position: 'center',
             icon: 'warning',
             iconColor: '#9D9361',
             showCancelButton: true,
@@ -337,6 +337,7 @@ use Carbon\Carbon;
                 title: 'swal2-title'
             },
             title: '¿Estás seguro que deseas eliminar el documento?',
+            position: 'center',
             icon: 'warning',
             iconColor: '#9D9361',
             showCancelButton: true,
