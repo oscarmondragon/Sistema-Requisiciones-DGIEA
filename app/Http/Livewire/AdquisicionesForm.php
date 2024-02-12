@@ -969,12 +969,24 @@ class AdquisicionesForm extends Component
 
     public function resetdocsCartaExclusividad($id = 0)
     {
+
         $this->docsCartaExclusividad = [];
         $this->docsAnexoOtrosDocumentos = [];
+
         if ($id != 0) {
-            $docs = Documento::select()->where('id_requisicion', $id)->where('tipo_requisicion', 1);
-            if (isset($docs)) {
-                $docs->delete();
+            $doc = Documento::select()->where('id_requisicion', $id)->where('tipo_requisicion', 1)->first();
+            if (isset($doc)) {
+                //Eliminamos el archivo del storage
+                //obtenemos la ruta
+                $filePath = $doc->ruta_documento;
+                // Checamos si existe el archivo en la ruta      
+                $fileExists = Storage::disk('local')->exists($filePath);
+
+                if ($fileExists) {
+                    Storage::disk('local')->delete($filePath);
+                }
+                //Eliminamos de bd
+                $doc->delete();
             }
         }
 

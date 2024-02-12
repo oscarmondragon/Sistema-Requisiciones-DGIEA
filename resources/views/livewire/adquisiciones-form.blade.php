@@ -222,7 +222,7 @@
                                     <label class="inline-flex items-center ml-6">
                                         <input type="radio" x-model="exclusividadSelectedOption"
                                             wire:model='exclusividad'
-                                            wire:click="resetdocsCartaExclusividad(@isset($adquisicion->id) @endisset)"
+                                            wire:click="resetdocsCartaExclusividad({{ isset($adquisicion->id) ? $adquisicion->id : 0 }})"
                                             name="noExclusivo" value="0" checked>
                                         <span class="ml-2">No</span>
                                     </label>
