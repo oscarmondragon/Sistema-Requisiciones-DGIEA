@@ -23,12 +23,9 @@ class ShowDashboard extends Component
     //public $searchVobo = '';
 
     public $categoria = 0;
-    public $categoriaVobo = 0;
     public $tipoRequisicion;
-    public $f_inicial = 0;
-    public $f_final = 0;
-    public $f_inicial_vobo = 0;
-    public $f_final_vobo = 0;
+    public $f_inicial;
+    public $f_final;
     public $user;
     public $queryEstatus;
 

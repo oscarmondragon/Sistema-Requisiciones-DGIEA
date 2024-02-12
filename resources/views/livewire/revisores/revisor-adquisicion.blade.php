@@ -119,6 +119,7 @@
                             title: 'swal2-title'
                         },
                         title: '¿Confirmar cambio?',
+                        position: 'center',
                         icon: 'warning',
                         iconColor: '#9D9361',
                         showCancelButton: true,

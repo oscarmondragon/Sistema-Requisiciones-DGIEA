@@ -55,6 +55,7 @@
                         title: 'swal2-title'
                     },
                     title: '¿Confirmar VoBo?',
+                    position: 'center',
                     icon: 'warning',
                     iconColor: '#9D9361',
                     showCancelButton: true,
@@ -74,6 +75,7 @@
                 Swal.fire({
                         title: '¿Estás seguro que deseas rechazar la solicitud?',
                         text: 'La solicitud estará disponible nuevamente para edición en el perfil del emisor.',
+                        position: 'center',
                         icon: 'warning',
                         iconColor: '#9D9361',
                         input: "textarea",

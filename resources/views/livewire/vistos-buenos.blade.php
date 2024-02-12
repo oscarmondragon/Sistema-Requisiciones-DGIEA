@@ -12,7 +12,7 @@
                             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
                             <script>
                                 Swal.fire({
-                                    position: 'top-center',
+                                    position: 'center',
                                     icon: 'success',
                                     text: '{{ session('success') }}',
                                     confirmButtonText: 'Aceptar',
@@ -313,6 +313,7 @@
                     Swal.fire({
                         title: '¿Estás seguro de eliminarlo?',
                         text: 'Un requerimiento eliminado no se puede recuperar.',
+                        position: 'center',
                         icon: 'warning',
                         iconColor: '#9D9361',
                         showCancelButton: true,
@@ -326,6 +327,7 @@
                             // Manda llamar el metodo liveware
                             window.livewire.emit('deleteAdquisicion', adquisicionId);
                             Swal.fire({
+                                position: 'center',
                                 icon: 'success',
                                 confirmButtonText: 'Aceptar',
                                 confirmButtonColor: '#62836C',
@@ -342,6 +344,7 @@
                     Swal.fire({
                         title: '¿Estás seguro de eliminarlo?',
                         text: 'Un requerimiento eliminado no se puede recuperar.',
+                        position: 'center',
                         icon: 'warning',
                         iconColor: '#9D9361',
                         showCancelButton: true,
@@ -355,6 +358,7 @@
                             // Manda llamar el metodo liveware
                             window.livewire.emit('deleteSolicitud', solicitudId);
                             Swal.fire({
+                                position: 'center',
                                 icon: 'success',
                                 confirmButtonText: 'Aceptar',
                                 confirmButtonColor: '#62836C',

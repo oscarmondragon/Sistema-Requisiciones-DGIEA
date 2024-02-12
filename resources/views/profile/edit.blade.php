@@ -9,7 +9,7 @@
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
             Swal.fire({
-                position: 'top-center',
+                position: 'center',
                 icon: 'success',
                 text: '{{ session('success') }}',
                 showConfirmButton: false,
