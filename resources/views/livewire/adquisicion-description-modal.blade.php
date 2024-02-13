@@ -59,8 +59,9 @@
                 <label class="block mb-2" for="importe">
                     Importe
                 </label>
-                <input wire:model="importe" required readonly class="inputs-formulario cursor-not-allowed"
-                    id="importe" type="text" placeholder="$ 0000.00">
+                <input wire:model="importe" required readonly class="disabled:bg-[#e0dddd] disabled:text-[#777171] disabled:border-[#888181] disabled:cursor-not-allowed
+                disabled:rounded-md h-10 w-full"
+                    id="importe" type="text" placeholder="$ 0000.00" disabled>
                 @error('importe')
                     <span class="text-rojo">{{ $message }}</span>
                 @enderror

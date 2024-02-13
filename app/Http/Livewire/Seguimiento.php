@@ -22,9 +22,9 @@ class Seguimiento extends Component
     public $categoria = 0;
     public $categoriaSIIA = 0;
     public $tipoRequisicion;
-    public $f_inicial = 0;
+    public $f_inicial;
     public $f_inicialSIIA = 0;
-    public $f_final = 0;
+    public $f_final;
     public $f_finalSIIA = 0;
 
     public $sortColumn = 'id';
@@ -151,7 +151,7 @@ class Seguimiento extends Component
 
         return view(
             'livewire.seguimiento',
-            ['requerimientos' => $requerimientos->orderBy($this->sortColumn, $this->sortDirection)->paginate(5, pageName: 'pendientes')  ]
+            ['requerimientos' => $requerimientos->orderBy($this->sortColumn, $this->sortDirection)->paginate(10, pageName: 'pendientes')  ]
         );
     }
 

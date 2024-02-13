@@ -122,19 +122,24 @@ class AdquisicionVobo extends Component
             DB::beginTransaction();
             $adquisicion = Adquisicion::where('id', $this->adquisicion->id)->first();
             if ($adquisicion) {
-                $clave_adquisicion = $adquisicion->clave_adquisicion;
-                $adquisicion->estatus_general = 4;
-                $adquisicion->observaciones_vobo = null;
                 if ($who_vobo) { //Si el deposito es por parte del Responsable técnico
-                    $adquisicion->vobo_rt = $fecha_vobo;
+                    $vobo_rt = $fecha_vobo;
+                    $vobo_admin = $adquisicion->vobo_admin;
                 } else { //Si el depósito es por parte del administrativo
-                    $adquisicion->vobo_admin = $fecha_vobo;
+                    $vobo_rt = $adquisicion->vobo_rt;
+                    $vobo_admin = $fecha_vobo;
                 }
-                $adquisicion->save();
+                $adquisicion->update([
+                    'clave_adquisicion' => $adquisicion->clave_adquisicion,
+                    'estatus_general' => 4,
+                    'vobo_rt' => $vobo_rt,
+                    'vobo_admin' => $vobo_admin,
+                    'observaciones_vobo' => null
+                ]);
 
             }
             DB::commit();
-            return redirect('/cvu-vobo')->with('success', 'Su requerimiento con clave ' . $clave_adquisicion . ' ha sido  enviado para revisión a la DGIEA.');
+            return redirect('/cvu-vobo')->with('success', 'Su requerimiento con clave ' . $adquisicion->clave_adquisicion . ' ha sido  enviado para revisión a la DGIEA.');
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -150,20 +155,18 @@ class AdquisicionVobo extends Component
             DB::beginTransaction();
             $adquisicion = Adquisicion::where('id', $this->adquisicion->id)->first();
             if ($adquisicion) {
-                $clave_adquisicion = $adquisicion->clave_adquisicion;
-                $adquisicion->estatus_general = 3;
-                $adquisicion->observaciones_vobo = $this->observacionesVobo;
-                $adquisicion->save();
-
+                $adquisicion->update([
+                    'clave_adquisicion' => $adquisicion->clave_adquisicion,
+                    'estatus_general' => 3,
+                    'observaciones_vobo' => $this->observacionesVobo
+                ]);
             }
             DB::commit();
-            return redirect('/cvu-vobo')->with('success', 'Su requerimiento con clave ' . $clave_adquisicion . ' ha sido  rechazado.');
-
+            return redirect('/cvu-vobo')->with('success', 'Su requerimiento con clave ' . $adquisicion->clave_adquisicion . ' ha sido  rechazado.');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->with('error', 'error al intentar rechazar visto bueno. Intente más tarde.' . $e->getMessage());
         }
-
     }
 
     public function updated($vobo)
@@ -173,10 +176,14 @@ class AdquisicionVobo extends Component
 
     public function descargarArchivo($rutaDocumento, $nombreDocumento)
     {
+        //Obtenemos ruta del archivo
         $rutaArchivo = storage_path('app/' . $rutaDocumento);
 
         if (Storage::exists($rutaDocumento)) {
-            return response()->download(storage_path('app/' . $rutaDocumento), $nombreDocumento);
+            // Obtener la extensión del archivo original
+            $extension = pathinfo($rutaArchivo, PATHINFO_EXTENSION);
+            // Devolver el archivo
+            return response()->download($rutaArchivo, $nombreDocumento . '.' . $extension);
         } else {
             abort(404);
         }

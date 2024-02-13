@@ -7,7 +7,11 @@
                 <div class="p-6 text-gray-900">
                     <div class="">
                         <div>
-                            <h1 class="mt-6">Formulario solicitudes</h1>
+                            @if($solicitud->estatus_rt == 2 )
+                            <h1 class="mt-6">Visto bueno para solicitud  con clave: {{$solicitud->clave_solicitud}}</h1>
+                            @else
+                            <h1 class="mt-6">Solicitud  con clave: {{$solicitud->clave_solicitud}}</h1>
+                            @endif
                             <form x-on:submit.prevent="confirmationVoBo">
                                 @csrf
                             @include('components.solicitud-ver-form')
@@ -51,6 +55,7 @@
                         title: 'swal2-title'
                     },
                     title: '¿Confirmar VoBo?',
+                    position: 'center',
                     icon: 'warning',
                     iconColor: '#9D9361',
                     showCancelButton: true,
@@ -70,6 +75,7 @@
                 Swal.fire({
                         title: '¿Estás seguro que deseas rechazar la solicitud?',
                         text: 'La solicitud estará disponible nuevamente para edición en el perfil del emisor.',
+                        position: 'center',
                         icon: 'warning',
                         iconColor: '#9D9361',
                         input: "textarea",

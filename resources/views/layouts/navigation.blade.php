@@ -1,10 +1,10 @@
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
     <!-- Primary Navigation Menu -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
+    <div class="max-w-7xl mx-auto sm:px-6 px-1 lg:px-8">
+        <div class="flex justify-between sm:h-16 h-20">
             <div class="flex">
                 <!-- Logo -->
-                <div class="shrink-0 flex items-center">
+                <div class="shrink-0 flex items-center ">
                     <a href="{{ route('dashboard') }}">
                         <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
                     </a>
@@ -22,12 +22,13 @@
                         {{ __('Requerimientos DGIEA - SIIA') }}
                     </x-nav-link>
                 </div>
+
                 @can('revisor', Auth::user())
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('asignados-revisor.index')" :active="request()->routeIs('asignados-revisor.index')">
-                        {{ __('Mis proyectos Asignados') }}
-                    </x-nav-link>
-                </div>
+                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                        <x-nav-link :href="route('asignados-revisor.index')" :active="request()->routeIs('asignados-revisor.index')">
+                            {{ __('Mis proyectos Asignados') }}
+                        </x-nav-link>
+                    </div>
                 @endcan
                 <div class="hidden sm:flex sm:items-center sm:ml-6">
                     @can('admin', Auth::user())
@@ -50,7 +51,7 @@
 
                             <x-slot name="content">
                                 <x-dropdown-link :href="route('admin.asignacion')">
-                                    {{ __('Asignacion de proyectos') }}
+                                    {{ __('Asignación de proyectos') }}
                                 </x-dropdown-link>
                             </x-slot>
                         </x-dropdown>
@@ -66,7 +67,8 @@
                             Administrador
                         </p>
                     @else
-                        <p class="bg-orange-100 border-2 border-orange-500 rounded-full p-1 px-2 text-sm text-orange-500">
+                        <p
+                            class="bg-orange-100 border-2 border-orange-500 rounded-full p-1 px-2 text-sm text-orange-500">
                             Revisor
                         </p>
                     @endif
@@ -100,7 +102,7 @@
                             <x-dropdown-link :href="route('logout')"
                                 onclick="event.preventDefault();
                                                 this.closest('form').submit();">
-                                {{ __('Salir') }}
+                                {{ __('Cerrar sesión') }}
                             </x-dropdown-link>
                         </form>
                     </x-slot>
@@ -108,7 +110,25 @@
             </div>
 
             <!-- Hamburger -->
-            <div class="-mr-2 flex items-center sm:hidden">
+            <div class="-mr-2 flex items-stretch sm:hidden">
+                <div>
+                    <div class="text-base text-textos_generales text-end">
+                        {{ Auth::user()->name . ' ' . Auth::user()->apePaterno . ' ' . Auth::user()->apeMaterno }}
+                        <div>
+                            @if (Auth::user()->rol == 1 || Auth::user()->rol == 2)
+                                <span class="bg-green-100 border-2 border-green-500 rounded-full p-1 px-2 text-xs text-green-700 ">
+                                    Administrador
+                                </span>
+                            @else
+                                <span
+                                    class="bg-orange-100 border-2 border-orange-500 rounded-full p-1 px-2 text-xs text-orange-500">
+                                    Revisor
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
                 <button @click="open = ! open"
                     class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
@@ -127,20 +147,42 @@
     <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
+                {{ __('Inicio') }}
             </x-responsive-nav-link>
         </div>
 
+        <div class="pt-2 pb-3 space-y-1">
+            <x-responsive-nav-link :href="route('requerimientos.index')" :active="request()->routeIs('requerimientos.index')">
+                {{ __('Requerimientos DGIEA - SIIA') }}
+            </x-responsive-nav-link>
+        </div>
+
+        @can('revisor', Auth::user())
+            <div class="pt-2 pb-3 space-y-1">
+                <x-responsive-nav-link :href="route('asignados-revisor.index')" :active="request()->routeIs('asignados-revisor.index')">
+                    {{ __('Mis proyectos asignados') }}
+                </x-responsive-nav-link>
+            </div>
+        @endcan
+
+        @can('admin', Auth::user())
+            <div class="pt-2 pb-3 space-y-1">
+                <x-responsive-nav-link :href="route('admin.asignacion')" :active="request()->routeIs('admin.asignacion')">
+                    {{ __('Asignación de proyectos') }}
+                </x-responsive-nav-link>
+            </div>
+        @endcan
+
         <!-- Responsive Settings Options -->
-        <div class="pt-4 pb-1 border-t border-gray-200">
-            <div class="px-4">
+        <div class="pb-1 border-t border-gray-200">
+            {{-- <div class="px-4">
                 <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
                 <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
-            </div>
+            </div> --}}
 
-            <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile.edit')">
-                    {{ __('Profile') }}
+            <div class="space-y-1">
+                <x-responsive-nav-link :href="route('profile.edit')" :active="request()->routeIs('profile.edit')">
+                    {{ __('Perfil') }}
                 </x-responsive-nav-link>
 
                 <!-- Authentication -->
@@ -150,7 +192,7 @@
                     <x-responsive-nav-link :href="route('logout')"
                         onclick="event.preventDefault();
                                         this.closest('form').submit();">
-                        {{ __('Log Out') }}
+                        {{ __('Cerrar sesión') }}
                     </x-responsive-nav-link>
                 </form>
             </div>

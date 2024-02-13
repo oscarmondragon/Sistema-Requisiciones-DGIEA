@@ -9,6 +9,7 @@ use App\Models\AdquisicionDetalle;
 use App\Models\Documento;
 use App\Models\CuentaContable;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -57,7 +58,7 @@ class RevisorAdquisicion extends Component
     protected $rules = [
         'estatus' => 'required_if:estatus,0|not_in:0',
         'observaciones_estatus' => 'required_if:estatus,5|required_if:estatus,9|max:800',
-        'claveSiia' => 'required_if:tipoEstatus,3|required_if:tipoEstatus,5|max:16',
+        'claveSiia' => 'required_if:tipoEstatus,3|required_if:tipoEstatus,5|max:16'
     ];
     protected $messages = [
         'estatus.required_if' => 'Debe seleccionar un estado.',
@@ -65,7 +66,7 @@ class RevisorAdquisicion extends Component
         'observaciones_estatus.required_if' => 'Debe escribir las observaciones o motivos de rechazo.',
         'observaciones_estatus.max' => 'La observación es demasiado larga.',
         'claveSiia.required_if' => 'Debe de escribir la clave del SIIA.',
-        'claveSiia.max' => 'La clave SIIA es demasiado larga.',
+        'claveSiia.max' => 'La clave SIIA es demasiado larga.'
     ];
 
     public $listeners = [
@@ -179,10 +180,14 @@ class RevisorAdquisicion extends Component
 
     public function descargarArchivo($rutaDocumento, $nombreDocumento)
     {
+        //Obtenemos ruta del archivo
         $rutaArchivo = storage_path('app/' . $rutaDocumento);
 
         if (Storage::exists($rutaDocumento)) {
-            return response()->download(storage_path('app/' . $rutaDocumento), $nombreDocumento);
+            // Obtener la extensión del archivo original
+            $extension = pathinfo($rutaArchivo, PATHINFO_EXTENSION);
+            // Devolver el archivo
+            return response()->download($rutaArchivo, $nombreDocumento . '.' . $extension);
         } else {
             abort(404);
         }
@@ -192,74 +197,78 @@ class RevisorAdquisicion extends Component
     {
         $this->validate();
 
+
         try {
             DB::beginTransaction();
             if ($this->id_adquisicion_detalle == null) {
+
                 if (in_array($this->tipoEstatus, [3, 5])) { // Selecciono un estatus por partida    
                     // $bienesDB = AdquisicionDetalle::where('id_adquisicion', $this->id_adquisicion)->get();
                     $bienesDB = $this->adquisicion->detalless()->get();
-
                     foreach ($bienesDB as $bien) {
                         if ($bien) {
-                            $bien->estatus_dgiea = $this->estatus;
-                            $bien->estatus_rt = $this->estatus;
-
                             if ($this->estatus == 5 || $this->estatus == 9) {
-                                $bien->observaciones = $this->observaciones_estatus;
+                                $observaciones = $this->observaciones_estatus;
                             } else {
-                                $bien->observaciones = null;
+                                $observaciones = null;
                             }
-                                $bien->clave_siia = $this->claveSiia;
-                            
 
-                            $bien->save();
+                            $bien->update([
+                                'estatus_dgiea' => $this->estatus,
+                                'estatus_rt' => $this->estatus,
+                                'observaciones' => $observaciones,
+                                'clave_siia' => $this->claveSiia
+                            ]);
                         }
 
                         $adquisicion = Adquisicion::where('id', $this->adquisicion->id)->first();
                         if ($adquisicion) {
-                            $adquisicion->estatus_general = $this->estatus;
-
                             if ($this->estatus == 5 || $this->estatus == 9) {
-                                $adquisicion->observaciones = $this->observaciones_estatus;
+                                $observaciones = $this->observaciones_estatus;
                             } else {
-                                $adquisicion->observaciones = null;
+                                $observaciones = null;
                             }
 
-                            $adquisicion->save();
+                            $adquisicion->update([
+                                'estatus_general' => $this->estatus,
+                                'observaciones' => $observaciones
+                            ]);
                         }
                     }
                 } else {
                     /*  Selecciono un estatus para una adquisicion en general
                         Actualizamos en adquisiciones */
+
                     $adquisicion = Adquisicion::where('id', $this->id_adquisicion)->first();
                     if ($adquisicion) {
-                        $adquisicion->estatus_general = $this->estatus;
-
                         if ($this->estatus == 5 || $this->estatus == 9) {
-                            $adquisicion->observaciones = $this->observaciones_estatus;
+                            $observaciones = $this->observaciones_estatus;
                         } else {
-                            $adquisicion->observaciones = null;
+                            $observaciones = null;
                         }
-
-                        $adquisicion->save();
+                        $adquisicion->update([
+                            'estatus_general' => $this->estatus,
+                            'observaciones' => $observaciones
+                        ]);
                     }
                 }
             } else {
                 // Actualizamos en detalles, entro a una partida
                 $bienesDB = AdquisicionDetalle::where('id', $this->id_adquisicion_detalle)->first();
                 if ($bienesDB) {
-                    $bienesDB->estatus_dgiea = $this->estatus;
-                    $bienesDB->estatus_rt = $this->estatus;
-                    $bienesDB->clave_siia = $this->claveSiia;
-
 
                     if ($this->estatus == 5 || $this->estatus == 9) {
-                        $bienesDB->observaciones = $this->observaciones_estatus;
+                        $observaciones = $this->observaciones_estatus;
                     } else {
-                        $bienesDB->observaciones = null;
+                        $observaciones = null;
                     }
 
-                    $bienesDB->save();
+                    $bienesDB->update([
+                        'estatus_dgiea' => $this->estatus,
+                        'estatus_rt' => $this->estatus,
+                        'observaciones' => $observaciones,
+                        'clave_siia' => $this->claveSiia
+                    ]);
                 }
             }
 

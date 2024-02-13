@@ -238,8 +238,8 @@ class AsignacionProyectos extends Component
 
         return view('livewire.admin.asignacion-proyectos', [
 
-            'proyectosSinAsignar' => $proyectosSinAsignar->orderBy($this->sortColumn, $this->sortDirection)->paginate(5, pageName: 'sinasignar'),
-            'proyectosAsignados' => $proyectosAsignados->orderBy($this->sortColumnProyAsig, $this->sortDirection)->paginate(5, pageName: 'asignados')
+            'proyectosSinAsignar' => $proyectosSinAsignar->orderBy($this->sortColumn, $this->sortDirection)->paginate(10, pageName: 'sinasignar'),
+            'proyectosAsignados' => $proyectosAsignados->orderBy($this->sortColumnProyAsig, $this->sortDirection)->paginate(10, pageName: 'asignados')
         ]);
     }
 

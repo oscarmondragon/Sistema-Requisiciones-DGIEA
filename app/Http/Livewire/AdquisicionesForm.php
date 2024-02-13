@@ -2,6 +2,8 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\AdquisicionDetalleHistorial;
+use App\Models\AdquisicionHistorial;
 use Livewire\Component;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -223,6 +225,7 @@ class AdquisicionesForm extends Component
                 });
 
                 foreach ($this->bienes as $bien) {
+                    //Guardamos en bd cada uno de los bienes o servicios 
                     $elemento = AdquisicionDetalle::create([
                         'id_adquisicion' => $bien['id_adquisicion'],
                         'descripcion' => $bien['descripcion'],
@@ -234,8 +237,9 @@ class AdquisicionesForm extends Component
                         'alumnos' => $bien['alumnos'],
                         'profesores_invest' => $bien['profesores_invest'],
                         'administrativos' => $bien['administrativos'],
-                        'id_emisor' => $id_user
+                        'id_usuario_sesion' => $id_user
                     ]);
+
                 }
 
                 //definimos la ruta temporal de los archivos
@@ -328,7 +332,6 @@ class AdquisicionesForm extends Component
 
                 DB::commit();
                 return redirect('/cvu-crear')->with('success', 'Su requerimiento ha sido guardado correctamente con la clave ' . $clave_adquisicion . '. Recuerde completarlo y mandarlo a visto bueno.');
-
             } catch (\Exception $e) {
                 DB::rollback();
                 dd("Error en catch:" . $e);
@@ -366,18 +369,21 @@ class AdquisicionesForm extends Component
                     $adquisicion = Adquisicion::where('id', $this->id_adquisicion)->first();
                     $id_adquisicion = $adquisicion->id;
                     if ($adquisicion) {
-                        $adquisicion->id_rubro = $this->id_rubro;
-                        $adquisicion->afecta_investigacion = $this->afecta_investigacion;
-                        $adquisicion->justificacion_academica = $this->justificacion_academica;
-                        $adquisicion->exclusividad = $this->exclusividad;
-                        $adquisicion->estatus_general = 2;
-                        $adquisicion->vobo_admin = $vobo_admin;
-                        $adquisicion->vobo_rt = $vobo_rt;
-                        $adquisicion->subtotal = $this->subtotal;
-                        $adquisicion->iva = $this->iva;
-                        $adquisicion->total = $this->total;
-
-                        $adquisicion->save();
+                        $adquisicion->update([
+                            'id_rubro' => $this->id_rubro,
+                            'afecta_investigacion' => $this->afecta_investigacion,
+                            'justificacion_academica' => $this->justificacion_academica,
+                            'exclusividad' => $this->exclusividad,
+                            'estatus_general' => 2,
+                            'vobo_admin' => $vobo_admin,
+                            'vobo_rt' => $vobo_rt,
+                            'subtotal' => $this->subtotal,
+                            'iva' => $this->iva,
+                            'total' => $this->total
+                        ]);
+                        /*  dd("hola");
+                          $_SESSION['pagina_actual'] = $_SERVER['REQUEST_URI'];
+                          dd("pagina actual:". $_SESSION['pagina_actual']);*/
 
                         //Guarda o actualizamos los bienes o servicios en adquisicion_detalles
                         //primero agregamos el id_adquisicion a cada bien
@@ -390,16 +396,17 @@ class AdquisicionesForm extends Component
                             if (isset($bien['id'])) { //si existe lo editamos
                                 $elementoFound = AdquisicionDetalle::where('id', $bien['id'])->first();
                                 if ($elementoFound) {
-                                    $elementoFound->descripcion = $bien['descripcion'];
-                                    $elementoFound->cantidad = $bien['cantidad'];
-                                    $elementoFound->precio_unitario = $bien['precio_unitario'];
-                                    $elementoFound->iva = $bien['iva'];
-                                    $elementoFound->importe = $bien['importe'];
-                                    $elementoFound->justificacion_software = $bien['justificacion_software'];
-                                    $elementoFound->alumnos = $bien['alumnos'];
-                                    $elementoFound->profesores_invest = $bien['profesores_invest'];
-                                    $elementoFound->administrativos = $bien['administrativos'];
-                                    $elementoFound->save();
+                                    $elementoFound->update([
+                                        'descripcion' => $bien['descripcion'],
+                                        'cantidad' => $bien['cantidad'],
+                                        'precio_unitario' => $bien['precio_unitario'],
+                                        'iva' => $bien['iva'],
+                                        'importe' => $bien['importe'],
+                                        'justificacion_software' => $bien['justificacion_software'],
+                                        'alumnos' => $bien['alumnos'],
+                                        'profesores_invest' => $bien['profesores_invest'],
+                                        'administrativos' => $bien['administrativos']
+                                    ]);
                                 }
                             } else { //si no existe lo insertamos
                                 $elemento = AdquisicionDetalle::create([
@@ -962,12 +969,24 @@ class AdquisicionesForm extends Component
 
     public function resetdocsCartaExclusividad($id = 0)
     {
+
         $this->docsCartaExclusividad = [];
         $this->docsAnexoOtrosDocumentos = [];
+
         if ($id != 0) {
-            $docs = Documento::select()->where('id_requisicion', $id)->where('tipo_requisicion', 1);
-            if (isset($docs)) {
-                $docs->delete();
+            $doc = Documento::select()->where('id_requisicion', $id)->where('tipo_requisicion', 1)->first();
+            if (isset($doc)) {
+                //Eliminamos el archivo del storage
+                //obtenemos la ruta
+                $filePath = $doc->ruta_documento;
+                // Checamos si existe el archivo en la ruta      
+                $fileExists = Storage::disk('local')->exists($filePath);
+
+                if ($fileExists) {
+                    Storage::disk('local')->delete($filePath);
+                }
+                //Eliminamos de bd
+                $doc->delete();
             }
         }
 
@@ -1106,10 +1125,14 @@ class AdquisicionesForm extends Component
 
     public function descargarArchivo($rutaDocumento, $nombreDocumento)
     {
+        //Obtenemos ruta del archivo
         $rutaArchivo = storage_path('app/' . $rutaDocumento);
 
         if (Storage::exists($rutaDocumento)) {
-            return response()->download(storage_path('app/' . $rutaDocumento), $nombreDocumento);
+            // Obtener la extensión del archivo original
+            $extension = pathinfo($rutaArchivo, PATHINFO_EXTENSION);
+            // Devolver el archivo
+            return response()->download($rutaArchivo, $nombreDocumento . '.' . $extension);
         } else {
             abort(404);
         }

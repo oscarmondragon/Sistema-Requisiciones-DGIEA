@@ -73,10 +73,10 @@ class RevisorSolicitud extends Component
 
     protected $rules = [
         'estatusSolicitud' => 'required_if:estatusSolicitud,0|not_in:0',
-        'sClaveSiia' => 'required_if:tipoEstatus,4|required_if:tipoEstatus,5|max:16|min:0',
+        'sClaveSiia' => 'required_if:tipoEstatus,4|required_if:tipoEstatus,5|max:16',
         'observaciones_estatus' => 'required_if:estatusSolicitud,5|required_if:estatusSolicitud,12|required_if:estatusSolicitud,14|max:800'
     ];
-
+    //regex:/^[A-Za-z0-9]*$/u
     protected $messages = [
         'estatusSolicitud.required_if' => 'Debe de seleccionar un estado.',
         'estatusSolicitud.not_in' => 'Debe de seleccionar un estado.',
@@ -166,25 +166,24 @@ class RevisorSolicitud extends Component
             DB::beginTransaction();
 
             if ($this->solicitud) {
-                $this->solicitud->estatus_dgiea = $this->estatusSolicitud;
-                $this->solicitud->estatus_rt = $this->estatusSolicitud;
-
                 if ($this->estatusSolicitud == 5 || $this->estatusSolicitud == 12 || $this->estatusSolicitud == 14) {
-                    $this->solicitud->observaciones = $this->observaciones_estatus;
+                    $observaciones = $this->observaciones_estatus;
                 } else {
-                    $this->solicitud->observaciones = null;
+                    $observaciones = null;
                 }
-
-                $this->solicitud->save();
+                $this->solicitud->update([
+                    'estatus_dgiea' => $this->estatusSolicitud,
+                    'estatus_rt' => $this->estatusSolicitud,
+                    'observaciones' => $observaciones
+                ]);
             }
+            if ($this->solicitud_detalles) {
+                $this->solicitud_detalles->update([
+                    'clave_siia' => $this->sClaveSiia
+                ]);
+            }
+            $this->clave = $this->sClaveSiia;
 
-                if ($this->solicitud_detalles) {
-                    $this->solicitud_detalles->clave_siia = $this->sClaveSiia;
-
-                    $this->solicitud_detalles->save();
-                }
-                $this->clave = $this->sClaveSiia;
-            
 
 
             DB::commit();
@@ -206,10 +205,14 @@ class RevisorSolicitud extends Component
     }
     public function descargarArchivo($rutaDocumento, $nombreDocumento)
     {
+        //Obtenemos ruta del archivo
         $rutaArchivo = storage_path('app/' . $rutaDocumento);
 
         if (Storage::exists($rutaDocumento)) {
-            return response()->download(storage_path('app/' . $rutaDocumento), $nombreDocumento);
+            // Obtener la extensión del archivo original
+            $extension = pathinfo($rutaArchivo, PATHINFO_EXTENSION);
+            // Devolver el archivo
+            return response()->download($rutaArchivo, $nombreDocumento . '.' . $extension);
         } else {
             abort(404);
         }

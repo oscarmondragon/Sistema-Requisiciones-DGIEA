@@ -1,7 +1,7 @@
 <div x-data class="sm:py-6 my-3">
     <x-slot name="header">
         <h2 class="font-semibold text-xl leading-tight ml-4">
-            {{ __('Estatus general de Requerimientos') }}
+            {{ __('Inicio') }}
         </h2>
     </x-slot>
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -11,7 +11,7 @@
                     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                         <div>
                             {{--  <img src="img/ic_req_pendientes.png" alt="Image/png" class="inline-block"> --}}
-                            <h3 class="inline-block text-xl pl-2">Requerimientos en revisión</h3>
+                            <h3 class="inline-block text-xl pl-2">Requerimientos pendientes de revisar</h3>
                         </div>
                         @if (session('success'))
                             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -39,9 +39,9 @@
                                                     data-id-especial="{{ $tipo->id }}">{{ $tipo->descripcion }}
                                                 </option>
                                             @endforeach
-                                            <option value="3" data-id-especial="3">Pendientes de revisar</option>
+                                            {{-- <option value="3" data-id-especial="3">Pendientes de revisar</option>
                                             <option value="4" data-id-especial="4">En DGIEA</option>
-                                            <option value="5" data-id-especial="5">En SIIA</option>
+                                            <option value="5" data-id-especial="5">En SIIA</option> --}}
 
                                         </select>
                                         <input type="text" wire:model.live="search"
@@ -116,39 +116,15 @@
                                                     <tr class="border-b-gray-200 border-transparent">
                                                         <td> {{ $requerimiento->id_requerimiento }} </td>
                                                         <td> {{ $requerimiento->clave_siia }} </td>
-                                                        <td> {{ strlen($requerimiento->concepto) > 80 ?  substr($requerimiento->concepto, 0, 80) . '...' : $requerimiento->concepto}} </td>
+                                                        <td> {{ strlen($requerimiento->concepto) > 80 ? substr($requerimiento->concepto, 0, 80) . '...' : $requerimiento->concepto }}
+                                                        </td>
                                                         <td>
                                                             {{ $requerimiento->clave_digcyn == null ? $requerimiento->clave_uaem : $requerimiento->clave_digcyn }}
                                                         </td>
                                                         <td> {{ $requerimiento->nombre_cuenta }} </td>
                                                         <td> {{ $requerimiento->descripcion }} </td>
                                                         <td class="sm:text-center">
-                                                            @if ($requerimiento->color_estado == 'VERDE')
-                                                                <span
-                                                                    class="bg-green-200 text-green-700 rounded-full p-1 px-2 text-xs font-bold text-center block mx-1 border border-green-300">
-                                                                    {{ $requerimiento->estado }}
-                                                                </span>
-                                                            @elseif($requerimiento->color_estado == 'ROJO')
-                                                                <span
-                                                                    class="bg-red-200 text-red-700 rounded-full p-1 px-2 text-xs font-bold text-center block mx-1 border border-red-300">
-                                                                    {{ $requerimiento->estado }}
-                                                                </span>
-                                                            @elseif($requerimiento->color_estado == 'AZUL')
-                                                                <span
-                                                                    class="bg-blue-200 text-blue-700 rounded-full p-1 px-2 text-xs font-bold text-center block mx-1 border border-blue-300">
-                                                                    {{ $requerimiento->estado }}
-                                                                </span>
-                                                            @elseif($requerimiento->color_estado == 'ROSA')
-                                                                <span
-                                                                    class="bg-pink-200 text-pink-700 rounded-full p-1 px-2 text-xs font-bold text-center block mx-1 border border-pink-300">
-                                                                    {{ $requerimiento->estado }}
-                                                                </span>
-                                                            @elseif($requerimiento->color_estado == 'NARANJA')
-                                                                <span
-                                                                    class="bg-orange-200 text-orange-700 rounded-full p-1 px-2 text-xs font-bold text-center block mx-1 border border-orange-300">
-                                                                    {{ $requerimiento->estado }}
-                                                                </span>
-                                                            @elseif($requerimiento->color_estado == 'AMARILLO')
+                                                            @if ($requerimiento->color_estado == 'AMARILLO')
                                                                 <span
                                                                     class="bg-yellow-200 text-yellow-700 rounded-full p-1 px-2 text-xs font-bold text-center block mx-1 border border-yellow-300">
                                                                     {{ $requerimiento->estado }}
@@ -165,37 +141,26 @@
                                                         @if ($requerimiento->tipo_requerimiento == 1)
                                                             @if ($rol == 2 || $rol == 1)
                                                                 <td>
-                                                                    <a href="{{ route('adquisicion-admin.ver', $requerimiento->id) }}">
+                                                                    <a
+                                                                        href="{{ route('adquisicion-admin.ver', $requerimiento->id) }}">
                                                                         <button class="btn-tablas" title="Ver">
                                                                             <img src="{{ 'img/botones/btn_ver.jpeg' }}"
-                                                                                alt="Image/png">
+                                                                                alt="Botón ver">
                                                                         </button>
                                                                     </a>
                                                                 </td>
                                                             @else
-                                                                @if (in_array($requerimiento->tipo_estado, [2]))
+                                                                @if ($requerimiento->id_estatus == 4)
                                                                     <td>
-                                                                        <a href="{{ route('adquisicion.revisar', ['id' => $requerimiento->id]) }}">
+                                                                        <a
+                                                                            href="{{ route('adquisicion.revisar', ['id' => $requerimiento->id]) }}">
                                                                             @if ($requerimiento->id_estatus == 4)
                                                                                 <button class="btn-tablas"
                                                                                     title="Revisar">
-                                                                                    <img src="{{'img/botones/btn_revisar.png'}}" alt="Botón Revisar">
-                                                                                </button>
-                                                                            @else
-                                                                                <button class="btn-tablas"
-                                                                                    title="Actualizar">
-                                                                                    <img src="{{'img/botones/btn_actualizar.png'}}" alt="Botón Actualizar">
+                                                                                    <img src="{{ 'img/botones/btn_revisar.png' }}"
+                                                                                        alt="Botón Revisar">
                                                                                 </button>
                                                                             @endif
-                                                                        </a>
-                                                                    </td>
-                                                                @else
-                                                                    <td>
-                                                                        <a href="{{ route('adquisicion.revisar', [$requerimiento->id, $requerimiento->id_requisicion_detalle]) }}">
-                                                                            <button class="btn-tablas"
-                                                                                title="Actualizar">
-                                                                                <img src="{{'img/botones/btn_actualizar.png'}}" alt="Botón Actualizar">
-                                                                            </button>
                                                                         </a>
                                                                     </td>
                                                                 @endif
@@ -203,24 +168,22 @@
                                                         @elseif($requerimiento->tipo_requerimiento == 2)
                                                             @if ($rol == 2 || $rol == 1)
                                                                 <td>
-                                                                    <a href="{{ route('solicitud-admin.ver', $requerimiento->id) }}">
+                                                                    <a
+                                                                        href="{{ route('solicitud-admin.ver', $requerimiento->id) }}">
                                                                         <button class="btn-tablas" title="Ver">
-                                                                            <img src="{{ 'img/botones/btn_ver.jpeg' }}" alt="Botón Ver">
+                                                                            <img src="{{ 'img/botones/btn_ver.jpeg' }}"
+                                                                                alt="Botón Ver">
                                                                         </button>
                                                                     </a>
                                                                 </td>
                                                             @else
                                                                 <td>
-                                                                    <a href="{{ route('solicitud.revisar', $requerimiento->id) }}">
+                                                                    <a
+                                                                        href="{{ route('solicitud.revisar', $requerimiento->id) }}">
                                                                         @if ($requerimiento->id_estatus == 4)
-                                                                            <button class="btn-tablas"
-                                                                                title="Revisar">
-                                                                                <img src="{{'img/botones/btn_revisar.png'}}" alt="Botón Revisar">
-                                                                            </button>
-                                                                        @else
-                                                                            <button class="btn-tablas"
-                                                                                title="Actualizar">
-                                                                                <img src="{{'img/botones/btn_actualizar.png'}}" alt="Botón Actualizar">
+                                                                            <button class="btn-tablas" title="Revisar">
+                                                                                <img src="{{ 'img/botones/btn_revisar.png' }}"
+                                                                                    alt="Botón Revisar">
                                                                             </button>
                                                                         @endif
                                                                     </a>
@@ -235,7 +198,7 @@
                                     </div>
                                 @else
                                     <h2 class="text-center font-bold mt-5">
-                                        No hay requerimientos en revisión.
+                                        No hay requerimientos pendientes de revisar.
                                     </h2>
                                 @endif
                                 <div class="mt-5">

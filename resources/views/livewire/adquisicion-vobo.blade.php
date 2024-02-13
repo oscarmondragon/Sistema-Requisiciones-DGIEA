@@ -7,7 +7,11 @@
         <div class="p-6">
           <div class="">
             <div>
+              @if($adquisicion->estatus_general == 2 )
               <h1 class="mt-6">Visto bueno para adquisición  con clave: {{$adquisicion->clave_adquisicion}}</h1>
+              @else
+              <h1 class="mt-6">Adquisición  con clave: {{$adquisicion->clave_adquisicion}}</h1>
+              @endif
               <form x-on:submit.prevent="confirmationVoBo">
                 @csrf
                 <div>
@@ -46,6 +50,7 @@
                         title: 'swal2-title'
                     },
                     title: '¿Confirmar VoBo?',
+                    position: 'center',
                     icon: 'warning',
                     iconColor: '#9D9361',
                     showCancelButton: true,
@@ -65,6 +70,7 @@
                 Swal.fire({
                         title: '¿Estás seguro que deseas rechazar el requerimiento?',
                         text: 'El requerimiento estará disponible nuevamente para edición en el perfil del emisor.',
+                        position: 'center',
                         icon: 'warning',
                         iconColor: '#9D9361',
                         input: "textarea",

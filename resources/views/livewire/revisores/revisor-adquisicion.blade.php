@@ -10,7 +10,11 @@
                                     {{ $adquisicion->clave_adquisicion }}
                                 </span>
                             </h1>
-                            <h2 class="text-dorado"> {{ $clave == null ? '' : 'Clave SIIA: ' . $clave }} </h2>                
+                            @isset($clave)
+                                <h1>
+                                    Clave SIIA: <span class="text-dorado"> {{ $clave }} </span>
+                                </h1>
+                            @endisset
                             <form x-on:submit.prevent="saveConfirmation">
                                 @csrf
                                 <div>
@@ -28,7 +32,7 @@
                                     <div class="my-5"
                                         x-data = "{ ifRechazo: @entangle('estatus').defer,
                                      tipoEstatus: @entangle('tipoEstatus').defer,
-                                     claveR: @entangle('clave') }">
+                                     claveR: @entangle('clave').defer, checkClave: false }">
 
                                         @can('revisor', Auth::user())
                                             <h2>Actualizar estado</h2>
@@ -64,16 +68,31 @@
                                             <span class=" text-rojo sm:inline-block block">{{ $message }}</span>
                                         @enderror
 
-                                        <div x-show="(tipoEstatus == 3 || tipoEstatus == 5) && claveR == null"
-                                            class="mt-6">
-                                            <label for="claveSiia" class="my-2">Clave SIIA:<samp
-                                                    class="text-rojo">*</samp>:</label>
-                                            <input type="number" name="claveSiia" id="claveSiia" wire:model='claveSiia'
-                                                placeholder="Clave SIIA" class="inputs-formulario-solicitudes w-1/4">
-                                            @error('claveSiia')
-                                                <span class=" text-rojo sm:inline-block block">{{ $message }}</span>
-                                            @enderror
-                                        </div>
+                                        @can('revisor', Auth::user())
+                                            <div x-show="(tipoEstatus == 3 || tipoEstatus == 5) || claveR != null"
+                                                class="mt-6">
+                                                <label for="claveSiia" class="my-2">Clave SIIA<samp
+                                                        class="text-rojo">*</samp>:</label>
+                                                <input type="text" name="claveSiia" id="claveSiia" wire:model='claveSiia'
+                                                    :disabled="claveR != null && checkClave == false" maxlength="16"
+                                                    placeholder="Clave SIIA"
+                                                    class="inputs-formulario-solicitudes sm:w-[282px] w-full
+                                                disabled:bg-[#e0dddd] disabled:text-[#777171] disabled:border-[#888181] disabled:cursor-not-allowed
+                                                disabled:rounded-md">
+
+                                                @if ($clave != null)
+                                                    <div class="sm:inline-block sm:ml-5 text-end">
+                                                        <input type="checkbox" name="editarClave" id="editarClave"
+                                                            x-model="checkClave" value="true">
+                                                        <label for="editarClave">Editar clave SIIA</label>
+                                                    </div>
+                                                @endif
+
+                                                @error('claveSiia')
+                                                    <span class="text-rojo block mt-2">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        @endcan
                                     </div>
                                     <div class="sm:text-right text-center my-10 -mb-2">
                                         @can('revisor', Auth::user())
@@ -100,6 +119,7 @@
                             title: 'swal2-title'
                         },
                         title: '¿Confirmar cambio?',
+                        position: 'center',
                         icon: 'warning',
                         iconColor: '#9D9361',
                         showCancelButton: true,

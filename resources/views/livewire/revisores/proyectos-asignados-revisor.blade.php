@@ -1,10 +1,10 @@
 <div x-data>
   <x-slot name="header">
-      <h2 class="font-semibold text-xl leading-tight">
+      <h2 class="font-semibold text-xl leading-tight ml-4">
           {{ __('Tus proyectos asignados') }}
       </h2>
   </x-slot>
-  <div class="py-6">
+  <div class="sm:py-6 my-3">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
           <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
               <div class="p-6 text-gray-900">
@@ -67,8 +67,8 @@
                                           placeholder="Buscar por clave del proyecto, nombre...">
                                   </div>
 
-                                  <div class="flex-col sm:ml-20">
-                                      <button type="button" class="bg-blue-600 sm:w-auto w-full sm:mt-0 mt-4"
+                                  <div class="flex-col sm:ml-20 sm:text-start text-end">
+                                      <button type="button" class="bg-blue-600 sm:w-auto sm:mt-0 mt-4 hover:bg-blue-800"
                                           wire:click="limpiarFiltros">
                                           Limpiar filtros
                                       </button>
@@ -178,7 +178,7 @@
       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
       <script>
           Swal.fire({
-              position: 'top-center',
+              position: 'center',
               icon: 'error',
               text: '{{ session('error') }}',
               confirmButtonText: 'Aceptar',
@@ -192,7 +192,7 @@
       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
       <script>
           Swal.fire({
-              position: 'top-center',
+              position: 'center',
               icon: 'success',
               text: '{{ session('success') }}',
               confirmButtonColor: '#62836C',

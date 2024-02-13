@@ -35,6 +35,12 @@
                     </x-nav-link>
                 </div>
 
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <x-nav-link :href="route('documentos.descargables')" :active="request()->routeIs(['documentos.descargables'])">
+                        {{ __('Descargables') }}
+                    </x-nav-link>
+                </div>
+
             </div>
 
             <!-- Settings Dropdown -->
@@ -58,7 +64,7 @@
                                         onclick="event.preventDefault();
                                                         this.closest('form').submit();">
                                         <div class="inline-block">
-                                            <img src="{{ asset('img/botones/btn_salir.png') }}" alt="Botón Salir" title="Salir">
+                                            <img src="{{ asset('img/botones/btn_salir.png') }}" alt="Botón Salir" title="Cerrar sesión">
                                         </div>
                                     </x-dropdown-link>
                                 </button>
@@ -144,13 +150,16 @@
             <x-responsive-nav-link :href="route('cvu.seguimiento')" :active="request()->routeIs('cvu.seguimiento')">
                 {{ __('Seguimiento') }}
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('documentos.descargables')" :active="request()->routeIs('documentos.descargables')">
+                {{ __('Descargables') }}
+            </x-responsive-nav-link>
             <div>
                 <form method="POST" action="{{ route('logout.cvu') }}">
                     @csrf
                     <x-responsive-nav-link :href="route('logout.cvu')"
                         onclick="event.preventDefault();
                                                         this.closest('form').submit();">
-                        {{ __('Salir') }}
+                        {{ __('Cerrar sesión') }}
                     </x-responsive-nav-link>
                 </form>
             </div>

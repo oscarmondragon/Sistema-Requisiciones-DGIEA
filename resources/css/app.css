@@ -74,6 +74,11 @@
     input[type="date"]:focus {
         @apply focus:border-verde focus:outline-none focus:ring-1 ring-verde;
     }
+
+    /* select desabilitado */
+    select:disabled {
+        @apply bg-[#e0dddd] text-[#777171] border-[#888181] cursor-not-allowed;
+    }
 }
 
 @layer components {
@@ -92,7 +97,7 @@
         @apply bg-btn_cancelar hover:bg-[#be9748] focus:ring-2 focus:outline-none focus:ring-[#947538] mt-2;
     }
 
-    .btn-danger{
+    .btn-danger {
         @apply bg-rojo hover:bg-[#fc4845] focus:ring-2 focus:outline-none focus:ring-[#ff4441] mt-2;
     }
 
@@ -163,4 +168,5 @@
 .swal2-styled {
     transition: none !important;
     box-shadow: none !important;
-  }
+}
+  

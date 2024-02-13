@@ -57,8 +57,7 @@ class ReasignarProyectoModal extends ModalComponent
             DB::beginTransaction();
             $asignacionPasada = AsignacionProyecto::where('id_proyecto', $this->id_proyecto)->first();
             if ($asignacionPasada) {
-                $asignacionPasada->id_revisor = $this->nuevoRevisor;
-                $asignacionPasada->save();
+                $asignacionPasada->update(['id_revisor' => $this->nuevoRevisor]);
             } else {
                 return redirect()->back()->with('error', 'El proyecto que desea reasignar no cuenta con asignación aun.');
             }

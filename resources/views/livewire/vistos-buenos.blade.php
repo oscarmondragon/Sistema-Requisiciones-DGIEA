@@ -4,15 +4,15 @@
             <div class="p-6 text-textos_generales">
                 <div>
                     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                        <div>
-                            <img src="img/iconos/ic_req_pendientes.png" alt="Image/png" class="inline-block">
-                            <h3 class="inline-block text-xl pl-2">Requerimientos pendientes de enviar</h3>
+                        <div class="flex items-center">
+                            <img src="img/iconos/ic_req_pendientes.png" alt="Requerimientos pendientes">
+                            <h3 class="text-xl pl-2">Requerimientos pendientes de enviar</h3>
                         </div>
                         @if (session('success'))
                             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
                             <script>
                                 Swal.fire({
-                                    position: 'top-center',
+                                    position: 'center',
                                     icon: 'success',
                                     text: '{{ session('success') }}',
                                     confirmButtonText: 'Aceptar',
@@ -24,8 +24,7 @@
                         @endif
                         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                             <div class="p-6">
-                                <!-- <input type="text" wire:model="search" placeholder="Buscar por clave, tipo..." class="inputs-formulario-solicitudes"> -->
-                                <div class="flex flex-wrap items-end gap-x-2 -mt-7">
+                                <div class="flex flex-wrap items-end gap-x-2 sm:-mt-7">
                                     <div class="sm:w-2/3  w-full">
                                         <select class="sm:w-auto  w-full" id="categoria" name="categoria"
                                             wire:model="categoria">
@@ -46,9 +45,9 @@
                                     <div class="flex-1 md:mt-0 mt-2">
                                         <p class="text-verde font-semibold">Filtrar por fecha</p>
                                         <input type="date" name="f_inicial" id="f_inicial" wire:model="f_inicial"
-                                            class="bg-blanco text-textos_generales rounded-md border-transparent h-10 sm:w-[160px] w-full">
+                                            class="inputs-formulario-solicitudes sm:w-[160px] w-full">
                                         <input type="date" name="f_final" id="f_final" wire:model="f_final"
-                                            class="bg-blanco text-textos_generales rounded-md border-transparent h-10 sm:ml-4 md:mt-0 mt-2 sm:w-[160px] w-full">
+                                            class="inputs-formulario-solicitudes sm:ml-4 md:mt-0 mt-2 sm:w-[160px] w-full">
                                     </div>
                                 </div>
                                 <div class="text-end mt-3">
@@ -158,13 +157,14 @@
                         </div>
                     </div>
                     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                        <div>
-                            <img src="img/iconos/ic_req_vobo.png" alt="Image/png" class="inline-block">
-                            <h3 class="inline-block text-xl pl-2 mt-8">Requerimientos pendientes de visto bueno</h3>
+                        <div class="flex items-center mt-5">
+                            <img src="img/iconos/ic_req_vobo.png" alt="Requerimientos pendientes de visto bueno">
+                            <h3 class="text-xl pl-2">Requerimientos pendientes de visto bueno</h3>
                         </div>
+
                         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                             <div class="p-6 ">
-                                <div class="flex flex-wrap items-end gap-2 -mt-7">
+                                <div class="flex flex-wrap items-end gap-2 sm:-mt-7">
                                     <div class="sm:w-2/3 w-full">
                                         <select class="sm:w-auto w-full" id="categoriaVobo" name="categoriaVobo"
                                             wire:model="categoriaVobo"
@@ -186,11 +186,10 @@
                                         <p class="text-verde font-semibold">Filtrar por fecha</p>
                                         <input type="date" name="f_inicial_vobo" id="f_inicial_vobo"
                                             wire:model="f_inicial_vobo"
-                                            class="bg-blanco text-textos_generales rounded-md border-transparent h-10 sm:w-[160px] w-full">
+                                            class=" inputs-formulario-solicitudes sm:w-[160px] w-full">
                                         <input type="date" name="f_final_vobo" id="f_final_vobo"
                                             wire:model="f_final_vobo"
-                                            class="bg-blanco text-textos_generales rounded-md border-transparent h-10 sm:ml-4 md:mt-0 mt-2 sm:w-[160px] w-full">
-
+                                            class="inputs-formulario-solicitudes sm:ml-4 md:mt-0 mt-2 sm:w-[160px] w-full">
                                     </div>
                                 </div>
                                 <div class="text-end mt-3">
@@ -313,6 +312,7 @@
                     Swal.fire({
                         title: '¿Estás seguro de eliminarlo?',
                         text: 'Un requerimiento eliminado no se puede recuperar.',
+                        position: 'center',
                         icon: 'warning',
                         iconColor: '#9D9361',
                         showCancelButton: true,
@@ -326,6 +326,7 @@
                             // Manda llamar el metodo liveware
                             window.livewire.emit('deleteAdquisicion', adquisicionId);
                             Swal.fire({
+                                position: 'center',
                                 icon: 'success',
                                 confirmButtonText: 'Aceptar',
                                 confirmButtonColor: '#62836C',
@@ -342,6 +343,7 @@
                     Swal.fire({
                         title: '¿Estás seguro de eliminarlo?',
                         text: 'Un requerimiento eliminado no se puede recuperar.',
+                        position: 'center',
                         icon: 'warning',
                         iconColor: '#9D9361',
                         showCancelButton: true,
@@ -355,6 +357,7 @@
                             // Manda llamar el metodo liveware
                             window.livewire.emit('deleteSolicitud', solicitudId);
                             Swal.fire({
+                                position: 'center',
                                 icon: 'success',
                                 confirmButtonText: 'Aceptar',
                                 confirmButtonColor: '#62836C',

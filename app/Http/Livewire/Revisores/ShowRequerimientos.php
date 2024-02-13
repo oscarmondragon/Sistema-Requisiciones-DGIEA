@@ -25,10 +25,8 @@ class ShowRequerimientos extends Component
     public $categoria = 0;
     public $categoriaVobo = 0;
     public $tipoRequisicion;
-    public $f_inicial = 0;
-    public $f_final = 0;
-    public $f_inicial_vobo = 0;
-    public $f_final_vobo = 0;
+    public $f_inicial;
+    public $f_final;
     public $user;
     public $queryEstatus;
 
@@ -382,7 +380,7 @@ class ShowRequerimientos extends Component
 
         return view(
             'livewire.revisores.show-requerimientos',
-            [ 'requerimientos' => $requerimientos->orderBy('id_requerimiento')->paginate(5, pageName: 'pendientes')
+            [ 'requerimientos' => $requerimientos->orderBy('id_requerimiento')->paginate(10, pageName: 'pendientes')
                 , 'rol'=>$user->rol,
             ]
         );
