@@ -89,8 +89,8 @@
                                                 placeholder="Buscar por clave del proyecto, nombre...">
                                         </div>
 
-                                        <div class="flex-col">
-                                            <button type="button" class="bg-blue-600 sm:w-auto w-full sm:mt-0 mt-4"
+                                        <div class="flex-col sm:text-start text-end">
+                                            <button type="button" class="bg-blue-600 sm:w-auto sm:mt-0 mt-4 hover:bg-blue-800"
                                                 wire:click="limpiarFiltros">
                                                 Limpiar filtros
                                             </button>
@@ -276,8 +276,8 @@
                                             placeholder="Buscar por clave del proyecto, nombre...">
                                     </div>
 
-                                    <div class="flex-col sm:ml-20">
-                                        <button type="button" class="bg-blue-600 sm:w-auto w-full sm:mt-0 mt-4"
+                                    <div class="flex-col sm:ml-20 sm:text-start text-end">
+                                        <button type="button" class="bg-blue-600 sm:w-auto sm:mt-0 mt-4 hover:bg-blue-800"
                                             wire:click="limpiarFiltrosProyAsignados">
                                             Limpiar filtros
                                         </button>

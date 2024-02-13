@@ -9,8 +9,8 @@
                 <div class="p-6 text-gray-900">
                     <div>
                         <div>
-                            <h1 class="mt-4">Revisión para solicitud con clave: <span
-                                    class="text-dorado">{{ $solicitud->clave_solicitud }}</span>
+                            <h1 class="mt-4">Revisión para solicitud con clave:
+                                 <span class="text-dorado">{{ $solicitud->clave_solicitud }}</span>
                             </h1>
                             {{-- <h2 class="text-dorado">{{ $clave == null ? '' : 'Clave SIIA: ' . $clave }}</h2> --}}
                             @isset($clave)

@@ -216,29 +216,29 @@ class VistosBuenos extends Component
         // $solicitudesVistosBuenos->where('estatus_rt', 2);
 
         if ($this->categoria == 0) {
-            $requerimientos = $adquisiciones->union($solicitudes)->orderBy($this->sortColumn, $this->sortDirection)->paginate(10, pageName: 'pendientes');
+            $requerimientos = $adquisiciones->union($solicitudes)->orderBy($this->sortColumn, $this->sortDirection)->paginate(5, pageName: 'pendientes');
             //dd($requerimientos);
         } else if ($this->categoria == 1) {
-            $requerimientos = $adquisiciones->orderBy($this->sortColumn, $this->sortDirection)->paginate(10, pageName: 'pendientes');
+            $requerimientos = $adquisiciones->orderBy($this->sortColumn, $this->sortDirection)->paginate(5, pageName: 'pendientes');
         } else if ($this->categoria == 2) {
-            $requerimientos = $solicitudes->orderBy($this->sortColumn, $this->sortDirection)->paginate(10, pageName: 'pendientes');
+            $requerimientos = $solicitudes->orderBy($this->sortColumn, $this->sortDirection)->paginate(5, pageName: 'pendientes');
         } else if ($this->categoria == 3) {
             $adquisiciones->where('estatus_general', 1);
             $solicitudes->where('estatus_rt', 1);
-            $requerimientos = $adquisiciones->union($solicitudes)->orderBy($this->sortColumn, $this->sortDirection)->paginate(10, pageName: 'pendientes');
+            $requerimientos = $adquisiciones->union($solicitudes)->orderBy($this->sortColumn, $this->sortDirection)->paginate(5, pageName: 'pendientes');
             //dd($requerimientos);
         } else if ($this->categoria == 4) {
             $adquisiciones->where('estatus_general', 4);
             $solicitudes->where('estatus_rt', 4);
-            $requerimientos = $adquisiciones->union($solicitudes)->orderBy($this->sortColumn, $this->sortDirection)->paginate(10, pageName: 'pendientes');
+            $requerimientos = $adquisiciones->union($solicitudes)->orderBy($this->sortColumn, $this->sortDirection)->paginate(5, pageName: 'pendientes');
         }
 
         if ($this->categoriaVobo == 0) {
-            $juntasvobo = $adquisicionesVistosBuenos->union($solicitudesVistosBuenos)->orderBy($this->sortColumn, $this->sortDirection)->paginate(10, pageName: 'vobo');
+            $juntasvobo = $adquisicionesVistosBuenos->union($solicitudesVistosBuenos)->orderBy($this->sortColumn, $this->sortDirection)->paginate(5, pageName: 'vobo');
         } else if ($this->categoriaVobo == 1) {
-            $juntasvobo = $adquisicionesVistosBuenos->orderBy($this->sortColumn, $this->sortDirection)->paginate(10, pageName: 'vobo');
+            $juntasvobo = $adquisicionesVistosBuenos->orderBy($this->sortColumn, $this->sortDirection)->paginate(5, pageName: 'vobo');
         } else if ($this->categoriaVobo == 2) {
-            $juntasvobo = $solicitudesVistosBuenos->orderBy($this->sortColumn, $this->sortDirection)->paginate(10, pageName: 'vobo');
+            $juntasvobo = $solicitudesVistosBuenos->orderBy($this->sortColumn, $this->sortDirection)->paginate(5, pageName: 'vobo');
         }
 
         //dd($requerimientos);
