@@ -4,7 +4,7 @@
             {{ __('Asignación de proyectos') }}
         </h2>
     </x-slot>
-    <div class="py-6">
+    <div class="sm:py-6 my-3">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
@@ -50,9 +50,10 @@
                                     <div class="sm:grid sm:grid-cols-2 sm:w-full gap-x-8">
                                         @if (auth()->user()->rol === 1)
                                             <div class="flex-col">
-                                                <label for="idTipoProyecto" class="sm:inline-block block">Tipo de proyecto:</label>
-                                                <select class="w-full mt-1" id="idTipoProyecto"
-                                                    name="idTipoProyecto" wire:model="idTipoProyecto">
+                                                <label for="idTipoProyecto" class="sm:inline-block block">Tipo de
+                                                    proyecto:</label>
+                                                <select class="w-full mt-1" id="idTipoProyecto" name="idTipoProyecto"
+                                                    wire:model="idTipoProyecto">
                                                     <option value="0">Todos</option>
                                                     @foreach ($tipoProyectos as $tipo)
                                                         <option value="{{ $tipo['Tipo_Proyecto'] }}">
@@ -100,7 +101,7 @@
                                         <div>
                                             <h3>Proyectos disponibles para asignar</h3>
                                             @error('proyectosSeleccionados')
-                                                    <span class="text-rojo">{{ $message }}</span>
+                                                <span class="text-rojo">{{ $message }}</span>
                                             @enderror
                                         </div>
 
@@ -149,7 +150,7 @@
                                                     @foreach ($proyectosSinAsignar as $proyecto)
                                                         <tr class="border-b-gray-200 border-transparent">
                                                             {{-- <td> {{ $proyecto->CveEntPry }}  </td> --}}
-                                                            <td> 
+                                                            <td>
                                                                 {{ $proyecto->Clave_DIGCYN == null ? $proyecto->CvePryUaem : $proyecto->Clave_DIGCYN }}
                                                             </td>
                                                             <td>{{ $proyecto->NomEntPry }}</td>
@@ -168,10 +169,9 @@
                                                     @endforeach
                                                 </tbody>
                                             </table>
-
-                                            <div class="mt-5">
-                                                {{ $proyectosSinAsignar->links() }}
-                                            </div>
+                                        </div>
+                                        <div class="mt-7">
+                                            {{ $proyectosSinAsignar->links() }}
                                         </div>
                                     @else
                                         <h2 class="text-center font-bold mt-5">No hay proyectos disponibles para
@@ -194,8 +194,7 @@
                                         @enderror
                                     </div>
                                     <div class="mt-8 sm:text-end text-center">
-                                        <button type="submit" 
-                                            class="btn-success sm:w-auto w-5/6">Guardar</button>
+                                        <button type="submit" class="btn-success sm:w-auto w-5/6">Guardar</button>
                                     </div>
                                 </div>
                             </form>
@@ -289,8 +288,8 @@
                                 <div class="mt-9">
                                     <h3>Proyectos asignados</h3>
                                 </div>
-                                <div class="overflow-x-auto mt-7">
-                                    @if ($proyectosAsignados->first())
+                                @if ($proyectosAsignados->first())
+                                    <div class="overflow-x-auto mt-7">
                                         <table class="table-auto text-left text-sm w-3/4 sm:w-full mx-auto">
                                             <thead>
                                                 <tr class="bg-blanco">
@@ -326,7 +325,7 @@
                                                 @foreach ($proyectosAsignados as $proyecto)
                                                     <tr class="border-b-gray-200 border-transparent">
                                                         {{-- <td> {{ $proyecto->CveEntPry }} </td> --}}
-                                                        <td> 
+                                                        <td>
                                                             {{ $proyecto->clave_digcyn == null ? $proyecto->clave_uaem : $proyecto->clave_digcyn }}
                                                         </td>
                                                         <td> {{ $proyecto->nombre_proyecto }}</td>
@@ -343,23 +342,23 @@
                                                             <button type="button"
                                                                 x-on:click="$wire.emit('openModal', 'admin.reasignar-proyecto-modal', { 'id_proyecto': {{ $proyecto->id_proyecto }}, 'id_revisor': {{ $proyecto->id_revisor }}, 'clave_uaem': '{{ $proyecto->clave_uaem }}', 'clave_digcyn': '{{ $proyecto->clave_digcyn }}'})"
                                                                 class="btn-tablas" title="Reasignar proyecto">
-                                                                <img src="{{'img/botones/btn_reasignar.png'}}" alt="Botón Reasignar">
+                                                                <img src="{{ 'img/botones/btn_reasignar.png' }}"
+                                                                    alt="Botón Reasignar">
                                                             </button>
                                                         </th>
                                                     </tr>
                                                 @endforeach
                                             </tbody>
                                         </table>
-
-                                        <div class="mt-10">
-                                            {{ $proyectosAsignados->links() }}
-                                        </div>
-                                    @else
-                                        <h2 class="text-center font-bold mt-5">
-                                            No hay proyectos asignados.
-                                        </h2>
-                                    @endif
-                                </div>
+                                    </div>
+                                    <div class="mt-10">
+                                        {{ $proyectosAsignados->links() }}
+                                    </div>
+                                @else
+                                    <h2 class="text-center font-bold mt-5">
+                                        No hay proyectos asignados.
+                                    </h2>
+                                @endif
                             </div>
                         </div>
                     </div>

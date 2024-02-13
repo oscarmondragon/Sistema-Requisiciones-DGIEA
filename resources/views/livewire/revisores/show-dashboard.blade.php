@@ -1,4 +1,4 @@
-<div x-data class="py-6">
+<div x-data class="sm:py-6 my-3">
     <x-slot name="header">
         <h2 class="font-semibold text-xl leading-tight ml-4">
             {{ __('Inicio') }}
