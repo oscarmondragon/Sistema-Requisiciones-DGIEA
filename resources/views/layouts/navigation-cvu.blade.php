@@ -64,7 +64,7 @@
                                         onclick="event.preventDefault();
                                                         this.closest('form').submit();">
                                         <div class="inline-block">
-                                            <img src="{{ asset('img/botones/btn_salir.png') }}" alt="Botón Salir" title="Salir">
+                                            <img src="{{ asset('img/botones/btn_salir.png') }}" alt="Botón Salir" title="Cerrar sesión">
                                         </div>
                                     </x-dropdown-link>
                                 </button>
@@ -159,7 +159,7 @@
                     <x-responsive-nav-link :href="route('logout.cvu')"
                         onclick="event.preventDefault();
                                                         this.closest('form').submit();">
-                        {{ __('Salir') }}
+                        {{ __('Cerrar sesión') }}
                     </x-responsive-nav-link>
                 </form>
             </div>
