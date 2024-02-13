@@ -53,9 +53,9 @@
                                         <p class="text-verde font-semibold">Filtrar por fecha</p>
                                         <input type="date" name="f_inicial" id="f_inicial"
                                             wire:model.live="f_inicial"
-                                            class="bg-blanco text-textos_generales rounded-md border-transparent h-10 sm:w-auto w-full">
+                                            class="inputs-formulario-solicitudes sm:w-auto w-full">
                                         <input type="date" name="f_final" id="f_final" wire:model.live="f_final"
-                                            class="bg-blanco text-textos_generales rounded-md border-transparent h-10 md:mt-0 mt-2 sm:w-auto w-full">
+                                            class="inputs-formulario-solicitudes md:mt-0 mt-2 sm:w-auto w-full">
                                     </div>
                                 </div>
 

@@ -383,7 +383,7 @@ class ShowDashboard extends Component
         return view(
             'livewire.revisores.show-dashboard',
             [
-                'requerimientos' => $requerimientos->orderBy('modificacion')->paginate(5, pageName: 'pendientes'), 'rol' => $user->rol,
+                'requerimientos' => $requerimientos->orderBy('modificacion')->paginate(10, pageName: 'pendientes'), 'rol' => $user->rol,
             ]
         );
     }

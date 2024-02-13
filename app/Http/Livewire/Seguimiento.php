@@ -151,7 +151,7 @@ class Seguimiento extends Component
 
         return view(
             'livewire.seguimiento',
-            ['requerimientos' => $requerimientos->orderBy($this->sortColumn, $this->sortDirection)->paginate(5, pageName: 'pendientes')  ]
+            ['requerimientos' => $requerimientos->orderBy($this->sortColumn, $this->sortDirection)->paginate(10, pageName: 'pendientes')  ]
         );
     }
 
