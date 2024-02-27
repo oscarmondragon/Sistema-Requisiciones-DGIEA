@@ -21,6 +21,8 @@ use App\Http\Controllers\AdquisicionController;
 use App\Http\Controllers\SolicitudController;
 use App\Http\Controllers\SeguimientoSiiaController;
 use App\Http\Controllers\CvuController;
+use App\Http\Livewire\Admin\CuentasContables;
+use App\Http\Livewire\Admin\CuentasContablesModal;
 use App\Http\Livewire\Revisores\ShowDashboard;
 use App\Http\Middleware\CheckRole;
 
@@ -53,6 +55,15 @@ Route::get('/asignados-revisor', ProyectosAsignadosRevisor::class)->middleware([
 
 Route::get('/asignacion-proyectos', AsignacionProyectos::class)
     ->middleware(['auth', 'verified', CheckRole::class . ':1,2'])->name('admin.asignacion');
+
+    //Cuentas contables admin
+    Route::get('/cuentas-contables', CuentasContables::class)
+    ->middleware(['auth', 'verified', CheckRole::class . ':1,2'])->name('cuentas.contables');
+    
+    // Route::post('/cuenta-contable', [CuentasContablesModal::class, 'store'])
+    // ->middleware(['auth', 'verified', CheckRole::class . ':1,2'])->name('cuenta.contable');
+
+
 
 
 Route::middleware('auth')->group(function () {

@@ -53,6 +53,10 @@
                                 <x-dropdown-link :href="route('admin.asignacion')">
                                     {{ __('Asignación de proyectos') }}
                                 </x-dropdown-link>
+
+                                <x-dropdown-link :href="route('cuentas.contables')">
+                                    {{ __('Cuentas contables') }}
+                                </x-dropdown-link>
                             </x-slot>
                         </x-dropdown>
                     @endcan
@@ -169,6 +173,10 @@
             <div class="pt-2 pb-3 space-y-1">
                 <x-responsive-nav-link :href="route('admin.asignacion')" :active="request()->routeIs('admin.asignacion')">
                     {{ __('Asignación de proyectos') }}
+                </x-responsive-nav-link>
+
+                <x-responsive-nav-link :href="route('cuentas.contables')" :active="request()->routeIs('cuentas.contables')">
+                    {{ __('Cuentas contables') }}
                 </x-responsive-nav-link>
             </div>
         @endcan

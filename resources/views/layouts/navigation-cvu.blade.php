@@ -1,7 +1,7 @@
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex flex-wrap justify-between h-auto">
+        <div class="flex justify-between h-auto sm:flex-wrap">
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
@@ -115,12 +115,11 @@
 
             <!-- Hamburger -->
 
-            <div class="-mr-2 flex flex-nowrap items-center sm:hidden">
+            <div class="-mr-2 flex items-stretch sm:hidden">
 
                 <div class="sm:hidden inline-block my-auto text-end">
-                    <p class="flex">{{ Session::get('name_user') }}
-                        <p class="text-verde font-bold text-sm text-end">En sesión</p>
-                    </p>
+                    <p class="flex">{{ Session::get('name_user') }}</p>
+                        <span class="text-verde font-bold text-sm text-end">En sesión</span>
                 </div>
                 <button @click="open = ! open"
                     class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
