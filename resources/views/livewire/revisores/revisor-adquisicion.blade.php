@@ -18,10 +18,11 @@
                             <form x-on:submit.prevent="saveConfirmation">
                                 @csrf
                                 <div>
-                                    <div x-data="{ open: false }">
-                                        <button type="button" class="bg-blue-600 my-4" @click="open = ! open">
-                                            Ver detalles
+                                    <div x-data="{ open: true }">
+                                        <button x-text="open ? 'Ocultar detalles &#129045;' : 'Ver detalles &#129047;'" type="button" class="bg-blue-600 hover:bg-blue-800 my-4"
+                                            @click="open = ! open">
                                         </button>
+
                                         <div x-show="open">
                                             @include('components.adquisicion-ver-form')
                                             @can('revisor', Auth::user())
@@ -111,29 +112,30 @@
             </div>
         </div>
         @push('scripts')
-            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-            <script>
-                function saveConfirmation() {
-                    Swal.fire({
-                        customClass: {
-                            title: 'swal2-title'
-                        },
-                        title: '¿Confirmar cambio?',
-                        position: 'center',
-                        icon: 'warning',
-                        iconColor: '#9D9361',
-                        showCancelButton: true,
-                        confirmButtonColor: '#62836C',
-                        cancelButtonColor: '#E86562',
-                        confirmButtonText: 'Si, confirmar',
-                        cancelButtonText: 'Cerrar',
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+                < /> <
+                script >
+                    function saveConfirmation() {
+                        Swal.fire({
+                            customClass: {
+                                title: 'swal2-title'
+                            },
+                            title: '¿Confirmar cambio?',
+                            position: 'center',
+                            icon: 'warning',
+                            iconColor: '#9D9361',
+                            showCancelButton: true,
+                            confirmButtonColor: '#62836C',
+                            cancelButtonColor: '#E86562',
+                            confirmButtonText: 'Si, confirmar',
+                            cancelButtonText: 'Cerrar',
 
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.livewire.emit('save');
-                        }
-                    });
-                }
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.livewire.emit('save');
+                            }
+                        });
+                    }
             </script>
         @endpush
     </div>

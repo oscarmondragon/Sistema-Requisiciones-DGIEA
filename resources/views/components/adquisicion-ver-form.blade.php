@@ -57,14 +57,13 @@
             <tr class="border border-b-gray-200 border-transparent">
                 <th class="w-[26px]" x-text="index + 1"> </th>
                 {{-- :title="elemento.descripcion" --}}
-                <th class="w-[200px]" :title="elemento.descripcion" x-text="elemento.descripcion.length > 85 ? elemento.descripcion.substring(0,85) + '...' : elemento.descripcion"> </th>
+                <th class="w-[200px]" :title="elemento.descripcion" x-text="elemento.descripcion"> </th>
                 <th class="w-[80px]" x-text="elemento.cantidad"> </th>
                 <th class="w-[80px]" x-text="elemento.precio_unitario"> </th>
                 <th class="w-[80px]" x-text="elemento.iva"> </th>
                 <th class="w-[80px]" x-text="elemento.importe"> </th>
                 @if ($id_rubro_especial == '1')
-                <th class="w-[300px]" :title="elemento.justificacion_software" x-text="elemento.justificacion_software.length > 85 ? elemento.justificacion_software.substring(0,85) 
-                                            + '...' : elemento.justificacion_software"></th>
+                <th class="w-[300px]" :title="elemento.justificacion_software" x-text="elemento.justificacion_software"></th>
                 <th class="w-[180px]" x-html="'Alumnos: ' + elemento.alumnos +
                                         '<br>Profesores: ' + elemento.profesores_invest +
                                         '<br>Administrativos: ' + elemento.administrativos"> </th>
@@ -110,7 +109,7 @@
             </tr>
         </tbody>
         </table>
-
+    </div>
     <div class="my-5" x-data x-init="afectaSelectedOption = '{{ $afecta_investigacion }}'">
         <label for="afecta" class="text-dorado font-bold">
         ¿El cambio de alguna de las características del bien descritas en la cotización,

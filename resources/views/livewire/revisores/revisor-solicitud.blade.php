@@ -20,9 +20,8 @@
                             @endisset
                             <form x-on:submit.prevent="saveConfirmation">
                                 @csrf
-                                <div class="mt-2" x-data="{ open: false }">
-                                    <button type="button" @click="open = ! open" class="bg-blue-600 my-4">Ver
-                                        detalles</button>
+                                <div class="mt-2" x-data="{ open: true }">
+                                    <button type="button" x-text="open ? 'Ocultar detalles &#129045;' : 'Ver detalles &#129047;' " @click="open = ! open" class="bg-blue-600 my-4"></button>
                                     <div x-show="open">
                                         @include('components.solicitud-ver-form')
                                         @can('revisor', Auth::user())
