@@ -33,33 +33,39 @@ class CuentasContables extends Component
 
         $cuentas = CuentaContable::select();
 
-        if ($this->categoriaRequisicion == 0 && ($this->categoria == 1 || $this->categoria == 0)) {
-            $cuentas->whereIn('tipo_requisicion', [1, 2, 3])->where('estatus', $this->categoria);
-        } elseif ($this->categoriaRequisicion == 0 && $this->categoria == 2) {
-            $cuentas->onlyTrashed()->whereIn('tipo_requisicion', [1, 2, 3]);
-        } elseif ($this->categoriaRequisicion == 1 && ($this->categoria == 0 || $this->categoria == 1)) {
-            $cuentas->where('tipo_requisicion', 1)->where('estatus', $this->categoria);
-        } elseif ($this->categoriaRequisicion == 1 && $this->categoria == 2) {
-            $cuentas->onlyTrashed()->where('tipo_requisicion', 1);
-        } elseif ($this->categoriaRequisicion == 2 && ($this->categoria == 0 || $this->categoria == 1)) {
-            $cuentas->where('tipo_requisicion', 2)->where('estatus', $this->categoria);
-        } elseif ($this->categoriaRequisicion == 2 && $this->categoria == 2) {
-            $cuentas->onlyTrashed()->where('tipo_requisicion', 2);
-        } elseif ($this->categoriaRequisicion == 3 && ($this->categoria == 0 || $this->categoria == 1)) {
-            $cuentas->where('tipo_requisicion', 3)->where('estatus', $this->categoria);
-        } else if ($this->categoriaRequisicion == 3 && $this->categoria == 2) {
-            $cuentas->onlyTrashed()->where('tipo_requisicion', 3);
+        if ($this->categoriaRequisicion == 0) {
+            $cuentas->whereIn('tipo_requisicion', [1, 2, 3]);
+        }
+        if ($this->categoriaRequisicion == 1) {
+            $cuentas->whereIn('tipo_requisicion', [1]);
+        }
+        if ($this->categoriaRequisicion == 2) {
+            $cuentas->whereIn('tipo_requisicion', [2]);
+        }
+        if ($this->categoriaRequisicion == 3) {
+            $cuentas->whereIn('tipo_requisicion', [3]);
+        }
+        if ($this->categoria == 1) {
+            $cuentas->where('estatus', $this->categoria);
+        }
+        if ($this->categoria == 0) {
+            $cuentas->where('estatus', $this->categoria);
+        }
+        if ($this->categoria == 2) {
+            $cuentas->onlyTrashed();
         }
 
         if (!empty($this->search)) {
             $cuentas->where(function ($query) {
-                $query-> where('id', 'like', '%' . $this->search . '%')
-                ->orWhere('nombre_cuenta', 'like', '%' . $this->search . '%');
+                $query->where('id', 'like', '%' . $this->search . '%')
+                    ->orWhere('nombre_cuenta', 'like', '%' . $this->search . '%');
             });
         }
 
-        return view('livewire.admin.cuentas-contables',
-         ['cuentas' => $cuentas->orderBy($this->sortColumn, $this->sortDirection)->paginate(10),]);
+        return view(
+            'livewire.admin.cuentas-contables',
+            ['cuentas' => $cuentas->orderBy($this->sortColumn, $this->sortDirection)->paginate(10),]
+        );
     }
 
     public function delete($id)
@@ -68,7 +74,8 @@ class CuentasContables extends Component
         $idCuenta->delete();
     }
 
-    public function restaurarCuenta($id){
+    public function restaurarCuenta($id)
+    {
         $cuenta = CuentaContable::withTrashed()->where('id', $id)->first();
         //dd($cuenta);
         $cuenta->restore();
@@ -80,7 +87,8 @@ class CuentasContables extends Component
         $this->sortDirection = $this->sortDirection == 'asc' ? 'desc' : 'asc';
     }
 
-    public function limpiarFiltros(){
+    public function limpiarFiltros()
+    {
         $this->categoriaRequisicion = 0;
         $this->categoria = 1;
         $this->search = null;
@@ -92,6 +100,11 @@ class CuentasContables extends Component
     }
 
     public function updatingCategoria()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingCategoriaRequisicion()
     {
         $this->resetPage();
     }

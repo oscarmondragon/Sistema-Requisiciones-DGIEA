@@ -15,6 +15,8 @@
                                     Clave SIIA: <span class="text-dorado"> {{ $clave }} </span>
                                 </h1>
                             @endisset
+                            {{$id_rubro}}
+
                             <form x-on:submit.prevent="saveConfirmation">
                                 @csrf
                                 <div>
@@ -112,9 +114,8 @@
             </div>
         </div>
         @push('scripts')
-            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11">
-                < /> <
-                script >
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> 
+                <script >
                     function saveConfirmation() {
                         Swal.fire({
                             customClass: {

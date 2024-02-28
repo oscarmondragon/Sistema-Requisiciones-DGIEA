@@ -27,8 +27,8 @@ class CuentasContablesModal extends ModalComponent
 
 
     protected $rules = [
-        'idClave' => 'required|numeric|gt:0',
-        'nombreCuenta' => 'required',
+        'idClave' => 'required|numeric|gt:0|max_digits:10',
+        'nombreCuenta' => 'required|max:255',
         'tipoRequisicion' => 'required',
         'idEspecial' => 'nullable'
     ];
@@ -38,7 +38,9 @@ class CuentasContablesModal extends ModalComponent
         'idClave.required' => 'La clave cuenta no puede estar vacía.',
         'idClave.gt' => 'La clave cuenta debe de ser mayor a 0.',
         'idClave.unique' => 'La clave cuenta ya existe.',
+        'idClave.max_digits' => 'La clave cuenta es demasiado larga.',
         'nombreCuenta.required' => 'El nombre de la cuenta no puede estar vacío.',
+        'nombreCuenta.max' => 'El nombre de la cuenta es demasiado largo.',
         'tipoRequisicion.required' => 'El tipo de requisición no puede estar vacío.',
     ];
 
@@ -56,7 +58,7 @@ class CuentasContablesModal extends ModalComponent
             $this->cuentasEspeciales = CuentasEspeciales::where('estatus', 1)->get();
         }
 
-        $this->cuenta = CuentaContable::where('id_cuenta', $this->idCuenta)->first();        
+        $this->cuenta = CuentaContable::where('id_cuenta', $this->idCuenta)->first();
     }
 
     public function render()
@@ -81,7 +83,7 @@ class CuentasContablesModal extends ModalComponent
     }
 
     public function store()
-    { 
+    {
 
         $this->validate([
             'idClave' => 'unique:cuentas_contables,id',
@@ -93,7 +95,7 @@ class CuentasContablesModal extends ModalComponent
 
         try {
             DB::beginTransaction();
-            
+
             CuentaContable::create([
                 'id' => $this->idClave,
                 'id_cuenta' => $idCuentaMax,
@@ -110,7 +112,7 @@ class CuentasContablesModal extends ModalComponent
             DB::rollBack();
             return redirect()->back()->with('error', 'Error: Al intentar guardar cuenta contable. Intente más tarde.' . $e->getMessage());
         }
-    
+
     }
 
     public function update()
@@ -119,7 +121,7 @@ class CuentasContablesModal extends ModalComponent
         //$cuenta = CuentaContable::where('id', $this->idClave)->first();
         if ($this->cuenta->id == $this->idClave) {
             $this->validate();
-        }else{
+        } else {
             //dd("entre");
             $this->validate([
                 'idClave' => 'unique:cuentas_contables,id',
