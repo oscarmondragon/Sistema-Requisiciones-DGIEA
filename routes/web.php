@@ -14,7 +14,6 @@ use App\Http\Livewire\Admin\AsignacionProyectos;
 use App\Http\Livewire\DocumentosDescargables;
 
 
-
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProyectoController;
 use App\Http\Controllers\AdquisicionController;
@@ -23,6 +22,7 @@ use App\Http\Controllers\SeguimientoSiiaController;
 use App\Http\Controllers\CvuController;
 use App\Http\Livewire\Admin\CuentasContables;
 use App\Http\Livewire\Admin\CuentasContablesModal;
+use App\Http\Livewire\Admin\DocumentosAdjuntar;
 use App\Http\Livewire\Revisores\ShowDashboard;
 use App\Http\Middleware\CheckRole;
 
@@ -56,14 +56,13 @@ Route::get('/asignados-revisor', ProyectosAsignadosRevisor::class)->middleware([
 Route::get('/asignacion-proyectos', AsignacionProyectos::class)
     ->middleware(['auth', 'verified', CheckRole::class . ':1,2'])->name('admin.asignacion');
 
-    //Cuentas contables admin
-    Route::get('/cuentas-contables', CuentasContables::class)
+//Cuentas contables admin
+Route::get('/cuentas-contables', CuentasContables::class)
     ->middleware(['auth', 'verified', CheckRole::class . ':1,2'])->name('cuentas.contables');
-    
-    // Route::post('/cuenta-contable', [CuentasContablesModal::class, 'store'])
-    // ->middleware(['auth', 'verified', CheckRole::class . ':1,2'])->name('cuenta.contable');
 
-
+//adjuntar documentos
+Route::get('/documentos-adjuntar', DocumentosAdjuntar::class)
+    ->middleware(['auth', 'verified', CheckRole::class . ':1,2'])->name('documentos.adjuntar');
 
 
 Route::middleware('auth')->group(function () {

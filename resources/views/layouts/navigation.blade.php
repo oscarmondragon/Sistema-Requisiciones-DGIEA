@@ -57,6 +57,10 @@
                                 <x-dropdown-link :href="route('cuentas.contables')">
                                     {{ __('Cuentas contables') }}
                                 </x-dropdown-link>
+
+                                <x-dropdown-link :href="route('documentos.adjuntar')">
+                                    {{ __('Documentos adjuntables') }}
+                                </x-dropdown-link>
                             </x-slot>
                         </x-dropdown>
                     @endcan
@@ -177,6 +181,10 @@
 
                 <x-responsive-nav-link :href="route('cuentas.contables')" :active="request()->routeIs('cuentas.contables')">
                     {{ __('Cuentas contables') }}
+                </x-responsive-nav-link>
+
+                <x-responsive-nav-link :href="route('documentos.adjuntar')" :active="request()->routeIs('documentos.adjuntar')">
+                    {{ __('Documentos adjuntables') }}
                 </x-responsive-nav-link>
             </div>
         @endcan

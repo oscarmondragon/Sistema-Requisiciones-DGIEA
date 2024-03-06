@@ -14,7 +14,8 @@ class DocumentosDescargables extends Component
     public function mount()
     {
         //Consultamos en base de datos los documentos descargables
-        $this->docsDescargables = Documento::where('id_requisicion', 0)->where('tipo_documento', 6)->get(); // 6 es el tipo de documento descargable
+        $this->docsDescargables = Documento::where('id_requisicion', 0)->where('tipo_documento', 6)
+            ->orderBy('nombre_documento')->get(); // 6 es el tipo de documento descargable
         //dd($this->docsDescargables);
     }
     public function render()
