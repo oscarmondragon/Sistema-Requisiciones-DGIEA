@@ -61,6 +61,10 @@
                                 <x-dropdown-link :href="route('documentos.adjuntar')">
                                     {{ __('Documentos adjuntables') }}
                                 </x-dropdown-link>
+
+                                <x-dropdown-link :href="route('usuarios')">
+                                    {{ __('Usuarios') }}
+                                </x-dropdown-link>
                             </x-slot>
                         </x-dropdown>
                     @endcan
@@ -185,6 +189,10 @@
 
                 <x-responsive-nav-link :href="route('documentos.adjuntar')" :active="request()->routeIs('documentos.adjuntar')">
                     {{ __('Documentos adjuntables') }}
+                </x-responsive-nav-link>
+
+                <x-responsive-nav-link :href="route('usuarios')" :active="request()->routeIs('usuarios')">
+                    {{ __('Usuarios') }}
                 </x-responsive-nav-link>
             </div>
         @endcan

@@ -23,6 +23,7 @@ use App\Http\Controllers\CvuController;
 use App\Http\Livewire\Admin\CuentasContables;
 use App\Http\Livewire\Admin\CuentasContablesModal;
 use App\Http\Livewire\Admin\DocumentosAdjuntar;
+use App\Http\Livewire\Admin\Usuarios;
 use App\Http\Livewire\Revisores\ShowDashboard;
 use App\Http\Middleware\CheckRole;
 
@@ -63,6 +64,10 @@ Route::get('/cuentas-contables', CuentasContables::class)
 //adjuntar documentos
 Route::get('/documentos-adjuntar', DocumentosAdjuntar::class)
     ->middleware(['auth', 'verified', CheckRole::class . ':1,2'])->name('documentos.adjuntar');
+
+// Registrar usuarios
+Route::get('/usuarios', Usuarios::class)
+    ->middleware(['auth', 'verified', CheckRole::class . ':1,2'])->name('usuarios');
 
 
 Route::middleware('auth')->group(function () {

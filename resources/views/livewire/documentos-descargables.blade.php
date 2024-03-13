@@ -20,7 +20,7 @@
                                             @if (isset($doc->ruta_documento))
                                                 <a href="#" class="text-dorado"
                                                     wire:click="descargarArchivo('{{ $doc->ruta_documento }}', '{{ $doc->nombre_documento }}')">
-                                                    {{ $doc->nombre_documento }}
+                                                    {{ strtr($doc->nombre_documento, '_', ' ') }} 
                                                     <button type="button" class="btn-ver" title="Descargar">
                                                         @if ($doc->extension_documento == 'pdf')
                                                             <img class="w-6 -mb-2" src="{{ 'img/iconos/ic_pdf.png' }}"
